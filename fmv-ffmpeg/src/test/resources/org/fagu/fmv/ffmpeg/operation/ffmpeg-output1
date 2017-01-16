@@ -1,0 +1,98 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'a.m4a':
+  Metadata:
+    major_brand     : M4A
+    minor_version   : 0
+    compatible_brands: M4A mp42isom
+    creation_time   : 1984-04-06 04:42:57
+    iTunSMPB        :  00000000 00000840 0000007E 00000000007DAF42 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+    iTunNORM        :  00000A5C 00000AC1 0000615D 00005D21 000259A2 000259D0 000081F8 000082DD 00025249 0002568C
+    title           : Providence
+    artist          : Audiomachine
+    album_artist    : Audiomachine
+    composer        : Ivan Torrent, Andrew James Prahlow, Mark John Petrie, Paul Dinletir, Kevin Rix & Danail Getz
+    album           : Magnus
+    genre           : Soundtrack
+    track           : 15/24
+    disc            : 1/1
+    compilation     : 0
+    gapless_playback: 0
+    date            : 2015-06-23T07:00:00Z
+    account_id      : fullbackdr@yahoo.com
+    rating          : 0
+    media_type      : 1
+    purchase_date   : 2015-06-27 03:29:10
+    sort_name       : Providence
+    sort_album      : Magnus
+    sort_artist     : Audiomachine
+    sort_composer   : Ivan Torrent, Andrew James Prahlow, Mark John Petrie, Paul Dinletir, Kevin Rix & Danail Getz
+    iTunMOVI        : <?xml version="1.0" encoding="UTF-8"?>
+                    : <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+                    : <plist version="1.0">
+                    : <dict>
+                    :   <key>asset-info</key>
+                    :   <dict>
+                    :           <key>file-size</key>
+                    :           <integer>6710234</integer>
+                    :           <key>flavor</key>
+                    :           <string>2:256</string>
+                    :   </dict>
+                    : </dict>
+                    : </plist>
+                    :
+    sort_album_artist: Iplusfree.com
+    sort_show       : Iplusfree.com
+  Duration: 00:03:06.83, start: 0.000000, bitrate: 287 kb/s
+    Stream #0:0(eng): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 261 kb/s (default)
+    Metadata:
+      creation_time   : 1984-04-06 04:42:57
+    Stream #0:1: Video: mjpeg, yuvj444p(pc, bt470bg/unknown/unknown), 1400x1400 [SAR 72:72 DAR 1:1], 90k tbr, 90k tbn, 90k tbc
+Output #0, mp3, to 'a.mp3':
+  Metadata:
+    major_brand     : M4A
+    minor_version   : 0
+    compatible_brands: M4A mp42isom
+    sort_show       : Iplusfree.com
+    iTunSMPB        :  00000000 00000840 0000007E 00000000007DAF42 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+    iTunNORM        :  00000A5C 00000AC1 0000615D 00005D21 000259A2 000259D0 000081F8 000082DD 00025249 0002568C
+    TIT2            : Providence
+    TPE1            : Audiomachine
+    TPE2            : Audiomachine
+    TCOM            : Ivan Torrent, Andrew James Prahlow, Mark John Petrie, Paul Dinletir, Kevin Rix & Danail Getz
+    TALB            : Magnus
+    TCON            : Soundtrack
+    TRCK            : 15/24
+    TPOS            : 1/1
+    TCMP            : 0
+    gapless_playback: 0
+    TDRC            : 2015-06-23T07:00:00Z
+    account_id      : fullbackdr@yahoo.com
+    rating          : 0
+    media_type      : 1
+    purchase_date   : 2015-06-27 03:29:10
+    sort_name       : Providence
+    sort_album      : Magnus
+    sort_artist     : Audiomachine
+    sort_composer   : Ivan Torrent, Andrew James Prahlow, Mark John Petrie, Paul Dinletir, Kevin Rix & Danail Getz
+    iTunMOVI        : <?xml version="1.0" encoding="UTF-8"?>
+                    : <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+                    : <plist version="1.0">
+                    : <dict>
+                    :   <key>asset-info</key>
+                    :   <dict>
+                    :           <key>file-size</key>
+                    :           <integer>6710234</integer>
+                    :           <key>flavor</key>
+                    :           <string>2:256</string>
+                    :   </dict>
+                    : </dict>
+                    : </plist>
+                    :
+    sort_album_artist: Iplusfree.com
+    TSSE            : Lavf56.25.101
+    Stream #0:0: Audio: mp3 (libmp3lame), 44100 Hz, stereo, fltp, 128 kb/s (default)
+    Metadata:
+      encoder         : Lavc56.28.100 libmp3lame
+Stream mapping:
+  Stream #0:0 (aac) -> aresample
+  aresample -> Stream #0:0 (libmp3lame)
+Press [q] to stop, [?] for help

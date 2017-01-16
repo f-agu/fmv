@@ -1,0 +1,76 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<groupId>org.fagu</groupId>
+		<artifactId>fmv-parent</artifactId>
+		<version>0.5.11-SNAPSHOT</version>
+	</parent>
+    
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>fmv-cli</artifactId>
+	<packaging>jar</packaging>
+	<name>fmv-cli</name>
+	<description>FMV command line</description>
+	
+	<repositories>
+		<repository>
+			<id>jline</id>
+			<name>JLine Project Repository</name>
+			<url>http://jline.sourceforge.net/m2repo</url>
+		</repository>
+	</repositories>
+    
+    <dependencies>
+		<dependency>
+			<groupId>org.fagu</groupId>
+			<artifactId>fmv-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+<!-- 		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency> -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+<!-- 		<dependency>
+			<groupId>jline</groupId>
+			<artifactId>jline</artifactId>
+			<version>0.9.9</version>
+		</dependency> -->
+		<dependency>
+			<groupId>commons-cli</groupId>
+			<artifactId>commons-cli</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-exec</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>jline</groupId>
+			<artifactId>jline</artifactId>
+			<version>2.12</version>
+		</dependency>
+		
+		
+		<!-- tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+
+</project>
+

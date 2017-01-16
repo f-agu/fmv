@@ -1,0 +1,26 @@
+-- release
+svn co https://svn.code.sf.net/p/fmv/code/trunk .
+mvn -Dtag=0.5.9 -DreleaseVersion=0.5.9 -DdevelopmentVersion=0.5.10-SNAPSHOT -U -B clean release:prepare
+
+svn up .
+svn revert -R .
+
+
+-- push to maven repo
+svn co https://svn.code.sf.net/p/fmv/code/tags/0.5.9 .
+mvn -U clean deploy
+
+
+
+-- en une fois (si ftp works well, c-a-d rarement)
+svn co https://svn.code.sf.net/p/fmv/code/trunk .
+mvn -Dtag=0.5.7 -DreleaseVersion=0.5.7 -DdevelopmentVersion=0.5.8-SNAPSHOT -Dmaven.javadoc.skip=true -U -B clean release:clean release:prepare release:perform
+
+
+
+-- extract
+mvn dependency:copy-dependencies
+
+
+-- add header license
+mvn license:update-file-header

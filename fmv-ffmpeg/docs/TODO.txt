@@ -1,0 +1,163 @@
+testU
+
+geoloc
+extract metadata
+Capture screen
+Mosaic
+reverse
+
+Add watermark / text
+volume
+
+infos for webcam
+
+audio spectre => showspectrum (audio -> video graph)
+
+
+
+
+------------------------ mosaic
+http://trac.ffmpeg.org/wiki/Create%20a%20mosaic%20out%20of%20several%20input%20videos
+ffmpeg
+	-i 1.avi -i 2.avi -i 3.avi -i 4.avi
+	-filter_complex "
+		nullsrc=size=640x480 [base];
+		[0:v] setpts=PTS-STARTPTS, scale=320x240 [upperleft];
+		[1:v] setpts=PTS-STARTPTS, scale=320x240 [upperright];
+		[2:v] setpts=PTS-STARTPTS, scale=320x240 [lowerleft];
+		[3:v] setpts=PTS-STARTPTS, scale=320x240 [lowerright];
+		[base][upperleft] overlay=shortest=1 [tmp1];
+		[tmp1][upperright] overlay=shortest=1:x=320 [tmp2];
+		[tmp2][lowerleft] overlay=shortest=1:y=240 [tmp3];
+		[tmp3][lowerright] overlay=shortest=1:x=320:y=240
+	"
+	-c:v libx264 output.mkv
+
+	
+
+
+------------------------ text
+
+Show text for 1 second every 3 seconds
+
+ffmpeg -i "2014-08-22 (02) Manon balaie.mp4" -vf drawtext="fontfile=/Windows/Fonts/ARIALN.TTF:fontcolor=white:x=100:y=x/dar:enable=lt(mod(t\,3)\,1):text='blink'" -y out.mp4
+ffmpeg -i "2014-08-22 (02) Manon balaie.mp4" -vf drawtext="fontfile=/Windows/Fonts/ARIALN.TTF:fontcolor=white:y=h-line_h:x=-50*t:enable=lt(mod(t\,3)\,1):text='blink very long line and blablbalbal et prout trop long et avec de spoils sans poils':fontsize=20" -y out.mp4
+
+
+ffmpeg -i "2014-08-22 (02) Manon balaie.mp4" -vf drawtext="fontfile=/Windows/Fonts/ARIALN.TTF:fontcolor=white:x=100:y=x/dar:text='bbb'" -y out.mp4
+ffmpeg -i "2014-08-22 (02) Manon balaie.mp4" -vf drawtext="fontfile=/Windows/Fonts/ARIALN.TTF:fontcolor=white:x=100:y=x/dar:text='%{localtime\:%t}'" -y out.mp4
+
+
+ffmpeg -i "2014-08-22 (02) Manon balaie.mp4" -vf drawtext="fontfile=/Windows/Fonts/ARIALN.TTF:fontcolor=white:x=0:y=0:text=%{pts} / %{n}" -y out.mp4
+# frame number
+ffmpeg -i "2014-08-22 (02) Manon balaie.mp4" -vf drawtext="fontfile=/Windows/Fonts/ARIALN.TTF:fontcolor=white:x=100:y=x/dar:text=%{n}" -y out.mp4
+
+
+
+
+
+ffmpeg -i "2014-08-22 (02) Manon balaie.mp4" -vf drawtext="fontfile=/Windows/Fonts/ARIALN.TTF::fontcolor_expr=ff0000%{eif\\\\: clip(255*(1*between(t\\, 1.0 + 1.5\\, 10.0 - 5) + ((t - 1.0)/1.5)*between(t, 1.0\\, 1.0 + 1.5) + (-(t - 10.0)/5)*between(t\\, 10.0 - 5\\, 10.0) )\\, 0\\, 255) \\\\: x\\\\: 2 }:x=100:y=x/dar:enable=lt(mod(t\,3)\,1):text='blink'" -y out.mp4
+
+
+ffplay -f lavfi "color,drawtext=text=TEST:fontsize=50:fontfile=FreeSerif.ttf:fontcolor_expr=ff0000%{eif\\\\: clip(255*(1*between(t\\, 1.0 + 1.5\\, 10.0 - 5) + ((t - 1.0)/1.5)*between(t\\, 1.0\\, 1.0 + 1.5) + (-(t - 10.0)/5)*between(t\\, 10.0 - 5\\, 10.0) )\\, 0\\, 255) \\\\: x\\\\: 2 }"
+
+------------------------ blend
+
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[0] setsar=sar=1,format=rgba [0rgbd]; [1] setsar=sar=1,format=rgba [1rgbd]; [1rgbd][0rgbd]blend=all_mode='addition':repeatlast=1:all_opacity=0.5:all_expr='A*(1-(if(gt(T,2.5),1,if(lte(T,1.1),0,min(max((T-1.1)/1.3,0),1)))))+B*(if(gte(T,2.5),1,if(lte(T,1.1),0,min(max((T-1.1)/1.3,0),1))))',format=yuva422p10le"  -y out.mp4
+
+
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[0][1] blend=all_mode='addition':repeatlast=1:all_opacity=1" -y out.mp4
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[1] setsar=sar=1,format=rgba [1sared]; [0] setsar=sar=1,format=rgba [0rgbd]; [0rgbd][1sared]blend=all_mode='addition':repeatlast=1:all_opacity=1,format=yuva422p10le"  -y out.mp4
+
+-- work but find expr
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[1] setsar=sar=1,format=rgba [1sared]; [0] setsar=sar=1,format=rgba [0rgbd]; [1sared][0rgbd]blend=all_mode='addition':repeatlast=1:all_opacity=1:all_expr='A*(if(gte(T,2),1,T/2))+B*(1-(if(gte(T,2),1,T/2)))',format=yuva422p10le"  -y out.mp4
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[1] setsar=sar=1,format=rgba [1sared]; [0] setsar=sar=1,format=rgba [0rgbd]; [1sared][0rgbd]blend=all_mode='addition':repeatlast=1:all_opacity=1:all_expr='if(gte(N*SW+X,W),A,B)',format=yuva422p10le"  -y out.mp4
+
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[1] setsar=sar=1,format=rgba [1sared]; [0] setsar=sar=1,format=rgba [0rgbd]; [1sared][0rgbd]blend=all_mode='addition':repeatlast=1:all_opacity=1:all_expr='if(eq(mod(X,2),mod(Y,2)),A,B)',format=yuva422p10le"  -y out.mp4
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[1] setsar=sar=1,format=rgba [1sared]; [0] setsar=sar=1,format=rgba [0rgbd]; [1sared][0rgbd]blend=all_mode='addition':repeatlast=1:all_opacity=1:all_expr='if(gte(T*SH*40+Y,H)*gte((T*40*SW+X)*W/H,W),A,B)',format=yuva422p10le"  -y out.mp4
+
+
+
+
+A*(if(gte(T,2),1,T/2))+B*(1-(if(gte(T,2),1,T/2)))
+
+
+
+
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[1] setsar=sar=1,format=rgba [1sared]; [0] setsar=sar=1,format=rgba [0rgbd]; [1sared][0rgbd]blend=all_mode='addition':repeatlast=1:all_opacity=1:all_expr='A*(if(gte(T,3),1,T/3))+B*(1-(if(gte(T,3),1,T/3)))',format=yuva422p10le"  -y out.mp4
+
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[1] setsar=sar=1,format=rgba [1sared]; [0] setsar=sar=1,format=rgba [0rgbd]; [1sared][0rgbd]blend=all_mode='addition':repeatlast=1:all_opacity=1:all_expr='A*(if(gte(T,3),1,T/3))+B*(1-(if(gte(T,3),1,T/3)))',format=yuva422p10le"  -y out.mp4
+
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[1] setsar=sar=1,format=rgba [1rgbd]; [0] setsar=sar=1,format=rgba [0rgbd]; [1rgbd][0rgbd]blend=all_mode='addition':repeatlast=1:all_opacity=1:all_expr='if(gte(T,1),A,if(lte(T,2),B,A*(if(gte(T,1),1,T/1))+B*(1-(if(gte(T,1),1,T/1)))))',format=yuva422p10le"  -y out.mp4
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[0] setsar=sar=1,format=rgba [0rgbd]; [1] setsar=sar=1,format=rgba [1rgbd]; [1rgbd][0rgbd]blend=all_mode='addition':repeatlast=1:all_opacity=1:all_expr='if(lte(T,1),A,if(gte(T,2),B,B*(if(gte(T,1),1,T/1))+A*(1-(if(gte(T,1),1,T/1)))))',format=yuva422p10le"  -y out.mp4
+
+
+ffmpeg -i a.mp4 -i b.mp4 -filter_complex "[0] setsar=sar=1,format=rgba [0rgbd]; [1] setsar=sar=1,format=rgba [1rgbd]; [1rgbd][0rgbd]blend=all_mode='addition':repeatlast=1:all_opacity=1:all_expr='if(lte(T,1),A,if(gte(T,2),B,A*(if(gte(T,1),1,T/1))+B*(1-(if(gte(T,1),1,T/1)))))',format=yuva422p10le"  -y out.mp4
+
+
+A*(if(gte(T,3),1,T/3)) : fin
+B*(1-(if(gte(T,3),1,T/2)): debut
+
+
+A*(1-(if(gt(T,2.5),1,if(lte(T,1.1),0,min(max((T-1.1)/1.3,0),1))))) : new debut
+B*(if(gte(T,2.5),1,if(lte(T,1.1),0,min(max((T-1.1)/1.3,0),1)))) : new fin
+
+B*(1-(if(gte(T,3),1,T/3)))
+
+
+
+A*(if(gte(T,3),1,T/3))+B*(1-(if(gte(T,3),1,T/3)))
+
+
+
+if(lte(T,1),A,if(gte(T,2),B,0))
+if(lte(T,1),A,if(gte(T,2),B,A*(if(gte(T,1),1,T/1))+B*(1-(if(gte(T,1),1,T/1)))))
+
+
+A*(if(gte(T,2),1,T/2))+B*(1-(if(gte(T,2),1,T/2)))
+
+
+
+
+
+
+------------------------ decompose
+
+# to images
+ffmpeg -i "2014-08-22 (02) Manon balaie.mp4" -r 30 -f image2 img\image-%4d.png
+
+# from images
+ffmpeg -framerate 30 -i img\image-%4d.png -f mp4 -y out.mp4
+
+
+
+------------------------ zoompan / images
+
+ffmpeg -loop 1 -r 30 -i France_relief_location_map.jpg -filter_complex "color=size=hd720:color=Black [a];[0] scale=750x720, zoompan=z='zoom+0.0433':d=150:x='iw':y='ih':s=750x720 [b]; [a][b] overlay=x=(W-w)/2 [out]" -map [out] -c:v libx264 -t 3 -y final.mp4
+
+
+
+------------------------ volumedetect
+http://superuser.com/questions/323119/how-can-i-normalize-audio-using-ffmpeg
+
+LINUX
+ffmpeg -i 566.mp4 -af "volumedetect" -f null /dev/null
+
+WINDOWS
+ffmpeg -i 566.mp4 -af "volumedetect" -f null NUL
+
+
+[Parsed_volumedetect_0 @ 0394e8e0] n_samples: 191488
+[Parsed_volumedetect_0 @ 0394e8e0] mean_volume: -17.9 dB
+[Parsed_volumedetect_0 @ 0394e8e0] max_volume: 0.0 dB
+[Parsed_volumedetect_0 @ 0394e8e0] histogram_0db: 46
+[Parsed_volumedetect_0 @ 0394e8e0] histogram_1db: 32
+[Parsed_volumedetect_0 @ 0394e8e0] histogram_2db: 41
+[Parsed_volumedetect_0 @ 0394e8e0] histogram_3db: 77
+
+
+[Parsed_volumedetect_0 @ 02280500] n_samples: 506274048
+[Parsed_volumedetect_0 @ 02280500] mean_volume: -17.4 dB
+[Parsed_volumedetect_0 @ 02280500] max_volume: 0.0 dB
+[Parsed_volumedetect_0 @ 02280500] histogram_0db: 606424
+	

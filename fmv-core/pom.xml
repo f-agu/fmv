@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<groupId>org.fagu</groupId>
+		<artifactId>fmv-parent</artifactId>
+		<version>0.5.11-SNAPSHOT</version>
+	</parent>
+    
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>fmv-core</artifactId>
+	<packaging>jar</packaging>
+	<name>fmv-core</name>
+	<description>FMV core - kernel pour le montage video</description>
+    
+    <dependencies>
+		<dependency>
+			<groupId>org.fagu</groupId>
+			<artifactId>fmv-ffmpeg</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.fagu</groupId>
+			<artifactId>fmv-image</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<artifactId>gs-core</artifactId>
+			<groupId>org.graphstream</groupId>
+			<version>1.3</version>
+  		</dependency>		
+			
+		<!-- tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+
+</project>
+

@@ -1,0 +1,212 @@
+Hibernate: select this_.contact_id as contact_2_33_3_, this_.contact_address as contact_3_33_3_, this_.contact_city as contact_4_33_3_, this_.contact_company as contact_5_33_3_, this_.contact_status_id as contact_6_33_3_, this_.contact_type_id as contact_1_33_3_, this_.contact_country as contact_7_33_3_, this_.contact_createdate as contact_8_33_3_, this_.contact_department as contact_9_33_3_, this_.contact_email as contact10_33_3_, this_.contact_firstname as contact11_33_3_, this_.contact_function as contact12_33_3_, this_.contact_lastname as contact13_33_3_, this_.contact_login as contact14_33_3_, this_.contact_password as contact15_33_3_, this_.contact_phone as contact16_33_3_, this_.account_id as account17_33_3_, this_.contact_workspace_id as contact18_33_3_, this_.contact_zipcode as contact19_33_3_, booleanatt2_.contact_id as contact_2_33_5_, booleanatt2_.contact_id as contact_2_49_5_, booleanatt2_.key as key1_49_5_, booleanatt2_.key as key1_5_, booleanatt2_.contact_id as contact_2_49_0_, booleanatt2_.key as key1_49_0_, booleanatt2_.value as value3_49_0_, permission3_.contact_contact_id as contact_1_33_6_, contactper4_.contact_id as permissi2_35_6_, contactper4_.contact_right_class as permissi3_35_6_, permission3_.contact_right_class as contact_4_6_, contactper4_.contact_id as contact_3_36_1_, contactper4_.contact_right_class as contact_1_36_1_, contactper4_.contact_right_value as contact_2_36_1_, contactpar5_.contact_id as contact_1_53_2_, contactpar5_.contact_enddate as contact_2_53_2_, contactpar5_.contact_usesms as contact_3_53_2_ from contact this_
+ left outer join es_contact_attribute_boolean booleanatt2_ on this_.contact_id=booleanatt2_.contact_id
+ left outer join contact_contact_right permission3_ on this_.contact_id=permission3_.contact_contact_id
+ left outer join contact_right contactper4_ on permission3_.permissionsMap_contact_id=contactper4_.contact_id and permission3_.permissionsMap_contact_right_class=contactper4_.contact_right_class
+ left outer join es_contact_parameters contactpar5_ on this_.contact_id=contactpar5_.contact_id where this_.contact_id=?
+11:45:36,939 WARN   - SQL Error: 0, SQLState: 42P01
+
+
+
+"C:\Program Files\FFMpeg\bin\ffmpeg.exe"
+   -i c:\tmp\preview\tsuC2Gla3gB01jtJZTnB-g.mp4
+   -i c:\tmp\preview\U1DjsQ8RnUzkPHsgprdwlQ.mp4
+   -i c:\tmp\preview\ciburLDJqtmd07pz4ywzug.mp4
+   -i c:\tmp\preview\NOmCcyRsA0-amBR1Su87Hw.mp4
+   -i c:\tmp\preview\taubfVKPoBXQ7_FXPy_CGg.mp4
+   -i c:\tmp\preview\HQe9mKaCoXRv9QluqtjTmA.mp4
+   -i c:\tmp\preview\zH6ic6D6yO_oY8Xqsl63yg.mp4
+   -i c:\tmp\preview\dej1xEr_eE9cPMDH4tUZvw.mp4
+   -i c:\tmp\preview\o7Cazy8cn3uvn31FQVeA4w.mp4
+   -i c:\tmp\preview\JDriwOPoFRS3GsIZ42XkCg.mp4
+   -i c:\tmp\preview\NrxdfF6qvvhhcDQDQAWzuA.mp4
+   -i c:\tmp\preview\ITO4FuR4KOSTlsYlU_-18w.mp4
+   -i c:\tmp\preview\XgrkYd2W9mXWLUD96QNNTw.mp4
+   -i c:\tmp\preview\1JsOBkKjvDRYNCl9B__dmQ.mp4
+   -i c:\tmp\preview\Tgf8PzmRdpe26xN3XxqntQ.mp4
+   -i c:\tmp\preview\oKLyTYSs6-nC5Y1-oJH_Ig.mp4
+   -i c:\tmp\preview\Mydsg7GryTdWuDLBZwhwpQ.mp4
+   -i c:\tmp\preview\NRxmNOiqMWkvLVbjrZBYvQ.mp4
+   -i c:\tmp\preview\-TuHBXfChqFWE0tkfRHBEw.mp4
+   -i c:\tmp\preview\gRGkwquMGogSTFYeQREfMQ.mp4
+   -i c:\tmp\preview\14UoMWOIZSF3cisZ6O9grw.mp4
+   -i c:\tmp\preview\Mr0FNtlJD-ms-W2_rm42jQ.mp4
+   -i c:\tmp\preview\jC3hP8oXuYFYS0NvO6bJOA.mp4
+   -i c:\tmp\preview\7oXUQ8u_Rnp_37U4OtjstQ.mp4
+   -i c:\tmp\preview\kJwXeEgTnHqgtimXDyv3Pw.mp4
+   -i c:\tmp\preview\9dbn8nVIiHm8CCOs39quxg.mp4
+   -i c:\tmp\preview\TG6wl625ruKEr1Q4AG-IWg.mp4
+   -i c:\tmp\preview\F4ssvTnP_EW5Sos8fBQJ8A.mp4
+   -i c:\tmp\preview\S0X8Eg6bVBJlMJsIaVx8Mg.mp4
+   -i c:\tmp\preview\v0qL5wd38--Y-JNA8Z9MBQ.mp4
+   -i c:\tmp\preview\Xva0kwD47Ggi3a0S5v7p0g.mp4
+   -i c:\tmp\preview\O0BuIojzfNNo2xRp49407Q.mp4
+   -i c:\tmp\preview\ycL3Bc76hKAJKgxOX6rQOQ.mp4
+   -i c:\tmp\preview\dDurusyD31SVsB0-hDwJoA.mp4
+   -i c:\tmp\preview\NOJtdnpoLAGqCMr1QgHcsw.mp4
+   -i c:\tmp\preview\-1O27kZ0xz-39TMD4QiHJw.mp4
+   -i c:\tmp\preview\neh-R4OrAs2ykOoVhT6fFQ.mp4
+   -i c:\tmp\preview\DSkT7EyUDBaLGq2X6ey12Q.mp4
+   -i c:\tmp\preview\dk4RHokGKScPlHwsz6QiBQ.mp4
+   -i c:\tmp\preview\ZoO1nTf4khdzUp4OqZuPUw.mp4
+   -i c:\tmp\preview\DXCSBP462FwylfC_GKBNYA.mp4
+   -i c:\tmp\preview\swdVbfMu1SKZFPWTWsrh7Q.mp4
+   -i c:\tmp\preview\QNFcWO6e9sWmCEKa85dqjg.mp4
+   -i c:\tmp\preview\mDRvGQuHx4bZdvJZ6UVFzA.mp4
+   -i c:\tmp\preview\RPL0JiOrY1A-GuLqozcw9A.mp4
+   -i c:\tmp\preview\K_VXvdKR_HA_Kggg5F9VWw.mp4
+   -i c:\tmp\preview\RbC6yDLbr5j6yDEm5ANLDQ.mp4
+   -i c:\tmp\preview\QrPGOjUOqEbviL9Lz44kWg.mp4
+   -i c:\tmp\preview\eySLo2ZlPEuVjvUQL6gAqQ.mp4
+   -i c:\tmp\preview\TMevA0Ag-F_3OtYYJsKJbA.mp4
+   -i c:\tmp\preview\ycDIhe4uzRqBnONpa-hCxA.mp4
+   -i c:\tmp\preview\2VXSGen9nNmZqGVAfMUHrQ.mp4
+ 
+ -filter_complex "[0:v] setpts=PTS-STARTPTS [f_de];[0:a] asetpts=PTS-STARTPTS [f_df];
+     [1:v] setpts=PTS-STARTPTS [f_dg];
+     [1:a] asetpts=PTS-STARTPTS [f_dh];
+     [2:v] setpts=PTS-STARTPTS [f_di];
+     [2:a] asetpts=PTS-STARTPTS [f_dj];
+     [3:v] setpts=PTS-STARTPTS [f_dk];
+     [3:a] asetpts=PTS-STARTPTS [f_dl];
+     [4:v] setpts=PTS-STARTPTS [f_dm];
+     [4:a] asetpts=PTS-STARTPTS [f_dn];
+     [5:v] setpts=PTS-STARTPTS [f_do];
+     [5:a] asetpts=PTS-STARTPTS [f_dp];
+     [6:v] setpts=PTS-STARTPTS [f_ea];
+     [6:a] asetpts=PTS-STARTPTS [f_eb];
+     [7:v] setpts=PTS-STARTPTS [f_ec];
+     [7:a] asetpts=PTS-STARTPTS [f_ed];
+     [8:v] setpts=PTS-STARTPTS [f_ee];
+     [8:a] asetpts=PTS-STARTPTS [f_ef];
+     [9:v] setpts=PTS-STARTPTS [f_eg];
+     [9:a] asetpts=PTS-STARTPTS [f_eh];
+     [10:v] setpts=PTS-STARTPTS [f_ei];
+     [10:a] asetpts=PTS-STARTPTS [f_ej];
+     [11:v] setpts=PTS-STARTPTS [f_ek];
+     [11:a] asetpts=PTS-STARTPTS [f_el];
+     [12:v] setpts=PTS-STARTPTS [f_em];
+     [12:a] asetpts=PTS-STARTPTS [f_en];
+     [13:v] setpts=PTS-STARTPTS [f_eo];
+     [13:a] asetpts=PTS-STARTPTS [f_ep];
+     [14:v] setpts=PTS-STARTPTS [f_fa];
+     [14:a] asetpts=PTS-STARTPTS [f_fb];
+     [15:v] setpts=PTS-STARTPTS [f_fc];
+     [15:a] asetpts=PTS-STARTPTS [f_fd];
+     [16:v] setpts=PTS-STARTPTS [f_fe];
+     [16:a] asetpts=PTS-STARTPTS [f_ff];
+     [17:v] setpts=PTS-STARTPTS [f_fg];
+     [17:a] asetpts=PTS-STARTPTS [f_fh];
+     [18:v] setpts=PTS-STARTPTS [f_fi];
+     [18:a] asetpts=PTS-STARTPTS [f_fj];
+     [19:v] setpts=PTS-STARTPTS [f_fk];
+     [19:a] asetpts=PTS-STARTPTS [f_fl];
+     [20:v] setpts=PTS-STARTPTS [f_fm];
+     [20:a] asetpts=PTS-STARTPTS [f_fn];
+     [21:v] setpts=PTS-STARTPTS [f_fo];
+     [21:a] asetpts=PTS-STARTPTS [f_fp];
+     [22:v] setpts=PTS-STARTPTS [f_ga];
+     [22:a] asetpts=PTS-STARTPTS [f_gb];
+     [23:v] setpts=PTS-STARTPTS [f_gc];
+     [23:a] asetpts=PTS-STARTPTS [f_gd];
+     [24:v] setpts=PTS-STARTPTS [f_ge];
+     [24:a] asetpts=PTS-STARTPTS [f_gf];
+     [25:v] setpts=PTS-STARTPTS [f_gg];
+     [25:a] asetpts=PTS-STARTPTS [f_gh];
+     [26:v] setpts=PTS-STARTPTS [f_gi];
+     [26:a] asetpts=PTS-STARTPTS [f_gj];
+     [27:v] setpts=PTS-STARTPTS [f_gk];
+     [27:a] asetpts=PTS-STARTPTS [f_gl];
+     [28:v] setpts=PTS-STARTPTS [f_gm];
+     [28:a] asetpts=PTS-STARTPTS [f_gn];
+     [29:v] setpts=PTS-STARTPTS [f_go];
+     [29:a] asetpts=PTS-STARTPTS [f_gp];
+     [30:v] setpts=PTS-STARTPTS [f_ha];
+     [30:a] asetpts=PTS-STARTPTS [f_hb];
+     [31:v] setpts=PTS-STARTPTS [f_hc];
+     [31:a] asetpts=PTS-STARTPTS [f_hd];
+     [32:v] setpts=PTS-STARTPTS [f_he];
+     [32:a] asetpts=PTS-STARTPTS [f_hf];
+     [33:v] setpts=PTS-STARTPTS [f_hg];
+     [33:a] asetpts=PTS-STARTPTS [f_hh];
+     [34:v] setpts=PTS-STARTPTS [f_hi];
+     [34:a] asetpts=PTS-STARTPTS [f_hj];
+     [35:v] setpts=PTS-STARTPTS [f_hk];
+     [35:a] asetpts=PTS-STARTPTS [f_hl];
+     [36:v] setpts=PTS-STARTPTS [f_hm];
+     [36:a] asetpts=PTS-STARTPTS [f_hn];
+     [37:v] setpts=PTS-STARTPTS [f_ho];
+     [37:a] asetpts=PTS-STARTPTS [f_hp];
+     [38:v] setpts=PTS-STARTPTS [f_ia];
+     [38:a] asetpts=PTS-STARTPTS [f_ib];
+     [39:v] setpts=PTS-STARTPTS [f_ic];
+     [39:a] asetpts=PTS-STARTPTS [f_id];
+     [40:v] setpts=PTS-STARTPTS [f_ie];
+     [40:a] asetpts=PTS-STARTPTS [f_if];
+     [41:v] setpts=PTS-STARTPTS [f_ig];
+     [41:a] asetpts=PTS-STARTPTS [f_ih];
+     [42:v] setpts=PTS-STARTPTS [f_ii];
+     [42:a] asetpts=PTS-STARTPTS [f_ij];
+     [43:v] setpts=PTS-STARTPTS [f_ik];
+     [43:a] asetpts=PTS-STARTPTS [f_il];
+     [44:v] setpts=PTS-STARTPTS [f_im];
+     [44:a] asetpts=PTS-STARTPTS [f_in];
+     [45:v] setpts=PTS-STARTPTS [f_io];
+     [45:a] asetpts=PTS-STARTPTS [f_ip];
+     [46:v] setpts=PTS-STARTPTS [f_ja];
+     [46:a] asetpts=PTS-STARTPTS [f_jb];
+     [47:v] setpts=PTS-STARTPTS [f_jc];
+     [47:a] asetpts=PTS-STARTPTS [f_jd];
+     [48:v] setpts=PTS-STARTPTS [f_je];
+     [48:a] asetpts=PTS-STARTPTS [f_jf];
+     [49:v] setpts=PTS-STARTPTS [f_jg];
+     [49:a] asetpts=PTS-STARTPTS [f_jh];
+     [50:v] setpts=PTS-STARTPTS [f_ji];
+     [50:a] asetpts=PTS-STARTPTS [f_jj];
+     [51:v] setpts=PTS-STARTPTS [f_jk];
+     [51:a] asetpts=PTS-STARTPTS [f_jl];
+     [f_de][f_df][f_dg][f_dh][f_di][f_dj][f_dk][f_dl][f_dm][f_dn][f_do][f_dp][f_ea][f_eb][f_ec][f_ed][f_ee][f_ef][f_eg][f_eh][f_ei][f_ej][f_ek][f_el][f_em][f_en][f_eo][f_ep][f_fa][f_fb][f_fc][f_fd][f_fe][f_ff][f_fg][f_fh][f_fi][f_fj][f_fk][f_fl][f_fm][f_fn][f_fo][f_fp][f_ga][f_gb][f_gc][f_gd][f_ge][f_gf][f_gg][f_gh][f_gi][f_gj][f_gk][f_gl][f_gm][f_gn][f_go][f_gp][f_ha][f_hb][f_hc][f_hd][f_he][f_hf][f_hg][f_hh][f_hi][f_hj][f_hk][f_hl][f_hm][f_hn][f_ho][f_hp][f_ia][f_ib][f_ic][f_id][f_ie][f_if][f_ig][f_ih][f_ii][f_ij][f_ik][f_il][f_im][f_in][f_io][f_ip][f_ja][f_jb][f_jc][f_jd][f_je][f_jf][f_jg][f_jh][f_ji][f_jj][f_jk][f_jl] concat=n=52:v=1:a=1 [out]" -map [out] -q:a 0 -q:v 0 -preset medium -profile:v baseline -level 3.0 -crf 23 -f mp4 -y c:\tmp\tmp\concat-8792786947500803336.mp4
+
+
+
+[C:\Program Files\FFMpeg\bin\ffmpeg.exe, -i, c:\tmp\preview\tsuC2Gla3gB01jtJZTnB-g.mp4, -i, c:\tmp\preview\U1DjsQ8RnUzkPHsgprdwlQ.mp4, -i, c:\tmp\preview\ciburLDJqtmd07pz4ywzug.mp4, -i, c:\tmp\preview\NOmCcyRsA0-amBR1Su87Hw.mp4, -i, c:\tmp\preview\taubfVKPoBXQ7_FXPy_CGg.mp4, -i, c:\tmp\preview\HQe9mKaCoXRv9QluqtjTmA.mp4, -i, c:\tmp\preview\zH6ic6D6yO_oY8Xqsl63yg.mp4, -i, c:\tmp\preview\dej1xEr_eE9cPMDH4tUZvw.mp4, -i, c:\tmp\preview\o7Cazy8cn3uvn31FQVeA4w.mp4, -i, c:\tmp\preview\JDriwOPoFRS3GsIZ42XkCg.mp4, -i, c:\tmp\preview\NrxdfF6qvvhhcDQDQAWzuA.mp4, -i, c:\tmp\preview\ITO4FuR4KOSTlsYlU_-18w.mp4, -i, c:\tmp\preview\XgrkYd2W9mXWLUD96QNNTw.mp4, -i, c:\tmp\preview\1JsOBkKjvDRYNCl9B__dmQ.mp4, -i, c:\tmp\preview\Tgf8PzmRdpe26xN3XxqntQ.mp4, -i, c:\tmp\preview\oKLyTYSs6-nC5Y1-oJH_Ig.mp4, -i, c:\tmp\preview\Mydsg7GryTdWuDLBZwhwpQ.mp4, -i, c:\tmp\preview\NRxmNOiqMWkvLVbjrZBYvQ.mp4, -i, c:\tmp\preview\-TuHBXfChqFWE0tkfRHBEw.mp4, -i, c:\tmp\preview\gRGkwquMGogSTFYeQREfMQ.mp4, -i, c:\tmp\preview\14UoMWOIZSF3cisZ6O9grw.mp4, -i, c:\tmp\preview\Mr0FNtlJD-ms-W2_rm42jQ.mp4, -i, c:\tmp\preview\jC3hP8oXuYFYS0NvO6bJOA.mp4, -i, c:\tmp\preview\7oXUQ8u_Rnp_37U4OtjstQ.mp4, -i, c:\tmp\preview\kJwXeEgTnHqgtimXDyv3Pw.mp4, -i, c:\tmp\preview\9dbn8nVIiHm8CCOs39quxg.mp4, -i, c:\tmp\preview\TG6wl625ruKEr1Q4AG-IWg.mp4, -i, c:\tmp\preview\F4ssvTnP_EW5Sos8fBQJ8A.mp4, -i, c:\tmp\preview\S0X8Eg6bVBJlMJsIaVx8Mg.mp4, -i, c:\tmp\preview\v0qL5wd38--Y-JNA8Z9MBQ.mp4, -i, c:\tmp\preview\Xva0kwD47Ggi3a0S5v7p0g.mp4, -i, c:\tmp\preview\O0BuIojzfNNo2xRp49407Q.mp4, -i, c:\tmp\preview\ycL3Bc76hKAJKgxOX6rQOQ.mp4, -i, c:\tmp\preview\dDurusyD31SVsB0-hDwJoA.mp4, -i, c:\tmp\preview\NOJtdnpoLAGqCMr1QgHcsw.mp4, -i, c:\tmp\preview\-1O27kZ0xz-39TMD4QiHJw.mp4, -i, c:\tmp\preview\neh-R4OrAs2ykOoVhT6fFQ.mp4, -i, c:\tmp\preview\DSkT7EyUDBaLGq2X6ey12Q.mp4, -i, c:\tmp\preview\dk4RHokGKScPlHwsz6QiBQ.mp4, -i, c:\tmp\preview\ZoO1nTf4khdzUp4OqZuPUw.mp4, -i, c:\tmp\preview\DXCSBP462FwylfC_GKBNYA.mp4, -i, c:\tmp\preview\swdVbfMu1SKZFPWTWsrh7Q.mp4, -i, c:\tmp\preview\QNFcWO6e9sWmCEKa85dqjg.mp4, -i, c:\tmp\preview\mDRvGQuHx4bZdvJZ6UVFzA.mp4, -i, c:\tmp\preview\RPL0JiOrY1A-GuLqozcw9A.mp4, -i, c:\tmp\preview\K_VXvdKR_HA_Kggg5F9VWw.mp4, -i, c:\tmp\preview\RbC6yDLbr5j6yDEm5ANLDQ.mp4, -i, c:\tmp\preview\QrPGOjUOqEbviL9Lz44kWg.mp4, -i, c:\tmp\preview\eySLo2ZlPEuVjvUQL6gAqQ.mp4, -i, c:\tmp\preview\TMevA0Ag-F_3OtYYJsKJbA.mp4, -i, c:\tmp\preview\ycDIhe4uzRqBnONpa-hCxA.mp4, -i, c:\tmp\preview\2VXSGen9nNmZqGVAfMUHrQ.mp4, -filter_complex, "[0][1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20][21][22][23][24][25][26][27][28][29][30][31][32][33][34][35][36][37][38][39][40][41][42][43][44][45][46][47][48][49][50][51] concat=n=52:v=1:a=1 [out]", -map, [out], -q:a, 0, -q:v, 0, -preset, medium, -profile:v, baseline, -level, 3.0, -crf, 23, -f, mp4, -y, c:\tmp\tmp\concat-7746494511592959885.mp4]
+        audiomix shortest with 59
+[C:\Program Files\FFMpeg\bin\ffmpeg.exe, -i, c:\tmp\tmp\concat-7746494511592959885.mp4, -ss, 00:00:00.000, -i, c:\tmp\zic.mp3, -filter_complex, "[0][1] amix=duration=shortest:inputs=2", -codec:v, copy, -y, c:\tmp\tmp\audiomix-97928953188709119.mp4]
+        fade in @00:00:00.000/00:00:03.000
+[C:\Program Files\FFMpeg\bin\ffmpeg.exe, -hide_banner, -i, c:\tmp\tmp\audiomix-97928953188709119.mp4, -filter_complex, "fade=t=in:st=0.0:d=3.0 [f_gi];afade=t=in:st=0.0:d=3.0 [f_gj]", -y, -map, [f_gi], -map, [f_gj], c:\tmp\tmp\52-timeline-filteredactions2038647900514908875.mp4]
+[C:\Program Files\FFMpeg\bin\ffmpeg.exe, -i, c:\tmp\tmp\52-timeline-filteredactions2038647900514908875.mp4, -filter:v, "drawtext=fontfile=/Windows/Fonts/arial.ttf:x=0:y=main_h-text_h:text=%{pts} / %{n}:fontcolor=White", -y, c:\tmp\tmp\preview1011571744373876176.mp4]
+
+
+-filter_complex "[0:v] setpts=PTS-STARTPTS [f_a];[0:a] asetpts=PTS-STARTPTS [f_b]", -map, [f_b], -map, [f_a],
+
+
+
+ffmpeg.exe -ss 00:00:31.300 -i "D:\Personnel\Videos fagu&Vv\2014\2014-09 - Center Parcs\2014-09-13 (01) .mp4" -t 00:00:01.600 -avoid_negative_ts make_non_negative -q:a 0 -q:v 0 -f mp4 -y c:\tmp\preview\ciburLDJqtmd07pz4ywzug.mp4
+
+ffprobe -v quiet -print_format json -show_format -show_streams -i c:\tmp\preview\ciburLDJqtmd07pz4ywzug.mp4
+
+-avoid_negative_ts
+
+
+"C:\Program Files\FFMpeg\bin\ffmpeg.exe" -i c:\tmp\preview\U1DjsQ8RnUzkPHsgprdwlQ.mp4 -i c:\tmp\preview\ciburLDJqtmd07pz4ywzug.mp4 -filter_complex "[0:v] setpts=PTS-STARTPTS [f_de];[0:a] asetpts=PTS-STARTPTS [f_df];[1:v] setpts=PTS-STARTPTS [f_dg];[1:a] asetpts=PTS-STARTPTS [f_dh];[f_de][f_df][f_dg][f_dh] concat=n=2:v=1:a=1 [out]" -map [out] -q:a 0 -q:v 0 -preset medium -profile:v baseline -level 3.0 -crf 23 -f mp4 -y c:\tmp\cutfix.mp4
+
+
+-avoid_negative_ts
+
+ffmpeg.exe -ss 00:00:31.300 -i "D:\Personnel\Videos fagu&Vv\2014\2014-09 - Center Parcs\2014-09-13 (01) .mp4" -t 00:00:01.600 -avoid_negative_ts make_non_negative -q:a 0 -q:v 0 -f mp4 -y c:\tmp\tmp\plane-cut-2-1077427499296520311.mp4
+ffmpeg.exe -i c:\tmp\tmp\plane-cut-2-1077427499296520311.mp4 -filter:v "scale=320:180,drawtext=fontfile=/Windows/Fonts/arial.ttf:x=0:y=0:text=%{pts} / %{n} - ne9brdh3:fontcolor=White" -f mp4 -avoid_negative_ts make_non_negative -y c:\tmp\preview\ciburLDJqtmd07pz4ywzug.mp4
+
+
+ffmpeg.exe -hide_banner -i c:\tmp\tmp\concat-7767126867166050065.mp4 -ss 00:00:00.000 -i c:\tmp\zic.mp3 -filter_complex "[0][1] amix=duration=shortest:inputs=2", -codec:v copy -y c:\tmp\tmp\audiomix-97928953188709119.mp4
+ffmpeg.exe -hide_banner -i c:\tmp\tmp\audiomix-97928953188709119.mp4 -filter_complex, "fade=t=in:st=0.0:d=3.0 [f_gi];afade=t=in:st=0.0:d=3.0 [f_gj]" -y -map [f_gi] -map [f_gj] c:\tmp\tmp\52-timeline-filteredactions2038647900514908875.mp4
+
+
+ffmpeg.exe -hide_banner -i c:\tmp\tmp\concat-7767126867166050065.mp4 -ss 00:00:00.000 -i c:\tmp\zic.mp3 -filter_complex "[0][1] amix=duration=shortest:inputs=2 [a];[0] fade=t=in:st=0.0:d=3.0 [f_gi];[a]afade=t=in:st=0.0:d=3.0 [f_gj]" -map [f_gj] -map [f_gi] -y c:\tmp\tmp\audiomix-97928953188709119.mp4
+
+
+
+[0][1] amix=duration=shortest:inputs=2 [a];
+[0] fade=t=in:st=0.0:d=3.0 [f_gi];
+[a] afade=t=in:st=0.0:d=3.0 [f_gj]" -map [f_gj] -map [f_gi] -y c:\tmp\tmp\audiomix-97928953188709119.mp4
+ 
+
+ffmpeg.exe -hide_banner -i c:\tmp\tmp\audiomix-97928953188709119.mp4 -filter_complex, "fade=t=in:st=0.0:d=3.0 [f_gi];afade=t=in:st=0.0:d=3.0 [f_gj]" -y -map [f_gi] -map [f_gj] c:\tmp\tmp\52-timeline-filteredactions2038647900514908875.mp4

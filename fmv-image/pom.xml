@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<groupId>org.fagu</groupId>
+		<artifactId>fmv-parent</artifactId>
+		<version>0.5.11-SNAPSHOT</version>
+	</parent>
+    
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>fmv-image</artifactId>
+	<packaging>jar</packaging>
+	<name>fmv-image</name>
+	<description>Library for the image</description>
+	
+	<dependencies>
+	    <dependency>
+			<groupId>org.im4java</groupId>
+			<artifactId>im4java</artifactId>
+			<version>1.4.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.fagu</groupId>
+			<artifactId>fmv-media</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.fagu</groupId>
+			<artifactId>fmv-soft-auto</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+	        <groupId>net.sf.json-lib</groupId>
+	        <artifactId>json-lib</artifactId>
+	        <type>jar</type>
+	        <classifier>jdk15</classifier>
+	    </dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-exec</artifactId>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.fagu</groupId>
+			<artifactId>fmv-utils</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>
+

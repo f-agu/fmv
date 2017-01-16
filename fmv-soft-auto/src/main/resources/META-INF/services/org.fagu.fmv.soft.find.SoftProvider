@@ -1,0 +1,14 @@
+org.fagu.fmv.soft.ffmpeg.FFMpegSoftProvider
+org.fagu.fmv.soft.ffmpeg.FFProbeSoftProvider
+org.fagu.fmv.soft.gs.GSSoftProvider
+org.fagu.fmv.soft.im.ConvertSoftProvider
+org.fagu.fmv.soft.im.IdentifySoftProvider
+org.fagu.fmv.soft.im.MogrifySoftProvider
+org.fagu.fmv.soft.xpdf.PdfDetachSoftProvider
+org.fagu.fmv.soft.xpdf.PdfFontsSoftProvider
+org.fagu.fmv.soft.xpdf.PdfInfoSoftProvider
+org.fagu.fmv.soft.xpdf.PdfToHtmlSoftProvider
+org.fagu.fmv.soft.xpdf.PdfToPngSoftProvider
+org.fagu.fmv.soft.xpdf.PdfToPpmSoftProvider
+org.fagu.fmv.soft.xpdf.PdfToPsSoftProvider
+org.fagu.fmv.soft.xpdf.PdfToTextSoftProvider

@@ -1,0 +1,3 @@
+org.fagu.fmv.ffmpeg.executor.fallback.AAC_ADTSTOASCBitStreamFilterFFExecFallback
+org.fagu.fmv.ffmpeg.executor.fallback.Libx264NotDisibleBy2FFExecFallback
+org.fagu.fmv.ffmpeg.executor.fallback.MP4TagCodecNotFoundFFExecFallback

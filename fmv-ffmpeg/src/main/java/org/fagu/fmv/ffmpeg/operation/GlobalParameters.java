@@ -1,0 +1,78 @@
+package org.fagu.fmv.ffmpeg.operation;
+
+/*
+ * #%L
+ * fmv-ffmpeg
+ * %%
+ * Copyright (C) 2014 fagu
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import java.util.Collection;
+
+
+/**
+ * @author f.agu
+ */
+public class GlobalParameters extends IOParameters {
+
+	/**
+	 * @param abstractOperation
+	 */
+	public GlobalParameters(AbstractOperation<?, ?> abstractOperation) {
+		super(abstractOperation);
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.operation.IOParameters#add(org.fagu.fmv.ffmpeg.operation.Parameter)
+	 */
+	@Override
+	public void add(Parameter parameter) {
+		if(parameter.isGlobal()) {
+			super.add(parameter);
+		}
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.operation.IOParameters#add(int, org.fagu.fmv.ffmpeg.operation.Parameter)
+	 */
+	@Override
+	public void add(int index, Parameter parameter) {
+		if(parameter.isGlobal()) {
+			super.add(index, parameter);
+		}
+	}
+
+	/**
+	 * @param commands
+	 */
+	@Override
+	public void toArguments(Collection<String> commands) {
+		for(Parameter parameter : getParameters(null, null)) {
+			parameter.addTo(commands);
+		}
+	}
+
+	// *******************************************
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.operation.IOParameters#getCommandPrefixFile()
+	 */
+	@Override
+	String getCommandPrefixFile() {
+		return null;
+	}
+
+}

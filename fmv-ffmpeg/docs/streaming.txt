@@ -1,0 +1,41 @@
+ffmpeg -i a.mp4 -f flv - > stdout.mp4
+
+ffmpeg -i a.mp4 -codec:v libx264 -movflags +faststart -preset medium -profile:v baseline -level 3.0 -crf 23 -f mp4 - > stdout.mp4
+
+
+ffmpeg -ss 4 -i video="screen-capture-recorder" -r 30 -f mp4 out.mp4
+
+
+ffmpeg -re -i SomeVideo.mp4 -vcodec copy -an -f rtp rtp://127.0.0.1:11111 -vn -acodec copy -f rtp rtp://127.0.0.1:11112
+
+
+// http://lucabe72.blogspot.fr/2010/04/rtp-streaming-with-ffmpeg.html
+ffmpeg -re -i GOPR0715.MP4 -vcodec copy -an -f rtp rtp://127.0.0.1:11111 -vn -acodec copy -f rtp rtp://127.0.0.1:11112
+
+ffplay rtp://127.0.0.1:11112
+
+
+
+// http://ffmpeg.org/ffmpeg-all.html#Examples-13
+ffplay -max_delay 500000 -rtsp_transport udp rtsp://127.0.0.1:11112/live.sdp
+
+ffmpeg -re -i GOPR0715.MP4 -f rtsp -muxdelay 0.1 rtsp://127.0.0.1:11112/live.sdp
+
+
+
+// http://ffmpeg.org/ffmpeg-all.html#Examples-13
+ffplay -rtsp_transport http rtsp://127.0.0.1:11112/video.mp4
+
+ffmpeg -re -i GOPR0715.MP4 -f rtsp rtsp://127.0.0.1:11112/video.mp4
+
+
+
+// https://trac.ffmpeg.org/wiki/StreamingGuide
+fmpeg -y -loglevel warning -f dshow -i video="screen-capture-recorder" -vf crop=690:388:136:0 -r 30 -s 962x388 -threads 2 -vcodec libx264 -vpre baseline -vpre my_ffpreset -f flv rtmp:///live/myStream.sdp
+
+
+======= OK
+ffmpeg -re -f lavfi -i aevalsrc="sin(400*2*PI*t)" -ar 8000 -f mulaw -f rtp rtp://127.0.0.1:1234
+ffplay rtp://127.0.0.1:1234
+
+
