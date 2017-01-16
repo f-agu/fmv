@@ -13,13 +13,6 @@
 	<description>Library common for media</description>
 	
 	<dependencies>
-	    <dependency>
-			<groupId>org.im4java</groupId>
-			<artifactId>im4java</artifactId>
-			<version>1.4.0</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.fagu</groupId>
 			<artifactId>fmv-utils</artifactId>

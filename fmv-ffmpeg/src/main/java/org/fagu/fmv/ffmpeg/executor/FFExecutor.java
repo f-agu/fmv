@@ -361,7 +361,7 @@ public class FFExecutor<R> {
 
 		private List<String> arguments;
 
-		private File fffile;
+		private File ffFile;
 
 		private CommandLine commandLine;
 
@@ -371,8 +371,8 @@ public class FFExecutor<R> {
 		 * @throws IOException
 		 */
 		private Prepare() throws IOException {
-			fffile = Soft.search(operation.getFFName()).getFile();
-			if(fffile == null) {
+			ffFile = Soft.search(operation.getFFName()).getFile();
+			if(ffFile == null) {
 				throw new FileNotFoundException("FFName " + operation.getFFName() + " not found or not declared. Use FFLocator.");
 			}
 		}
@@ -382,7 +382,7 @@ public class FFExecutor<R> {
 		 */
 		public FMVExecutor getExecutor() {
 			if(executor == null) {
-				executor = FMVExecutor.create(fffile.getParentFile(), getOutReadLine(), getErrReadLine());
+				executor = FMVExecutor.create(ffFile.getParentFile(), getOutReadLine(), getErrReadLine());
 				populateWithListeners(executor);
 			}
 			return executor;
@@ -393,7 +393,7 @@ public class FFExecutor<R> {
 		 */
 		public CommandLine getCommandLine() {
 			if(commandLine == null) {
-				commandLine = FMVCommandLine.create(fffile, getArguments());
+				commandLine = FMVCommandLine.create(ffFile, getArguments());
 			}
 			return commandLine;
 		}
@@ -416,13 +416,13 @@ public class FFExecutor<R> {
 			try {
 				return _execute();
 			} catch(IOException e) {
-				FFExecListener ffExecListener = new Proxifier<FFExecListener>(FFExecListener.class).addAll(ffExecListeners).proxify();
+				FFExecListener ffExecListener = new Proxifier<>(FFExecListener.class).addAll(ffExecListeners).proxify();
 				ffExecListener.eventExecFailed(e, executor, getCommandLine());
 				Executed<R> runFallbacks = runFallbacks(e, ffExecListener);
 				if(runFallbacks != null) {
 					return runFallbacks;
 				}
-				throw new ExecuteIOException(e, fffile.getPath() + ' ' + getArguments().toString(), outputs);
+				throw new ExecuteIOException(e, ffFile.getPath() + ' ' + getArguments().toString(), outputs);
 			}
 		}
 
@@ -482,7 +482,7 @@ public class FFExecutor<R> {
 						ffs.add(fallback);
 					}
 				} catch(IOException fbe) {
-					throw new ExecuteIOException(e, fffile.getPath() + ' ' + getArguments().toString(), outputs);
+					throw new ExecuteIOException(e, ffFile.getPath() + ' ' + getArguments().toString(), outputs);
 				}
 			}
 			if( ! ffs.isEmpty()) {
@@ -490,7 +490,7 @@ public class FFExecutor<R> {
 					ffExecListener.eventPreExecFallbacks(executor, getCommandLine(), ffs);
 					return _execute();
 				} catch(IOException fbe) {
-					throw new ExecuteIOException(e, fffile.getPath() + ' ' + getArguments().toString(), outputs);
+					throw new ExecuteIOException(e, ffFile.getPath() + ' ' + getArguments().toString(), outputs);
 				}
 			}
 			ffExecListener.eventFallbackNotFound(executor, getCommandLine(), Collections.unmodifiableList(outputs));

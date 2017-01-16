@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -34,6 +35,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableSet;
+import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -42,15 +45,14 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.image.soft.OverrideIdentifyCmd;
+import org.fagu.fmv.im.IMOperation;
 import org.fagu.fmv.media.MetadataProperties;
 import org.fagu.fmv.media.Metadatas;
+import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.im.Identify;
 import org.fagu.fmv.utils.media.Size;
-import org.im4java.core.IM4JavaException;
-import org.im4java.core.IMOperation;
-import org.im4java.core.IdentifyCmd;
-import org.im4java.process.ArrayListOutputConsumer;
 
 import net.sf.json.JSONObject;
 
@@ -194,6 +196,34 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 	 */
 	public String getColorSpace() {
 		return metadatas.get("colorspace");
+	}
+
+	/**
+	 * @return
+	 */
+	public int getColorDepth() {
+		return NumberUtils.toInt(metadatas.get("cdepth"));
+	}
+
+	/**
+	 * @return
+	 */
+	public int getCompressionQuality() {
+		return NumberUtils.toInt(metadatas.get("compressionq"));
+	}
+
+	/**
+	 * @return
+	 */
+	public String getCompression() {
+		return metadatas.get("compression");
+	}
+
+	/**
+	 * @return
+	 */
+	public String getResolutionUnit() {
+		return metadatas.get("resunit");
 	}
 
 	/**
@@ -410,46 +440,58 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 	 * @throws IOException
 	 */
 	public static Map<File, ImageMetadatas> extract(Collection<File> sourceFiles, Consumer<String> logger) throws IOException {
+		Soft identifySoft = Identify.search();
+		return extract(identifySoft, sourceFiles, logger);
+	}
+
+	/**
+	 * @param identifySoft
+	 * @param sourceFiles
+	 * @param logger
+	 * @return
+	 * @throws IOException
+	 */
+	public static Map<File, ImageMetadatas> extract(Soft identifySoft, Collection<File> sourceFiles, Consumer<String> logger) throws IOException {
+		Objects.requireNonNull(identifySoft);
 		if(sourceFiles.isEmpty()) {
 			return Collections.emptyMap();
 		}
+
+		final String boundary = "BOUNDARY";
 		// prepare
 		IMOperation op = new IMOperation();
-		op.ping();
-		op.format();
-		op.addRawArgs("==%f==\n%[exif:*]%[date:*]%[xap:*]xy=%x %y\ncolorspace=%[colorspace]\nwh=%w %h\n");
-		int size = sourceFiles.size();
-		Object[] files = new Object[size];
-		Iterator<File> srcFileIterator = sourceFiles.iterator();
-		int i = 0;
-		while(srcFileIterator.hasNext()) {
-			op.addImage();
-			files[i++] = srcFileIterator.next().getAbsolutePath() + "[0]";
-		}
+		StringJoiner joiner = new StringJoiner("\n");
+		joiner.add("==%f==");
+		joiner.add("%[exif:*]%[date:*]%[xap:*]xy=%x %y");
+		joiner.add("colorspace=%[colorspace]");
+		joiner.add("wh=%w %h");
+		joiner.add("cdepth=%z");
+		joiner.add("compression=%C");
+		joiner.add("compressionq=%Q");
+		joiner.add("resunit=%U");
+		joiner.add(boundary);
 
-		// run
-		ArrayListOutputConsumer outputConsumer = new ArrayListOutputConsumer();
-		IdentifyCmd cmd = new OverrideIdentifyCmd(logger);
-		cmd.setOutputConsumer(outputConsumer);
-		try {
-			cmd.run(op, files);
-		} catch(InterruptedException e) {
-			throw new IOException(e);
-		} catch(IM4JavaException e) {
-			throw new IOException(e);
-		}
+		op.ping().format(joiner.toString() + "\n");
+
+		int size = sourceFiles.size();
+		sourceFiles.forEach(file -> op.image(file, "[0]"));
+
+		List<String> outputs = new ArrayList<>();
+		identifySoft.withParameters(op.toList())
+				.addOutReadLine(outputs::add)
+				.logCommandLine(logger)
+				.execute();
 
 		// parse output
 		Map<File, ImageMetadatas> outMap = new LinkedHashMap<>(size);
-		List<String> lines = outputConsumer.getOutput();
-		srcFileIterator = sourceFiles.iterator();
+		Iterator<File> srcFileIterator = sourceFiles.iterator();
 		TreeMap<String, String> params = null;
 		File currentFile = null;
-		for(String line : lines) {
-			if(StringUtils.isBlank(line)) {
+		for(String line : outputs) {
+			if(StringUtils.isBlank(line) || boundary.equals(line)) {
 				continue;
 			}
-			if(line.startsWith("==") && line.endsWith("==")) {
+			if((line.startsWith("==") || line.startsWith(boundary + "==")) && line.endsWith("==")) {
 				if(currentFile != null) {
 					outMap.put(currentFile, new ImageMetadatas(params));
 				}

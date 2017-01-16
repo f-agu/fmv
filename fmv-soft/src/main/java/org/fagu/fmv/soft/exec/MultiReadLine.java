@@ -55,4 +55,12 @@ public class MultiReadLine implements ReadLine {
 			readLine.read(line);
 		}
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return readLines.toString();
+	}
 }

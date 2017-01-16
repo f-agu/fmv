@@ -91,4 +91,12 @@ public class LibLogReadLine implements ReadLine {
 		}
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Lib";
+	}
+
 }

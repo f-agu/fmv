@@ -18,12 +18,7 @@
  * limitations under the License.
  * #L%
  */
-import java.io.IOException;
-
 import org.fagu.fmv.soft.im.Convert;
-import org.im4java.core.IM4JavaException;
-import org.im4java.core.IMOperation;
-import org.im4java.process.ArrayListOutputConsumer;
 
 
 /**
@@ -42,23 +37,23 @@ public class TestPipe {
 	public static void main(String[] args) throws Exception {
 		Convert.search();
 
-		IMOperation op = new IMOperation();
-		op.addImage();
-		op.autoOrient();
-		op.quality(60D);
-		op.addImage();
-
-		OverrideRunConvertCmd convertCmd = new OverrideRunConvertCmd();
-		// ConvertCmd convertCmd = new ConvertCmd();
-		// convertCmd.setInputProvider(pInputProvider);
-
-		ArrayListOutputConsumer outputConsumer = new ArrayListOutputConsumer();
-		// convertCmd.setOutputConsumer(outputConsumer);
-		try {
-			convertCmd.run(op, "-", "jpg:-");
-		} catch(IM4JavaException | InterruptedException e) {
-			throw new IOException(e);
-		}
+		// IMOperation op = new IMOperation();
+		// op.addImage();
+		// op.autoOrient();
+		// op.quality(60D);
+		// op.addImage();
+		//
+		// OverrideRunConvertCmd convertCmd = new OverrideRunConvertCmd();
+		// // ConvertCmd convertCmd = new ConvertCmd();
+		// // convertCmd.setInputProvider(pInputProvider);
+		//
+		// ArrayListOutputConsumer outputConsumer = new ArrayListOutputConsumer();
+		// // convertCmd.setOutputConsumer(outputConsumer);
+		// try {
+		// convertCmd.run(op, "-", "jpg:-");
+		// } catch(IM4JavaException | InterruptedException e) {
+		// throw new IOException(e);
+		// }
 	}
 
 }

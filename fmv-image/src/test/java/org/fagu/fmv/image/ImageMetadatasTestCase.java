@@ -51,7 +51,8 @@ public class ImageMetadatasTestCase {
 	@Test
 	public void testSimple() throws Exception {
 		Package pkg = ImageMetadatas.class.getPackage();
-		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), ImageMetadatasTestCase.class.getSimpleName(), ".jpg");
+		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), ImageMetadatasTestCase.class
+				.getSimpleName(), ".jpg");
 		try {
 			ImageMetadatas metadatas = ImageMetadatas.extract(file);
 			assertMetadatas_BadAssTottooFail(metadatas);
@@ -68,10 +69,12 @@ public class ImageMetadatasTestCase {
 	@Test
 	public void testMultiple() throws Exception {
 		Package pkg = ImageMetadatas.class.getPackage();
-		File file1 = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), ImageMetadatasTestCase.class.getSimpleName(), ".jpg");
+		File file1 = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), ImageMetadatasTestCase.class
+				.getSimpleName(), ".jpg");
 		File file2 = Resources.extractToTempFile(Resources.getResourcePath(pkg, "wei-ass.jpg"), ImageMetadatasTestCase.class.getSimpleName(), ".jpg");
+
 		try {
-			Map<File, ImageMetadatas> map = ImageMetadatas.extract(Arrays.asList(file2, file1));
+			Map<File, ImageMetadatas> map = ImageMetadatas.extract(Arrays.asList(file2, file1), System.out::println);
 			Iterator<ImageMetadatas> iterator = map.values().iterator();
 			assertMetadatas_WeiAss(iterator.next());
 			assertMetadatas_BadAssTottooFail(iterator.next());
@@ -92,7 +95,8 @@ public class ImageMetadatasTestCase {
 	@Ignore
 	public void testExtractSingleton() throws Exception {
 		Package pkg = ImageMetadatas.class.getPackage();
-		final File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "plan4-550Mpixels.tif"), ImageMetadatasTestCase.class.getSimpleName(), ".tif");
+		final File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "plan4-550Mpixels.tif"), ImageMetadatasTestCase.class
+				.getSimpleName(), ".tif");
 		try {
 			Runnable runnable = new Runnable() {
 

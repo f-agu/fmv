@@ -1,13 +1,13 @@
 -- release
 svn co https://svn.code.sf.net/p/fmv/code/trunk .
-mvn -Dtag=0.5.9 -DreleaseVersion=0.5.9 -DdevelopmentVersion=0.5.10-SNAPSHOT -U -B clean release:prepare
+mvn -Dtag=0.5.10 -DreleaseVersion=0.5.10 -DdevelopmentVersion=0.5.11-SNAPSHOT -U -B clean release:prepare
 
 svn up .
 svn revert -R .
 
 
 -- push to maven repo
-svn co https://svn.code.sf.net/p/fmv/code/tags/0.5.9 .
+svn sw https://svn.code.sf.net/p/fmv/code/tags/0.5.10 .
 mvn -U clean deploy
 
 

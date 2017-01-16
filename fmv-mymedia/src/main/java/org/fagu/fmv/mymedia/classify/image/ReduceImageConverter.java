@@ -22,8 +22,8 @@ package org.fagu.fmv.mymedia.classify.image;
 
 import java.io.File;
 
+import org.fagu.fmv.im.IMOperation;
 import org.fagu.fmv.utils.media.Size;
-import org.im4java.core.IMOperation;
 
 
 /**
@@ -66,7 +66,7 @@ public class ReduceImageConverter extends AbstractImageConverter {
 	// **********************************************************
 
 	/**
-	 * @see org.fagu.fmv.mymedia.classify.image.AbstractImageConverter#populateOperation(org.im4java.core.IMOperation)
+	 * @see org.fagu.fmv.mymedia.classify.image.AbstractImageConverter#populateOperation(org.fagu.fmv.im.IMOperation)
 	 */
 	@Override
 	protected void populateOperation(IMOperation op) {

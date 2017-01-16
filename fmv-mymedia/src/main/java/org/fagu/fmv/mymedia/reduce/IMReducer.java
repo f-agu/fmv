@@ -24,10 +24,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.fagu.fmv.im.IMOperation;
+import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.im.Convert;
-import org.im4java.core.IM4JavaException;
-import org.im4java.core.IMOperation;
-import org.im4java.process.ArrayListOutputConsumer;
 
 
 /**
@@ -69,22 +68,14 @@ public class IMReducer extends AbstractReducer {
 	 */
 	@Override
 	public File reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException {
-		IMOperation op = new IMOperation();
-		op.addImage();
-		op.autoOrient();
-		op.quality(quality);
-		op.addImage();
-
 		File destFile = getTempFile(srcFile, format);
+		IMOperation op = new IMOperation();
+		op.image(srcFile, "[0]").autoOrient().quality(quality).image(destFile);
 
-		OverrideLogConvertCmd convertCmd = new OverrideLogConvertCmd(logger);
-		ArrayListOutputConsumer outputConsumer = new ArrayListOutputConsumer();
-		convertCmd.setOutputConsumer(outputConsumer);
-		try {
-			convertCmd.run(op, srcFile.getAbsolutePath() + "[0]", destFile.getAbsolutePath());
-		} catch(IM4JavaException | InterruptedException e) {
-			throw new IOException(e);
-		}
+		Soft convertSoft = Convert.search();
+		convertSoft.withParameters(op.toList())
+				.logCommandLine(line -> logger.log("Exec: " + line))
+				.execute();
 		return destFile;
 	}
 

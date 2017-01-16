@@ -232,6 +232,22 @@ public class Soft {
 		}
 
 		/**
+		 * @param commandLineConsumer
+		 * @return
+		 */
+		public SoftExecutor logCommandLine(Consumer<String> commandLineConsumer) {
+			return addListener(new ExecListener() {
+
+				@Override
+				public void eventPrepare(String cmdLineStr) {
+					if(commandLineConsumer != null) {
+						commandLineConsumer.accept(cmdLineStr);
+					}
+				}
+			});
+		}
+
+		/**
 		 * @return Executed time in milliseconds
 		 * @throws IOException
 		 */
@@ -244,7 +260,8 @@ public class Soft {
 
 			List<String> readLineList = new ArrayList<>();
 			BufferedReadLine bufferedReadLine = new BufferedReadLine(readLineList);
-			FMVExecutor fmvExecutor = FMVExecutor.create(execFile.getParentFile(), getOutReadLine(bufferedReadLine), getErrReadLine(bufferedReadLine));
+			FMVExecutor fmvExecutor = FMVExecutor.create(execFile.getParentFile(), getOutReadLine(bufferedReadLine), getErrReadLine(
+					bufferedReadLine));
 			applyCustomizeExecutor(fmvExecutor);
 
 			long startTime = System.currentTimeMillis();

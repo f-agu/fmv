@@ -7,32 +7,31 @@ package org.fagu.fmv.image;
  * Copyright (C) 2014 - 2017 fagu
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  * #L%
  */
 import java.awt.Color;
 import java.awt.color.ColorSpace;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.fagu.fmv.image.soft.OverrideConvertCmd;
-import org.im4java.core.ConvertCmd;
-import org.im4java.core.IM4JavaException;
-import org.im4java.core.IMOperation;
-import org.im4java.process.ArrayListOutputConsumer;
+import org.fagu.fmv.im.IMOperation;
+import org.fagu.fmv.soft.Soft;
 
 
 /**
@@ -44,16 +43,35 @@ public class DominantColor {
 
 	private static final Pattern PATTERN = Pattern.compile("(\\w+)\\((\\d+(?:,\\d+)*)\\)");
 
+	private final Soft convertSoft;
+
 	/**
-	 * 
+	 * @param convertSoft
 	 */
-	private DominantColor() {}
+	private DominantColor(Soft convertSoft) {
+		this.convertSoft = Objects.requireNonNull(convertSoft);
+	}
+
+	/**
+	 * @return
+	 */
+	public static DominantColor getInstance() {
+		return getInstance(org.fagu.fmv.soft.im.Convert.search());
+	}
+
+	/**
+	 * @param convertSoft
+	 * @return
+	 */
+	public static DominantColor getInstance(Soft convertSoft) {
+		return new DominantColor(convertSoft);
+	}
 
 	/**
 	 * @param file
 	 * @return
 	 */
-	public static Color getDominantColor(File file) throws IOException {
+	public Color getDominantColor(File file) throws IOException {
 		return getDominantColor(file, null);
 	}
 
@@ -62,28 +80,20 @@ public class DominantColor {
 	 * @param logger
 	 * @return
 	 */
-	public static Color getDominantColor(File file, Consumer<String> logger) throws IOException {
+	public Color getDominantColor(File file, Consumer<String> logger) throws IOException {
 		IMOperation op = new IMOperation();
-		op.addImage();
-		op.addRawArgs("-scale", "1x1!");
-		op.format("%[pixel:u]");
-		op.addRawArgs("info:");
+		op.image(file, "[0]").scale("1x1!").format("%[pixel:u]").add("info:");
 
-		ArrayListOutputConsumer outputConsumer = new ArrayListOutputConsumer();
-		ConvertCmd cmd = new OverrideConvertCmd(logger);
-		cmd.setOutputConsumer(outputConsumer);
-		try {
-			cmd.run(op, file.getAbsolutePath() + "[0]");
-		} catch(InterruptedException e) {
-			throw new IOException(e);
-		} catch(IM4JavaException e) {
-			throw new IOException(e);
-		}
-		List<String> lines = outputConsumer.getOutput();
-		if(lines.isEmpty()) {
+		List<String> outputs = new ArrayList<>();
+		convertSoft.withParameters(op.toList())
+				.addCommonReadLine(outputs::add)
+				.logCommandLine(logger)
+				.execute();
+
+		if(outputs.isEmpty()) {
 			throw new IOException("Data not found for " + file);
 		}
-		String value = lines.get(0);
+		String value = outputs.get(0);
 		Matcher matcher = PATTERN.matcher(value);
 		if( ! matcher.find()) {
 			throw new IOException("Data not matches a RGB pattern: " + value);

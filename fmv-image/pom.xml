@@ -13,12 +13,10 @@
 	<description>Library for the image</description>
 	
 	<dependencies>
-	    <dependency>
-			<groupId>org.im4java</groupId>
-			<artifactId>im4java</artifactId>
-			<version>1.4.0</version>
-			<type>jar</type>
-			<scope>compile</scope>
+	  	<dependency>
+			<groupId>org.fagu</groupId>
+			<artifactId>fmv-imagemagick</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fagu</groupId>

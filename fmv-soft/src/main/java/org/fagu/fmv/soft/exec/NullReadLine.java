@@ -38,4 +38,12 @@ public class NullReadLine implements ReadLine {
 	@Override
 	public void read(String line) {}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Null";
+	}
+
 }

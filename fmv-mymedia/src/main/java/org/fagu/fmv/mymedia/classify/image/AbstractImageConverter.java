@@ -25,14 +25,13 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.fagu.fmv.im.IMOperation;
 import org.fagu.fmv.image.Image;
 import org.fagu.fmv.mymedia.classify.Converter;
 import org.fagu.fmv.mymedia.classify.ConverterListener;
+import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.im.Convert;
 import org.fagu.fmv.utils.file.FileFinder;
-import org.im4java.core.ConvertCmd;
-import org.im4java.core.IMOperation;
-import org.im4java.process.ArrayListOutputConsumer;
 
 
 /**
@@ -41,6 +40,8 @@ import org.im4java.process.ArrayListOutputConsumer;
 public abstract class AbstractImageConverter extends Converter<Image> {
 
 	private final ExecutorService executorService;
+
+	private final Soft convertSoft;
 
 	/**
 	 * @param destFolder
@@ -55,7 +56,7 @@ public abstract class AbstractImageConverter extends Converter<Image> {
 	 */
 	public AbstractImageConverter(File destFolder, int nThreads) {
 		super(destFolder);
-		Convert.search();
+		convertSoft = Convert.search();
 		if(nThreads > 1) {
 			executorService = Executors.newFixedThreadPool(nThreads);
 		} else {
@@ -117,15 +118,12 @@ public abstract class AbstractImageConverter extends Converter<Image> {
 			}
 
 			IMOperation op = new IMOperation();
-			op.addImage();
+			op.image(srcImage.getFile(), "[0]");
 			populateOperation(op);
-			op.addImage();
+			op.image(destFile);
 
-			ConvertCmd convertCmd = new ConvertCmd();
-			ArrayListOutputConsumer outputConsumer = new ArrayListOutputConsumer();
-			convertCmd.setOutputConsumer(outputConsumer);
 			try {
-				convertCmd.run(op, srcImage.getFile().getAbsolutePath() + "[0]", destFile.getAbsolutePath());
+				convertSoft.withParameters(op.toList()).execute();
 			} catch(Exception e) {
 				throw new RuntimeException(e);
 			}
