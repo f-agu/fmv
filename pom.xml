@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.fagu</groupId>
 	<artifactId>fmv-parent</artifactId>
-	<version>0.5.11</version>
+	<version>0.5.11-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>fmv-parent</name>
 	<description>FMV parent</description>
@@ -20,7 +20,7 @@
 	<scm>
 		<connection>scm:git:https://github.com/f-agu/fmv.git</connection>
 		<developerConnection>scm:git:https://github.com/f-agu/fmv.git</developerConnection>
-		<tag>0.5.11</tag>
+		<tag>HEAD</tag>
 	</scm>
 	
 	<repositories>
@@ -53,6 +53,7 @@
 	</developers>
        
 	<properties>
+		<project.scm.id>github</project.scm.id>
 		<maven.build.timestamp.format>yyyyMMdd.HHmm</maven.build.timestamp.format>
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

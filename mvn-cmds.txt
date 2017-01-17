@@ -1,13 +1,14 @@
 -- release
-svn co https://svn.code.sf.net/p/fmv/code/trunk .
-mvn -Dtag=0.5.10 -DreleaseVersion=0.5.10 -DdevelopmentVersion=0.5.11-SNAPSHOT -U -B clean release:prepare
+git clone https://github.com/f-agu/fmv.git
+cd fmv
+mvn -Dtag=0.5.11 -DreleaseVersion=0.5.11 -DdevelopmentVersion=0.5.12-SNAPSHOT -U -B clean release:clean release:prepare release:perform 
 
-svn up .
-svn revert -R .
+git pull
+svn reset --hard
 
 
 -- push to maven repo
-svn sw https://svn.code.sf.net/p/fmv/code/tags/0.5.10 .
+git branch https://svn.code.sf.net/p/fmv/code/tags/0.5.10 .
 mvn -U clean deploy
 
 

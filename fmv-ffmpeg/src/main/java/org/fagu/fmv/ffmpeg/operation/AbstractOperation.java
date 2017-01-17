@@ -357,7 +357,9 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends Processor<?>> Stream<T> getProcessorStream(Class<T> cls) {
-		return processorMap.values().stream().filter(p -> cls.isAssignableFrom(p.getClass())).map(p -> (T)p);
+		return processorMap.values().stream()
+				.filter(p -> p != null && cls.isAssignableFrom(p.getClass()))
+				.map(p -> (T)p);
 	}
 
 	/**
