@@ -32,7 +32,6 @@ import org.fagu.fmv.soft.exec.CommandLineUtils;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 16 janv. 2017 10:33:32
  */

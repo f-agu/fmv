@@ -49,13 +49,31 @@ public class ImageMetadatasTestCase {
 	 * @throws Exception
 	 */
 	@Test
-	public void testSimple() throws Exception {
+	public void testSimple1() throws Exception {
 		Package pkg = ImageMetadatas.class.getPackage();
 		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), ImageMetadatasTestCase.class
 				.getSimpleName(), ".jpg");
 		try {
 			ImageMetadatas metadatas = ImageMetadatas.extract(file);
 			assertMetadatas_BadAssTottooFail(metadatas);
+		} finally {
+			if(file != null) {
+				file.delete();
+			}
+		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testSimple2() throws Exception {
+		Package pkg = ImageMetadatas.class.getPackage();
+		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "wei-ass.jpg"), ImageMetadatasTestCase.class
+				.getSimpleName(), ".jpg");
+		try {
+			ImageMetadatas metadatas = ImageMetadatas.extract(file);
+			assertMetadatas_WeiAss(metadatas);
 		} finally {
 			if(file != null) {
 				file.delete();
@@ -74,7 +92,7 @@ public class ImageMetadatasTestCase {
 		File file2 = Resources.extractToTempFile(Resources.getResourcePath(pkg, "wei-ass.jpg"), ImageMetadatasTestCase.class.getSimpleName(), ".jpg");
 
 		try {
-			Map<File, ImageMetadatas> map = ImageMetadatas.extract(Arrays.asList(file2, file1), System.out::println);
+			Map<File, ImageMetadatas> map = ImageMetadatas.extract(Arrays.asList(file2, file1));
 			Iterator<ImageMetadatas> iterator = map.values().iterator();
 			assertMetadatas_WeiAss(iterator.next());
 			assertMetadatas_BadAssTottooFail(iterator.next());

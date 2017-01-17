@@ -425,6 +425,18 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 	}
 
 	/**
+	 * @param identifySoft
+	 * @param sourceFiles
+	 * @param logger
+	 * @return
+	 * @throws IOException
+	 */
+	public static ImageMetadatas extract(Soft identifySoft, File sourceFiles, Consumer<String> logger) throws IOException {
+		Map<File, ImageMetadatas> map = extract(identifySoft, Collections.singletonList(sourceFiles), logger);
+		return map.get(sourceFiles);
+	}
+
+	/**
 	 * @param sourceFiles
 	 * @return
 	 * @throws IOException

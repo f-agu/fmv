@@ -111,7 +111,7 @@ public class DominantColor {
 	static Color parse(String value) throws IOException {
 		Matcher matcher = PATTERN.matcher(value);
 		if( ! matcher.find()) {
-			throw new IOException("Data not matches a RGB pattern: " + value);
+			throw new IOException("Data not matches a color pattern: " + value);
 		}
 		ColorSpace colorSpace = parseColorSpace(matcher.group(1));
 		String values = matcher.group(2);
