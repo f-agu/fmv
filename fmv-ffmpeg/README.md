@@ -1,16 +1,30 @@
-# FMV (I don't translate, it's a french acronym)
+# FMV-FFMpeg
 
-FMV provides some tools to handle your media (image, video, sound...).
+FMV-FFMpeg helps the developer to use `ffmpeg`.
 
-## Getting started
+# Example
 
-Download and install some softwares:
-
-|| Name || URL ||
-| Java | https://java.com/fr/download/ |
-| FFmpeg | https://ffmpeg.org/download.html |
-| ImageMagick | https://www.imagemagick.org/script/binary-releases.php |
-| GhostScript | https://ghostscript.com/download/gsdnld.html |
-| XPDF | http://www.foolabs.com/xpdf/download.html<br>(or on Linux http://poppler.freedesktop.org) |
+Extract a part of a video from 2s to 5.4s (see [this class](/src/main/java/org/fagu/fmv/ffmpeg/FFHelper.java#L417)):
+```java
+File inFile = ...;
+File outFile = ...;
+Time startTime = Time.valueOf(2);
+Duration duration = Duration.valueOf(3.4);
 
 
+FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
+
+// input
+InputProcessor inputProcessor = builder.addMediaInputFile(inFile);
+inputProcessor.timeSeek(startTime);
+
+// output
+OutputProcessor outputProcessor = builder.mux(MP4Muxer.to(outFile).avoidNegativeTs(AvoidNegativeTs.MAKE_NON_NEGATIVE));
+outputProcessor.duration(duration);
+outputProcessor.qualityScale(0);
+outputProcessor.codec(Libx264.build().mostCompatible());
+outputProcessor.overwrite();
+
+// execute
+builder.build().execute();
+```
