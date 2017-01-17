@@ -4,7 +4,7 @@ FMV-FFMpeg helps the developer to use `ffmpeg`.
 
 # Example
 
-Extract a part of a video from 2s to 5.4s (see [this class](/src/main/java/org/fagu/fmv/ffmpeg/FFHelper.java#L417)):
+Extract a part of a video from 2s to 5.4s (see [this class](/fmv-ffmpeg/src/main/java/org/fagu/fmv/ffmpeg/FFHelper.java#L417)):
 ```java
 File inFile = ...;
 File outFile = ...;
