@@ -19,9 +19,10 @@ package org.fagu.fmv.image;
  * limitations under the License.
  * #L%
  */
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,6 +103,28 @@ public class ImageMetadatasTestCase {
 			}
 			if(file2 != null) {
 				file2.delete();
+			}
+		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testFailed() throws Exception {
+		Package pkg = ImageMetadatas.class.getPackage();
+		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "no-image"), ImageMetadatasTestCase.class
+				.getSimpleName(), ".jpg");
+		try {
+			ImageMetadatas.extract(file);
+			fail();
+		} catch(IOException e) {
+			assertTrue(e.getMessage().contains("Not a JPEG file"));
+
+			e.printStackTrace();
+		} finally {
+			if(file != null) {
+				file.delete();
 			}
 		}
 	}

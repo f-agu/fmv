@@ -18,6 +18,15 @@
  * limitations under the License.
  * #L%
  */
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.apache.commons.io.IOUtils;
+import org.fagu.fmv.im.IMOperation;
+import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.im.Convert;
 
 
@@ -26,34 +35,58 @@ import org.fagu.fmv.soft.im.Convert;
  */
 public class TestPipe {
 
-	/**
-	 * 
-	 */
-	public TestPipe() {}
+	public static void main(String[] args) throws Exception {
+		new File("d:\\tmp\\out-pipe3.jpg").delete();
+
+		Soft convertSoft = Convert.search();
+		IMOperation op = new IMOperation();
+		op.image("-").autoOrient().quality(60D).image("jpg:-");
+		try (InputStream inputStream = new FileInputStream("d:\\tmp\\Nexway.png");
+				OutputStream outputStream = new FileOutputStream("d:\\tmp\\out-pipe3.jpg")) {
+			convertSoft.withParameters(op.toList())
+					.logCommandLine(System.out::println)
+					.input(inputStream)
+					.out(outputStream)
+					.err(System.out)
+					.execute();
+		}
+	}
 
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) throws Exception {
-		Convert.search();
+	public static void main0(String[] args) throws Exception {
 
-		// IMOperation op = new IMOperation();
-		// op.addImage();
-		// op.autoOrient();
-		// op.quality(60D);
-		// op.addImage();
-		//
-		// OverrideRunConvertCmd convertCmd = new OverrideRunConvertCmd();
-		// // ConvertCmd convertCmd = new ConvertCmd();
-		// // convertCmd.setInputProvider(pInputProvider);
-		//
-		// ArrayListOutputConsumer outputConsumer = new ArrayListOutputConsumer();
-		// // convertCmd.setOutputConsumer(outputConsumer);
-		// try {
-		// convertCmd.run(op, "-", "jpg:-");
-		// } catch(IM4JavaException | InterruptedException e) {
-		// throw new IOException(e);
-		// }
+		new File("d:\\tmp\\out-pipe2.jpg").delete();
+
+		ProcessBuilder pb = new ProcessBuilder()
+				.command("C:\\Program Files\\ImageMagick-7.0.3-Q16\\magick.exe", "convert", "-", "-auto-orient", "-quality", "60.0", "jpg:-");
+		// .redirectInput(Redirect.PIPE);
+		// .redirectErrorStream(true);
+		Process p = pb.start();
+
+		// input
+		new Thread(() -> {
+			try (OutputStream outputStream = p.getOutputStream();
+					FileInputStream inputStream = new FileInputStream(new File("d:\\tmp\\0.png"))) {
+				IOUtils.copy(inputStream, outputStream);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
+
+		InputStream inputStream = p.getInputStream();
+		// ouput
+		new Thread(() -> {
+
+			try (OutputStream outputStream = new FileOutputStream("d:\\tmp\\out-pipe2.jpg")) {
+				IOUtils.copy(inputStream, outputStream);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
+
+		System.out.println(p.waitFor());
 	}
 
 }

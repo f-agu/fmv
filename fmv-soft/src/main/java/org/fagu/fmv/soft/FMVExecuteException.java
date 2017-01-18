@@ -20,11 +20,12 @@ package org.fagu.fmv.soft;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -34,6 +35,8 @@ public class FMVExecuteException extends ExecuteException {
 
 	private static final long serialVersionUID = 1097668665104345846L;
 
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
 	private final String commandLine;
 
 	private final List<String> outputLines;
@@ -41,11 +44,12 @@ public class FMVExecuteException extends ExecuteException {
 	/**
 	 * @param executeException
 	 * @param commandLine
+	 * @param outputLines
 	 */
 	public FMVExecuteException(ExecuteException executeException, String commandLine, List<String> outputLines) {
-		super(executeException.getMessage(), executeException.getExitValue());
+		super(concat(executeException.getMessage(), commandLine, outputLines), executeException.getExitValue(), executeException);
 		this.commandLine = commandLine;
-		this.outputLines = Collections.unmodifiableList(outputLines);
+		this.outputLines = outputLines != null ? Collections.unmodifiableList(outputLines) : null;
 	}
 
 	/**
@@ -60,6 +64,25 @@ public class FMVExecuteException extends ExecuteException {
 	 */
 	public List<String> getOutputLines() {
 		return outputLines;
+	}
+
+	// *****************************************************
+
+	/**
+	 * @param message
+	 * @param commandLine
+	 * @param outputLines
+	 * @return
+	 */
+	private static String concat(String message, String commandLine, List<String> outputLines) {
+		StringBuilder msg = new StringBuilder(message);
+		if(StringUtils.isNotEmpty(commandLine)) {
+			msg.append(LINE_SEPARATOR).append(commandLine);
+		}
+		if(outputLines != null && ! outputLines.isEmpty()) {
+			msg.append(LINE_SEPARATOR).append(outputLines.stream().collect(Collectors.joining(LINE_SEPARATOR)));
+		}
+		return msg.toString();
 	}
 
 }

@@ -145,14 +145,10 @@ public class FMVExecutor extends DefaultExecutor {
 	 */
 	@Override
 	public int execute(CommandLine command, Map<String, String> environment) throws ExecuteException, IOException {
-		try {
-			proxyFMVExecListener.eventPreExecute(this, command, environment, null);
-			int exitValue = super.execute(command, environment);
-			proxyFMVExecListener.eventPostExecute(this, command, environment, null);
-			return exitValue;
-		} catch(ExecuteException e) {
-			throw new ExecuteException(command.toString(), e.getExitValue(), e);
-		}
+		proxyFMVExecListener.eventPreExecute(this, command, environment, null);
+		int exitValue = super.execute(command, environment);
+		proxyFMVExecListener.eventPostExecute(this, command, environment, null);
+		return exitValue;
 	}
 
 	/**

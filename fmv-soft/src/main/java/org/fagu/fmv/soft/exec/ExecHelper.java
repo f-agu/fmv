@@ -1,5 +1,10 @@
 package org.fagu.fmv.soft.exec;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 /*
  * #%L
  * fmv-soft
@@ -20,12 +25,14 @@ package org.fagu.fmv.soft.exec;
  * #L%
  */
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import org.apache.commons.exec.ExecuteStreamHandler;
+import org.apache.commons.exec.PumpStreamHandler;
 
 
 /**
@@ -35,11 +42,23 @@ public class ExecHelper<T> {
 
 	protected boolean debug;
 
+	private Consumer<String> outDebugConsumer;
+
+	private Consumer<String> errDebugConsumer;
+
+	protected OutputStream out;
+
+	protected OutputStream err;
+
+	protected InputStream input;
+
 	protected final List<ReadLine> commonReadLines;
 
 	protected final List<ReadLine> outReadLines;
 
 	protected final List<ReadLine> errReadLines;
+
+	protected ExecuteStreamHandler executeStreamHandler;
 
 	protected Consumer<FMVExecutor> customizeExecutor;
 
@@ -50,6 +69,8 @@ public class ExecHelper<T> {
 		commonReadLines = new ArrayList<>();
 		outReadLines = new ArrayList<>();
 		errReadLines = new ArrayList<>();
+		outDebugConsumer = line -> System.out.println("OUT  " + line);
+		errDebugConsumer = line -> System.out.println("ERR  " + line);
 	}
 
 	/**
@@ -64,7 +85,23 @@ public class ExecHelper<T> {
 	 * @return
 	 */
 	public T debug(boolean debug) {
+		return debug(debug, null, null);
+	}
+
+	/**
+	 * @param debug
+	 * @param outDebugConsumer
+	 * @param errDebugConsumer
+	 * @return
+	 */
+	public T debug(boolean debug, Consumer<String> outDebugConsumer, Consumer<String> errDebugConsumer) {
 		this.debug = debug;
+		if(outDebugConsumer != null) {
+			this.outDebugConsumer = outDebugConsumer;
+		}
+		if(errDebugConsumer != null) {
+			this.errDebugConsumer = errDebugConsumer;
+		}
 		return getThis();
 	}
 
@@ -73,7 +110,7 @@ public class ExecHelper<T> {
 	 * @return
 	 */
 	public T addCommonReadLine(ReadLine readLine) {
-		this.commonReadLines.add(Objects.requireNonNull(readLine));
+		commonReadLines.add(Objects.requireNonNull(readLine));
 		return getThis();
 	}
 
@@ -82,7 +119,7 @@ public class ExecHelper<T> {
 	 * @return
 	 */
 	public T addOutReadLine(ReadLine readLine) {
-		this.outReadLines.add(Objects.requireNonNull(readLine));
+		outReadLines.add(Objects.requireNonNull(readLine));
 		return getThis();
 	}
 
@@ -91,7 +128,7 @@ public class ExecHelper<T> {
 	 * @return
 	 */
 	public T addErrReadLine(ReadLine readLine) {
-		this.errReadLines.add(Objects.requireNonNull(readLine));
+		errReadLines.add(Objects.requireNonNull(readLine));
 		return getThis();
 	}
 
@@ -104,6 +141,42 @@ public class ExecHelper<T> {
 		return getThis();
 	}
 
+	/**
+	 * @param executeStreamHandler
+	 * @return
+	 */
+	public T streamHandler(ExecuteStreamHandler executeStreamHandler) {
+		this.executeStreamHandler = executeStreamHandler;
+		return getThis();
+	}
+
+	/**
+	 * @param input
+	 * @return
+	 */
+	public T input(InputStream input) {
+		this.input = input;
+		return getThis();
+	}
+
+	/**
+	 * @param out
+	 * @return
+	 */
+	public T out(OutputStream out) {
+		this.out = out;
+		return getThis();
+	}
+
+	/**
+	 * @param err
+	 * @return
+	 */
+	public T err(OutputStream err) {
+		this.err = err;
+		return getThis();
+	}
+
 	// *******************************************************
 
 	/**
@@ -113,10 +186,10 @@ public class ExecHelper<T> {
 	protected ReadLine getOutReadLine(ReadLine... readLines) {
 		List<ReadLine> lines = new ArrayList<>();
 		if(debug) {
-			lines.add(line -> System.out.println("OUT  " + line));
+			lines.add(outDebugConsumer::accept);
 		}
 		populateReadLine(lines, outReadLines, Arrays.asList(readLines));
-		return new MultiReadLine(lines);
+		return MultiReadLine.createWith(lines);
 	}
 
 	/**
@@ -126,10 +199,10 @@ public class ExecHelper<T> {
 	protected ReadLine getErrReadLine(ReadLine... readLines) {
 		List<ReadLine> lines = new ArrayList<>();
 		if(debug) {
-			lines.add(line -> System.out.println("ERR  " + line));
+			lines.add(errDebugConsumer::accept);
 		}
 		populateReadLine(lines, errReadLines, Arrays.asList(readLines));
-		return new MultiReadLine(lines);
+		return MultiReadLine.createWith(lines);
 	}
 
 	/**
@@ -153,6 +226,43 @@ public class ExecHelper<T> {
 		if(customizeExecutor != null) {
 			customizeExecutor.accept(fmvExecutor);
 		}
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	protected void checkStreamHandler() throws IOException {
+		if(executeStreamHandler != null && ( ! commonReadLines.isEmpty() || ! outReadLines.isEmpty() || ! errReadLines.isEmpty()) && (input != null
+				|| out != null || err != null)) {
+			throw new IOException("Choose between a StreamHandler and a ReadLine and an input/out/err.");
+		}
+	}
+
+	/**
+	 * @param workingFolder
+	 * @param defaultReaDLine
+	 * @return
+	 * @throws IOException
+	 */
+	protected FMVExecutor createFMVExecutor(File workingFolder, ReadLine defaultReaDLine) throws IOException {
+		checkStreamHandler();
+
+		// executeStreamHandler
+		if(executeStreamHandler != null) {
+			return FMVExecutor.create(workingFolder, executeStreamHandler);
+		}
+
+		// input/out/err
+		if(input != null || out != null || err != null) { // input & whatever
+			ReadLineOutputStream outRL = new ReadLineOutputStream(out, defaultReaDLine);
+			ReadLineOutputStream errRL = new ReadLineOutputStream(err, defaultReaDLine);
+			ExecuteStreamHandler customExecuteStreamHandler = new PumpStreamHandler(outRL, errRL, input);
+			return FMVExecutor.create(workingFolder, customExecuteStreamHandler);
+		}
+
+		// ReadLine
+		return FMVExecutor.create(workingFolder, getOutReadLine(defaultReaDLine), getErrReadLine(
+				defaultReaDLine));
 	}
 
 	// *******************************************************

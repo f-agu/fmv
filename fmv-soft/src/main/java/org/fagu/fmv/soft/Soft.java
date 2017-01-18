@@ -260,8 +260,7 @@ public class Soft {
 
 			List<String> readLineList = new ArrayList<>();
 			BufferedReadLine bufferedReadLine = new BufferedReadLine(readLineList);
-			FMVExecutor fmvExecutor = FMVExecutor.create(execFile.getParentFile(), getOutReadLine(bufferedReadLine), getErrReadLine(
-					bufferedReadLine));
+			FMVExecutor fmvExecutor = createFMVExecutor(execFile.getParentFile(), bufferedReadLine);
 			applyCustomizeExecutor(fmvExecutor);
 
 			long startTime = System.currentTimeMillis();
@@ -277,6 +276,7 @@ public class Soft {
 			}
 			return time;
 		}
+
 	}
 
 	// -----------------------------------------------------------
@@ -454,16 +454,20 @@ public class Soft {
 	/**
 	 * @return
 	 */
-	public SoftExecutor withNoParameter() {
+	public SoftExecutor withoutParameter() {
 		return withParameters(Collections.emptyList());
 	}
 
 	/**
-	 * @param parameters
+	 * @param param1
+	 * @param otherPparameters
 	 * @return
 	 */
-	public SoftExecutor withParameters(String... parameters) {
-		return withParameters(Arrays.asList(parameters));
+	public SoftExecutor withParameters(String param1, String... otherPparameters) {
+		List<String> params = new ArrayList<>(1 + otherPparameters.length);
+		params.add(param1);
+		params.addAll(Arrays.asList(otherPparameters));
+		return withParameters(params);
 	}
 
 	/**
@@ -479,7 +483,7 @@ public class Soft {
 	 * @throws IOException
 	 */
 	public long execute() throws IOException {
-		return withNoParameter().execute();
+		return withoutParameter().execute();
 	}
 
 	/**

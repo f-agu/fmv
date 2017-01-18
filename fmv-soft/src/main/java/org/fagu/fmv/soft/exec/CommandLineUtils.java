@@ -20,7 +20,6 @@ package org.fagu.fmv.soft.exec;
  * #L%
  */
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,12 +63,12 @@ public class CommandLineUtils {
 		List<String> nargs = new ArrayList<>(args.size());
 		for(String arg : args) {
 			if(arg.contains(" ") || arg.contains("'") || arg.contains("=")) {
-				nargs.add("\"" + arg + "\"");
+				nargs.add('"' + arg + '"');
 			} else {
 				nargs.add(arg);
 			}
 		}
-		return StringUtils.join(nargs, " ");
+		return StringUtils.join(nargs, " ").replace("\n", "\\n").replace("\r", "\\r");
 	}
 
 }

@@ -23,13 +23,13 @@ package org.fagu.fmv.ffmpeg.executor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 
 import org.apache.commons.exec.CommandLine;
 import org.fagu.fmv.ffmpeg.exception.ExecuteIOException;
@@ -62,7 +62,11 @@ public class FFExecutor<R> {
 
 	private Prepare prepare;
 
-	private PrintStream debugOutput;
+	private boolean debug;
+
+	private Consumer<String> outDebugConsumer;
+
+	private Consumer<String> errDebugConsumer;
 
 	private final BufferedReadLine outputReadLine;
 
@@ -119,6 +123,9 @@ public class FFExecutor<R> {
 		ffExecListeners = new ArrayList<>();
 
 		ServiceLoader.load(FFExecFallback.class).forEach(fallbacks::add);
+
+		outDebugConsumer = line -> System.out.println("OUT  " + line);
+		errDebugConsumer = line -> System.out.println("ERR  " + line);
 	}
 
 	/**
@@ -136,10 +143,34 @@ public class FFExecutor<R> {
 	}
 
 	/**
-	 * @param debugOutput the debugOutput to set
+	 * @return
 	 */
-	public void setDebugOutput(PrintStream debugOutput) {
-		this.debugOutput = debugOutput;
+	public void debug() {
+		debug(true);
+	}
+
+	/**
+	 * @param debug
+	 * @return
+	 */
+	public void debug(boolean debug) {
+		debug(debug, null, null);
+	}
+
+	/**
+	 * @param debug
+	 * @param outDebugConsumer
+	 * @param errDebugConsumer
+	 * @return
+	 */
+	public void debug(boolean debug, Consumer<String> outDebugConsumer, Consumer<String> errDebugConsumer) {
+		this.debug = debug;
+		if(outDebugConsumer != null) {
+			this.outDebugConsumer = outDebugConsumer;
+		}
+		if(errDebugConsumer != null) {
+			this.errDebugConsumer = errDebugConsumer;
+		}
 	}
 
 	/**
@@ -252,8 +283,8 @@ public class FFExecutor<R> {
 		if(readLine != null) {
 			lines.add(readLine);
 		}
-		if(debugOutput != null) {
-			lines.add(l -> debugOutput.println("OUT  " + l));
+		if(debug) {
+			lines.add(outDebugConsumer::accept);
 		}
 		if( ! outReadLines.isEmpty()) {
 			lines.addAll(outReadLines);
@@ -261,7 +292,7 @@ public class FFExecutor<R> {
 		if( ! readLines.isEmpty()) {
 			lines.addAll(readLines);
 		}
-		return new MultiReadLine(lines);
+		return MultiReadLine.createWith(lines);
 	}
 
 	/**
@@ -277,8 +308,8 @@ public class FFExecutor<R> {
 		if(ffmpegProgressReadLine != null) {
 			lines.add(ffmpegProgressReadLine);
 		}
-		if(debugOutput != null) {
-			lines.add(l -> debugOutput.println("ERR  " + l));
+		if(debug) {
+			lines.add(errDebugConsumer::accept);
 		}
 		if( ! libLogReadLine.isEmpty()) {
 			lines.add(libLogReadLine);
@@ -289,7 +320,7 @@ public class FFExecutor<R> {
 		if( ! readLines.isEmpty()) {
 			lines.addAll(readLines);
 		}
-		return new MultiReadLine(lines);
+		return MultiReadLine.createWith(lines);
 	}
 
 	/**

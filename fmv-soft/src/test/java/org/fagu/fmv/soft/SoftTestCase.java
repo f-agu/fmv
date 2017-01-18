@@ -28,7 +28,6 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -90,11 +89,4 @@ public class SoftTestCase {
 		// soft.withParameters("").execute();
 	}
 
-	@Test
-	@Ignore
-	public void testExecFile() throws Exception {
-		Soft soft = Soft.withExecFile("C:\\Program Files (x86)\\Microsoft Office\\Office15\\EXCEL.EXE");
-		// Soft soft = Soft.withExecFile("cmd");
-		soft.withNoParameter().execute();
-	}
 }

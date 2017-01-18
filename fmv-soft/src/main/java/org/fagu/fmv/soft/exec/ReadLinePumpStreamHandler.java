@@ -55,7 +55,7 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 	 */
 	@Override
 	public void setProcessOutputStream(InputStream is) {
-		createProcessOutputPump(new MyInputStream(is, outReadLine), null);
+		createProcessOutputPump(new ReadLineInputStream(is, outReadLine), null);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 	 */
 	@Override
 	public void setProcessErrorStream(InputStream is) {
-		createProcessErrorPump(new MyInputStream(is, errReadLine), null);
+		createProcessErrorPump(new ReadLineInputStream(is, errReadLine), null);
 	}
 
 	// *************************************************
@@ -73,7 +73,7 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 	 */
 	@Override
 	protected Thread createPump(InputStream is, OutputStream os) {
-		MyInputStream myInputStream = (MyInputStream)is;
+		ReadLineInputStream myInputStream = (ReadLineInputStream)is;
 		return createPump(myInputStream.delegate, myInputStream.readLine);
 	}
 
@@ -93,7 +93,7 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 	/**
 	 * @author f.agu
 	 */
-	private class MyInputStream extends InputStream {
+	public static class ReadLineInputStream extends InputStream {
 
 		private final ReadLine readLine;
 
@@ -103,7 +103,7 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 		 * @param delegate
 		 * @param readLine
 		 */
-		MyInputStream(InputStream delegate, ReadLine readLine) {
+		ReadLineInputStream(InputStream delegate, ReadLine readLine) {
 			this.delegate = delegate;
 			this.readLine = readLine;
 		}

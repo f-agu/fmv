@@ -28,7 +28,7 @@ import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.filter.Filter;
 import org.fagu.fmv.ffmpeg.filter.impl.Scale;
 import org.fagu.fmv.ffmpeg.filter.impl.ScaleMode;
-import org.fagu.fmv.ffmpeg.operation.FFMPEGOperation;
+import org.fagu.fmv.ffmpeg.operation.AbstractOperation;
 import org.fagu.fmv.utils.media.Size;
 
 
@@ -48,7 +48,7 @@ public class Libx264NotDisibleBy2FFExecFallback implements FFExecFallback {
 	@Override
 	public boolean prepare(FFEnv ffEnv, IOException ioException) throws IOException {
 		FFExecutor<Object> executor = ffEnv.getExecutor();
-		FFMPEGOperation<?> operation = (FFMPEGOperation<?>)ffEnv.getOperation();
+		AbstractOperation<?, ?> operation = (AbstractOperation<?, ?>)ffEnv.getOperation();
 		for(String line : executor.getOutputReadLine().getLines()) {
 			if(line.startsWith("[libx264 @") && line.contains(" not divisible by 2")) {
 				for(Filter filter : operation.getFilters()) {
