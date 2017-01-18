@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.fagu.fmv.utils.Resources;
 import org.fagu.fmv.utils.media.Size;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -51,9 +50,7 @@ public class ImageMetadatasTestCase {
 	 */
 	@Test
 	public void testSimple1() throws Exception {
-		Package pkg = ImageMetadatas.class.getPackage();
-		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), ImageMetadatasTestCase.class
-				.getSimpleName(), ".jpg");
+		File file = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
 		try {
 			ImageMetadatas metadatas = ImageMetadatas.extract(file);
 			assertMetadatas_BadAssTottooFail(metadatas);
@@ -69,9 +66,7 @@ public class ImageMetadatasTestCase {
 	 */
 	@Test
 	public void testSimple2() throws Exception {
-		Package pkg = ImageMetadatas.class.getPackage();
-		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "wei-ass.jpg"), ImageMetadatasTestCase.class
-				.getSimpleName(), ".jpg");
+		File file = ImageResourceUtils.extractFile("wei-ass.jpg");
 		try {
 			ImageMetadatas metadatas = ImageMetadatas.extract(file);
 			assertMetadatas_WeiAss(metadatas);
@@ -87,10 +82,8 @@ public class ImageMetadatasTestCase {
 	 */
 	@Test
 	public void testMultiple() throws Exception {
-		Package pkg = ImageMetadatas.class.getPackage();
-		File file1 = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), ImageMetadatasTestCase.class
-				.getSimpleName(), ".jpg");
-		File file2 = Resources.extractToTempFile(Resources.getResourcePath(pkg, "wei-ass.jpg"), ImageMetadatasTestCase.class.getSimpleName(), ".jpg");
+		File file1 = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
+		File file2 = ImageResourceUtils.extractFile("wei-ass.jpg");
 
 		try {
 			Map<File, ImageMetadatas> map = ImageMetadatas.extract(Arrays.asList(file2, file1));
@@ -112,16 +105,12 @@ public class ImageMetadatasTestCase {
 	 */
 	@Test
 	public void testFailed() throws Exception {
-		Package pkg = ImageMetadatas.class.getPackage();
-		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "no-image"), ImageMetadatasTestCase.class
-				.getSimpleName(), ".jpg");
+		File file = ImageResourceUtils.extractFile("no-image", "jpg");
 		try {
 			ImageMetadatas.extract(file);
 			fail();
 		} catch(IOException e) {
 			assertTrue(e.getMessage().contains("Not a JPEG file"));
-
-			e.printStackTrace();
 		} finally {
 			if(file != null) {
 				file.delete();
@@ -135,9 +124,7 @@ public class ImageMetadatasTestCase {
 	@Test
 	@Ignore
 	public void testExtractSingleton() throws Exception {
-		Package pkg = ImageMetadatas.class.getPackage();
-		final File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "plan4-550Mpixels.tif"), ImageMetadatasTestCase.class
-				.getSimpleName(), ".tif");
+		final File file = ImageResourceUtils.extractFile("plan4-550Mpixels.tif");
 		try {
 			Runnable runnable = new Runnable() {
 

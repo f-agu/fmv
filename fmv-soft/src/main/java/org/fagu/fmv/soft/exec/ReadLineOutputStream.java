@@ -11,7 +11,7 @@ import org.apache.commons.io.output.NullOutputStream;
  */
 public class ReadLineOutputStream extends OutputStream {
 
-	private final StringBuilder currentBuffer = new StringBuilder();
+	private final StringBuilder buffer = new StringBuilder();
 
 	private final ReadLine readLine;
 
@@ -42,6 +42,7 @@ public class ReadLineOutputStream extends OutputStream {
 	 */
 	@Override
 	public void write(int b) throws IOException {
+		outputStream.write(b);
 		++count;
 		if(b == '\r') {
 			skipLF = true;
@@ -56,8 +57,7 @@ public class ReadLineOutputStream extends OutputStream {
 			flushBuffer();
 			return;
 		}
-		currentBuffer.append((char)b);
-		outputStream.write(b);
+		buffer.append((char)b);
 	}
 
 	/**
@@ -79,8 +79,8 @@ public class ReadLineOutputStream extends OutputStream {
 	 */
 	private void flushBuffer() {
 		if(count > 0) {
-			readLine.read(currentBuffer.toString());
-			currentBuffer.setLength(0);
+			readLine.read(buffer.toString());
+			buffer.setLength(0);
 			count = 0;
 		}
 	}
