@@ -28,9 +28,7 @@ import org.junit.Test;
 
 
 /**
- * @author Oodrive
- * @author Fabrice AGU
- * @created 16 févr. 09 12:11:20
+ * @author fagu
  */
 public class VersionFieldTestCase {
 
