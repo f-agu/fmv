@@ -361,6 +361,14 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 	}
 
 	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return metadatas.toString();
+	}
+
+	/**
 	 * @return
 	 */
 	public static ImageMetadatas parseJSON(String json) {
@@ -510,6 +518,8 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 				currentFile = srcFileIterator.next();
 				if(StringUtils.substringBetween(line, "==").equals(currentFile.getName())) {
 					params = new TreeMap<>();
+					params.put("filename", currentFile.getName());
+					continue;
 				} else {
 					params = null;
 					currentFile = null;

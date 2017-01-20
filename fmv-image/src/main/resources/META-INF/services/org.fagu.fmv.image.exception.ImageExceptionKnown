@@ -1,0 +1,3 @@
+org.fagu.fmv.image.exception.EmptyFileExceptionKnown
+org.fagu.fmv.image.exception.NoDecoderExceptionKnown
+org.fagu.fmv.image.exception.NotJPEGExceptionKnown

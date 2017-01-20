@@ -1,5 +1,10 @@
 package org.fagu.fmv.image;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.fagu.fmv.image.exception.ImageExceptionKnown;
+
 /*
  * #%L
  * fmv-image
@@ -20,7 +25,6 @@ package org.fagu.fmv.image;
  * #L%
  */
 
-
 import org.fagu.fmv.media.FileType;
 import org.fagu.fmv.media.Metadatas;
 import org.fagu.fmv.media.MetadatasFactory;
@@ -34,7 +38,9 @@ public class ImageMetadatasFactory extends MetadatasFactory {
 	/**
 	 * 
 	 */
-	public ImageMetadatasFactory() {}
+	public ImageMetadatasFactory() {
+		super(ImageExceptionKnown.class);
+	}
 
 	/**
 	 * @see java.util.function.Predicate#test(java.lang.Object)
@@ -42,6 +48,14 @@ public class ImageMetadatasFactory extends MetadatasFactory {
 	@Override
 	public boolean test(FileType t) {
 		return t == FileType.IMAGE;
+	}
+
+	/**
+	 * @see org.fagu.fmv.media.MetadatasFactory#extract(java.io.File)
+	 */
+	@Override
+	public Metadatas extract(File file) throws IOException {
+		return ImageMetadatas.extract(file);
 	}
 
 	/**

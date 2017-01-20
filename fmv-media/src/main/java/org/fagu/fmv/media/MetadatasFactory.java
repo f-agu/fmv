@@ -1,5 +1,7 @@
 package org.fagu.fmv.media;
 
+import java.io.File;
+
 /*
  * #%L
  * fmv-media
@@ -24,8 +26,12 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.function.Predicate;
 
+import org.fagu.fmv.soft.exec.exception.ExceptionKnown;
+import org.fagu.fmv.soft.exec.exception.NestedException;
 import org.fagu.fmv.utils.ClassResolver;
 
 
@@ -36,16 +42,56 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 
 	private static final List<MetadatasFactory> METADATAS_FACTORIES = new ArrayList<>();
 
+	private final Class<? extends ExceptionKnown> exceptionKnownSPIClass;
+
+	private List<ExceptionKnown> exceptionKnownList;
+
 	/**
-	 *
+	 * @param exceptionKnownSPIClass
 	 */
-	public MetadatasFactory() {}
+	public MetadatasFactory(Class<? extends ExceptionKnown> exceptionKnownSPIClass) {
+		this.exceptionKnownSPIClass = exceptionKnownSPIClass;
+	}
+
+	/**
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	abstract public Metadatas extract(File file) throws IOException;
 
 	/**
 	 * @param json
 	 * @return
 	 */
 	abstract public Metadatas parseJSON(String json);
+
+	/**
+	 * @return
+	 */
+	public List<ExceptionKnown> getExceptionKnowns() {
+		if(exceptionKnownList == null) {
+			List<ExceptionKnown> list = new ArrayList<>();
+			for(ExceptionKnown exceptionKnown : ServiceLoader.load(exceptionKnownSPIClass)) {
+				list.add(exceptionKnown);
+			}
+			exceptionKnownList = list;
+		}
+		return exceptionKnownList;
+	}
+
+	/**
+	 * @param e
+	 * @return
+	 */
+	public Optional<ExceptionKnown> isExceptionKnown(Exception e) {
+		NestedException nestedException = new NestedException(e);
+		return getExceptionKnowns().stream()
+				.filter(ek -> ek.test(nestedException))
+				.findFirst();
+	}
+
+	// --------------------------------------------------
 
 	/**
 	 * @param fileType
@@ -110,7 +156,7 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 	 */
 	private static void search() {
 		if(METADATAS_FACTORIES.isEmpty()) {
-			register("org.fagu.fmv");
+			ServiceLoader.load(MetadatasFactory.class).forEach(MetadatasFactory::register);
 		}
 	}
 
