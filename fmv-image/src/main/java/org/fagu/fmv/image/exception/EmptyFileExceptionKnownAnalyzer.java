@@ -3,12 +3,12 @@ package org.fagu.fmv.image.exception;
 /**
  * @author f.agu
  */
-public class EmptyFileExceptionKnown extends ImageExceptionKnown {
+public class EmptyFileExceptionKnownAnalyzer extends ImageExceptionKnownAnalyzer {
 
 	/**
 	 * 
 	 */
-	public EmptyFileExceptionKnown() {
+	public EmptyFileExceptionKnownAnalyzer() {
 		super("Empty file", ": Empty input file ");
 	}
 

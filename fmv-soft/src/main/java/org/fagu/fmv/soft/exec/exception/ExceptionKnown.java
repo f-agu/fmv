@@ -1,16 +1,27 @@
 package org.fagu.fmv.soft.exec.exception;
 
-import java.util.function.Predicate;
+import java.util.Objects;
 
 
 /**
- * @author f.agu
+ * @author fagu
  */
-public interface ExceptionKnown extends Predicate<NestedException> {
+public class ExceptionKnown {
+
+	private final String message;
 
 	/**
-	 * @return
+	 * @param message
 	 */
-	String title();
+	public ExceptionKnown(String message) {
+		this.message = Objects.requireNonNull(message);
+	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return message;
+	}
 }

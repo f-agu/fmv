@@ -3,12 +3,12 @@ package org.fagu.fmv.ffmpeg.exception;
 /**
  * @author f.agu
  */
-public class InvalidDataExceptionKnown extends MovieExceptionKnown {
+public class InvalidDataExceptionKnownAnalyzer extends MovieExceptionKnownAnalyzer {
 
 	/**
 	 * 
 	 */
-	public InvalidDataExceptionKnown() {
+	public InvalidDataExceptionKnownAnalyzer() {
 		super("Invalid data", ": Invalid data found when processing input");
 	}
 

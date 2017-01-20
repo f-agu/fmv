@@ -59,4 +59,11 @@ public class NestedException {
 		return msgLines;
 	}
 
+	/**
+	 * @param strToFind
+	 * @return
+	 */
+	public boolean contains(String strToFind) {
+		return exception.getMessage().contains(strToFind);
+	}
 }

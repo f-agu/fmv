@@ -1,0 +1,3 @@
+org.fagu.fmv.image.exception.EmptyFileExceptionKnownAnalyzer
+org.fagu.fmv.image.exception.NoDecoderExceptionKnownAnalyzer
+org.fagu.fmv.image.exception.NotJPEGExceptionKnownAnalyzer

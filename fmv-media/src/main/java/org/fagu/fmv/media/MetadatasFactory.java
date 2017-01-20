@@ -26,11 +26,13 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.function.Predicate;
 
 import org.fagu.fmv.soft.exec.exception.ExceptionKnown;
+import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.exec.exception.NestedException;
 import org.fagu.fmv.utils.ClassResolver;
 
@@ -42,14 +44,14 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 
 	private static final List<MetadatasFactory> METADATAS_FACTORIES = new ArrayList<>();
 
-	private final Class<? extends ExceptionKnown> exceptionKnownSPIClass;
+	private final Class<? extends ExceptionKnownAnalyzer> exceptionKnownSPIClass;
 
-	private List<ExceptionKnown> exceptionKnownList;
+	private List<ExceptionKnownAnalyzer> exceptionKnownList;
 
 	/**
 	 * @param exceptionKnownSPIClass
 	 */
-	public MetadatasFactory(Class<? extends ExceptionKnown> exceptionKnownSPIClass) {
+	public MetadatasFactory(Class<? extends ExceptionKnownAnalyzer> exceptionKnownSPIClass) {
 		this.exceptionKnownSPIClass = exceptionKnownSPIClass;
 	}
 
@@ -69,10 +71,10 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 	/**
 	 * @return
 	 */
-	public List<ExceptionKnown> getExceptionKnowns() {
+	public List<ExceptionKnownAnalyzer> getExceptionKnownAnalyzers() {
 		if(exceptionKnownList == null) {
-			List<ExceptionKnown> list = new ArrayList<>();
-			for(ExceptionKnown exceptionKnown : ServiceLoader.load(exceptionKnownSPIClass)) {
+			List<ExceptionKnownAnalyzer> list = new ArrayList<>();
+			for(ExceptionKnownAnalyzer exceptionKnown : ServiceLoader.load(exceptionKnownSPIClass)) {
 				list.add(exceptionKnown);
 			}
 			exceptionKnownList = list;
@@ -86,9 +88,7 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 	 */
 	public Optional<ExceptionKnown> isExceptionKnown(Exception e) {
 		NestedException nestedException = new NestedException(e);
-		return getExceptionKnowns().stream()
-				.filter(ek -> ek.test(nestedException))
-				.findFirst();
+		return getExceptionKnownAnalyzers().stream().map(ek -> ek.anaylze(nestedException)).filter(Objects::nonNull).findFirst();
 	}
 
 	// --------------------------------------------------
