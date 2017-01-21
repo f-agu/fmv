@@ -65,7 +65,7 @@ public class ReadMetadataBootstrap {
 			metadatas = metadatasFactory.extract(file);
 			// System.out.println(metadatas);
 		} catch(IOException e) {
-			Optional<ExceptionKnown> exceptionKnown = metadatasFactory.isExceptionKnown(e);
+			Optional<ExceptionKnown> exceptionKnown = metadatasFactory.getExceptionKnown(e);
 			if(exceptionKnown.isPresent()) {
 				System.out.println(exceptionKnown.toString());
 			} else {

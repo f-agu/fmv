@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.fagu.fmv.image.Image;
+import org.fagu.fmv.im.Image;
 import org.fagu.fmv.mymedia.classify.Classifier;
 import org.fagu.fmv.mymedia.classify.ClassifierFactories;
 import org.fagu.fmv.mymedia.classify.ConverterListener;

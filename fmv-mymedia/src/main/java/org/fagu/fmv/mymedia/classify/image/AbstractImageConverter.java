@@ -26,11 +26,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.fagu.fmv.im.IMOperation;
-import org.fagu.fmv.image.Image;
+import org.fagu.fmv.im.Image;
+import org.fagu.fmv.im.soft.Convert;
 import org.fagu.fmv.mymedia.classify.Converter;
 import org.fagu.fmv.mymedia.classify.ConverterListener;
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.im.Convert;
 import org.fagu.fmv.utils.file.FileFinder;
 
 

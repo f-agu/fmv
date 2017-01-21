@@ -38,6 +38,7 @@ import org.fagu.fmv.ffmpeg.operation.LibLogReadLine;
 import org.fagu.fmv.ffmpeg.operation.Operation;
 import org.fagu.fmv.ffmpeg.operation.OperationListener;
 import org.fagu.fmv.ffmpeg.operation.Progress;
+import org.fagu.fmv.ffmpeg.soft.FFMpegSoftProvider;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.exec.BufferedReadLine;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
@@ -45,7 +46,6 @@ import org.fagu.fmv.soft.exec.FMVCommandLine;
 import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.soft.exec.MultiReadLine;
 import org.fagu.fmv.soft.exec.ReadLine;
-import org.fagu.fmv.soft.ffmpeg.FFMpegSoftProvider;
 import org.fagu.fmv.utils.Proxifier;
 
 

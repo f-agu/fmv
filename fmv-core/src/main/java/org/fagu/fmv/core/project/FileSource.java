@@ -25,7 +25,7 @@ import java.io.IOException;
 
 import org.fagu.fmv.ffmpeg.FFHelper;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.fagu.fmv.image.ImageMetadatas;
+import org.fagu.fmv.im.ImageMetadatas;
 import org.fagu.fmv.media.FileType;
 import org.fagu.fmv.media.Metadatas;
 

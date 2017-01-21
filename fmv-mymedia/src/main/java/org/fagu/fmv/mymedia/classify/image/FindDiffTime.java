@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.fagu.fmv.image.Image;
+import org.fagu.fmv.im.Image;
 import org.fagu.fmv.mymedia.file.ImageFinder;
 import org.fagu.fmv.utils.file.FileFinder;
 

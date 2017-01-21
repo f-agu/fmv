@@ -38,8 +38,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.fagu.fmv.image.Image;
-import org.fagu.fmv.image.ImageMetadatas;
+import org.fagu.fmv.im.Image;
+import org.fagu.fmv.im.ImageMetadatas;
 import org.fagu.fmv.utils.file.DoneFuture;
 
 

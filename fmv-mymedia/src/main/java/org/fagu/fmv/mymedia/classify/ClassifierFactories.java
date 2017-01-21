@@ -23,7 +23,7 @@ package org.fagu.fmv.mymedia.classify;
 import java.io.File;
 import java.io.IOException;
 
-import org.fagu.fmv.image.Image;
+import org.fagu.fmv.im.Image;
 import org.fagu.fmv.mymedia.classify.image.AskTimeOffsetImageComparator;
 import org.fagu.fmv.mymedia.classify.movie.AskTimeOffsetMovieComparator;
 import org.fagu.fmv.mymedia.classify.movie.Movie;

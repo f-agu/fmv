@@ -1,6 +1,6 @@
 package org.fagu.fmv.ffmpeg.operation;
 
-import org.fagu.fmv.soft.ffmpeg.FFProbeSoftProvider;
+import org.fagu.fmv.ffmpeg.soft.FFProbeSoftProvider;
 
 
 /*

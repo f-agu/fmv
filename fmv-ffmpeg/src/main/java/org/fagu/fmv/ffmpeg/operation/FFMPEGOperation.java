@@ -26,9 +26,9 @@ import java.util.List;
 import org.fagu.fmv.ffmpeg.filter.Filter;
 import org.fagu.fmv.ffmpeg.filter.FilterNaming;
 import org.fagu.fmv.ffmpeg.require.Require;
+import org.fagu.fmv.ffmpeg.soft.FFMpegSoftProvider;
 import org.fagu.fmv.soft.exec.BufferedReadLine;
 import org.fagu.fmv.soft.exec.ReadLine;
-import org.fagu.fmv.soft.ffmpeg.FFMpegSoftProvider;
 
 
 /**

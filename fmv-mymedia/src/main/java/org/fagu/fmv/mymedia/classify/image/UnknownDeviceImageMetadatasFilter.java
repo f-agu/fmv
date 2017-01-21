@@ -22,7 +22,7 @@ package org.fagu.fmv.mymedia.classify.image;
 
 import java.util.function.Predicate;
 
-import org.fagu.fmv.image.ImageMetadatas;
+import org.fagu.fmv.im.ImageMetadatas;
 
 
 /**

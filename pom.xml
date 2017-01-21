@@ -34,7 +34,6 @@
 		<module>fmv-cli</module>
 		<module>fmv-core</module>
 		<module>fmv-ffmpeg</module>
-		<module>fmv-image</module>
 		<module>fmv-imagemagick</module>
 		<module>fmv-media</module>
 		<module>fmv-mymedia</module>

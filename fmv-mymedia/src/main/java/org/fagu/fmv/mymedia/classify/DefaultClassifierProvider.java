@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.fagu.fmv.image.Image;
+import org.fagu.fmv.im.Image;
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.mymedia.classify.image.ReduceImageConverter;
 import org.fagu.fmv.mymedia.classify.movie.Movie;

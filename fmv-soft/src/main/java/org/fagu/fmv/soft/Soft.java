@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
@@ -44,6 +45,9 @@ import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.ExecHelper;
 import org.fagu.fmv.soft.exec.FMVCommandLine;
 import org.fagu.fmv.soft.exec.FMVExecutor;
+import org.fagu.fmv.soft.exec.exception.ExceptionKnowConsumer;
+import org.fagu.fmv.soft.exec.exception.ExceptionKnown;
+import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
 import org.fagu.fmv.soft.find.FoundStrategy;
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFindListener;
@@ -206,17 +210,23 @@ public class Soft {
 	 */
 	public static class SoftExecutor extends ExecHelper<SoftExecutor> {
 
+		private final SoftProvider softProvider;
+
 		private final File execFile;
 
 		private final List<String> parameters;
 
 		private final List<ExecListener> execListeners;
 
+		private ExceptionKnowConsumer exceptionKnowConsumer;
+
 		/**
+		 * @param softProvider
 		 * @param execFile
 		 * @param parameters
 		 */
-		public SoftExecutor(File execFile, List<String> parameters) {
+		public SoftExecutor(SoftProvider softProvider, File execFile, List<String> parameters) {
+			this.softProvider = Objects.requireNonNull(softProvider);
 			this.execFile = Objects.requireNonNull(execFile);
 			this.parameters = Collections.unmodifiableList(new ArrayList<>(parameters)); // defensive copy
 			this.execListeners = new ArrayList<>();
@@ -248,6 +258,17 @@ public class Soft {
 		}
 
 		/**
+		 * @param exceptionKnowConsumer
+		 * @return
+		 */
+		public SoftExecutor ifExceptionIsKnownDo(ExceptionKnowConsumer exceptionKnowConsumer) {
+			if(softProvider.getExceptionKnownAnalyzerClass() != null) {
+				this.exceptionKnowConsumer = exceptionKnowConsumer;
+			}
+			return this;
+		}
+
+		/**
 		 * @return Executed time in milliseconds
 		 * @throws IOException
 		 */
@@ -272,7 +293,17 @@ public class Soft {
 			} catch(ExecuteException e) {
 				FMVExecuteException fmvExecuteException = new FMVExecuteException(e, cmdLineStr, readLineList);
 				execListener.eventException(fmvExecuteException);
-				throw fmvExecuteException;
+				boolean isKnown = false;
+				if(exceptionKnowConsumer != null) {
+					Optional<ExceptionKnown> known = ExceptionKnownAnalyzers.getKnown(softProvider.getExceptionKnownAnalyzerClass(), e);
+					if(known.isPresent()) {
+						isKnown = true;
+						exceptionKnowConsumer.accept(known.get());
+					}
+				}
+				if( ! isKnown) {
+					throw fmvExecuteException;
+				}
 			}
 			return time;
 		}

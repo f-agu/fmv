@@ -28,8 +28,8 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.fagu.fmv.ffmpeg.soft.FFMpeg;
 import org.fagu.fmv.soft.exec.ReadLine;
-import org.fagu.fmv.soft.ffmpeg.FFMpeg;
 import org.junit.Before;
 import org.junit.Test;
 

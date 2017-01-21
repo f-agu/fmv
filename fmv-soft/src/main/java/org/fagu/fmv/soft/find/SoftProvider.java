@@ -34,6 +34,7 @@ import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.soft.Soft.SoftSearch;
 import org.fagu.fmv.soft.SoftName;
+import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 
 
 /**
@@ -161,7 +162,14 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public SoftExecutor createSoftExecutor(Soft soft, File execFile, List<String> parameters) {
-		return new SoftExecutor(execFile, parameters);
+		return new SoftExecutor(this, execFile, parameters);
+	}
+
+	/**
+	 * @return
+	 */
+	public Class<? extends ExceptionKnownAnalyzer> getExceptionKnownAnalyzerClass() {
+		return null;
 	}
 
 	/**

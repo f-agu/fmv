@@ -33,6 +33,20 @@ public class SimpleExceptionKnownAnalyzer implements ExceptionKnownAnalyzer {
 	}
 
 	/**
+	 * @return
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getStrToFind() {
+		return strToFind;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

@@ -30,8 +30,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import org.fagu.fmv.image.Image;
-import org.fagu.fmv.image.ImageMetadatas;
+import org.fagu.fmv.im.Image;
+import org.fagu.fmv.im.ImageMetadatas;
 import org.fagu.fmv.mymedia.classify.image.TimeOffsetImageComparator;
 import org.fagu.fmv.utils.file.FileFinder;
 import org.fagu.fmv.utils.file.FileFinder.InfosFile;

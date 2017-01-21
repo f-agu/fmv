@@ -1,13 +1,6 @@
 org.fagu.fmv.soft.ffmpeg.FFMpegSoftProvider
 org.fagu.fmv.soft.ffmpeg.FFProbeSoftProvider
 org.fagu.fmv.soft.gs.GSSoftProvider
-org.fagu.fmv.soft.im.AnimateSoftProvider
-org.fagu.fmv.soft.im.CompositeSoftProvider
-org.fagu.fmv.soft.im.ConjureSoftProvider
-org.fagu.fmv.soft.im.ConvertSoftProvider
-org.fagu.fmv.soft.im.IdentifySoftProvider
-org.fagu.fmv.soft.im.MogrifySoftProvider
-org.fagu.fmv.soft.im.MontageSoftProvider
 org.fagu.fmv.soft.xpdf.PdfDetachSoftProvider
 org.fagu.fmv.soft.xpdf.PdfFontsSoftProvider
 org.fagu.fmv.soft.xpdf.PdfInfoSoftProvider

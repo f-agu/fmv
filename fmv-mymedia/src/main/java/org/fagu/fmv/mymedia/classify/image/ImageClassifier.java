@@ -23,7 +23,7 @@ package org.fagu.fmv.mymedia.classify.image;
 
 import java.io.File;
 
-import org.fagu.fmv.image.Image;
+import org.fagu.fmv.im.Image;
 import org.fagu.fmv.mymedia.classify.Classifier;
 import org.fagu.fmv.mymedia.file.ImageFinder;
 

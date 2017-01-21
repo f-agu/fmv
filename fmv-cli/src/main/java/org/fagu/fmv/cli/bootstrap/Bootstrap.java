@@ -41,9 +41,9 @@ import org.fagu.fmv.core.FMV;
 import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.OutputInfos;
 import org.fagu.fmv.core.project.Project;
+import org.fagu.fmv.ffmpeg.soft.FFMpeg;
+import org.fagu.fmv.ffmpeg.soft.FFProbe;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
-import org.fagu.fmv.soft.ffmpeg.FFMpeg;
-import org.fagu.fmv.soft.ffmpeg.FFProbe;
 import org.fagu.fmv.utils.io.UnclosedInputStream;
 import org.fagu.fmv.utils.media.Size;
 

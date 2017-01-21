@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.fagu.fmv.image.Image;
+import org.fagu.fmv.im.Image;
 import org.fagu.fmv.mymedia.classify.Organizer;
 import org.fagu.fmv.mymedia.file.ImageFinder;
 import org.fagu.fmv.mymedia.utils.TextProgressBar;

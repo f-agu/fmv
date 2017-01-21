@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 
-import org.fagu.fmv.image.Image;
-import org.fagu.fmv.image.ImageMetadatas;
+import org.fagu.fmv.im.Image;
+import org.fagu.fmv.im.ImageMetadatas;
 
 
 /**
@@ -59,7 +59,7 @@ public class TimeOffsetImageComparator implements ImageTimeComparator {
 	}
 
 	/**
-	 * @see org.fagu.fmv.mymedia.classify.image.ImageTimeComparator#getTime(org.fagu.fmv.image.Image)
+	 * @see org.fagu.fmv.mymedia.classify.image.ImageTimeComparator#getTime(org.fagu.fmv.im.Image)
 	 */
 	@Override
 	public long getTime(Image image) {

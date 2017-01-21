@@ -26,14 +26,13 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.function.Predicate;
 
 import org.fagu.fmv.soft.exec.exception.ExceptionKnown;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
-import org.fagu.fmv.soft.exec.exception.NestedException;
+import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
 import org.fagu.fmv.utils.ClassResolver;
 
 
@@ -45,8 +44,6 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 	private static final List<MetadatasFactory> METADATAS_FACTORIES = new ArrayList<>();
 
 	private final Class<? extends ExceptionKnownAnalyzer> exceptionKnownSPIClass;
-
-	private List<ExceptionKnownAnalyzer> exceptionKnownList;
 
 	/**
 	 * @param exceptionKnownSPIClass
@@ -68,27 +65,21 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 	 */
 	abstract public Metadatas parseJSON(String json);
 
+	// --------------------------------------------------
+
 	/**
 	 * @return
 	 */
-	public List<ExceptionKnownAnalyzer> getExceptionKnownAnalyzers() {
-		if(exceptionKnownList == null) {
-			List<ExceptionKnownAnalyzer> list = new ArrayList<>();
-			for(ExceptionKnownAnalyzer exceptionKnown : ServiceLoader.load(exceptionKnownSPIClass)) {
-				list.add(exceptionKnown);
-			}
-			exceptionKnownList = list;
-		}
-		return exceptionKnownList;
+	public List<? extends ExceptionKnownAnalyzer> getExceptionKnownAnalyzers() {
+		return ExceptionKnownAnalyzers.getExceptionKnownAnalyzers(exceptionKnownSPIClass);
 	}
 
 	/**
 	 * @param e
 	 * @return
 	 */
-	public Optional<ExceptionKnown> isExceptionKnown(Exception e) {
-		NestedException nestedException = new NestedException(e);
-		return getExceptionKnownAnalyzers().stream().map(ek -> ek.anaylze(nestedException)).filter(Objects::nonNull).findFirst();
+	public Optional<ExceptionKnown> getExceptionKnown(Exception e) {
+		return ExceptionKnownAnalyzers.getKnown(exceptionKnownSPIClass, e);
 	}
 
 	// --------------------------------------------------

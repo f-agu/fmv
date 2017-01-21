@@ -1,0 +1,7 @@
+org.fagu.fmv.im.soft.AnimateSoftProvider
+org.fagu.fmv.im.soft.CompositeSoftProvider
+org.fagu.fmv.im.soft.ConjureSoftProvider
+org.fagu.fmv.im.soft.ConvertSoftProvider
+org.fagu.fmv.im.soft.IdentifySoftProvider
+org.fagu.fmv.im.soft.MogrifySoftProvider
+org.fagu.fmv.im.soft.MontageSoftProvider

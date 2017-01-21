@@ -25,8 +25,8 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.fagu.fmv.im.IMOperation;
+import org.fagu.fmv.im.soft.Convert;
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.im.Convert;
 
 
 /**

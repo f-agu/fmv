@@ -53,7 +53,7 @@ import org.fagu.fmv.core.exec.Executable;
 import org.fagu.fmv.core.exec.ExecutableFactory;
 import org.fagu.fmv.core.exec.FileCache;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.fagu.fmv.image.ImageMetadatas;
+import org.fagu.fmv.im.ImageMetadatas;
 import org.fagu.fmv.media.FileType;
 import org.fagu.fmv.media.Metadatas;
 import org.fagu.fmv.utils.Proxifier;
