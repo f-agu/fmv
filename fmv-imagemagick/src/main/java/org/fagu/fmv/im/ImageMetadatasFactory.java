@@ -55,7 +55,7 @@ public class ImageMetadatasFactory extends MetadatasFactory {
 	 */
 	@Override
 	public Metadatas extract(File file) throws IOException {
-		return ImageMetadatas.extract(file);
+		return ImageMetadatas.with(file).extract();
 	}
 
 	/**

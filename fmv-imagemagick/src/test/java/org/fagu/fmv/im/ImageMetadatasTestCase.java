@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.fagu.fmv.im.ImageMetadatas;
 import org.fagu.fmv.utils.media.Size;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -53,7 +52,7 @@ public class ImageMetadatasTestCase {
 	public void testSimple1() throws Exception {
 		File file = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
 		try {
-			ImageMetadatas metadatas = ImageMetadatas.extract(file);
+			ImageMetadatas metadatas = ImageMetadatas.with(file).extract();
 			assertMetadatas_BadAssTottooFail(metadatas);
 		} finally {
 			if(file != null) {
@@ -69,7 +68,7 @@ public class ImageMetadatasTestCase {
 	public void testSimple2() throws Exception {
 		File file = ImageResourceUtils.extractFile("wei-ass.jpg");
 		try {
-			ImageMetadatas metadatas = ImageMetadatas.extract(file);
+			ImageMetadatas metadatas = ImageMetadatas.with(file).extract();
 			assertMetadatas_WeiAss(metadatas);
 		} finally {
 			if(file != null) {
@@ -87,7 +86,7 @@ public class ImageMetadatasTestCase {
 		File file2 = ImageResourceUtils.extractFile("wei-ass.jpg");
 
 		try {
-			Map<File, ImageMetadatas> map = ImageMetadatas.extract(Arrays.asList(file2, file1));
+			Map<File, ImageMetadatas> map = ImageMetadatas.with(Arrays.asList(file2, file1)).extract();
 			Iterator<ImageMetadatas> iterator = map.values().iterator();
 			assertMetadatas_WeiAss(iterator.next());
 			assertMetadatas_BadAssTottooFail(iterator.next());
@@ -108,7 +107,7 @@ public class ImageMetadatasTestCase {
 	public void testFailed() throws Exception {
 		File file = ImageResourceUtils.extractFile("no-image", "jpg");
 		try {
-			ImageMetadatas.extract(file);
+			ImageMetadatas.with(file).extract();
 			fail();
 		} catch(IOException e) {
 			assertTrue(e.getMessage().contains("Not a JPEG file"));

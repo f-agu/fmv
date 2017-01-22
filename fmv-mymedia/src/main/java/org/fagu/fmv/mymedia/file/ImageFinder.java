@@ -132,15 +132,15 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 	 * @return
 	 */
 	private Callable<Map<FileFound, InfosFile>> create(List<FileFound> buffer, Consumer<List<FileFound>> consumer) {
-		List<File> files = buffer.stream().map(ff -> ff.getFileFound()).collect(Collectors.toList());
+		List<File> files = buffer.stream().map(FileFound::getFileFound).collect(Collectors.toList());
 		return () -> {
 			Map<File, ImageMetadatas> map = null;
 			try {
-				map = ImageMetadatas.extract(files);
+				map = ImageMetadatas.with(files).extract();
 			} catch(IOException e) {
 				throw new RuntimeException(e);
 			}
-			Map<File, FileFound> reverseMap = buffer.stream().collect(Collectors.toMap(ff -> ff.getFileFound(), ff -> ff));
+			Map<File, FileFound> reverseMap = buffer.stream().collect(Collectors.toMap(FileFound::getFileFound, ff -> ff));
 			Map<FileFound, InfosFile> outMap = new LinkedHashMap<>(map.size());
 
 			for(Entry<File, ImageMetadatas> entry : map.entrySet()) {

@@ -96,7 +96,6 @@ import org.fagu.fmv.ffmpeg.utils.PixelFormat;
 import org.fagu.fmv.ffmpeg.utils.Time;
 import org.fagu.fmv.ffmpeg.utils.VSync;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
-import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.utils.media.Size;
 
 
@@ -457,12 +456,12 @@ public class FFHelper {
 		executor.addListener(new FFExecListener() {
 
 			@Override
-			public void eventExecFailed(IOException e, FMVExecutor fmvExecutor, CommandLine command) {
+			public void eventExecFailed(IOException e, CommandLine command) {
 				System.out.println("FAILED: " + CommandLineUtils.toLine(command));
 			}
 
 			@Override
-			public void eventPreExecFallbacks(FMVExecutor fmvExecutor, CommandLine command, Collection<FFExecFallback> fallbacks) {
+			public void eventPreExecFallbacks(CommandLine command, Collection<FFExecFallback> fallbacks) {
 				System.out.println("With fallback: " + fallbacks);
 				System.out.println(" -->: " + CommandLineUtils.toLine(command));
 			}

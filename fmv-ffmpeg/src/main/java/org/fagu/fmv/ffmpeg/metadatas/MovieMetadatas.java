@@ -33,13 +33,13 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Predicate;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.media.Metadatas;
 import org.fagu.fmv.utils.collection.MapList;
 import org.fagu.fmv.utils.collection.MultiValueMaps;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 
 /**
@@ -52,10 +52,12 @@ public class MovieMetadatas implements Metadatas, Serializable {
 	private static final Map<String, Factory<?>> FACTORY_MAP = new HashMap<>(4);
 
 	static {
-		FACTORY_MAP.put("format", (json, mm) -> Format.create(json, mm));
-		FACTORY_MAP.put("streams", (json, mm) -> Stream.create(json, mm));
-		FACTORY_MAP.put("chapters", (json, mm) -> Chapter.create(json, mm));
+		FACTORY_MAP.put("format", Format::create);
+		FACTORY_MAP.put("streams", Stream::create);
+		FACTORY_MAP.put("chapters", Chapter::create);
 	}
+
+	// --------------------------------------------------------
 
 	private final List<InfoBase> infoBaseList;
 
@@ -318,6 +320,7 @@ public class MovieMetadatas implements Metadatas, Serializable {
 	 *
 	 * @param <O>
 	 */
+	@FunctionalInterface
 	public interface Factory<O extends InfoBase> {
 
 		/**

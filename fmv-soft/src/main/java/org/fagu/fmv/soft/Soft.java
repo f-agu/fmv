@@ -29,9 +29,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
@@ -46,7 +47,6 @@ import org.fagu.fmv.soft.exec.ExecHelper;
 import org.fagu.fmv.soft.exec.FMVCommandLine;
 import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnowConsumer;
-import org.fagu.fmv.soft.exec.exception.ExceptionKnown;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
 import org.fagu.fmv.soft.find.FoundStrategy;
 import org.fagu.fmv.soft.find.Founds;
@@ -66,6 +66,8 @@ import org.fagu.fmv.utils.order.OrderComparator;
  * @author f.agu
  */
 public class Soft {
+
+	private static final Map<String, Soft> SOFT_NAME_CACHE = new HashMap<>();
 
 	// -----------------------------------------------------------
 
@@ -269,13 +271,20 @@ public class Soft {
 		}
 
 		/**
+		 * @return
+		 */
+		public CommandLine getCommandLine() {
+			return FMVCommandLine.create(execFile, parameters);
+		}
+
+		/**
 		 * @return Executed time in milliseconds
 		 * @throws IOException
 		 */
 		public long execute() throws IOException {
 			ExecListener execListener = new Proxifier<>(ExecListener.class).addAll(execListeners).proxify();
 
-			CommandLine commandLine = FMVCommandLine.create(execFile, parameters);
+			CommandLine commandLine = getCommandLine();
 			String cmdLineStr = CommandLineUtils.toLine(commandLine);
 			execListener.eventPrepare(cmdLineStr);
 
@@ -293,17 +302,7 @@ public class Soft {
 			} catch(ExecuteException e) {
 				FMVExecuteException fmvExecuteException = new FMVExecuteException(e, cmdLineStr, readLineList);
 				execListener.eventException(fmvExecuteException);
-				boolean isKnown = false;
-				if(exceptionKnowConsumer != null) {
-					Optional<ExceptionKnown> known = ExceptionKnownAnalyzers.getKnown(softProvider.getExceptionKnownAnalyzerClass(), e);
-					if(known.isPresent()) {
-						isKnown = true;
-						exceptionKnowConsumer.accept(known.get());
-					}
-				}
-				if( ! isKnown) {
-					throw fmvExecuteException;
-				}
+				ExceptionKnownAnalyzers.doOrThrows(softProvider.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer);
 			}
 			return time;
 		}
@@ -397,12 +396,18 @@ public class Soft {
 	 * @return
 	 */
 	public static Soft search(String name) {
-		return SoftProvider.getSoftProviders() //
+		Soft soft = SOFT_NAME_CACHE.get(name);
+		if(soft != null) {
+			return soft;
+		}
+		soft = SoftProvider.getSoftProviders() //
 				.filter(sp -> sp.getName().equalsIgnoreCase(name)) //
 				.sorted(Collections.reverseOrder(OrderComparator.INSTANCE)) //
 				.map(SoftProvider::search) //
 				.findFirst() //
 				.orElseThrow(() -> new RuntimeException("Soft \"" + name + "\" undefined"));
+		SOFT_NAME_CACHE.put(name, soft);
+		return soft;
 	}
 
 	/**

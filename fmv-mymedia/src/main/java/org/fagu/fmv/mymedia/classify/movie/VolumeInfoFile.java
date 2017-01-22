@@ -22,6 +22,7 @@ package org.fagu.fmv.mymedia.classify.movie;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.OptionalInt;
 
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
@@ -81,11 +82,11 @@ public class VolumeInfoFile implements InfoFile {
 
 		FFExecutor<Object> executor = builder.build();
 		if(metadatas != null) {
-			Integer countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
-			if(countEstimateFrames != null) {
+			OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
+			if(countEstimateFrames.isPresent()) {
 				FFMpegTextProgressBar ffMpegTextProgressBar = new FFMpegTextProgressBar();
 				try {
-					ffMpegTextProgressBar.prepareProgressBar(executor, "Detect volume", ffMpegTextProgressBar.progressByFrame(countEstimateFrames));
+					ffMpegTextProgressBar.prepareProgressBar(executor, "Detect volume", ffMpegTextProgressBar.progressByFrame(countEstimateFrames.getAsInt()));
 					executor.execute();
 				} finally {
 					ffMpegTextProgressBar.close();

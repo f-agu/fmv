@@ -22,10 +22,10 @@ package org.fagu.fmv.ffmpeg.metadatas;
 
 import java.util.NavigableMap;
 
-import net.sf.json.JSONObject;
-
 import org.fagu.fmv.ffmpeg.utils.Fraction;
 import org.fagu.fmv.ffmpeg.utils.Time;
+
+import net.sf.json.JSONObject;
 
 
 /**
@@ -84,13 +84,6 @@ public class Chapter extends InfoBase {
 	 */
 	public Time endTime() {
 		return getTime("end_time");
-	}
-
-	/**
-	 * @return
-	 */
-	public String title() {
-		return (String)tag("title");
 	}
 
 	/**

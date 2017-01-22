@@ -58,6 +58,7 @@ public class Image implements Media, Comparable<Image>, Serializable {
 	/**
 	 * @see org.fagu.fmv.mymedia.Media#getFile()
 	 */
+	@Override
 	public File getFile() {
 		return file;
 	}
@@ -65,6 +66,7 @@ public class Image implements Media, Comparable<Image>, Serializable {
 	/**
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
+	@Override
 	public int compareTo(Image o) {
 		long t1 = getTime();
 		long t2 = o.getTime();
@@ -80,6 +82,7 @@ public class Image implements Media, Comparable<Image>, Serializable {
 	/**
 	 * @see org.fagu.fmv.media.Media#getTime()
 	 */
+	@Override
 	public long getTime() {
 		if(time > 0) {
 			return time;
@@ -90,10 +93,11 @@ public class Image implements Media, Comparable<Image>, Serializable {
 	/**
 	 * @see org.fagu.fmv.mymedia.Media#getMetadatas()
 	 */
+	@Override
 	public ImageMetadatas getMetadatas() {
 		if(metadatas == null) {
 			try {
-				metadatas = ImageMetadatas.extract(file);
+				metadatas = ImageMetadatas.with(file).extract();
 			} catch(Exception e) {
 				throw new RuntimeException(e);
 			}

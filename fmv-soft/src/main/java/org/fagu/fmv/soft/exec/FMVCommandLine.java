@@ -20,7 +20,6 @@ package org.fagu.fmv.soft.exec;
  * #L%
  */
 
-
 import java.io.File;
 import java.util.Collection;
 

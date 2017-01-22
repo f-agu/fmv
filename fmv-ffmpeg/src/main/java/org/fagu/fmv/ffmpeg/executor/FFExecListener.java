@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.apache.commons.exec.CommandLine;
 import org.fagu.fmv.soft.exec.FMVExecListener;
-import org.fagu.fmv.soft.exec.FMVExecutor;
 
 
 /**
@@ -39,23 +38,20 @@ public interface FFExecListener extends FMVExecListener {
 
 	/**
 	 * @param e
-	 * @param fmvExecutor
 	 * @param command
 	 */
-	default void eventExecFailed(IOException e, FMVExecutor fmvExecutor, CommandLine command) {}
+	default void eventExecFailed(IOException e, CommandLine command) {}
 
 	/**
-	 * @param fmvExecutor
 	 * @param command
 	 * @param fallbacks
 	 */
-	default void eventPreExecFallbacks(FMVExecutor fmvExecutor, CommandLine command, Collection<FFExecFallback> fallbacks) {}
+	default void eventPreExecFallbacks(CommandLine command, Collection<FFExecFallback> fallbacks) {}
 
 	/**
-	 * @param fmvExecutor
 	 * @param command
 	 * @param outputs
 	 */
-	default void eventFallbackNotFound(FMVExecutor fmvExecutor, CommandLine command, List<String> outputs) {}
+	default void eventFallbackNotFound(CommandLine command, List<String> outputs) {}
 
 }

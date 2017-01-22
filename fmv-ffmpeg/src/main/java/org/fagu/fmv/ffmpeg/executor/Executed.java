@@ -28,21 +28,6 @@ public interface Executed<R> {
 	/**
 	 * @return
 	 */
-	int getExitValue();
-
-	/**
-	 * @return
-	 */
-	long getStartTime();
-
-	/**
-	 * @return
-	 */
-	long getEndTime();
-
-	/**
-	 * @return
-	 */
 	long getDurationInMilliseconds();
 
 	/**

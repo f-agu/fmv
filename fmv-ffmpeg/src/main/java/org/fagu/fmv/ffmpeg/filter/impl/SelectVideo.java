@@ -21,6 +21,7 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  */
 
 import java.util.Collections;
+import java.util.OptionalInt;
 import java.util.Set;
 
 import org.fagu.fmv.ffmpeg.filter.AbstractFilter;
@@ -83,9 +84,12 @@ public class SelectVideo extends AbstractFilter {
 	 * @return
 	 */
 	public SelectVideo countFrame(VideoStream videoStream, int countFrame) {
-		Integer countEstimateFrames = videoStream.countEstimateFrames();
-		int everyFrame = Math.round((float)countEstimateFrames / (float)countFrame);
-		return everyFrame(everyFrame);
+		OptionalInt countEstimateFrames = videoStream.countEstimateFrames();
+		if(countEstimateFrames.isPresent()) {
+			int everyFrame = Math.round((float)countEstimateFrames.getAsInt() / (float)countFrame);
+			return everyFrame(everyFrame);
+		}
+		return null;
 	}
 
 	/**

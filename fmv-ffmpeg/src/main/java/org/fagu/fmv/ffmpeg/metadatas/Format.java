@@ -23,9 +23,9 @@ package org.fagu.fmv.ffmpeg.metadatas;
 import java.util.NavigableMap;
 import java.util.OptionalInt;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
+
+import net.sf.json.JSONObject;
 
 
 /**
@@ -90,13 +90,6 @@ public class Format extends InfoBase {
 	 */
 	public String majorBrand() {
 		return StringUtils.stripToEmpty((String)tag("major_brand"));
-	}
-
-	/**
-	 * @return
-	 */
-	public String title() {
-		return (String)tag("title");
 	}
 
 	/**

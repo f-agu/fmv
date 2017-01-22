@@ -140,7 +140,7 @@ public class FileSource implements Comparable<FileSource> {
 	public ImageMetadatas getImageMetadatas() {
 		if(imageMetadatas == null && isImage()) {
 			try {
-				imageMetadatas = ImageMetadatas.extract(file);
+				imageMetadatas = ImageMetadatas.with(file).extract();
 			} catch(IOException e) {
 				throw new RuntimeException(e);
 			}

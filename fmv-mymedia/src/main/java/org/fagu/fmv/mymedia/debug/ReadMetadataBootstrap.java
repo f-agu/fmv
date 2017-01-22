@@ -51,8 +51,9 @@ public class ReadMetadataBootstrap {
 	 * @param file
 	 */
 	private static void onFile(File file) {
+		System.out.println(file);
 		onFile(file, IMAGE_METADATAS_FACTORY);
-		onFile(file, VIDEO_METADATAS_FACTORY);
+		// onFile(file, VIDEO_METADATAS_FACTORY);
 	}
 
 	/**

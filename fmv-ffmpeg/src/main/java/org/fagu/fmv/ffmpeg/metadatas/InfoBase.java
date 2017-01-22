@@ -50,19 +50,10 @@ import com.neovisionaries.i18n.LanguageCode;
  */
 public abstract class InfoBase implements MetadataProperties {
 
-	/**
-	 *
-	 */
 	private static final SimpleDateFormat CREATION_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
 
-	/**
-	 *
-	 */
 	protected final MovieMetadatas movieMetadatas;
 
-	/**
-	 *
-	 */
 	protected final NavigableMap<String, Object> map;
 
 	/**

@@ -25,13 +25,13 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.OptionalInt;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang3.math.NumberUtils;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.Fraction;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
+
+import net.sf.json.JSONObject;
 
 
 /**
@@ -164,17 +164,17 @@ public abstract class Stream extends InfoBase {
 	/**
 	 * @return
 	 */
-	public Integer countEstimateFrames() {
+	public OptionalInt countEstimateFrames() {
 		OptionalInt count = numberOfFrames();
 		if(count.isPresent()) {
-			return count.getAsInt();
+			return count;
 		}
 		FrameRate frameRate = frameRate();
 		if(frameRate == null) {
 			frameRate = averageFrameRate();
 		}
 		if(frameRate == null) {
-			return null;
+			return OptionalInt.empty();
 		}
 		Duration duration = duration();
 		if(duration == null) {
@@ -193,16 +193,16 @@ public abstract class Stream extends InfoBase {
 		if(duration == null) {
 			OptionalInt dts = durationTimeBase();
 			if( ! dts.isPresent()) {
-				return null;
+				return OptionalInt.empty();
 			}
 			Fraction timeBase = timeBase();
 			if(timeBase == null) {
-				return null;
+				return OptionalInt.empty();
 			}
 			duration = Duration.valueOf(dts.getAsInt() * timeBase.doubleValue());
 		}
 
-		return (int)(frameRate.doubleValue() * duration.toSeconds());
+		return OptionalInt.of((int)(frameRate.doubleValue() * duration.toSeconds()));
 	}
 
 	/**
@@ -259,7 +259,7 @@ public abstract class Stream extends InfoBase {
 	/**
 	 * @return
 	 */
-	abstract public Type type();
+	public abstract Type type();
 
 	// **********************************************
 

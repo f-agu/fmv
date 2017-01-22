@@ -308,11 +308,10 @@ public class FFReducer extends AbstractReducer {
 		executor.addListener(createCropDetectFFExecListener(logger, cropDetect, videoMetadatas));
 		executor.addListener(createVolumeDetectFFExecListener(logger, volumeDetect));
 
-		Integer countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
-		if(countEstimateFrames != null) {
+		OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
+		if(countEstimateFrames.isPresent()) {
 			ffMpegTextProgressBar = new FFMpegTextProgressBar();
-			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByFrame(countEstimateFrames,
-					srcFile.length()));
+			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByFrame(countEstimateFrames.getAsInt(), srcFile.length()));
 		}
 
 		executor.execute();
@@ -369,8 +368,7 @@ public class FFReducer extends AbstractReducer {
 		Duration duration = metadatas.getAudioStream().duration();
 		if(duration != null) {
 			ffMpegTextProgressBar = new FFMpegTextProgressBar();
-			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByDuration(duration, srcFile
-					.length()));
+			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByDuration(duration, srcFile.length()));
 		}
 		executor.execute();
 	}
@@ -445,11 +443,11 @@ public class FFReducer extends AbstractReducer {
 			}
 
 			/**
-			 * @see org.fagu.fmv.ffmpeg.executor.FFExecListener#eventPreExecFallbacks(org.fagu.fmv.soft.exec.FMVExecutor,
-			 *      org.apache.commons.exec.CommandLine, java.util.Collection)
+			 * @see org.fagu.fmv.ffmpeg.executor.FFExecListener#eventPreExecFallbacks(org.apache.commons.exec.CommandLine,
+			 *      java.util.Collection)
 			 */
 			@Override
-			public void eventPreExecFallbacks(FMVExecutor fmvExecutor, CommandLine command, Collection<FFExecFallback> fallbacks) {
+			public void eventPreExecFallbacks(CommandLine command, Collection<FFExecFallback> fallbacks) {
 				logger.log("Exec fallback " + fallbacks + ": " + CommandLineUtils.toLine(command));
 			}
 
@@ -458,7 +456,7 @@ public class FFReducer extends AbstractReducer {
 			 *      org.apache.commons.exec.CommandLine)
 			 */
 			@Override
-			public void eventFallbackNotFound(FMVExecutor fmvExecutor, CommandLine command, List<String> outputs) {
+			public void eventFallbackNotFound(CommandLine command, List<String> outputs) {
 				logger.log("Fallback not found: " + CommandLineUtils.toLine(command));
 				outputs.forEach(logger::log);
 			}

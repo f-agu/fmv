@@ -60,7 +60,7 @@ public class ExecHelper<T> {
 
 	protected ExecuteStreamHandler executeStreamHandler;
 
-	protected Consumer<FMVExecutor> customizeExecutor;
+	protected List<Consumer<FMVExecutor>> customizeExecutors;
 
 	/**
 	 *
@@ -69,6 +69,7 @@ public class ExecHelper<T> {
 		commonReadLines = new ArrayList<>();
 		outReadLines = new ArrayList<>();
 		errReadLines = new ArrayList<>();
+		customizeExecutors = new ArrayList<>();
 		outDebugConsumer = line -> System.out.println("OUT  " + line);
 		errDebugConsumer = line -> System.out.println("ERR  " + line);
 	}
@@ -137,7 +138,9 @@ public class ExecHelper<T> {
 	 * @return
 	 */
 	public T customizeExecutor(Consumer<FMVExecutor> consumer) {
-		this.customizeExecutor = consumer;
+		if(consumer != null) {
+			customizeExecutors.add(consumer);
+		}
 		return getThis();
 	}
 
@@ -223,9 +226,7 @@ public class ExecHelper<T> {
 	 * @param fmvExecutor
 	 */
 	protected void applyCustomizeExecutor(FMVExecutor fmvExecutor) {
-		if(customizeExecutor != null) {
-			customizeExecutor.accept(fmvExecutor);
-		}
+		customizeExecutors.forEach(c -> c.accept(fmvExecutor));
 	}
 
 	/**
@@ -261,8 +262,7 @@ public class ExecHelper<T> {
 		}
 
 		// ReadLine
-		return FMVExecutor.create(workingFolder, getOutReadLine(defaultReaDLine), getErrReadLine(
-				defaultReaDLine));
+		return FMVExecutor.create(workingFolder, getOutReadLine(defaultReaDLine), getErrReadLine(defaultReaDLine));
 	}
 
 	// *******************************************************
