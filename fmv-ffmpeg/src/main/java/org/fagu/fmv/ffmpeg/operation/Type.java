@@ -45,7 +45,7 @@ public enum Type {
 	 */
 	public static Set<Type> valuesSet() {
 		Type[] values = Type.values();
-		Set<Type> set = new HashSet<Type>(values.length);
+		Set<Type> set = new HashSet<>(values.length);
 		for(Type type : values) {
 			set.add(type);
 		}
@@ -58,7 +58,7 @@ public enum Type {
 	 */
 	public static Set<Type> valuesSet(FilterComplexBase filterComplexBase) {
 		Type[] values = Type.values();
-		Set<Type> set = new HashSet<Type>(values.length);
+		Set<Type> set = new HashSet<>(values.length);
 		for(Type type : values) {
 			if(filterComplexBase.containsInput(type)) {
 				set.add(type);

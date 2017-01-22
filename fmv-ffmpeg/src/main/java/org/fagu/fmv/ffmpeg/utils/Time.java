@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.utils;
  * #L%
  */
 
-
 import java.util.regex.Matcher;
 
 import org.apache.commons.lang.math.NumberUtils;
@@ -31,9 +30,6 @@ import org.apache.commons.lang.math.NumberUtils;
  */
 public class Time extends AbstractTime implements Comparable<Time> {
 
-	/**
-	 * 
-	 */
 	private static final Time T0 = new Time(0);
 
 	/**
@@ -86,6 +82,7 @@ public class Time extends AbstractTime implements Comparable<Time> {
 	/**
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
+	@Override
 	public int compareTo(Time o) {
 		return super.compareTo(o);
 	}

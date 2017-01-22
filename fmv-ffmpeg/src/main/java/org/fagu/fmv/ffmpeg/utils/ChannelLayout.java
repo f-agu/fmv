@@ -439,8 +439,7 @@ public class ChannelLayout {
 					return true;
 				};
 
-				availableHelp.title().unreadLine().reader(individualReader).unreadLines(3).reader(standardReader).parse(executor.execute()
-						.getResult());
+				availableHelp.title().unreadLine().reader(individualReader).unreadLines(3).reader(standardReader).parse(executor.execute().getResult());
 			} catch(IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -454,10 +453,7 @@ public class ChannelLayout {
 	 */
 	private static class ChannelLayoutHelp extends Help {
 
-		/**
-		 * 
-		 */
-		private boolean individual;
+		private final boolean individual;
 
 		/**
 		 * @param name

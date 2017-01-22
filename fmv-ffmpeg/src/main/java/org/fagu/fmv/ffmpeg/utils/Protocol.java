@@ -49,9 +49,6 @@ public class Protocol {
 
 	// --------------------------------------------
 
-	/**
-	 * 
-	 */
 	private static final HelpCache<Protocol, ProtocolHelp> HELP_CACHE = new HelpCache<>(runnable(), Protocol::new);
 
 	// input
@@ -266,10 +263,7 @@ public class Protocol {
 	 */
 	private static class ProtocolHelp extends Help {
 
-		/**
-		 * 
-		 */
-		private IO io;
+		private final IO io;
 
 		/**
 		 * @param name

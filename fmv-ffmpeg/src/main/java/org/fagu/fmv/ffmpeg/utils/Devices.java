@@ -180,7 +180,7 @@ public class Devices {
 			try {
 				FFExecutor<List<String>> executor = new FFExecutor<>(operation);
 				Consumer<DeviceHelp> cacheConsumer = HELP_CACHE.consumer();
-				Function<String, DeviceHelp> factory = name -> new DeviceHelp(name);
+				Function<String, DeviceHelp> factory = DeviceHelp::new;
 
 				AvailableHelp<DeviceHelp> availableHelp = AvailableHelp.create();
 				availableHelp.title().legend().unreadLine().values(factory, cacheConsumer).parse(executor.execute().getResult());

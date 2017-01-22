@@ -172,7 +172,7 @@ public abstract class AbstractTime {
 	 * @return
 	 */
 	public static double toSeconds(int hour, int minute, double second, boolean negative) {
-		return (negative ? - 1D : 1D) * (60D * ((60D * (double)hour) + (double)minute) + second);
+		return (negative ? - 1D : 1D) * (60D * ((60D * hour) + minute) + second);
 	}
 
 	// *****************************************************
@@ -182,6 +182,9 @@ public abstract class AbstractTime {
 	 * @return
 	 */
 	protected boolean equals(AbstractTime abstractTime) {
+		if(abstractTime == null) {
+			return false;
+		}
 		return hour == abstractTime.hour && minute == abstractTime.minute && second == abstractTime.second;
 	}
 

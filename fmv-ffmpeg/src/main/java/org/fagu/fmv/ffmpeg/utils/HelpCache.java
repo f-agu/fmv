@@ -97,9 +97,7 @@ public class HelpCache<E, H extends Help> {
 	 * @return the consumer
 	 */
 	public Consumer<H> consumer() {
-		return h -> {
-			add(h.getName(), null, h);
-		};
+		return h -> add(h.getName(), null, h);
 	}
 
 	/**
@@ -113,7 +111,7 @@ public class HelpCache<E, H extends Help> {
 		}
 		Both<E, H> both = cacheMap.get(name);
 		if(both == null) {
-			both = new Both<E, H>();
+			both = new Both<>();
 			cacheMap.put(name, both);
 		}
 		if(e != null && both.e == null) {

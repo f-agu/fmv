@@ -131,8 +131,8 @@ public class FFInfo extends SoftInfo {
 			return builtVersion.toString();
 		}
 		if(builtDate != null) {
-			final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-			return DATE_FORMAT.format(builtDate);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			return dateFormat.format(builtDate);
 		}
 		return "<version not found>";
 	}

@@ -40,9 +40,6 @@ import org.fagu.fmv.ffmpeg.operation.LinesFFMPEGOperation;
  */
 public class PixelFormat {
 
-	/**
-	 * 
-	 */
 	private static final HelpCache<PixelFormat, PixelFormatHelp> HELP_CACHE = new HelpCache<>(runnable(), PixelFormat::new);
 
 	public static final PixelFormat _0BGR = new PixelFormat("0bgr");
@@ -497,10 +494,10 @@ public class PixelFormat {
 			try {
 				FFExecutor<List<String>> executor = new FFExecutor<>(operation);
 				Consumer<PixelFormatHelp> cacheConsumer = HELP_CACHE.consumer();
-				final Pattern PATTERN = Pattern.compile("(\\d+)\\s+(\\d+)");
-				Function<String, PixelFormatHelp> factory = name -> new PixelFormatHelp(name);
+				final Pattern pattern = Pattern.compile("(\\d+)\\s+(\\d+)");
+				Function<String, PixelFormatHelp> factory = PixelFormatHelp::new;
 				Consumer<PixelFormatHelp> consumer = help -> {
-					Matcher matcher = PATTERN.matcher(help.getText());
+					Matcher matcher = pattern.matcher(help.getText());
 					if(matcher.matches()) {
 						help.nbComponents = Integer.parseInt(matcher.group(1));
 						help.bitsPerPixel = Integer.parseInt(matcher.group(2));
@@ -525,14 +522,8 @@ public class PixelFormat {
 	 */
 	private static class PixelFormatHelp extends Help {
 
-		/**
-		 * 
-		 */
 		private int nbComponents;
 
-		/**
-		 * 
-		 */
 		private int bitsPerPixel;
 
 		/**

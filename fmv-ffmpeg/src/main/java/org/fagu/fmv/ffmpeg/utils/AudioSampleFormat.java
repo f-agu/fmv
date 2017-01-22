@@ -184,10 +184,7 @@ public class AudioSampleFormat {
 	 */
 	private static class AudioSampleFormatHelp extends Help {
 
-		/**
-		 * 
-		 */
-		private int depth;
+		private final int depth;
 
 		/**
 		 * @param name

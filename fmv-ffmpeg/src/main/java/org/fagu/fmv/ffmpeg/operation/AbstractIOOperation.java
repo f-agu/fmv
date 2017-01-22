@@ -55,6 +55,7 @@ public abstract class AbstractIOOperation<R, O> extends AbstractOperation<R, O> 
 	/**
 	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getInputParameters()
 	 */
+	@Override
 	public InputParameters getInputParameters() {
 		return inputParameters;
 	}
@@ -62,6 +63,7 @@ public abstract class AbstractIOOperation<R, O> extends AbstractOperation<R, O> 
 	/**
 	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getOutputParameters()
 	 */
+	@Override
 	public OutputParameters getOutputParameters() {
 		return outputParameters;
 	}

@@ -20,13 +20,13 @@ package org.fagu.fmv.ffmpeg.metadatas;
  * #L%
  */
 
-
 import java.util.NavigableMap;
 
 
 /**
  * @author f.agu
  */
+@FunctionalInterface
 public interface StreamFactory {
 
 	/**

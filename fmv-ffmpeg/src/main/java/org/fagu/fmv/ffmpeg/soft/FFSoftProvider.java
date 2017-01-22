@@ -131,16 +131,16 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 			private Map<String, Version> libVersions = new HashMap<>(); // lib versions
 
-			private final String CONFIGURATION_START_PATTERN = "configuration:";
+			private final String configurationStartPattern = "configuration:";
 
 			private SoftFound softFound;
 
 			@Override
-			public void readLine(String line) {
-				if(StringUtils.isBlank(line) || softFound != null) {
+			public void readLine(final String lineIn) {
+				if(StringUtils.isBlank(lineIn) || softFound != null) {
 					return;
 				}
-				line = line.trim();
+				String line = lineIn.trim();
 
 				// version
 				Matcher matcher = FF_FIRSTLINE_PATTERN.matcher(line);
@@ -154,8 +154,8 @@ public abstract class FFSoftProvider extends SoftProvider {
 				}
 
 				// configuration
-				if(line.startsWith(CONFIGURATION_START_PATTERN)) {
-					configuration = getConfiguration(StringUtils.substringAfter(line, CONFIGURATION_START_PATTERN).trim());
+				if(line.startsWith(configurationStartPattern)) {
+					configuration = getConfiguration(StringUtils.substringAfter(line, configurationStartPattern).trim());
 					return;
 				}
 
@@ -181,10 +181,10 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 				Integer builtVersion = null;
 				if(version != null && version.size() == 1) {
-					final int MIN_BUILD_VERSION = 100;
+					final int minBuildVersion = 100;
 					int major = version.getFieldValue(VersionUnit.VF_0_MAJOR, 0);
 					// N-70767-gd24af70
-					if(major > MIN_BUILD_VERSION) {
+					if(major > minBuildVersion) {
 						builtVersion = major;
 						version = null;
 					}

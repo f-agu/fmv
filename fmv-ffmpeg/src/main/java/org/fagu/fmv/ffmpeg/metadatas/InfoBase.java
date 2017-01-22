@@ -50,8 +50,6 @@ import com.neovisionaries.i18n.LanguageCode;
  */
 public abstract class InfoBase implements MetadataProperties {
 
-	private static final SimpleDateFormat CREATION_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
-
 	protected final MovieMetadatas movieMetadatas;
 
 	protected final NavigableMap<String, Object> map;
@@ -148,8 +146,9 @@ public abstract class InfoBase implements MetadataProperties {
 		if(tag == null) {
 			return null;
 		}
+		SimpleDateFormat createDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
 		try {
-			return CREATION_DATE_FORMAT.parse(tag);
+			return createDateFormat.parse(tag);
 		} catch(ParseException e) {
 			return null;
 		}
@@ -320,7 +319,7 @@ public abstract class InfoBase implements MetadataProperties {
 	 * @return
 	 */
 	protected FrameRate getFrameRate(String name) {
-		return get(name, s -> FrameRate.parse(s));
+		return get(name, FrameRate::parse);
 	}
 
 	/**
@@ -328,7 +327,7 @@ public abstract class InfoBase implements MetadataProperties {
 	 * @return
 	 */
 	protected Fraction getFraction(String name) {
-		return get(name, s -> Fraction.parse(s));
+		return get(name, Fraction::parse);
 	}
 
 	/**
@@ -336,7 +335,7 @@ public abstract class InfoBase implements MetadataProperties {
 	 * @return
 	 */
 	protected Ratio getRatio(String name) {
-		return get(name, s -> Ratio.parse(s));
+		return get(name, Ratio::parse);
 	}
 
 	/**
@@ -344,7 +343,7 @@ public abstract class InfoBase implements MetadataProperties {
 	 * @return
 	 */
 	protected PixelFormat getPixelFormat(String name) {
-		return get(name, s -> PixelFormat.byName(name));
+		return get(name, PixelFormat::byName);
 	}
 
 	/**

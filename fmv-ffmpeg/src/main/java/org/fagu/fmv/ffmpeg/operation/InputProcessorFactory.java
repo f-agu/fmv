@@ -20,13 +20,13 @@ package org.fagu.fmv.ffmpeg.operation;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.require.Require;
 
 
 /**
  * @author f.agu
  */
+@FunctionalInterface
 public interface InputProcessorFactory {
 
 	/**

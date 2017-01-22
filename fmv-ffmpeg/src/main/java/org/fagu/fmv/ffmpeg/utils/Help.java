@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.utils;
  * #L%
  */
 
-
 import org.apache.commons.lang3.ArrayUtils;
 
 
@@ -29,19 +28,10 @@ import org.apache.commons.lang3.ArrayUtils;
  */
 public abstract class Help {
 
-	/**
-	 * 
-	 */
 	private final String name;
 
-	/**
-	 * 
-	 */
 	protected char[] chars;
 
-	/**
-	 * 
-	 */
 	protected String text;
 
 	/**

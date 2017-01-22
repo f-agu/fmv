@@ -30,9 +30,6 @@ import org.fagu.fmv.utils.Fractionable;
  */
 public class Fraction extends Fractionable<Fraction> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = - 9079925093366839973L;
 
 	/**

@@ -40,14 +40,8 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
  */
 public class FontUtils {
 
-	/**
-	 * 
-	 */
 	private static BidiMap<String, Font> FONT_MAP;
 
-	/**
-	 * 
-	 */
 	private static Map<Font, File> FONTFILE_MAP;
 
 	//

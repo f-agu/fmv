@@ -32,66 +32,34 @@ import org.fagu.fmv.utils.collection.MultiValueMaps;
  */
 public class FrameRate extends Fractionable<FrameRate> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 137029467904009288L;
 
-	/**
-	 * 
-	 */
 	private static final MapList<String, FrameRate> FRAME_MAP = MultiValueMaps.hashMapArrayList();
 
-	/**
-	 * 
-	 */
 	public static final FrameRate NTSC = new FrameRate("ntsc", 30000, 1001);
 
-	/**
-	 * 
-	 */
 	public static final FrameRate PAL = new FrameRate("pal", 25);
 
-	/**
-	 * 
-	 */
 	public static final FrameRate QNTSC = new FrameRate("qntsc", 30000, 1001);
 
-	/**
-	 * 
-	 */
 	public static final FrameRate QPAL = new FrameRate("qpal", 25);
 
-	/**
-	 * 
-	 */
 	public static final FrameRate SNTSC = new FrameRate("sntsc", 30000, 1001);
 
-	/**
-	 * 
-	 */
 	public static final FrameRate SPAL = new FrameRate("spal", 25);
 
-	/**
-	 * 
-	 */
 	public static final FrameRate FILM = new FrameRate("film", 24);
 
-	/**
-	 * 
-	 */
 	public static final FrameRate NTSC_FILM = new FrameRate("ntsc-film", 24000, 1001);
 
-	/**
-	 * 
-	 */
-	private String name;
+	private final String name;
 
 	/**
 	 * @param fraction
 	 */
 	protected FrameRate(org.apache.commons.lang3.math.Fraction fraction) {
 		super(fraction);
+		name = null;
 	}
 
 	/**

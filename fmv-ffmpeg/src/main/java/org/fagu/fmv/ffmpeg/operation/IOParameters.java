@@ -94,7 +94,7 @@ public abstract class IOParameters {
 		if(list == null) {
 			return false;
 		}
-		return list.contains(parameterName);
+		return list.stream().map(Parameter::getName).anyMatch(name -> name.equals(parameterName));
 	}
 
 	/**

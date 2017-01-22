@@ -31,9 +31,6 @@ import java.util.regex.Pattern;
  */
 public class Color {
 
-	/**
-	 * 
-	 */
 	private static final Map<String, Color> NAME_COLOR = new HashMap<>();
 
 	/**

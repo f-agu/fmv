@@ -25,14 +25,8 @@ package org.fagu.fmv.ffmpeg.utils;
  */
 public class FPS {
 
-	/**
-	 *
-	 */
 	private final double countFrameBySeconds;
 
-	/**
-	 *
-	 */
 	private final String fps;
 
 	/**

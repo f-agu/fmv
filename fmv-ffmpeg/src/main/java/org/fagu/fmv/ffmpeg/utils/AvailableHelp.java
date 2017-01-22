@@ -50,6 +50,7 @@ public class AvailableHelp<H extends Help> {
 	/**
 	 * @author f.agu
 	 */
+	@FunctionalInterface
 	public interface Reader {
 
 		/**
@@ -81,9 +82,6 @@ public class AvailableHelp<H extends Help> {
 	 */
 	protected static class OneLineReader implements Reader {
 
-		/**
-		 * 
-		 */
 		protected String line;
 
 		/**
@@ -105,7 +103,7 @@ public class AvailableHelp<H extends Help> {
 		public String toString() {
 			return "OneLineReader(" + (line == null ? "un" : "") + "read)";
 		}
-	};
+	}
 
 	// ------------------------------------
 
@@ -114,14 +112,8 @@ public class AvailableHelp<H extends Help> {
 	 */
 	protected static class LinesReader implements Reader {
 
-		/**
-		 * 
-		 */
-		protected int max;
+		protected final int max;
 
-		/**
-		 * 
-		 */
 		protected int count;
 
 		/**
@@ -153,7 +145,7 @@ public class AvailableHelp<H extends Help> {
 		public String toString() {
 			return "LinesReader(" + count + "/" + max + ")";
 		}
-	};
+	}
 
 	// ------------------------------------
 
@@ -258,7 +250,7 @@ public class AvailableHelp<H extends Help> {
 		public String toString() {
 			return "LegendReader(" + legendMap.size() + ")";
 		}
-	};
+	}
 
 	// ------------------------------------
 
@@ -319,7 +311,7 @@ public class AvailableHelp<H extends Help> {
 			String text = matcher.group(2);
 			for(String name : names) {
 				H h = factory.apply(name);
-				Help help = (Help)h;
+				Help help = h;
 				help.chars = chars;
 				help.text = text;
 				if(consumer != null) {
@@ -337,7 +329,7 @@ public class AvailableHelp<H extends Help> {
 		public String toString() {
 			return "ValuesReader(" + count + ")";
 		}
-	};
+	}
 
 	// ------------------------------------
 	/**
@@ -456,7 +448,6 @@ public class AvailableHelp<H extends Help> {
 		while(lineIterator.hasNext()) {
 			String line = lineIterator.next().trim();
 			++number;
-			// System.out.println("## " + currentReader + " > " + line);
 			while( ! currentReader.read(line)) {
 				if( ! readerIterator.hasNext()) {
 					for(int i = Math.max(0, number - 8); i < Math.min(help.size(), number + 8); ++i) {

@@ -23,6 +23,7 @@ package org.fagu.fmv.ffmpeg.operation;
 /**
  * @author f.agu
  */
+@FunctionalInterface
 public interface IOEntity {
 
 	/**

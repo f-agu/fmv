@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.operation;
  * #L%
  */
 
-
 import java.util.Set;
 
 import org.fagu.fmv.ffmpeg.filter.Label;
@@ -29,6 +28,7 @@ import org.fagu.fmv.ffmpeg.filter.Label;
 /**
  * @author f.agu
  */
+@FunctionalInterface
 public interface AutoMap {
 
 	/**

@@ -134,13 +134,6 @@ public class BitStreamFilter {
 	/**
 	 * @return
 	 */
-	// private BitStreamFilterHelp cache() {
-	// return HELP_CACHE.cache(name).get(0);
-	// }
-
-	/**
-	 * @return
-	 */
 	private static Runnable runnable() {
 		return () -> {
 			LinesFFMPEGOperation operation = new LinesFFMPEGOperation();
