@@ -293,11 +293,6 @@ public class FFExecutor<R> {
 		}
 
 		List<ReadLine> lines = new ArrayList<>();
-		lines.add(outputReadLine);
-		ReadLine readLine = operation.getOutReadLine();
-		if(readLine != null) {
-			lines.add(readLine);
-		}
 		if(debug) {
 			lines.add(outDebugConsumer::accept);
 		}
@@ -315,11 +310,6 @@ public class FFExecutor<R> {
 	 */
 	protected ReadLine getErrReadLine() {
 		List<ReadLine> lines = new ArrayList<>();
-		lines.add(outputReadLine);
-		ReadLine readLine = operation.getErrReadLine();
-		if(readLine != null) {
-			lines.add(readLine);
-		}
 		if(ffmpegProgressReadLine != null) {
 			lines.add(ffmpegProgressReadLine);
 		}
@@ -424,9 +414,7 @@ public class FFExecutor<R> {
 				if(runFallbacks != null) {
 					return runFallbacks;
 				}
-				FMVExecuteException fmvExecuteException = new FMVExecuteException(MovieExceptionKnownAnalyzer.class, 0, e, CommandLineUtils.toLine(
-						getCommandLine()), outputs);
-				ExceptionKnownAnalyzers.doOrThrows(MovieExceptionKnownAnalyzer.class, fmvExecuteException, exceptionKnowConsumer);
+				ExceptionKnownAnalyzers.doOrThrows(MovieExceptionKnownAnalyzer.class, e, exceptionKnowConsumer);
 				return null;
 			}
 		}

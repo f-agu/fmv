@@ -107,22 +107,6 @@ public class FMVExecuteException extends ExecuteException {
 		return getExceptionKnown().isPresent();
 	}
 
-	/**
-	 * @see java.lang.Throwable#getMessage()
-	 */
-	@Override
-	public String getMessage() {
-		String lineSeparator = System.getProperty("line.separator");
-		StringBuilder sb = new StringBuilder(200);
-		sb.append(super.getMessage()).append(lineSeparator);
-		sb.append(commandLine).append(lineSeparator);
-		for(String str : outputLines) {
-			sb.append(str).append(lineSeparator);
-		}
-		sb.append("nested exception is ").append(getCause());
-		return sb.toString();
-	}
-
 	// *****************************************************
 
 	/**

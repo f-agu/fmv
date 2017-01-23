@@ -24,13 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import net.sf.json.JSONException;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.soft.exec.BufferedReadLine;
 import org.fagu.fmv.soft.exec.ReadLine;
+
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 
 
 /**
@@ -231,9 +231,9 @@ public class InfoOperation extends FFProbeOperation<MovieMetadatas> {
 			return MovieMetadatas.create(jsonObject);
 		} catch(JSONException e) {
 			// debug
-			for(String str : out) {
-				System.out.println(str);
-			}
+			// for(String str : out) {
+			// System.out.println(str);
+			// }
 			throw e;
 		}
 	}
