@@ -55,9 +55,9 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 	/**
 	 * @param file
 	 * @return
-	 * @throws IOException
 	 */
-	abstract public Metadatas extract(File file) throws IOException;
+	@SuppressWarnings("rawtypes")
+	abstract public MetadatasBuilder withFile(File file);
 
 	/**
 	 * @param json
@@ -66,6 +66,15 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 	abstract public Metadatas parseJSON(String json);
 
 	// --------------------------------------------------
+
+	/**
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public Metadatas extract(File file) throws IOException {
+		return withFile(file).extract();
+	}
 
 	/**
 	 * @return

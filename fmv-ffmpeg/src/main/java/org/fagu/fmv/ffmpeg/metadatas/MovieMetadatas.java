@@ -1,5 +1,8 @@
 package org.fagu.fmv.ffmpeg.metadatas;
 
+import java.io.File;
+import java.io.IOException;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -29,12 +32,22 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import org.fagu.fmv.ffmpeg.executor.Executed;
+import org.fagu.fmv.ffmpeg.executor.FFExecutor;
+import org.fagu.fmv.ffmpeg.ioe.FileMediaInput;
+import org.fagu.fmv.ffmpeg.operation.InfoOperation;
+import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.media.Metadatas;
+import org.fagu.fmv.media.MetadatasBuilder;
+import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.utils.collection.MapList;
 import org.fagu.fmv.utils.collection.MultiValueMaps;
 
@@ -59,6 +72,44 @@ public class MovieMetadatas implements Metadatas, Serializable {
 
 	// --------------------------------------------------------
 
+	public static class MovieMetadatasBuilder implements MetadatasBuilder<MovieMetadatas, MovieMetadatasBuilder> {
+
+		private final MediaInput mediaInput;
+
+		private Soft soft;
+
+		private Consumer<SoftExecutor> customizeSoftExecutor;
+
+		private MovieMetadatasBuilder(MediaInput mediaInput) {
+			this.mediaInput = Objects.requireNonNull(mediaInput);
+		}
+
+		@Override
+		public MovieMetadatasBuilder soft(Soft soft) {
+			this.soft = Objects.requireNonNull(soft);
+			return this;
+		}
+
+		@Override
+		public MovieMetadatasBuilder customizeExecutor(Consumer<SoftExecutor> customizeSoftExecutor) {
+			this.customizeSoftExecutor = customizeSoftExecutor;
+			return this;
+		}
+
+		@Override
+		public MovieMetadatas extract() throws IOException {
+			InfoOperation infoOperation = new InfoOperation(mediaInput);
+			FFExecutor<MovieMetadatas> executor = new FFExecutor<>(infoOperation);
+			executor.customizeSoftExecutor(customizeSoftExecutor);
+			executor.setSoft(soft);
+			Executed<MovieMetadatas> execute = executor.execute();
+			return execute.getResult();
+		}
+
+	}
+
+	// --------------------------------------------------------
+
 	private final List<InfoBase> infoBaseList;
 
 	private final String original;
@@ -70,6 +121,22 @@ public class MovieMetadatas implements Metadatas, Serializable {
 	protected MovieMetadatas(List<InfoBase> infoBaseList, String original) {
 		this.infoBaseList = Collections.unmodifiableList(infoBaseList);
 		this.original = original;
+	}
+
+	/**
+	 * @param mediaInput
+	 * @return
+	 */
+	public static MovieMetadatasBuilder with(MediaInput mediaInput) {
+		return new MovieMetadatasBuilder(mediaInput);
+	}
+
+	/**
+	 * @param file
+	 * @return
+	 */
+	public static MovieMetadatasBuilder with(File file) {
+		return new MovieMetadatasBuilder(new FileMediaInput(file));
 	}
 
 	/**

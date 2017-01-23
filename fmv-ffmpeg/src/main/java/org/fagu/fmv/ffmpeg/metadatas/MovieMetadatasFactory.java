@@ -1,13 +1,8 @@
 package org.fagu.fmv.ffmpeg.metadatas;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.fagu.fmv.ffmpeg.exception.MovieExceptionKnownAnalyzer;
-import org.fagu.fmv.ffmpeg.executor.Executed;
-import org.fagu.fmv.ffmpeg.executor.FFExecutor;
-import org.fagu.fmv.ffmpeg.ioe.FileMediaInput;
-import org.fagu.fmv.ffmpeg.operation.InfoOperation;
 
 /*
  * #%L
@@ -31,6 +26,7 @@ import org.fagu.fmv.ffmpeg.operation.InfoOperation;
 
 import org.fagu.fmv.media.FileType;
 import org.fagu.fmv.media.Metadatas;
+import org.fagu.fmv.media.MetadatasBuilder;
 import org.fagu.fmv.media.MetadatasFactory;
 
 
@@ -55,14 +51,12 @@ public class MovieMetadatasFactory extends MetadatasFactory {
 	}
 
 	/**
-	 * @see org.fagu.fmv.media.MetadatasFactory#extract(java.io.File)
+	 * @see org.fagu.fmv.media.MetadatasFactory#withFile(java.io.File)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public Metadatas extract(File file) throws IOException {
-		InfoOperation infoOperation = new InfoOperation(new FileMediaInput(file));
-		FFExecutor<MovieMetadatas> executor = new FFExecutor<>(infoOperation);
-		Executed<MovieMetadatas> execute = executor.execute();
-		return execute.getResult();
+	public MetadatasBuilder withFile(File file) {
+		return MovieMetadatas.with(file);
 	}
 
 	/**

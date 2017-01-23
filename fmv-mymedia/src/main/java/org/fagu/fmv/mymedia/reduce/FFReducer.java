@@ -37,7 +37,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.coder.Decoders;
 import org.fagu.fmv.ffmpeg.coder.Libx264;
-import org.fagu.fmv.ffmpeg.executor.Executed;
 import org.fagu.fmv.ffmpeg.executor.FFExecFallback;
 import org.fagu.fmv.ffmpeg.executor.FFExecListener;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
@@ -53,21 +52,19 @@ import org.fagu.fmv.ffmpeg.filter.impl.ScaleMode;
 import org.fagu.fmv.ffmpeg.filter.impl.VolumeDetect;
 import org.fagu.fmv.ffmpeg.filter.impl.VolumeDetected;
 import org.fagu.fmv.ffmpeg.flags.Strict;
-import org.fagu.fmv.ffmpeg.ioe.FileMediaInput;
 import org.fagu.fmv.ffmpeg.metadatas.AudioStream;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.Stream;
 import org.fagu.fmv.ffmpeg.metadatas.SubtitleStream;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
-import org.fagu.fmv.ffmpeg.operation.InfoOperation;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
-import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.mymedia.movie.StreamOrder;
 import org.fagu.fmv.mymedia.utils.FFMpegTextProgressBar;
+import org.fagu.fmv.soft.FMVExecuteException;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.utils.media.Rotation;
@@ -103,7 +100,15 @@ public class FFReducer extends AbstractReducer {
 
 	public static void main(String[] args) throws IOException {
 		FFReducer ffReducer = new FFReducer();
-		ffReducer.reduceMedia(new File("D:\\Personnel\\TODO\\ENCORE3\\5\\Lady Kung Fu.avi"), "toto", Loggers.systemOut());
+		try {
+			ffReducer.reduceMedia(new File("D:\\Personnel\\TODO\\ENCORE3\\12\\"), "toto", Loggers.systemOut());
+		} catch(FMVExecuteException e) {
+			e.printStackTrace();
+			// if( ! e.isKnown()) {
+			// throw e;
+			// }
+			// System.out.println("Error: " + e.getExceptionKnown().get().toString());
+		}
 	}
 
 	/**
@@ -140,8 +145,7 @@ public class FFReducer extends AbstractReducer {
 	@Override
 	public File reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException {
 		File destFile = null;
-		MovieMetadatas metadatas = getMetadatas(srcFile);
-
+		MovieMetadatas metadatas = MovieMetadatas.with(srcFile).extract();
 		try {
 			if(isVideo(metadatas, logger)) {
 				logger.log("is video");
@@ -311,7 +315,8 @@ public class FFReducer extends AbstractReducer {
 		OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
 		if(countEstimateFrames.isPresent()) {
 			ffMpegTextProgressBar = new FFMpegTextProgressBar();
-			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByFrame(countEstimateFrames.getAsInt(), srcFile.length()));
+			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByFrame(countEstimateFrames
+					.getAsInt(), srcFile.length()));
 		}
 
 		executor.execute();
@@ -368,22 +373,10 @@ public class FFReducer extends AbstractReducer {
 		Duration duration = metadatas.getAudioStream().duration();
 		if(duration != null) {
 			ffMpegTextProgressBar = new FFMpegTextProgressBar();
-			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByDuration(duration, srcFile.length()));
+			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByDuration(duration, srcFile
+					.length()));
 		}
 		executor.execute();
-	}
-
-	/**
-	 * @param inFile
-	 * @return
-	 * @throws IOException
-	 */
-	private MovieMetadatas getMetadatas(File inFile) throws IOException {
-		MediaInput input = new FileMediaInput(inFile);
-		InfoOperation infoOperation = new InfoOperation(input);
-		FFExecutor<MovieMetadatas> executor = new FFExecutor<>(infoOperation);
-		Executed<MovieMetadatas> execute = executor.execute();
-		return execute.getResult();
 	}
 
 	/**

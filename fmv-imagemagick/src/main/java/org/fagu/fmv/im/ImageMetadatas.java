@@ -50,6 +50,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.im.soft.Identify;
 import org.fagu.fmv.media.MetadataProperties;
 import org.fagu.fmv.media.Metadatas;
+import org.fagu.fmv.media.MetadatasBuilder;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.utils.media.Size;
@@ -77,7 +78,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 	// --------------------------------------------------------
 
-	public abstract static class ImageMetadatasBuilder<B extends ImageMetadatasBuilder<?>> {
+	public abstract static class ImageMetadatasBuilder<B extends ImageMetadatasBuilder<?>> implements MetadatasBuilder<ImageMetadatas, B> {
 
 		final Collection<File> sourceFiles;
 
@@ -92,6 +93,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 			identifySoft = Identify.search();
 		}
 
+		@Override
 		public B soft(Soft identifySoft) {
 			this.identifySoft = Objects.requireNonNull(identifySoft);
 			return getThis();
@@ -102,9 +104,16 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 			return getThis();
 		}
 
+		@Override
 		public B customizeExecutor(Consumer<SoftExecutor> customizeExecutor) {
 			this.customizeExecutor = customizeExecutor;
 			return getThis();
+		}
+
+		@Override
+		public ImageMetadatas extract() throws IOException {
+			Map<File, ImageMetadatas> extract = ImageMetadatas.extract(identifySoft, sourceFiles, logger, customizeExecutor);
+			return extract.get(sourceFiles.iterator().next());
 		}
 
 		// ********************************
@@ -124,11 +133,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 			super(Collections.singletonList(sourceFile));
 		}
 
-		public ImageMetadatas extract() throws IOException {
-			Map<File, ImageMetadatas> extract = ImageMetadatas.extract(identifySoft, sourceFiles, logger, customizeExecutor);
-			return extract.get(sourceFiles.iterator().next());
-		}
-
 	}
 
 	// --------------------------------------------------------
@@ -139,7 +143,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 			super(new ArrayList<>(sourceFiles)); // defensive copy
 		}
 
-		public Map<File, ImageMetadatas> extract() throws IOException {
+		public Map<File, ImageMetadatas> extractAll() throws IOException {
 			return ImageMetadatas.extract(identifySoft, sourceFiles, logger, customizeExecutor);
 		}
 

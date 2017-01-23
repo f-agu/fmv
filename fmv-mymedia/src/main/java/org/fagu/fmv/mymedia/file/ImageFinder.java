@@ -136,7 +136,7 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 		return () -> {
 			Map<File, ImageMetadatas> map = null;
 			try {
-				map = ImageMetadatas.with(files).extract();
+				map = ImageMetadatas.with(files).extractAll();
 			} catch(IOException e) {
 				throw new RuntimeException(e);
 			}

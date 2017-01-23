@@ -42,7 +42,10 @@ public class ExceptionKnownAnalyzers {
 	 */
 	public static Optional<ExceptionKnown> getKnown(Class<? extends ExceptionKnownAnalyzer> cls, Exception e) {
 		NestedException nestedException = new NestedException(e);
-		return getExceptionKnownAnalyzers(cls).stream().map(ek -> ek.anaylze(nestedException)).filter(Objects::nonNull).findFirst();
+		return getExceptionKnownAnalyzers(cls).stream() //
+				.map(ek -> ek.anaylze(nestedException)) //
+				.filter(Objects::nonNull) //
+				.findFirst();
 	}
 
 	/**
@@ -54,6 +57,7 @@ public class ExceptionKnownAnalyzers {
 	@SuppressWarnings("unchecked")
 	public static <E extends IOException> void doOrThrows(Class<? extends ExceptionKnownAnalyzer> cls, E exception,
 			ExceptionKnowConsumer exceptionKnowConsumer) throws E {
+
 		boolean isKnown = false;
 		if(exceptionKnowConsumer != null) {
 			Optional<ExceptionKnown> known = ExceptionKnownAnalyzers.getKnown(cls, exception);

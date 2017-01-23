@@ -1,7 +1,6 @@
 package org.fagu.fmv.im;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.fagu.fmv.im.exception.ImageExceptionKnownAnalyzer;
 
@@ -27,6 +26,7 @@ import org.fagu.fmv.im.exception.ImageExceptionKnownAnalyzer;
 
 import org.fagu.fmv.media.FileType;
 import org.fagu.fmv.media.Metadatas;
+import org.fagu.fmv.media.MetadatasBuilder;
 import org.fagu.fmv.media.MetadatasFactory;
 
 
@@ -51,11 +51,12 @@ public class ImageMetadatasFactory extends MetadatasFactory {
 	}
 
 	/**
-	 * @see org.fagu.fmv.media.MetadatasFactory#extract(java.io.File)
+	 * @see org.fagu.fmv.media.MetadatasFactory#withFile(java.io.File)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public Metadatas extract(File file) throws IOException {
-		return ImageMetadatas.with(file).extract();
+	public MetadatasBuilder withFile(File file) {
+		return ImageMetadatas.with(file);
 	}
 
 	/**

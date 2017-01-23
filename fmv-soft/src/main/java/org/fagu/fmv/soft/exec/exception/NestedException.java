@@ -20,7 +20,7 @@ public class NestedException {
 	private List<String> msgLines;
 
 	/**
-	 * 
+	 * @param exception
 	 */
 	public NestedException(Exception exception) {
 		this.exception = exception;

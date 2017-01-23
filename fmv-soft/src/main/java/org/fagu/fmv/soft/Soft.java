@@ -300,7 +300,8 @@ public class Soft {
 				time = System.currentTimeMillis() - startTime;
 				execListener.eventExecuted(cmdLineStr, exitValue, time);
 			} catch(ExecuteException e) {
-				FMVExecuteException fmvExecuteException = new FMVExecuteException(e, cmdLineStr, readLineList);
+				FMVExecuteException fmvExecuteException = new FMVExecuteException(softProvider.getExceptionKnownAnalyzerClass(), e, cmdLineStr,
+						readLineList);
 				execListener.eventException(fmvExecuteException);
 				ExceptionKnownAnalyzers.doOrThrows(softProvider.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer);
 			}

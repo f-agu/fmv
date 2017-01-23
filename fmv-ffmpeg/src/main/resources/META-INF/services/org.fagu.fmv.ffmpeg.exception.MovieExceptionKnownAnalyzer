@@ -1,1 +1,2 @@
 org.fagu.fmv.ffmpeg.exception.InvalidDataExceptionKnownAnalyzer
+org.fagu.fmv.ffmpeg.exception.PermissionDeniedExceptionKnownAnalyzer

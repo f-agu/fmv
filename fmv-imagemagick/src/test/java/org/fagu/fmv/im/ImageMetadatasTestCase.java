@@ -86,7 +86,7 @@ public class ImageMetadatasTestCase {
 		File file2 = ImageResourceUtils.extractFile("wei-ass.jpg");
 
 		try {
-			Map<File, ImageMetadatas> map = ImageMetadatas.with(Arrays.asList(file2, file1)).extract();
+			Map<File, ImageMetadatas> map = ImageMetadatas.with(Arrays.asList(file2, file1)).extractAll();
 			Iterator<ImageMetadatas> iterator = map.values().iterator();
 			assertMetadatas_WeiAss(iterator.next());
 			assertMetadatas_BadAssTottooFail(iterator.next());
