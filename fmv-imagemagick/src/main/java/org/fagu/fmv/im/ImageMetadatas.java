@@ -127,7 +127,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 	// --------------------------------------------------------
 
-	public static class ImageMetadatasFileBuilder extends ImageMetadatasBuilder<ImageMetadatasFilesBuilder> {
+	public static class ImageMetadatasFileBuilder extends ImageMetadatasBuilder<ImageMetadatasFileBuilder> {
 
 		private ImageMetadatasFileBuilder(File sourceFile) {
 			super(Collections.singletonList(sourceFile));
