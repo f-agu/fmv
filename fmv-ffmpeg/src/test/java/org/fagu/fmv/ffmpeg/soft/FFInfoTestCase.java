@@ -36,12 +36,10 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
-import org.fagu.fmv.ffmpeg.soft.FFInfo;
-import org.fagu.fmv.ffmpeg.soft.FFMpegSoftProvider;
-import org.fagu.fmv.ffmpeg.soft.FFProbeSoftProvider;
-import org.fagu.fmv.ffmpeg.soft.FFSoftProvider;
+import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.version.Version;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -54,6 +52,20 @@ public class FFInfoTestCase {
 	 *
 	 */
 	public FFInfoTestCase() {}
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	@Ignore
+	public void testFindFFMpeg() throws Exception {
+		Founds founds = FFMpeg.search().getFounds();
+		founds.forEach(softFound -> {
+			FFInfo ffInfo = (FFInfo)softFound.getSoftInfo();
+			System.out.println(softFound.getFile() + "  " + ffInfo);
+		});
+		System.out.println(founds.getFirstFound());
+	}
 
 	/**
 	 * @throws Exception

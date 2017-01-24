@@ -63,7 +63,7 @@ public class FFInfo extends SoftInfo {
 		super(file, softName);
 		this.version = version;
 		this.builtVersion = builtVersion;
-		this.builtDate = builtDate;
+		this.builtDate = estimateBuildDate(version, builtVersion, builtDate);
 		if(configSet != null) {
 			this.configSet = Collections.unmodifiableSet(new HashSet<>(configSet));
 		} else {
@@ -94,7 +94,7 @@ public class FFInfo extends SoftInfo {
 	 * @return
 	 */
 	public Date getBuiltDate() {
-		return builtDate;
+		return builtDate != null ? new Date(builtDate.getTime()) : null;
 	}
 
 	/**
@@ -198,6 +198,27 @@ public class FFInfo extends SoftInfo {
 		}
 		buf.append(']');
 		return buf.toString();
+	}
+
+	// *****************************************************
+
+	/**
+	 * @param version
+	 * @param builtVersion
+	 * @param defaultDate
+	 * @return
+	 */
+	private Date estimateBuildDate(Version version, Integer builtVersion, Date defaultDate) {
+		if(defaultDate != null) {
+			return defaultDate;
+		}
+		if(version != null) {
+			return BuildMapping.versionToDate(version);
+		}
+		if(builtVersion != null) {
+			return BuildMapping.buildToDate(builtVersion);
+		}
+		return null;
 	}
 
 }

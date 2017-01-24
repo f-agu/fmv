@@ -52,8 +52,8 @@ public class ReadMetadataBootstrap {
 	 */
 	private static void onFile(File file) {
 		System.out.println(file);
-		onFile(file, IMAGE_METADATAS_FACTORY);
-		// onFile(file, VIDEO_METADATAS_FACTORY);
+		// onFile(file, IMAGE_METADATAS_FACTORY);
+		onFile(file, VIDEO_METADATAS_FACTORY);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class ReadMetadataBootstrap {
 		Metadatas metadatas;
 		try {
 			metadatas = metadatasFactory.extract(file);
-			// System.out.println(metadatas);
+			System.out.println(metadatas);
 		} catch(IOException e) {
 			Optional<ExceptionKnown> exceptionKnown = metadatasFactory.getExceptionKnown(e);
 			if(exceptionKnown.isPresent()) {

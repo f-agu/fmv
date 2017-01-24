@@ -288,12 +288,12 @@ public class SoftFound implements Comparable<SoftFound> {
 	 */
 	// @SuppressWarnings("unchecked")
 	private int compareByInfo(SoftFound o) {
-		// if(info != null) {
-		// SoftInfo<?> otherInfo = o.getSoftInfo();
-		// if(otherInfo != null) {
-		// return info.compareTo(otherInfo);
-		// }
-		// }
+		if(softInfo != null) {
+			SoftInfo otherInfo = o.getSoftInfo();
+			if(otherInfo != null) {
+				return softInfo.compareTo(otherInfo);
+			}
+		}
 		File myFile = getFile();
 		File otherFile = o.getFile();
 		if(myFile != null && otherFile != null) {

@@ -1,0 +1,3 @@
+org.fagu.fmv.soft.gs.exception.PermissionDeniedExceptionKnownAnalyzer
+org.fagu.fmv.soft.gs.exception.ReadJPEGExceptionKnownAnalyzer
+org.fagu.fmv.soft.gs.exception.UndefinedFormatExceptionKnownAnalyzer

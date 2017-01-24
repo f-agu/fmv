@@ -34,7 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.ffmpeg.exception.MovieExceptionKnownAnalyzer;
+import org.fagu.fmv.ffmpeg.exception.FFExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
@@ -110,7 +110,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public Class<? extends ExceptionKnownAnalyzer> getExceptionKnownAnalyzerClass() {
-		return MovieExceptionKnownAnalyzer.class;
+		return FFExceptionKnownAnalyzer.class;
 	}
 
 	// ***********************************************************************

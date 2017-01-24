@@ -23,7 +23,6 @@ package org.fagu.fmv.soft;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.exec.ExecuteException;
@@ -48,7 +47,7 @@ public class FMVExecuteException extends ExecuteException {
 
 	private final List<String> outputLines;
 
-	private Optional<ExceptionKnown> optionalExceptionKnown;
+	private ExceptionKnown exceptionKnown;
 
 	/**
 	 * @param exceptionKnownAnalyzerClass
@@ -93,18 +92,18 @@ public class FMVExecuteException extends ExecuteException {
 	/**
 	 * @return
 	 */
-	public Optional<ExceptionKnown> getExceptionKnown() {
-		if(optionalExceptionKnown == null && exceptionKnownAnalyzerClass != null) {
-			optionalExceptionKnown = ExceptionKnownAnalyzers.getKnown(exceptionKnownAnalyzerClass, (Exception)getCause());
+	public ExceptionKnown getExceptionKnown() {
+		if(exceptionKnown == null && exceptionKnownAnalyzerClass != null) {
+			exceptionKnown = ExceptionKnownAnalyzers.getKnown(exceptionKnownAnalyzerClass, this).orElse(null);
 		}
-		return optionalExceptionKnown;
+		return exceptionKnown;
 	}
 
 	/**
 	 * @return
 	 */
 	public boolean isKnown() {
-		return getExceptionKnown().isPresent();
+		return getExceptionKnown() != null;
 	}
 
 	// *****************************************************

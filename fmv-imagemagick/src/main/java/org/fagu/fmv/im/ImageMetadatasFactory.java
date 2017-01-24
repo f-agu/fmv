@@ -2,7 +2,7 @@ package org.fagu.fmv.im;
 
 import java.io.File;
 
-import org.fagu.fmv.im.exception.ImageExceptionKnownAnalyzer;
+import org.fagu.fmv.im.exception.IMExceptionKnownAnalyzer;
 
 /*
  * #%L
@@ -39,7 +39,7 @@ public class ImageMetadatasFactory extends MetadatasFactory {
 	 * 
 	 */
 	public ImageMetadatasFactory() {
-		super(ImageExceptionKnownAnalyzer.class);
+		super(IMExceptionKnownAnalyzer.class);
 	}
 
 	/**

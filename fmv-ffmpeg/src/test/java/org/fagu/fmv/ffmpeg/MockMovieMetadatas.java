@@ -28,6 +28,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
 import org.fagu.fmv.ffmpeg.metadatas.AudioStream;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
@@ -142,7 +143,7 @@ public class MockMovieMetadatas {
 		}
 
 		public MockVideoStream countEstimateFrames(Integer count) {
-			doReturn(count).when(videoStream).countEstimateFrames();
+			doReturn(count != null ? OptionalInt.of(count) : OptionalInt.empty()).when(videoStream).countEstimateFrames();
 			return this;
 		}
 

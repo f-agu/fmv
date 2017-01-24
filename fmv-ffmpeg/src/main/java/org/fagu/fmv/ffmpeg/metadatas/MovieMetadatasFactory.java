@@ -2,7 +2,7 @@ package org.fagu.fmv.ffmpeg.metadatas;
 
 import java.io.File;
 
-import org.fagu.fmv.ffmpeg.exception.MovieExceptionKnownAnalyzer;
+import org.fagu.fmv.ffmpeg.exception.FFExceptionKnownAnalyzer;
 
 /*
  * #%L
@@ -39,7 +39,7 @@ public class MovieMetadatasFactory extends MetadatasFactory {
 	 * 
 	 */
 	public MovieMetadatasFactory() {
-		super(MovieExceptionKnownAnalyzer.class);
+		super(FFExceptionKnownAnalyzer.class);
 	}
 
 	/**

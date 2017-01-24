@@ -30,7 +30,7 @@ import java.util.ServiceLoader;
 import java.util.function.Consumer;
 
 import org.apache.commons.exec.CommandLine;
-import org.fagu.fmv.ffmpeg.exception.MovieExceptionKnownAnalyzer;
+import org.fagu.fmv.ffmpeg.exception.FFExceptionKnownAnalyzer;
 import org.fagu.fmv.ffmpeg.operation.FFMPEGProgressReadLine;
 import org.fagu.fmv.ffmpeg.operation.LibLogReadLine;
 import org.fagu.fmv.ffmpeg.operation.Operation;
@@ -293,6 +293,10 @@ public class FFExecutor<R> {
 		}
 
 		List<ReadLine> lines = new ArrayList<>();
+		ReadLine readLine = operation.getOutReadLine();
+		if(readLine != null) {
+			lines.add(readLine);
+		}
 		if(debug) {
 			lines.add(outDebugConsumer::accept);
 		}
@@ -312,6 +316,10 @@ public class FFExecutor<R> {
 		List<ReadLine> lines = new ArrayList<>();
 		if(ffmpegProgressReadLine != null) {
 			lines.add(ffmpegProgressReadLine);
+		}
+		ReadLine readLine = operation.getErrReadLine();
+		if(readLine != null) {
+			lines.add(readLine);
 		}
 		if(debug) {
 			lines.add(errDebugConsumer::accept);
@@ -414,7 +422,7 @@ public class FFExecutor<R> {
 				if(runFallbacks != null) {
 					return runFallbacks;
 				}
-				ExceptionKnownAnalyzers.doOrThrows(MovieExceptionKnownAnalyzer.class, e, exceptionKnowConsumer);
+				ExceptionKnownAnalyzers.doOrThrows(FFExceptionKnownAnalyzer.class, e, exceptionKnowConsumer);
 				return null;
 			}
 		}
@@ -456,7 +464,7 @@ public class FFExecutor<R> {
 						ffs.add(fallback);
 					}
 				} catch(IOException fbe) {
-					throw new FMVExecuteException(MovieExceptionKnownAnalyzer.class, 0, originalException, CommandLineUtils.toLine(getCommandLine()),
+					throw new FMVExecuteException(FFExceptionKnownAnalyzer.class, 0, originalException, CommandLineUtils.toLine(getCommandLine()),
 							outputs);
 				}
 			}
@@ -465,7 +473,7 @@ public class FFExecutor<R> {
 					ffExecListener.eventPreExecFallbacks(getCommandLine(), ffs);
 					return _execute();
 				} catch(IOException fbe) {
-					throw new FMVExecuteException(MovieExceptionKnownAnalyzer.class, 0, originalException, CommandLineUtils.toLine(getCommandLine()),
+					throw new FMVExecuteException(FFExceptionKnownAnalyzer.class, 0, originalException, CommandLineUtils.toLine(getCommandLine()),
 							outputs);
 				}
 			}

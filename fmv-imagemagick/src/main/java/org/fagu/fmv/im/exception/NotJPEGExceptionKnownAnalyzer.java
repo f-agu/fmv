@@ -3,7 +3,7 @@ package org.fagu.fmv.im.exception;
 /**
  * @author f.agu
  */
-public class NotJPEGExceptionKnownAnalyzer extends ImageExceptionKnownAnalyzer {
+public class NotJPEGExceptionKnownAnalyzer extends IMExceptionKnownAnalyzer {
 
 	/**
 	 * 

@@ -3,7 +3,7 @@ package org.fagu.fmv.im.exception;
 /**
  * @author f.agu
  */
-public class EmptyFileExceptionKnownAnalyzer extends ImageExceptionKnownAnalyzer {
+public class EmptyFileExceptionKnownAnalyzer extends IMExceptionKnownAnalyzer {
 
 	/**
 	 * 

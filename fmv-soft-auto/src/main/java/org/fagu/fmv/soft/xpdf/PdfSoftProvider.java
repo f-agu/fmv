@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.SoftName;
+import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
@@ -36,6 +37,7 @@ import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.fmv.soft.xpdf.exception.XpdfExceptionKnownAnalyzer;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
 
@@ -58,11 +60,11 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-v") //
-		.parseFactory(file -> createParser(getSoftName(), file)) //
-		.customizeExecutor(ex -> {
-			ex.setExitValues(exitValues());
-			ex.setTimeOut(10_000);
-		}).build();
+				.parseFactory(file -> createParser(getSoftName(), file)) //
+				.customizeExecutor(ex -> {
+					ex.setExitValues(exitValues());
+					ex.setTimeOut(10_000);
+				}).build();
 	}
 
 	/**
@@ -85,9 +87,17 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		Version v012 = new Version(0, 12);
 		BiPredicate<VersionSoftInfo, Provider> isProvider = (s, p) -> s instanceof XPdfVersionSoftInfo && ((XPdfVersionSoftInfo)s).getProvider() == p;
 		return new VersionPolicy() //
-		.on("xpdf", s -> isProvider.test(s, Provider.XPDF)).minVersion(Version.V3) //
-		.on("poppler", s -> isProvider.test(s, Provider.POPPLER)).minVersion(v012) //
-		.onAllPlatforms().minVersion(v012);
+				.on("xpdf", s -> isProvider.test(s, Provider.XPDF)).minVersion(Version.V3) //
+				.on("poppler", s -> isProvider.test(s, Provider.POPPLER)).minVersion(v012) //
+				.onAllPlatforms().minVersion(v012);
+	}
+
+	/**
+	 * @see org.fagu.fmv.soft.find.SoftProvider#getExceptionKnownAnalyzerClass()
+	 */
+	@Override
+	public Class<? extends ExceptionKnownAnalyzer> getExceptionKnownAnalyzerClass() {
+		return XpdfExceptionKnownAnalyzer.class;
 	}
 
 	// ***********************************************************************

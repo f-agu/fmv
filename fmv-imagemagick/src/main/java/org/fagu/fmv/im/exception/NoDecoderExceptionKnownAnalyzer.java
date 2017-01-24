@@ -10,7 +10,7 @@ import org.fagu.fmv.soft.exec.exception.NestedException;
 /**
  * @author f.agu
  */
-public class NoDecoderExceptionKnownAnalyzer extends ImageExceptionKnownAnalyzer {
+public class NoDecoderExceptionKnownAnalyzer extends IMExceptionKnownAnalyzer {
 
 	/**
 	 * 

@@ -1,4 +1,4 @@
-package org.fagu.fmv.ffmpeg.exception;
+package org.fagu.fmv.soft.xpdf.exception;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,21 +11,21 @@ import org.fagu.fmv.soft.exec.exception.SimpleExceptionKnownAnalyzer;
 /**
  * @author f.agu
  */
-public abstract class MovieExceptionKnownAnalyzer extends SimpleExceptionKnownAnalyzer {
+public abstract class XpdfExceptionKnownAnalyzer extends SimpleExceptionKnownAnalyzer {
 
 	/**
 	 * @param title
 	 * @param strToFind
 	 */
-	public MovieExceptionKnownAnalyzer(String title, String strToFind) {
+	public XpdfExceptionKnownAnalyzer(String title, String strToFind) {
 		super(title, strToFind);
 	}
 
 	/**
 	 * @return
 	 */
-	public static List<MovieExceptionKnownAnalyzer> getAnalyzers() {
-		return ExceptionKnownAnalyzers.getExceptionKnownAnalyzers(MovieExceptionKnownAnalyzer.class);
+	public static List<XpdfExceptionKnownAnalyzer> getAnalyzers() {
+		return ExceptionKnownAnalyzers.getExceptionKnownAnalyzers(XpdfExceptionKnownAnalyzer.class);
 	}
 
 	/**
@@ -33,7 +33,7 @@ public abstract class MovieExceptionKnownAnalyzer extends SimpleExceptionKnownAn
 	 * @return
 	 */
 	public static Optional<ExceptionKnown> getKnown(Exception e) {
-		return ExceptionKnownAnalyzers.getKnown(MovieExceptionKnownAnalyzer.class, e);
+		return ExceptionKnownAnalyzers.getKnown(XpdfExceptionKnownAnalyzer.class, e);
 	}
 
 }

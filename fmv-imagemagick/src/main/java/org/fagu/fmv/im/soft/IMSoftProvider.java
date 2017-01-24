@@ -32,7 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
-import org.fagu.fmv.im.exception.ImageExceptionKnownAnalyzer;
+import org.fagu.fmv.im.exception.IMExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.soft.SoftName;
@@ -131,7 +131,7 @@ public abstract class IMSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public Class<? extends ExceptionKnownAnalyzer> getExceptionKnownAnalyzerClass() {
-		return ImageExceptionKnownAnalyzer.class;
+		return IMExceptionKnownAnalyzer.class;
 	}
 	// ***********************************************************************
 

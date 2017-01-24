@@ -1,4 +1,4 @@
-package org.fagu.fmv.im.exception;
+package org.fagu.fmv.soft.gs.exception;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,21 +11,21 @@ import org.fagu.fmv.soft.exec.exception.SimpleExceptionKnownAnalyzer;
 /**
  * @author f.agu
  */
-public abstract class ImageExceptionKnownAnalyzer extends SimpleExceptionKnownAnalyzer {
+public abstract class GSExceptionKnownAnalyzer extends SimpleExceptionKnownAnalyzer {
 
 	/**
 	 * @param title
 	 * @param strToFind
 	 */
-	public ImageExceptionKnownAnalyzer(String title, String strToFind) {
+	public GSExceptionKnownAnalyzer(String title, String strToFind) {
 		super(title, strToFind);
 	}
 
 	/**
 	 * @return
 	 */
-	public static List<ImageExceptionKnownAnalyzer> getAnalyzers() {
-		return ExceptionKnownAnalyzers.getExceptionKnownAnalyzers(ImageExceptionKnownAnalyzer.class);
+	public static List<GSExceptionKnownAnalyzer> getAnalyzers() {
+		return ExceptionKnownAnalyzers.getExceptionKnownAnalyzers(GSExceptionKnownAnalyzer.class);
 	}
 
 	/**
@@ -33,7 +33,7 @@ public abstract class ImageExceptionKnownAnalyzer extends SimpleExceptionKnownAn
 	 * @return
 	 */
 	public static Optional<ExceptionKnown> getKnown(Exception e) {
-		return ExceptionKnownAnalyzers.getKnown(ImageExceptionKnownAnalyzer.class, e);
+		return ExceptionKnownAnalyzers.getKnown(GSExceptionKnownAnalyzer.class, e);
 	}
 
 }
