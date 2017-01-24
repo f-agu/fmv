@@ -135,7 +135,7 @@ public class FFInfoTestCase {
 		parser.readLine("libswresample   1.  1.100 /  1.  1.100");
 		parser.readLine("libpostproc    53.  3.100 / 53.  3.100");
 
-		assertFull(parser, null, null, 70767);
+		assertFull(parser, null, date(2015, 1, 2), 70767);
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class FFInfoTestCase {
 		parser.readLine("libswresample   1.  1.100 /  1.  1.100");
 		parser.readLine("libpostproc    53.  3.100 / 53.  3.100");
 
-		assertFull(parser, null, null, 70767);
+		assertFull(parser, null, date(2015, 1, 2), 70767);
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class FFInfoTestCase {
 		parser.readLine("libswscale      3.  1.101 /  3.  1.101");
 		parser.readLine("libswresample   1.  1.100 /  1.  1.100");
 
-		assertFull(parser, new Version(2, 6, 1), null, null);
+		assertFull(parser, new Version(2, 6, 1), date(2014, 12, 30), null);
 	}
 
 	/**
@@ -282,10 +282,22 @@ public class FFInfoTestCase {
 		parser.readLine("libswresample   1.  1.100 /  1.  1.100");
 		parser.readLine("libpostproc    53.  3.100 / 53.  3.100");
 
-		assertFull(parser, new Version(2, 6, 1), null, null);
+		assertFull(parser, new Version(2, 6, 1), date(2014, 12, 30), null);
 	}
 
 	// ********************************************************
+
+	/**
+	 * @param year
+	 * @param month
+	 * @param day
+	 * @return
+	 */
+	private Date date(int year, int month, int day) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(year, month - 1, day, 0, 0, 0);
+		return calendar.getTime();
+	}
 
 	/**
 	 * @return

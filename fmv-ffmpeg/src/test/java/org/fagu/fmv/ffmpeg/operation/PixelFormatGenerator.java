@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 import org.fagu.fmv.ffmpeg.soft.FFMpeg;
 import org.fagu.fmv.soft.exec.ReadLine;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -62,6 +63,7 @@ public class PixelFormatGenerator {
 	 * @throws IOException
 	 */
 	@Test
+	@Ignore
 	public void generate() throws IOException {
 		final Pattern PATTERN = Pattern.compile("(I|\\.)(O|\\.)(H|\\.)(P|\\.)(B|\\.)\\s(\\w+)\\s+(\\d+)\\s+(\\d+).*");
 		List<String> arguments = Arrays.asList("-v", "quiet", "-pix_fmts");

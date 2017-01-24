@@ -152,7 +152,7 @@ public class FFHelper {
 		builder.addMediaOutputFile(outFile);
 
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
+		// System.out.println(executor.getCommandLine());
 		executor.execute();
 	}
 
@@ -918,7 +918,7 @@ public class FFHelper {
 
 		FFExecutor<Object> executor = builder.build();
 
-		System.out.println(executor.getCommandLine());
+		// System.out.println(executor.getCommandLine());
 
 		// executor.execute();
 	}
