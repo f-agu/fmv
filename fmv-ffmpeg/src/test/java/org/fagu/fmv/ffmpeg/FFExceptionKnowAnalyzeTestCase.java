@@ -23,14 +23,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.soft.FMVExecuteException;
 import org.junit.Test;
@@ -70,7 +65,7 @@ public class FFExceptionKnowAnalyzeTestCase {
 		try {
 			FileUtils.deleteDirectory(folder);
 			folder.mkdirs();
-			File file = resource != null ? extractResource(folder, resource) : folder;
+			File file = resource != null ? ResourceUtils.extract(resource, folder) : folder;
 			try {
 				MovieMetadatas extract = MovieMetadatas.with(file).extract();
 				fail(extract.toJSON());
@@ -86,18 +81,4 @@ public class FFExceptionKnowAnalyzeTestCase {
 		}
 	}
 
-	/**
-	 * @param tmpFolder
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
-	private File extractResource(File tmpFolder, String resource) throws IOException {
-		File file = File.createTempFile(FilenameUtils.getBaseName(resource), "." + FilenameUtils.getExtension(resource), tmpFolder);
-		try (InputStream inputStream = FFHelper.class.getResourceAsStream(resource);
-				OutputStream outputStream = new FileOutputStream(file)) {
-			IOUtils.copy(inputStream, outputStream);
-		}
-		return file;
-	}
 }

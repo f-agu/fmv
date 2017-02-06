@@ -74,7 +74,7 @@ public class AudioStream extends Stream {
 	 * @return
 	 */
 	public ChannelLayout channelLayout() {
-		return get("channel_layout", s -> ChannelLayout.byName(s));
+		return get("channel_layout", ChannelLayout::byName);
 	}
 
 	/**
