@@ -24,6 +24,12 @@ import org.fagu.fmv.soft.Soft;
 
 
 /**
+ * The conjure program gives you the ability to perform custom image processing tasks from a script written in the
+ * Magick Scripting Language (MSL). MSL is XML-based and consists of action statements with attributes. Actions include
+ * reading an image, processing an image, getting attributes from an image, writing an image, and more. An attribute is
+ * a key/value pair that modifies the behavior of an action.
+ * 
+ * @see {@link https://www.imagemagick.org/script/conjure.php}
  * @author f.agu
  */
 public class Conjure {

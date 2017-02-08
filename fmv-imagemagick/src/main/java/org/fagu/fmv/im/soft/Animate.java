@@ -24,6 +24,9 @@ import org.fagu.fmv.soft.Soft;
 
 
 /**
+ * Use the animate program to animate an image sequence on any X server.
+ * 
+ * @see {@link https://www.imagemagick.org/script/animate.php}
  * @author f.agu
  */
 public class Animate {

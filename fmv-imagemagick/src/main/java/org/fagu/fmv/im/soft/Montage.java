@@ -24,6 +24,10 @@ import org.fagu.fmv.soft.Soft;
 
 
 /**
+ * Use the montage program to create a composite image by combining several separate images. The images are tiled on the
+ * composite image optionally adorned with a border, frame, image name, and more.
+ * 
+ * @see {@link https://www.imagemagick.org/script/montage.php}
  * @author f.agu
  */
 public class Montage {

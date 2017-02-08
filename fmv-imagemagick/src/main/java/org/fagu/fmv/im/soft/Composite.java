@@ -24,6 +24,9 @@ import org.fagu.fmv.soft.Soft;
 
 
 /**
+ * Use the composite program to overlap one image over another.
+ * 
+ * @see {@link https://www.imagemagick.org/script/composite.php}
  * @author f.agu
  */
 public class Composite {

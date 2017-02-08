@@ -24,6 +24,10 @@ import org.fagu.fmv.soft.Soft;
 
 
 /**
+ * Use the convert program to convert between image formats as well as resize an image, blur, crop, despeckle, dither,
+ * draw on, flip, join, re-sample, and much more.
+ * 
+ * @see {@link https://www.imagemagick.org/script/convert.php}
  * @author f.agu
  */
 public class Convert {
