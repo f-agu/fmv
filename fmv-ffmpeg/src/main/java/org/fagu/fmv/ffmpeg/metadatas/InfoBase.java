@@ -22,6 +22,9 @@ package org.fagu.fmv.ffmpeg.metadatas;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
@@ -30,6 +33,8 @@ import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.OptionalInt;
 import java.util.function.Function;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -146,12 +151,28 @@ public abstract class InfoBase implements MetadataProperties {
 		if(tag == null) {
 			return null;
 		}
-		SimpleDateFormat createDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
-		try {
-			return createDateFormat.parse(tag);
-		} catch(ParseException e) {
-			return null;
+		String[] patterns = {"yyyy-MM-dd HH:mm:SS", "yyyy-MM-dd'T'HH:mm:ss.MMZ"};
+		for(String pattern : patterns) {
+			SimpleDateFormat createDateFormat = new SimpleDateFormat(pattern);
+			try {
+				return createDateFormat.parse(tag);
+			} catch(ParseException e) {
+				// ignore
+			}
 		}
+
+		try {
+			return Date.from(LocalDateTime.parse(tag).atZone(ZoneId.systemDefault()).toInstant());
+		} catch(DateTimeParseException e) {
+			// ignore
+		}
+		try {
+			return DatatypeConverter.parseDateTime(tag).getTime();
+		} catch(IllegalArgumentException e) {
+			// ignore
+		}
+		return null;
+
 	}
 
 	/**

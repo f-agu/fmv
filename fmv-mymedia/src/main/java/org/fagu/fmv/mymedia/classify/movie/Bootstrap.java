@@ -70,7 +70,7 @@ public class Bootstrap {
 				// Format format = videoMetadatas.getFormat();
 				VideoStream videoStream = videoMetadatas.getVideoStream();
 				Rotation rotate = videoStream.rotate();
-				// System.out.println(count + ": " + file.getName() + "  " + infos); // .getFormat().creationDate()
+				// System.out.println(count + ": " + file.getName() + " " + infos); // .getFormat().creationDate()
 				System.out.println("   " + rotate + ", " + videoStream.handlerName());
 			}
 		});
@@ -87,7 +87,7 @@ public class Bootstrap {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		File source = new File("C:\\tmp\\bretagne");
+		File source = new File("D:\\tmp\\ski");
 
 		File saveFile = new File(source, "movie.save");
 		File destFolder = new File(source.getParentFile(), source.getName() + "-mv-out");

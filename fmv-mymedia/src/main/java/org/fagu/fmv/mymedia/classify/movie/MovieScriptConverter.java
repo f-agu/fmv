@@ -137,7 +137,7 @@ public class MovieScriptConverter extends Converter<Movie> {
 		FFExecutor<Object> executor = builder.build();
 		try {
 			script.println("echo.");
-			script.println("echo Frame: " + infos.getVideoStream().countEstimateFrames());
+			script.println("echo Frame: " + infos.getVideoStream().countEstimateFrames().getAsInt());
 			script.println(executor.getCommandLine());
 		} catch(IOException e) {
 			throw new RuntimeException(e);
@@ -161,13 +161,14 @@ public class MovieScriptConverter extends Converter<Movie> {
 	 */
 	private void openScript() throws IOException {
 		if(script == null) {
-			this.script = new PrintStream(new File(destFolder, "script.bat"));;
+			this.script = new PrintStream(new File(destFolder, "script.bat"));
 			rotateMap = new HashMap<>();
+			script.println("@echo off");
+			script.println();
 			script.println("rem Rotate 90: ... -filter:v \"transpose=dir=clock\" ...");
 			script.println("rem Rotate 180: ... -filter:v \"transpose=dir=clock,transpose=dir=clock\" ...");
 			script.println("rem Rotate 270: ... -filter:v \"transpose=dir=cclock\" ...");
 			script.println();
-			script.println("@echo off");
 		}
 	}
 }
