@@ -42,14 +42,19 @@ import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.mymedia.classify.Converter;
 import org.fagu.fmv.mymedia.classify.ConverterListener;
+import org.fagu.fmv.mymedia.reduce.FFReducer;
+import org.fagu.fmv.mymedia.reduce.Logger;
 import org.fagu.fmv.utils.file.FileFinder;
 import org.fagu.fmv.utils.media.Rotation;
+import org.fagu.fmv.utils.media.Size;
 
 
 /**
  * @author f.agu
  */
 public class MovieScriptConverter extends Converter<Movie> {
+
+	private static final Size MAX_SIZE = Size.HD1080;
 
 	private static final int DEFAULT_AUDIO_SAMPLE_RATE = 44100;
 
@@ -115,6 +120,9 @@ public class MovieScriptConverter extends Converter<Movie> {
 		} else {
 			builder.filter(AutoRotate.create(infos));
 		}
+		Size newSize = FFReducer.applyScaleIfNecessary(builder, infos, getMaxSize(), getScaleLogger());
+		script.println("rem " + (newSize.isLandscape() ? "landscape" : newSize.isPortrait() ? "portrait" : "square"));
+
 		builder.filter(ResampleAudio.build().frequency(audioFrequency));
 
 		Optional<VolumeDetected> findFirst = infosFile.getInfos().stream().filter(o -> o instanceof VolumeDetected).map(o -> (VolumeDetected)o).findFirst();
@@ -139,6 +147,7 @@ public class MovieScriptConverter extends Converter<Movie> {
 			script.println("echo.");
 			script.println("echo Frame: " + infos.getVideoStream().countEstimateFrames().getAsInt());
 			script.println(executor.getCommandLine());
+			script.println();
 		} catch(IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -170,5 +179,35 @@ public class MovieScriptConverter extends Converter<Movie> {
 			script.println("rem Rotate 270: ... -filter:v \"transpose=dir=cclock\" ...");
 			script.println();
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	private Logger getScaleLogger() {
+		return new Logger() {
+
+			@Override
+			public void close() throws IOException {}
+
+			@Override
+			public void log(Throwable throwable) {}
+
+			@Override
+			public void log(String message) {
+				script.println("rem " + message);
+			}
+		};
+	}
+
+	/**
+	 * @return
+	 */
+	private Size getMaxSize() {
+		String property = System.getProperty("fmv.reduce.video.maxsize");
+		if(property == null) {
+			return MAX_SIZE;
+		}
+		return Size.parse(property);
 	}
 }

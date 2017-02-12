@@ -87,7 +87,7 @@ public class Bootstrap {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		File source = new File("D:\\tmp\\ski");
+		File source = new File("D:\\tmp\\107APPLE");
 
 		File saveFile = new File(source, "movie.save");
 		File destFolder = new File(source.getParentFile(), source.getName() + "-mv-out");

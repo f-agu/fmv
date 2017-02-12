@@ -57,17 +57,10 @@ public class Libx264NotDisibleBy2FFExecFallback implements FFExecFallback {
 						Size size = scale.getSize();
 						ScaleMode scaleMode = scale.getScaleMode();
 						if(size != null && scaleMode != null) {
-							Size newSize = null;
-							if(size.getHeight() % 2 == 1) {
-								newSize = size = Size.valueOf(size.getWidth(), size.getHeight() - 1);
-							}
-							if(size.getWidth() % 2 == 1) {
-								newSize = size = Size.valueOf(size.getWidth() - 1, size.getHeight());
-							}
+							Size newSize = resize(size);
 							if(newSize == null) {
 								return false;
 							}
-							size = size.fitAndKeepRatioTo(size);
 							scale.set(size, scaleMode);
 							return true;
 						}
@@ -85,5 +78,23 @@ public class Libx264NotDisibleBy2FFExecFallback implements FFExecFallback {
 	@Override
 	public String toString() {
 		return "Libx264 not divisible by 2";
+	}
+
+	/**
+	 * @param size
+	 * @return
+	 */
+	public static Size resize(Size size) {
+		Size newSize = null;
+		if(size.getHeight() % 2 == 1) {
+			newSize = size = Size.valueOf(size.getWidth(), size.getHeight() - 1);
+		}
+		if(size.getWidth() % 2 == 1) {
+			newSize = size = Size.valueOf(size.getWidth() - 1, size.getHeight());
+		}
+		if(newSize == null) {
+			return null;
+		}
+		return size.fitAndKeepRatioTo(size);
 	}
 }

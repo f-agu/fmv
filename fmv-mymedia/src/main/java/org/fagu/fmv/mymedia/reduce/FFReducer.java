@@ -41,6 +41,7 @@ import org.fagu.fmv.ffmpeg.executor.FFExecFallback;
 import org.fagu.fmv.ffmpeg.executor.FFExecListener;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
+import org.fagu.fmv.ffmpeg.executor.fallback.Libx264NotDisibleBy2FFExecFallback;
 import org.fagu.fmv.ffmpeg.filter.FilterComplex;
 import org.fagu.fmv.ffmpeg.filter.impl.AutoRotate;
 import org.fagu.fmv.ffmpeg.filter.impl.CropDetect;
@@ -176,6 +177,42 @@ public class FFReducer extends AbstractReducer {
 		}
 	}
 
+	/**
+	 * @param builder
+	 * @param movieMetadatas
+	 * @param maxSize
+	 * @param logger
+	 */
+	public static Size applyScaleIfNecessary(FFMPEGExecutorBuilder builder, MovieMetadatas movieMetadatas, Size maxSize, Logger logger) {
+		VideoStream videoStream = movieMetadatas.getVideoStream();
+		Size size = videoStream.size();
+		Rotation rotation = videoStream.rotate();
+		if(rotation != null) {
+			size = rotation.resize(size);
+		}
+		if(size.getWidth() <= maxSize.getWidth() && size.getHeight() <= maxSize.getHeight()) {
+			return size;
+		}
+		StringBuilder log = new StringBuilder();
+		log.append("Need to resize ").append(size);
+		if(rotation != null) {
+			log.append(" (rotation of ").append(rotation.getValue()).append(')');
+		}
+		size = size.fitAndKeepRatioTo(maxSize);
+		if(rotation != null && ! AutoRotate.isAutoRotateObsolete()) {
+			size = rotation.resize(size);
+		}
+
+		// fix [libx264 @ 037f8b00] height not divisible by 2 (1078x607)
+		size = Libx264NotDisibleBy2FFExecFallback.resize(size);
+
+		log.append(" to under ").append(maxSize).append(": ").append(size);
+		logger.log(log.toString());
+
+		builder.filter(Scale.to(size, ScaleMode.fitToBoxKeepAspectRatio())); // .forceOriginalAspectRatio(ForceOriginalAspectRatio.DECREASE)
+		return size;
+	}
+
 	// *******************************************
 
 	/**
@@ -254,7 +291,7 @@ public class FFReducer extends AbstractReducer {
 		builder.hideBanner();
 		InputProcessor inputProcessor = builder.addMediaInputFile(srcFile);
 		builder.filter(AutoRotate.create(movieMetadatas));
-		applyScaleIfNecessary(builder, movieMetadatas, logger);
+		applyScaleIfNecessary(builder, movieMetadatas, getMaxSize(), logger);
 		VolumeDetect volumeDetect = VolumeDetect.build();
 		builder.filter(volumeDetect);
 		CropDetect cropDetect = CropDetect.build();
@@ -315,8 +352,7 @@ public class FFReducer extends AbstractReducer {
 		OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
 		if(countEstimateFrames.isPresent()) {
 			ffMpegTextProgressBar = new FFMpegTextProgressBar();
-			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByFrame(countEstimateFrames
-					.getAsInt(), srcFile.length()));
+			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByFrame(countEstimateFrames.getAsInt(), srcFile.length()));
 		}
 
 		executor.execute();
@@ -373,8 +409,7 @@ public class FFReducer extends AbstractReducer {
 		Duration duration = metadatas.getAudioStream().duration();
 		if(duration != null) {
 			ffMpegTextProgressBar = new FFMpegTextProgressBar();
-			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByDuration(duration, srcFile
-					.length()));
+			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByDuration(duration, srcFile.length()));
 		}
 		executor.execute();
 	}
@@ -517,43 +552,6 @@ public class FFReducer extends AbstractReducer {
 			}
 
 		};
-	}
-
-	/**
-	 * @param builder
-	 * @param movieMetadatas
-	 * @param logger
-	 */
-	private void applyScaleIfNecessary(FFMPEGExecutorBuilder builder, MovieMetadatas movieMetadatas, Logger logger) {
-		VideoStream videoStream = movieMetadatas.getVideoStream();
-		Size size = videoStream.size();
-		Size maxSize = getMaxSize();
-		Rotation rotation = videoStream.rotate();
-		if(rotation != null) {
-			size = rotation.resize(size);
-		}
-		if(size.getWidth() <= maxSize.getWidth() && size.getHeight() <= maxSize.getHeight()) {
-			return;
-		}
-		StringBuilder log = new StringBuilder();
-		log.append("Need to resize ").append(size);
-		if(rotation != null) {
-			log.append(" (rotation of ").append(rotation.getValue()).append(')');
-		}
-		size = size.fitAndKeepRatioTo(maxSize);
-		if(rotation != null) {
-			size = rotation.resize(size);
-		}
-
-		// fix [libx264 @ 037f8b00] height not divisible by 2 (1078x607)
-		if(size.getHeight() % 2 == 1) {
-			// size = size.fitAndKeepRatioTo(Size.valueOf(size.getWidth() - 1, size.getHeight()));
-		}
-
-		log.append(" to under ").append(maxSize).append(": ").append(size);
-		logger.log(log.toString());
-
-		builder.filter(Scale.to(size, ScaleMode.fitToBoxKeepAspectRatio())); // .forceOriginalAspectRatio(ForceOriginalAspectRatio.DECREASE)
 	}
 
 	/**
