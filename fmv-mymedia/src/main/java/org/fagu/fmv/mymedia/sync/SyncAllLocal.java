@@ -48,12 +48,18 @@ public class SyncAllLocal {
 	 * @param args
 	 */
 	public static void main(String[] args) throws IOException {
-		File localPhotos = new File("C:\\Nos Documents\\Photos fagu & Vv");
+		File localPhotos = new File("D:\\Photos fagu & Vv");
 		File localVideos = new File("D:\\Video_fagu&Vv");
 		File faguVv1 = FileUtils.getRootByName("fagu_Vv_1");
 		File faguVv2 = FileUtils.getRootByName("fagu_Vv_2");
+		if(faguVv1 != null) {
+			System.out.println("Found fagu_Vv_1 (tv): " + faguVv1);
+		}
+		if(faguVv2 != null) {
+			System.out.println("Found fagu_Vv_2 (backup): " + faguVv2);
+		}
 
-		try (PrintStream printStream = new PrintStream(new FileOutputStream("c:\\tmp\\sync.log", true))) {
+		try (PrintStream printStream = new PrintStream(new FileOutputStream("d:\\tmp\\sync.log", true))) {
 			List<File> hdRoots = new ArrayList<>(2);
 			if(exists(faguVv1)) {
 				hdRoots.add(faguVv1);
@@ -133,7 +139,7 @@ public class SyncAllLocal {
 	private static void synchronize(PrintStream printStream, File sourceFile, List<File> destFiles) throws IOException {
 		List<Storage> destStorages = null;
 		try (Storage sourceStrage = new FileStorage(sourceFile)) {
-			destStorages = destFiles.stream().map(f -> new FileStorage(f)).collect(Collectors.toList());
+			destStorages = destFiles.stream().map(FileStorage::new).collect(Collectors.toList());
 			Synchronizer synchronizer = Synchronizers.getDefault(printStream);
 			Sync sync = new Sync(sourceStrage, destStorages, synchronizer);
 			sync.synchronize();

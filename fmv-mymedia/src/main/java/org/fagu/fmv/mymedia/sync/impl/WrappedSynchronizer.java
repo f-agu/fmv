@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.sync.impl;
  * #L%
  */
 
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +34,7 @@ import org.fagu.fmv.mymedia.sync.Synchronizer;
  */
 public class WrappedSynchronizer implements Synchronizer {
 
-	private final Synchronizer synchronizer;
+	protected final Synchronizer synchronizer;
 
 	/**
 	 * @param synchronizer
@@ -54,10 +53,10 @@ public class WrappedSynchronizer implements Synchronizer {
 	}
 
 	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#close()
+	 * @see java.io.Closeable#close()
 	 */
 	@Override
-	public void close() {
+	public void close() throws IOException {
 		synchronizer.close();
 	}
 
@@ -149,6 +148,13 @@ public class WrappedSynchronizer implements Synchronizer {
 	@Override
 	public String toString() {
 		return "Wrapped(" + synchronizer + ')';
+	}
+
+	/**
+	 * @return
+	 */
+	public Synchronizer getDelegatedSynchronizer() {
+		return synchronizer;
 	}
 
 }

@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.sync.impl;
  * #L%
  */
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -61,10 +60,10 @@ public class StandardSynchronizer implements Synchronizer {
 	public void start(Storage sourceStorage, List<Storage> destStorages) {}
 
 	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#close()
+	 * @see java.io.Closeable#close()
 	 */
 	@Override
-	public void close() {}
+	public void close() throws IOException {}
 
 	/**
 	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#mkdir(org.fagu.fmv.mymedia.sync.Item, java.lang.String)
