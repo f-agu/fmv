@@ -23,12 +23,12 @@ limitations under the License.
 /**
  * @author f.agu
  */
-public class MayNotBeAPDFFileExceptionKnownAnalyzer2 extends XpdfExceptionKnownAnalyzer {
+public class MayNotBeAPDFFileExceptionKnownAnalyzer extends XpdfExceptionKnownAnalyzer {
 
 	/**
 	 * 
 	 */
-	public MayNotBeAPDFFileExceptionKnownAnalyzer2() {
+	public MayNotBeAPDFFileExceptionKnownAnalyzer() {
 		super("May not be a PDF file", "Syntax Warning: May not be a PDF file");
 	}
 

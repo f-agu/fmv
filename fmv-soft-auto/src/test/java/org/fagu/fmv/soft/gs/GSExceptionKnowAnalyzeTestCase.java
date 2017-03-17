@@ -40,6 +40,7 @@ import org.fagu.fmv.soft.FMVExecuteException;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.soft.SoftTestCase;
+import org.fagu.fmv.soft.exec.exception.NestedException;
 import org.junit.Test;
 
 
@@ -83,7 +84,7 @@ public class GSExceptionKnowAnalyzeTestCase {
 
 				gsSoft.withParameters(parameters)
 						.customizeExecutor(exec -> exec.setWorkingDirectory(srcFile.getParentFile()))
-						.logCommandLine(System.out::println)
+						// .logCommandLine(System.out::println)
 						.execute();
 			} catch(FMVExecuteException e) {
 				if(e.isKnown()) {
@@ -105,6 +106,11 @@ public class GSExceptionKnowAnalyzeTestCase {
 	public void testPDFToImage() throws IOException {
 		StringJoiner joiner = new StringJoiner(";");
 		List<Consumer<SoftExecutor>> consumers = Arrays.asList(null, se -> se.ifExceptionIsKnownDo(ek -> ek.onMessage(joiner::add).doThrow()));
+		// List<Consumer<SoftExecutor>> consumers = Arrays.asList(se -> se.ifExceptionIsKnownDo(ek -> {
+		// System.out.println("================= " + ek.toString());
+		// ek.getNestedException().messageToLines().forEach(System.out::println);
+		// ek.onMessage(joiner::add).doThrow();
+		// }));
 		for(Consumer<SoftExecutor> consumer : consumers) {
 			runPdfToImage(null, "Permission denied", consumer);
 			runPdfToImage("cheese.zip", "Undefined format", consumer);
@@ -155,6 +161,7 @@ public class GSExceptionKnowAnalyzeTestCase {
 				if(e.isKnown()) {
 					assertEquals(expectedMessage, e.getExceptionKnown().toString());
 				} else {
+					new NestedException(e).messageToLines().forEach(System.out::println);
 					throw e;
 				}
 			}
