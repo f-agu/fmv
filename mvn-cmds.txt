@@ -9,7 +9,7 @@ svn reset --hard
 
 -- push to maven repo
 git pull
-git checkout tags/0.6.0
+git checkout tags/0.6.1
 mvn -U clean deploy
 
 
