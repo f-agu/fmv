@@ -78,10 +78,10 @@ public class LogSynchronizer extends WrappedSynchronizer {
 	}
 
 	/**
-	 * @see org.fagu.fmv.mymedia.sync.impl.WrappedSynchronizer#close()
+	 * @see java.io.Closeable#close()
 	 */
 	@Override
-	public void close() {
+	public void close() throws IOException {
 		logPlusSysout("-----------------------------------------------------------");
 		logResume("Scanned", scanFileCount);
 		logResume("Updated", syncFileCount);
@@ -196,7 +196,7 @@ public class LogSynchronizer extends WrappedSynchronizer {
 	 */
 	@Override
 	public String toString() {
-		return "Log";
+		return "Log, " + synchronizer.toString();
 	}
 
 	// ****************************************************

@@ -377,6 +377,27 @@ public class Size implements Serializable {
 	}
 
 	/**
+	 * @return
+	 */
+	public boolean isPortrait() {
+		return width < height;
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isLandscape() {
+		return width > height;
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isSquare() {
+		return width == height;
+	}
+
+	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

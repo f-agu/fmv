@@ -87,7 +87,14 @@ public class AutoRotate extends FilterCombined {
 	 * @return
 	 */
 	public static boolean isAutoRotateObsolete() {
-		Soft soft = FFMpeg.search();
+		return isAutoRotateObsolete(FFMpeg.search());
+	}
+
+	/**
+	 * @param soft
+	 * @return
+	 */
+	public static boolean isAutoRotateObsolete(Soft soft) {
 		SoftFound softFound = soft.getFirstFound();
 		FFInfo ffInfo = (FFInfo)softFound.getSoftInfo();
 		// version

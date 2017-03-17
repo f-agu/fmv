@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.sync.impl;
  * #L%
  */
 
-
 import java.io.PrintStream;
 
 import org.fagu.fmv.mymedia.sync.Synchronizer;
@@ -58,7 +57,7 @@ public class Synchronizers {
 	 * @return
 	 */
 	public static Synchronizer getDefault(PrintStream logPrintStream) {
-		return new LogSynchronizer(new StandardSynchronizer(), logPrintStream);
+		return new ConfirmDeleteSynchronizer(new LogSynchronizer(new StandardSynchronizer(), logPrintStream));
 	}
 
 	/**

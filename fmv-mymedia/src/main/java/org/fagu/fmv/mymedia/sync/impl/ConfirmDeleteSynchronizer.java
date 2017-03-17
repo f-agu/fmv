@@ -21,35 +21,23 @@ package org.fagu.fmv.mymedia.sync.impl;
  */
 
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.fagu.fmv.mymedia.sync.Item;
 import org.fagu.fmv.mymedia.sync.Synchronizer;
+import org.fagu.fmv.utils.io.UnclosedInputStream;
 
 
 /**
  * @author f.agu
  */
-public class EmptySynchronizer implements Synchronizer {
+public class ConfirmDeleteSynchronizer extends WrappedSynchronizer {
 
 	/**
-	 * 
+	 * @param synchronizer
 	 */
-	public EmptySynchronizer() {}
-
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#mkdir(org.fagu.fmv.mymedia.sync.Item, java.lang.String)
-	 */
-	@Override
-	public Item mkdir(Item destItem, String name) throws IOException {
-		return null;
-	}
-
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#createFile(org.fagu.fmv.mymedia.sync.Item, java.lang.String)
-	 */
-	@Override
-	public Item createFile(Item destItem, String name) throws IOException {
-		return null;
+	public ConfirmDeleteSynchronizer(Synchronizer synchronizer) {
+		super(synchronizer);
 	}
 
 	/**
@@ -57,20 +45,38 @@ public class EmptySynchronizer implements Synchronizer {
 	 */
 	@Override
 	public boolean delete(Item item) throws IOException {
+		if(confirmDelete(item)) {
+			return synchronizer.delete(item);
+		}
 		return false;
 	}
-
-	/**
-	 * @see java.io.Closeable#close()
-	 */
-	@Override
-	public void close() throws IOException {}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "empty";
+		return "confirm delete, " + super.toString();
+	}
+
+	// *******************************************************
+
+	/**
+	 * @return
+	 */
+	private static boolean confirmDelete(Item item) {
+		System.out.println("> Delete " + item + " ? [y/n] ");
+		try (Scanner scanner = new Scanner(new UnclosedInputStream(System.in))) {
+			String line = null;
+			while((line = scanner.nextLine()) != null) {
+				line = line.trim().toLowerCase();
+				if("y".equals(line) || "yes".equals(line)) {
+					return true;
+				} else if("n".equals(line) || "no".equals(line)) {
+					return false;
+				}
+			}
+		}
+		return false;
 	}
 }

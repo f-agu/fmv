@@ -1,5 +1,7 @@
 package org.fagu.fmv.mymedia.sync;
 
+import java.io.Closeable;
+
 /*
  * #%L
  * fmv-mymedia
@@ -20,7 +22,6 @@ package org.fagu.fmv.mymedia.sync;
  * #L%
  */
 
-
 import java.io.IOException;
 import java.util.List;
 
@@ -28,28 +29,23 @@ import java.util.List;
 /**
  * @author f.agu
  */
-public interface Synchronizer {
+public interface Synchronizer extends Closeable {
 
 	/**
 	 * @param sourceStorage
 	 * @param destStorages
 	 */
-	void start(Storage sourceStorage, List<Storage> destStorages);
-
-	/**
-	 * 
-	 */
-	void close();
+	default void start(Storage sourceStorage, List<Storage> destStorages) {}
 
 	/**
 	 * @param item
 	 */
-	void doNothingOnFolder(Item item);
+	default void doNothingOnFolder(Item item) {}
 
 	/**
 	 * @param item
 	 */
-	void doNothingOnFile(Item item);
+	default void doNothingOnFile(Item item) {}
 
 	/**
 	 * @param destItem
@@ -72,14 +68,14 @@ public interface Synchronizer {
 	 * @param destItem
 	 * @throws IOException
 	 */
-	void copyForNew(Item srcItem, Item destItem) throws IOException;
+	default void copyForNew(Item srcItem, Item destItem) throws IOException {}
 
 	/**
 	 * @param srcItem
 	 * @param destItem
 	 * @throws IOException
 	 */
-	void copyForUpdate(Item srcItem, Item destItem) throws IOException;
+	default void copyForUpdate(Item srcItem, Item destItem) throws IOException {}
 
 	/**
 	 * @param item
@@ -91,15 +87,15 @@ public interface Synchronizer {
 	/**
 	 * @param path
 	 */
-	void conflict(String path);
+	default void conflict(String path) {}
 
 	/**
 	 * @param path
 	 */
-	void ignore(String path);
+	default void ignore(String path) {}
 
 	/**
 	 * @param path
 	 */
-	void unknown(String path);
+	default void unknown(String path) {}
 }
