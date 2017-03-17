@@ -302,21 +302,23 @@ public class ChannelLayout {
 	 */
 	public static final ChannelLayout STEREO = new ChannelLayout("stereo");
 
-	private String name;
+	private final String name;
 
-	private List<ChannelLayout> channelLayouts;
+	private final List<ChannelLayout> channelLayouts;
 
 	/**
 	 * @param channel
 	 */
 	protected ChannelLayout(String name) {
 		this.name = name;
+		this.channelLayouts = null;
 	}
 
 	/**
 	 * @param channelLayouts
 	 */
 	protected ChannelLayout(List<ChannelLayout> channelLayouts) {
+		this.name = null;
 		this.channelLayouts = channelLayouts;
 	}
 
@@ -353,6 +355,43 @@ public class ChannelLayout {
 	 */
 	public boolean isIndividual() {
 		return cache().individual;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((channelLayouts == null) ? 0 : channelLayouts.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj)
+			return true;
+		if(obj == null)
+			return false;
+		if(getClass() != obj.getClass())
+			return false;
+		ChannelLayout other = (ChannelLayout)obj;
+		if(channelLayouts == null) {
+			if(other.channelLayouts != null)
+				return false;
+		} else if( ! channelLayouts.equals(other.channelLayouts))
+			return false;
+		if(name == null) {
+			if(other.name != null)
+				return false;
+		} else if( ! name.equals(other.name))
+			return false;
+		return true;
 	}
 
 	/**
@@ -439,7 +478,8 @@ public class ChannelLayout {
 					return true;
 				};
 
-				availableHelp.title().unreadLine().reader(individualReader).unreadLines(3).reader(standardReader).parse(executor.execute().getResult());
+				availableHelp.title().unreadLine().reader(individualReader).unreadLines(3).reader(standardReader).parse(executor.execute()
+						.getResult());
 			} catch(IOException e) {
 				throw new RuntimeException(e);
 			}

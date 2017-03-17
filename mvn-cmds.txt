@@ -1,7 +1,7 @@
 -- release
 git clone https://github.com/f-agu/fmv.git
 cd fmv
-mvn -Dtag=0.6.0 -DreleaseVersion=0.6.0 -DdevelopmentVersion=0.6.1-SNAPSHOT -U -B clean release:prepare
+mvn -Dtag=0.6.1 -DreleaseVersion=0.6.1 -DdevelopmentVersion=0.6.2-SNAPSHOT -U -B clean release:prepare
 
 git pull
 svn reset --hard

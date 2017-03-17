@@ -46,9 +46,9 @@ public class MovieMetadatasTestCase {
 			assertEquals(128920, audioStream.bitRate().getAsInt());
 			assertEquals(ChannelLayout.MONO, audioStream.channelLayout());
 			assertEquals("aac", audioStream.codecName());
-			assertEquals(Duration.valueOf(1.370000F), videoStream.duration());
+			assertEquals(Duration.parse("00:00:01.335"), videoStream.duration());
 
-			System.out.println(movieMetadatas);
+			// System.out.println(movieMetadatas);
 		} finally {
 			if(file != null) {
 				file.delete();
