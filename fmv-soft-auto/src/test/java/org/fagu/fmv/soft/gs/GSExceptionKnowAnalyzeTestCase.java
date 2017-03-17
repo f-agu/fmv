@@ -28,15 +28,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
+import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.fagu.fmv.soft.FMVExecuteException;
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.soft.SoftTestCase;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -56,7 +59,7 @@ public class GSExceptionKnowAnalyzeTestCase {
 	 * @throws IOException
 	 */
 	@Test
-	@Ignore
+	// @Ignore
 	public void testMerge() throws IOException {
 		File folder = new File(System.getProperty("java.io.tmpdir"), "gs-merge-test");
 		FileUtils.deleteDirectory(folder);
@@ -80,9 +83,7 @@ public class GSExceptionKnowAnalyzeTestCase {
 
 				gsSoft.withParameters(parameters)
 						.customizeExecutor(exec -> exec.setWorkingDirectory(srcFile.getParentFile()))
-						.logCommandLine(l -> {
-							System.out.println(l);
-						})
+						.logCommandLine(System.out::println)
 						.execute();
 			} catch(FMVExecuteException e) {
 				if(e.isKnown()) {
@@ -102,18 +103,25 @@ public class GSExceptionKnowAnalyzeTestCase {
 	 */
 	@Test
 	public void testPDFToImage() throws IOException {
-		runPdfToImage(null, "Permission denied");
-		runPdfToImage("cheese.zip", "Undefined format");
-		runPdfToImage("mp4.mp4", "Undefined format");
+		StringJoiner joiner = new StringJoiner(";");
+		List<Consumer<SoftExecutor>> consumers = Arrays.asList(null, se -> se.ifExceptionIsKnownDo(ek -> ek.onMessage(joiner::add).doThrow()));
+		for(Consumer<SoftExecutor> consumer : consumers) {
+			runPdfToImage(null, "Permission denied", consumer);
+			runPdfToImage("cheese.zip", "Undefined format", consumer);
+			runPdfToImage("mp4.mp4", "Undefined format", consumer);
+		}
+		assertEquals("Permission denied;Undefined format;Undefined format", joiner.toString());
 	}
 
 	// *************************************
 
 	/**
 	 * @param srcResource
+	 * @param expectedMessage
+	 * @param consumer
 	 * @throws IOException
 	 */
-	private void runPdfToImage(String srcResource, String expectedMessage) throws IOException {
+	private void runPdfToImage(String srcResource, String expectedMessage, Consumer<SoftExecutor> consumer) throws IOException {
 		File folder = new File(System.getProperty("java.io.tmpdir"), "gs-pdf2img-test");
 		try {
 			FileUtils.deleteDirectory(folder);
@@ -135,9 +143,13 @@ public class GSExceptionKnowAnalyzeTestCase {
 				list.add("-dUseCropBox");
 				list.add(srcFile.getAbsolutePath());
 
-				gsSoft.withParameters(list)
-						.customizeExecutor(exec -> exec.setWorkingDirectory(srcFile.getParentFile()))
-						.execute();
+				SoftExecutor customizeExecutor = gsSoft.withParameters(list)
+						.customizeExecutor(exec -> exec.setWorkingDirectory(srcFile.getParentFile()));
+				// .logCommandLine(System.out::println);
+				if(consumer != null) {
+					consumer.accept(customizeExecutor);
+				}
+				customizeExecutor.execute();
 				fail();
 			} catch(FMVExecuteException e) {
 				if(e.isKnown()) {

@@ -1,5 +1,6 @@
 package org.fagu.fmv.ffmpeg.exception;
 
+import java.io.IOException;
 /*-
  * #%L
  * fmv-ffmpeg
@@ -51,7 +52,7 @@ public abstract class FFExceptionKnownAnalyzer extends SimpleExceptionKnownAnaly
 	 * @param e
 	 * @return
 	 */
-	public static Optional<ExceptionKnown> getKnown(Exception e) {
+	public static Optional<ExceptionKnown> getKnown(IOException e) {
 		return ExceptionKnownAnalyzers.getKnown(FFExceptionKnownAnalyzer.class, e);
 	}
 

@@ -1,4 +1,5 @@
-# FMV (I don't translate, it's a french acronym)
+# FMV
+(I don't translate, it's a french acronym)
 
 FMV provides some tools to handle your media (image, video, sound...).
 

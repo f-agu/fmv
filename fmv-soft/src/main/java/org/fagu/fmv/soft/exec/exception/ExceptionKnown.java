@@ -1,5 +1,6 @@
 package org.fagu.fmv.soft.exec.exception;
 
+import java.io.IOException;
 /*-
  * #%L
  * fmv-soft
@@ -20,6 +21,7 @@ limitations under the License.
  * #L%
  */
 import java.util.Objects;
+import java.util.function.Consumer;
 
 
 /**
@@ -27,13 +29,40 @@ import java.util.Objects;
  */
 public class ExceptionKnown {
 
+	private final NestedException nestedException;
+
 	private final String message;
 
 	/**
+	 * @param nestedException
 	 * @param message
 	 */
-	public ExceptionKnown(String message) {
+	public ExceptionKnown(NestedException nestedException, String message) {
+		this.nestedException = Objects.requireNonNull(nestedException);
 		this.message = Objects.requireNonNull(message);
+	}
+
+	/**
+	 * @return
+	 */
+	public NestedException getNestedException() {
+		return nestedException;
+	}
+
+	/**
+	 * @param consumer
+	 * @return
+	 */
+	public ExceptionKnown onMessage(Consumer<String> consumer) {
+		consumer.accept(message);
+		return this;
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	public void doThrow() throws IOException {
+		throw nestedException.getIOException();
 	}
 
 	/**

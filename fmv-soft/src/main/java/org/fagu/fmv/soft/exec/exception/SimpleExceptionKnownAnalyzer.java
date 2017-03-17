@@ -46,7 +46,7 @@ public class SimpleExceptionKnownAnalyzer implements ExceptionKnownAnalyzer {
 	@Override
 	public ExceptionKnown anaylze(NestedException nestedException) {
 		if(nestedException.contains(strToFind)) {
-			return new ExceptionKnown(title);
+			return new ExceptionKnown(nestedException, title);
 		}
 		return null;
 	}

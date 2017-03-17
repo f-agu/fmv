@@ -59,7 +59,7 @@ public class ExceptionKnownAnalyzers {
 	 * @param e
 	 * @return
 	 */
-	public static Optional<ExceptionKnown> getKnown(Class<? extends ExceptionKnownAnalyzer> cls, Exception e) {
+	public static Optional<ExceptionKnown> getKnown(Class<? extends ExceptionKnownAnalyzer> cls, IOException e) {
 		NestedException nestedException = new NestedException(e);
 		return getExceptionKnownAnalyzers(cls).stream() //
 				.map(ek -> ek.anaylze(nestedException)) //

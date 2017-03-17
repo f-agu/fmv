@@ -46,7 +46,7 @@ public class NoDecoderExceptionKnownAnalyzer extends IMExceptionKnownAnalyzer {
 		Optional<String> findFirst = nestedException.messageToLines().stream().filter(l -> l.contains(getStrToFind())).findFirst();
 		if(findFirst.isPresent()) {
 			String line = StringUtils.substringBefore(findFirst.get(), " @ error").replace('`', '\'');
-			return new ExceptionKnown(line);
+			return new ExceptionKnown(nestedException, line);
 		}
 		return null;
 	}

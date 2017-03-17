@@ -1,5 +1,6 @@
 package org.fagu.fmv.im.exception;
 
+import java.io.IOException;
 /*-
  * #%L
  * fmv-imagemagick
@@ -51,7 +52,7 @@ public abstract class IMExceptionKnownAnalyzer extends SimpleExceptionKnownAnaly
 	 * @param e
 	 * @return
 	 */
-	public static Optional<ExceptionKnown> getKnown(Exception e) {
+	public static Optional<ExceptionKnown> getKnown(IOException e) {
 		return ExceptionKnownAnalyzers.getKnown(IMExceptionKnownAnalyzer.class, e);
 	}
 

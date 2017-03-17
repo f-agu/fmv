@@ -1,5 +1,6 @@
 package org.fagu.fmv.soft.gs.exception;
 
+import java.io.IOException;
 /*-
  * #%L
  * fmv-soft-auto
@@ -51,7 +52,7 @@ public abstract class GSExceptionKnownAnalyzer extends SimpleExceptionKnownAnaly
 	 * @param e
 	 * @return
 	 */
-	public static Optional<ExceptionKnown> getKnown(Exception e) {
+	public static Optional<ExceptionKnown> getKnown(IOException e) {
 		return ExceptionKnownAnalyzers.getKnown(GSExceptionKnownAnalyzer.class, e);
 	}
 

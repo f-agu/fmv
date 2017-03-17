@@ -87,7 +87,7 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 	 * @param e
 	 * @return
 	 */
-	public Optional<ExceptionKnown> getExceptionKnown(Exception e) {
+	public Optional<ExceptionKnown> getExceptionKnown(IOException e) {
 		return ExceptionKnownAnalyzers.getKnown(exceptionKnownSPIClass, e);
 	}
 
