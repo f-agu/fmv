@@ -35,7 +35,7 @@ public class FileUtils {
 	/**
 	 * 
 	 */
-	public FileUtils() {}
+	private FileUtils() {}
 
 	/**
 	 * @param prefix

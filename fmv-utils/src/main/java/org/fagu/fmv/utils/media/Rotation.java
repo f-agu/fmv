@@ -24,6 +24,7 @@ package org.fagu.fmv.utils.media;
  * @author f.agu
  */
 public enum Rotation {
+
 	R_0(0), R_90(90), R_180(180), R_270(270);
 
 	private final int value;

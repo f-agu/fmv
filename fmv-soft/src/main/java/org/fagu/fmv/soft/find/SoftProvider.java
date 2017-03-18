@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.soft.Soft.SoftSearch;
@@ -56,6 +57,16 @@ public abstract class SoftProvider {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getGroupName() {
+		Class<? extends SoftProvider> cls = getClass();
+		Class<?> superclass = cls.getSuperclass();
+		String grpName = superclass != SoftProvider.class ? superclass.getSimpleName() : cls.getSimpleName();
+		return StringUtils.substringBefore(grpName, "SoftProvider").toLowerCase();
 	}
 
 	// --------------------------------------

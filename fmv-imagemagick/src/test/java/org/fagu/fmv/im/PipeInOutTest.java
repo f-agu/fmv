@@ -29,7 +29,6 @@ import java.io.OutputStream;
 import java.security.MessageDigest;
 
 import org.apache.commons.io.FilenameUtils;
-import org.fagu.fmv.im.IMOperation;
 import org.fagu.fmv.im.soft.Convert;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.utils.StringUtils;
@@ -59,7 +58,10 @@ public class PipeInOutTest {
 		try {
 			Soft convertSoft = Convert.search();
 			IMOperation op = new IMOperation();
-			op.image(srcFile).autoOrient().quality(60D).image(destFile);
+			op.image(srcFile)
+					.autoOrient()
+					.quality(60D)
+					.image(destFile);
 			convertSoft.withParameters(op.toList())
 					.logCommandLine(System.out::println)
 					.execute();
@@ -81,13 +83,16 @@ public class PipeInOutTest {
 		try {
 			Soft convertSoft = Convert.search();
 			IMOperation op = new IMOperation();
-			op.image("-").autoOrient().quality(60D).image("jpg:-");
+			op.image("-") // <-------- means standard input
+					.autoOrient()
+					.quality(60D)
+					.image("jpg:-"); // <-------- means standard output
 			try (InputStream inputStream = new FileInputStream(srcFile);
 					OutputStream outputStream = new FileOutputStream(destFile)) {
 				convertSoft.withParameters(op.toList())
 						.logCommandLine(System.out::println)
-						.input(inputStream)
-						.out(outputStream)
+						.input(inputStream) // <--------- in
+						.out(outputStream) // <--------- out
 						.execute();
 			}
 			assertEquals(EXPECTED_SHA1, sha1Of(destFile));
@@ -108,11 +113,14 @@ public class PipeInOutTest {
 		try {
 			Soft convertSoft = Convert.search();
 			IMOperation op = new IMOperation();
-			op.image("-").autoOrient().quality(60D).image(destFile);
+			op.image("-") // <-------- means standard input
+					.autoOrient()
+					.quality(60D)
+					.image(destFile);
 			try (InputStream inputStream = new FileInputStream(srcFile)) {
 				convertSoft.withParameters(op.toList())
 						.logCommandLine(System.out::println)
-						.input(inputStream)
+						.input(inputStream) // <--------- in
 						.execute();
 			}
 			assertEquals(EXPECTED_SHA1, sha1Of(destFile));
@@ -133,11 +141,14 @@ public class PipeInOutTest {
 		try {
 			Soft convertSoft = Convert.search();
 			IMOperation op = new IMOperation();
-			op.image(srcFile).autoOrient().quality(60D).image("jpg:-");
+			op.image(srcFile)
+					.autoOrient()
+					.quality(60D)
+					.image("jpg:-"); // <-------- means standard output
 			try (OutputStream outputStream = new FileOutputStream(destFile)) {
 				convertSoft.withParameters(op.toList())
 						.logCommandLine(System.out::println)
-						.out(outputStream)
+						.out(outputStream) // <--------- out
 						.execute();
 			}
 			assertEquals(EXPECTED_SHA1, sha1Of(destFile));

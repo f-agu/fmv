@@ -80,11 +80,11 @@ public class IniFile {
 	 * @throws IOException
 	 */
 	public static IniFile parse(Reader reader) throws IOException {
-		final Pattern SECTION_PATTERN = Pattern.compile("\\s*\\[([^]]*)\\]\\s*");
+		final Pattern sectionPattern = Pattern.compile("\\s*\\[([^]]*)\\]\\s*");
 
 		MapMap<String, String, String> mapMap = MultiValueMaps.hashMapHashMap();
 
-		String line = null;
+		String line;
 		String section = null;
 
 		BufferedReader br = new BufferedReader(reader);
@@ -93,7 +93,7 @@ public class IniFile {
 			if(line.isEmpty() || line.startsWith("#")) { // empty or comments
 				continue;
 			}
-			Matcher matcher = SECTION_PATTERN.matcher(line);
+			Matcher matcher = sectionPattern.matcher(line);
 			if(matcher.matches()) {
 				section = matcher.group(1).trim();
 			} else if(section != null) {

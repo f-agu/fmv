@@ -2,7 +2,6 @@ package org.fagu.fmv.soft;
 
 import org.fagu.fmv.soft.find.SoftFindListener;
 import org.fagu.fmv.soft.find.SoftLocator;
-import org.junit.Ignore;
 
 /*-
  * #%L
@@ -38,15 +37,18 @@ public class SoftTestCase {
 	public SoftTestCase() {}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testFindAll() throws Exception {
 		Soft.searchAll(ss -> ss.withListener(new SoftFindListener() {
 
 			@Override
 			public void eventFound(SoftLocator softLocator, Soft soft) {
-				soft.getFounds().forEach(System.out::println);
+				// soft.getFounds().forEach(System.out::println);
 			}
-		})).forEach(s -> System.out.println("==>  " + s.getName() + ": " + s));
+		})).forEach(s -> {
+			String url = s.isFound() ? "" : " ; " + s.getSoftProvider().getDownloadURL();
+			System.out.println("[" + s.getSoftProvider().getGroupName() + "] " + s.getName() + ": " + s + url);
+		});
 	}
 
 }

@@ -20,10 +20,10 @@ package org.fagu.fmv.utils.order;
  * #L%
  */
 
-
 /**
  * @author f.agu
  */
+@FunctionalInterface
 public interface Ordered {
 
 	int HIGHEST_PRECEDENCE = Integer.MIN_VALUE;

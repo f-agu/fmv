@@ -150,8 +150,8 @@ public class GSExceptionKnowAnalyzeTestCase {
 				list.add(srcFile.getAbsolutePath());
 
 				SoftExecutor customizeExecutor = gsSoft.withParameters(list)
-						.customizeExecutor(exec -> exec.setWorkingDirectory(srcFile.getParentFile()));
-				// .logCommandLine(System.out::println);
+						.customizeExecutor(exec -> exec.setWorkingDirectory(srcFile.getParentFile()))
+						.logCommandLine(System.out::println);
 				if(consumer != null) {
 					consumer.accept(customizeExecutor);
 				}

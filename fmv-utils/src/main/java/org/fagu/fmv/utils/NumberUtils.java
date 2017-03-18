@@ -51,7 +51,7 @@ public class NumberUtils {
 	 * @return
 	 */
 	public static double round(double d, int decimalPlace) {
-		BigDecimal bd = new BigDecimal(d);
+		BigDecimal bd = BigDecimal.valueOf(d);
 		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
 		return bd.doubleValue();
 	}

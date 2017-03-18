@@ -20,9 +20,8 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-
 /**
- * @author f.agu
+ * @author Spring
  */
 public class ClassReader {
 

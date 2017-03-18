@@ -20,7 +20,6 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-
 import java.util.Iterator;
 
 
@@ -32,7 +31,7 @@ public class StringJoin {
 	/**
 	 * 
 	 */
-	public StringJoin() {}
+	private StringJoin() {}
 
 	/**
 	 * @param buf

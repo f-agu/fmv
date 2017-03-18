@@ -18,6 +18,19 @@
 			<artifactId>fmv-soft</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.fagu</groupId>
+			<artifactId>fmv-ffmpeg</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.fagu</groupId>
+			<artifactId>fmv-imagemagick</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
 		
 		<dependency>
 			<groupId>junit</groupId>

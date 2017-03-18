@@ -34,9 +34,7 @@ import org.fagu.fmv.soft.Soft;
 
 
 /**
- * @author Oodrive
  * @author f.agu
- * @created 10 janv. 2017 17:06:49
  */
 public class DominantColor {
 
@@ -139,8 +137,4 @@ public class DominantColor {
 		return ColorSpace.getInstance(type);
 	}
 
-	// public static void main(String[] args) throws IOException {
-	// Color color = getDominantColor(new File("D:\\tmp\\files\\out.jpg"), System.out::println);
-	// System.out.println(color);
-	// }
 }

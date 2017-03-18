@@ -20,7 +20,6 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +51,7 @@ public class Resources {
 		if(clsPackage == null) {
 			return name;
 		}
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(clsPackage.getName().replace('.', '/'));
 		if( ! name.startsWith("/")) {
 			sb.append('/');
@@ -88,15 +87,10 @@ public class Resources {
 	 * @param suffix
 	 * @return
 	 */
-	public static File extractToTempFile(String resource, String prefix, String suffix) {
-		try {
-			File tmpFile = File.createTempFile(prefix, suffix);
-			tmpFile = extractToFile(resource, tmpFile);
-			return tmpFile;
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public static File extractToTempFile(String resource, String prefix, String suffix) throws IOException {
+		File tmpFile = File.createTempFile(prefix, suffix);
+		tmpFile = extractToFile(resource, tmpFile);
+		return tmpFile;
 	}
 
 	/**

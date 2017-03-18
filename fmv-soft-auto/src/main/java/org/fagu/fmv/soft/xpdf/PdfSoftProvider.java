@@ -55,6 +55,14 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	}
 
 	/**
+	 * @see org.fagu.fmv.soft.find.SoftProvider#getGroupName()
+	 */
+	@Override
+	public String getGroupName() {
+		return "pdf";
+	}
+
+	/**
 	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory()
 	 */
 	@Override
@@ -64,7 +72,8 @@ public abstract class PdfSoftProvider extends SoftProvider {
 				.customizeExecutor(ex -> {
 					ex.setExitValues(exitValues());
 					ex.setTimeOut(10_000);
-				}).build();
+				})
+				.build();
 	}
 
 	/**
@@ -87,9 +96,12 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		Version v012 = new Version(0, 12);
 		BiPredicate<VersionSoftInfo, Provider> isProvider = (s, p) -> s instanceof XPdfVersionSoftInfo && ((XPdfVersionSoftInfo)s).getProvider() == p;
 		return new VersionPolicy() //
-				.on("xpdf", s -> isProvider.test(s, Provider.XPDF)).minVersion(Version.V3) //
-				.on("poppler", s -> isProvider.test(s, Provider.POPPLER)).minVersion(v012) //
-				.onAllPlatforms().minVersion(v012);
+				.on("xpdf", s -> isProvider.test(s, Provider.XPDF))
+				.minVersion(Version.V3) //
+				.on("poppler", s -> isProvider.test(s, Provider.POPPLER))
+				.minVersion(v012) //
+				.onAllPlatforms()
+				.minVersion(v012);
 	}
 
 	/**

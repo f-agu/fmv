@@ -20,10 +20,10 @@ package org.fagu.fmv.utils.file;
  * #L%
  */
 
-
 /**
  * @author f.agu
  */
+@FunctionalInterface
 public interface FindProgress {
 
 	/**
