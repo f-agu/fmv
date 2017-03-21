@@ -38,7 +38,6 @@ import org.junit.Test;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 24 janv. 2017 13:23:07
  */
