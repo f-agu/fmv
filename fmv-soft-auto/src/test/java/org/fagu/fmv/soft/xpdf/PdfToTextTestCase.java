@@ -20,7 +20,6 @@ import org.junit.Test;
 
 /**
  * @author f.agu
- * @created 21 mars 2017 11:07:39
  */
 public class PdfToTextTestCase {
 
@@ -46,7 +45,6 @@ public class PdfToTextTestCase {
 					.execute();
 			assertEquals(1, output.size());
 			assertEquals("Salut, E\u00E9\u00E9\u00E9 de test", output.get(0));
-			System.out.println((int)'é');
 		} finally {
 			FileUtils.deleteDirectory(folder);
 		}
