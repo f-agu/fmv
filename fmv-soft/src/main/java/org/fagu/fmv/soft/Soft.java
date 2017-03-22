@@ -401,11 +401,11 @@ public class Soft {
 		if(soft != null) {
 			return soft;
 		}
-		soft = SoftProvider.getSoftProviders() //
-				.filter(sp -> sp.getName().equalsIgnoreCase(name)) //
-				.sorted(Collections.reverseOrder(OrderComparator.INSTANCE)) //
-				.map(SoftProvider::search) //
-				.findFirst() //
+		soft = SoftProvider.getSoftProviders()
+				.filter(sp -> sp.getName().equalsIgnoreCase(name))
+				.sorted(Collections.reverseOrder(OrderComparator.INSTANCE))
+				.map(SoftProvider::search)
+				.findFirst()
 				.orElseThrow(() -> new RuntimeException("Soft \"" + name + "\" undefined"));
 		SOFT_NAME_CACHE.put(name, soft);
 		return soft;

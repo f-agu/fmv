@@ -146,8 +146,8 @@ public class FFHelper {
 	 */
 	public static void captureWebCam(File outFile, Duration duration) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
-		InputProcessor inputProcessor = builder.addMediaInputWebCam();
-		inputProcessor.duration(duration);
+		builder.addMediaInputWebCam()
+				.duration(duration);
 
 		builder.addMediaOutputFile(outFile);
 
@@ -165,9 +165,9 @@ public class FFHelper {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.addMediaInputFile(inFile);
 
-		OutputProcessor outputProcessor = builder.mux(BasicStreamMuxer.to(outFile).movflags(Movflags.FASTSTART));
-		outputProcessor.codec(LibFDK_AAC.build());
-		outputProcessor.overwrite();
+		builder.mux(BasicStreamMuxer.to(outFile).movflags(Movflags.FASTSTART))
+				.codec(LibFDK_AAC.build())
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -183,8 +183,8 @@ public class FFHelper {
 		AudioGenerator ag = AudioGenerator.build().expr("sin(440*2*PI*t)").sampleRate(44100).duration(Duration.valueOf(5));
 		builder.addMediaInput(ag.forInput());
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -205,8 +205,8 @@ public class FFHelper {
 		filtercomplex.addInput(inputProcessor);
 		builder.filter(filtercomplex);
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -248,13 +248,11 @@ public class FFHelper {
 
 		Volume volume = Volume.build().increaseToMax(volumeDetected);
 
-		// FilterComplex filtercomplex = FilterComplex.create(volume);
-		// filtercomplex.addInput(inputProcessor);
 		builder.filter(volume);
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.videoCodecCopy();
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.videoCodecCopy()
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -274,10 +272,10 @@ public class FFHelper {
 
 		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
 		outputProcessor.map().allStreams().input(videoInput).input(audioInput);
-		outputProcessor.codecCopy(Type.VIDEO);
-		outputProcessor.shortest();
-		outputProcessor.overwrite();
-		outputProcessor.metadataStream(Type.AUDIO, countAudioStreams, "language", "fra");
+		outputProcessor.codecCopy(Type.VIDEO)
+				.shortest()
+				.overwrite()
+				.metadataStream(Type.AUDIO, countAudioStreams, "language", "fra");
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -294,9 +292,9 @@ public class FFHelper {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.addMediaInputFile(inFile);
 
-		OutputProcessor outputProcessor = builder.mux(Image2Muxer.to(outImageFile));
-		outputProcessor.timeSeek(time);
-		outputProcessor.numberOfVideoFrameToRecord(1); // only one thumbnail
+		builder.mux(Image2Muxer.to(outImageFile))
+				.timeSeek(time)
+				.numberOfVideoFrameToRecord(1); // only one thumbnail
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -353,9 +351,9 @@ public class FFHelper {
 		builder.filter(selectVideo);
 
 		// output
-		OutputProcessor outputProcessor = builder.mux(Image2Muxer.to(new File(outFolder, "out%05d.jpg")));
-		outputProcessor.videoSync(VSync.PASSTHROUGH);
-		outputProcessor.overwrite();
+		builder.mux(Image2Muxer.to(new File(outFolder, "out%05d.jpg")))
+				.videoSync(VSync.PASSTHROUGH)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -398,9 +396,9 @@ public class FFHelper {
 		builder.filter(Format.with(PixelFormat.RGB24));
 
 		// output
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.videoSync(VSync.PASSTHROUGH);
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.videoSync(VSync.PASSTHROUGH)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -416,17 +414,19 @@ public class FFHelper {
 	public static void extractPart(File inFile, File outFile, Time startTime, Duration duration) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
-		InputProcessor inputProcessor = builder.addMediaInputFile(inFile);
-		inputProcessor.timeSeek(startTime);
+		// input
+		builder.addMediaInputFile(inFile)
+				.timeSeek(startTime);
 
-		OutputProcessor outputProcessor = builder.mux(MP4Muxer.to(outFile).avoidNegativeTs(AvoidNegativeTs.MAKE_NON_NEGATIVE));
-		outputProcessor.duration(duration);
-		outputProcessor.qualityScale(0);
-		outputProcessor.codec(Libx264.build().mostCompatible());
-		outputProcessor.overwrite();
+		// ouput
+		builder.mux(MP4Muxer.to(outFile).avoidNegativeTs(AvoidNegativeTs.MAKE_NON_NEGATIVE))
+				.duration(duration)
+				.qualityScale(0)
+				.codec(Libx264.build().mostCompatible())
+				.overwrite();
 
-		FFExecutor<Object> executor = builder.build();
-		executor.execute();
+		// execute
+		builder.build().execute();
 	}
 
 	/**
@@ -440,17 +440,14 @@ public class FFHelper {
 
 		InputProcessor inputProcessor = builder.addMediaInputFile(inFile);
 
-		Scale scale = Scale.to(size, ScaleMode.fitToBoxKeepAspectRatio());
-		// scale.forceOriginalAspectRatio(ForceOriginalAspectRatio.DECREASE);
-		builder.filter(scale);
+		builder.filter(Scale.to(size, ScaleMode.fitToBoxKeepAspectRatio()));
 
-		OutputProcessor outputProcessor = builder.mux(MP4Muxer.to(outFile));
-		outputProcessor.qualityScaleVideo(0);
-		outputProcessor.codecCopy(Type.AUDIO);
-		outputProcessor.codecCopy(Type.SUBTITLE);
-		outputProcessor.mapAllStreams(inputProcessor);
-		outputProcessor.codecCopy(Type.AUDIO);
-		outputProcessor.overwrite();
+		builder.mux(MP4Muxer.to(outFile))
+				.qualityScaleVideo(0)
+				.codecCopy(Type.AUDIO)
+				.codecCopy(Type.SUBTITLE)
+				.mapAllStreams(inputProcessor)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.addListener(new FFExecListener() {
@@ -481,10 +478,10 @@ public class FFHelper {
 
 		builder.filter(concat);
 
-		OutputProcessor outputProcessor = builder.mux(MP4Muxer.to(outFile).movflags(Movflags.FASTSTART));
-		outputProcessor.qualityScale(0);
-		outputProcessor.codec(Libx264.build().mostCompatible());
-		outputProcessor.overwrite();
+		builder.mux(MP4Muxer.to(outFile).movflags(Movflags.FASTSTART))
+				.qualityScale(0)
+				.codec(Libx264.build().mostCompatible())
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -521,12 +518,12 @@ public class FFHelper {
 
 		builder.filter(concat);
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.qualityScaleAudio(0);
-		outputProcessor.qualityScaleVideo(0);
-		outputProcessor.codec(Libx264.build().mostCompatible());
-		outputProcessor.format("mp4");
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.qualityScaleAudio(0)
+				.qualityScaleVideo(0)
+				.codec(Libx264.build().mostCompatible())
+				.format("mp4")
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -547,8 +544,8 @@ public class FFHelper {
 		speed.addInput(inputProcessor);
 		builder.filter(speed);
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -570,8 +567,8 @@ public class FFHelper {
 
 		builder.filter(fadeVideo).filter(fadeAudio);
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -593,8 +590,8 @@ public class FFHelper {
 
 		builder.filter(fade);
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -634,8 +631,8 @@ public class FFHelper {
 		Crop crop = Crop.build().centralArea(size);
 		builder.filter(crop);
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -706,8 +703,8 @@ public class FFHelper {
 		InputProcessor inputProcessor = builder.addMediaInputFile(inFile);
 		builder.filter(AutoRotate.create(inputProcessor.getMovieMetadatas()));
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -733,9 +730,9 @@ public class FFHelper {
 
 		builder.filter(audioMix);
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.videoCodecCopy();
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.videoCodecCopy()
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -782,8 +779,8 @@ public class FFHelper {
 		Overlay overlay3 = Overlay.with(overlay2, vfc3).shortest(true).y(quartSize.getHeight());
 		Overlay.with(overlay3, vfc4).shortest(true).x(quartSize.getWidth()).y(quartSize.getHeight());
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -812,22 +809,30 @@ public class FFHelper {
 
 		// source 1: video
 		NullSourceVideo nullSourceVideo1 = NullSourceVideo.build().size(videoStream1.size()).duration(duration_T2_END);
-		Concat concat1V = Concat.create(builder, video1InputProcessor, FilterComplex.create(nullSourceVideo1)).countVideo(1).countAudio(0)
+		Concat concat1V = Concat.create(builder, video1InputProcessor, FilterComplex.create(nullSourceVideo1))
+				.countVideo(1)
+				.countAudio(0)
 				.countInputs(2);
 		// source 1: audio
 		AudioGenerator audioGenerator1 = AudioGenerator.build().silence().duration(duration_T2_END);
-		Concat concat1A = Concat.create(builder, video1InputProcessor, FilterComplex.create(audioGenerator1)).countVideo(0).countAudio(1).countInputs(
-				2);
+		Concat concat1A = Concat.create(builder, video1InputProcessor, FilterComplex.create(audioGenerator1))
+				.countVideo(0)
+				.countAudio(1)
+				.countInputs(2);
 		FilterComplex fadeAudio1 = FilterComplex.create(FadeAudio.out().startTime(startTime_T1).duration(fadeDuration)).addInput(concat1A);
 
 		// source 2: video
 		NullSourceVideo nullSourceVideo2 = NullSourceVideo.build().size(videoStream2.size()).duration(duration_0_T1);
-		Concat concat2V = Concat.create(builder, FilterComplex.create(nullSourceVideo2), video2InputProcessor).countVideo(1).countAudio(0)
+		Concat concat2V = Concat.create(builder, FilterComplex.create(nullSourceVideo2), video2InputProcessor)
+				.countVideo(1)
+				.countAudio(0)
 				.countInputs(2);
 		// source 2: audio
 		AudioGenerator audioGenerator2 = AudioGenerator.build().silence().duration(duration_0_T1);
-		Concat concat2A = Concat.create(builder, FilterComplex.create(audioGenerator2), video2InputProcessor).countVideo(0).countAudio(1).countInputs(
-				2);
+		Concat concat2A = Concat.create(builder, FilterComplex.create(audioGenerator2), video2InputProcessor)
+				.countVideo(0)
+				.countAudio(1)
+				.countInputs(2);
 		FilterComplex fadeAudio2 = FilterComplex.create(FadeAudio.in().startTime(startTime_T1).duration(fadeDuration)).addInput(concat2A);
 
 		// blend / merge video
@@ -845,8 +850,8 @@ public class FFHelper {
 		builder.filter(audioMix);
 
 		// out
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -876,8 +881,8 @@ public class FFHelper {
 
 		builder.filter(scale2);
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(outFile)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -910,17 +915,17 @@ public class FFHelper {
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 
-		outputProcessor.codec(Libx264.build().strict(Strict.EXPERIMENTAL).crf(23));
-		// outputProcessor.codecCopy(Type.AUDIO);
-		outputProcessor.codecAutoSelectAAC();
-		outputProcessor.codecCopy(Type.SUBTITLE);
-		outputProcessor.overwrite();
+		outputProcessor.codec(Libx264.build().strict(Strict.EXPERIMENTAL).crf(23))
+				// .codecCopy(Type.AUDIO)
+				.codecAutoSelectAAC()
+				.codecCopy(Type.SUBTITLE)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 
 		// System.out.println(executor.getCommandLine());
 
-		// executor.execute();
+		executor.execute();
 	}
 
 	/**
@@ -954,11 +959,13 @@ public class FFHelper {
 		builder.filter(ResampleAudio.build().frequency(audioFrequency));
 
 		// output
-		OutputProcessor outputProcessor = builder.mux(MP4Muxer.to(outFile).movflags(Movflags.FASTSTART));
-		outputProcessor.codec(Libx264.build().mostCompatible());
-		outputProcessor.pixelFormat(PixelFormat.YUV420P); // pour quicktime/safari
-		outputProcessor.codecAutoSelectAAC().audioChannel(audioChannel).audioBitRate(audioBitRate);
-		outputProcessor.overwrite();
+		builder.mux(MP4Muxer.to(outFile).movflags(Movflags.FASTSTART))
+				.codec(Libx264.build().mostCompatible())
+				.pixelFormat(PixelFormat.YUV420P) // pour quicktime/safari
+				.codecAutoSelectAAC()
+				.audioChannel(audioChannel)
+				.audioBitRate(audioBitRate)
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -983,12 +990,11 @@ public class FFHelper {
 		FilterComplex filter = FilterComplex.create(ResampleAudio.build().frequency(sampleRate));
 		builder.filter(filter);
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
-		outputProcessor.audioChannel(2);
-		outputProcessor.audioBitRate(bitRate);
-		outputProcessor.format("mp3");
-		outputProcessor.overwrite();
-
+		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile)
+				.audioChannel(2)
+				.audioBitRate(bitRate)
+				.format("mp3")
+				.overwrite();
 		outputProcessor.map().allStreams().input(filter);
 
 		FFExecutor<Object> executor = builder.build();
@@ -999,31 +1005,6 @@ public class FFHelper {
 	}
 
 	public static void main(String[] args) throws Exception {
-		// resize(new File("D:\\Personnel\\films\\Dessins animés HD\\Monstres & cie (480p).mkv"), Size.valueOf(481,
-		// 301), new File(
-		// "D:\\Personnel\\films\\Dessins animés HD\\Monstres & cie (test).mkv"));
-
-		// extractPart(new File("D:\\Personnel\\TODO\\ENCORE3\\2\\T.mkv"), new
-		// File("D:\\Personnel\\TODO\\ENCORE3\\2\\T2.mkv"), Time.valueOf(12), Duration.valueOf(500));
-
-		// CropDetection cropDetection = cropDetect(new File("D:\\Personnel\\TODO\\ENCORE3\\3\\T3.mkv"));
-		// cropDetection.getOrderedCropSizes().stream().limit(10).forEach(cs -> System.out.println("CropDetect: " +
-		// cs));
-
 		captureWebCam(new File("D:\\tmp\\capture.mp4"), Duration.valueOf(10));
-		// audioVolumeDetect(new File("D:\\tmp\\Compét 2014\\566.mp4"));
-
-		// audioVolumeAdjustToMax(new
-		// File("D:\\Video_fagu&Vv\\2015\\2015-02 - Corse, Porto-Vecchio\\2015-02-19 (01) Jacuzzi.mp4"), new File(
-		// "D:\\Video_fagu&Vv\\2015\\2015-02 - Corse, Porto-Vecchio\\2015-02-19 (01) Jacuzzi - 2.mp4"));
-
-		// for(CropSize cropSize : cropDetect(new
-		// File("D:\\tmp\\2014-04-testmontage\\2014-04-14 - Au rocher de vierge.mp4")).getCropSizes()) {
-		// System.out.println(cropSize);
-		// }
-
-		// encodeTox264_KeepChaptersAndSubtitles(new File("C:\\tmp\\dvd\\Barbie 01 - Rêve de danseuse étoile.mkv"), new
-		// File(
-		// "C:\\tmp\\dvd\\Barbie 01 - Rêve de danseuse étoile-out.mkv"), null);
 	}
 }

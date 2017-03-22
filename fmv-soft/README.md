@@ -1,6 +1,6 @@
 # FMV-Soft
 
-Easy way to fond and execute an external binary. 
+Easy way to fInd and execute an external binary. 
 
 
 ## Getting started
@@ -22,9 +22,9 @@ Soft soft = FFMpeg.search();
 
 ## On your application startup
 
-On starting, add a check to find all binaries your application need. A example:
+On starting, add a check to find all binaries your application needs. An example:
 ```java
-public static boolean checkAll(Consumer<String> formatConsumer) {
+private boolean checkSome() {
 	List<Soft> softs = new ArrayList<>(8);
 	softs.add(FFMpeg.search());
 	softs.add(FFProbe.search());
@@ -35,10 +35,10 @@ public static boolean checkAll(Consumer<String> formatConsumer) {
 	softs.add(PdfToText.search());
 	softs.add(GS.search());
 	SoftLogger softLogger = new SoftLogger(softs);
-	return softLogger.log(formatConsumer);
+	return softLogger.log(System.out::println);
 }
 ```
-do
+display
 ```
 composite   [   FOUND   ]  C:\Program Files\ImageMagick-7.0.3-Q16\magick.exe (7.0.3.5) 
 convert     [   FOUND   ]  C:\Program Files\ImageMagick-7.0.3-Q16\magick.exe (7.0.3.5) 
