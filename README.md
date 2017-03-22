@@ -7,10 +7,10 @@ FMV provides some tools to handle your media (image, video, sound...).
 
 Name                               | Comments
 ---------------------------------- | ------------------
-[fmv-ffmpeg] (fmv-ffmpeg)          | helps the developer to use `ffmpeg` & `ffprobe`
+[fmv-ffmpeg](fmv-ffmpeg)           | Helps the developer to use `ffmpeg` & `ffprobe`
 [fmv-imagemagick](fmv-imagemagick) | Helps the developer to use imagemagick
 [fmv-soft](fmv-soft)               | Easy way to fInd and execute an external binary
-[fmv-soft-auto](fmv-soft-auto)     | Auto conf for soft software: GhostScript, XPDF, Java
+[fmv-soft-auto](fmv-soft-auto)     | Auto conf for some softwares: GhostScript, Java, XPDF
 
 
 
