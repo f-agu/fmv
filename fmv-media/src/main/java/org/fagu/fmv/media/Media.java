@@ -42,4 +42,6 @@ public interface Media {
 	 * @return
 	 */
 	long getTime();
+
+	String getDevice();
 }

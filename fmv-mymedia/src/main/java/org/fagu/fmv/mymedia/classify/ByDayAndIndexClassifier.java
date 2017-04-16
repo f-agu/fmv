@@ -44,7 +44,7 @@ import org.fagu.fmv.utils.file.FileFinder;
  */
 public class ByDayAndIndexClassifier extends Classifier<FileFinder<Media>, Media> {
 
-	private final static SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	private static final SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
 	private final MediaTimeComparator<Media> mediaTimeComparator;
 

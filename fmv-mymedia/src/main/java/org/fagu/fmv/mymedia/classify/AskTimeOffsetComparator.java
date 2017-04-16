@@ -32,7 +32,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.fagu.fmv.media.Media;
-import org.fagu.fmv.media.Metadatas;
 import org.fagu.fmv.utils.file.FileFinder;
 
 
@@ -68,8 +67,9 @@ public abstract class AskTimeOffsetComparator<M extends Media> implements MediaT
 	/**
 	 * @see org.fagu.fmv.mymedia.classify.MediaTimeComparator#getTime(org.fagu.fmv.media.Media)
 	 */
+	@Override
 	public long getTime(M media) {
-		String metadatasKey = getMetadatasKey(media);
+		String metadatasKey = media.getDevice();
 		Long offset = metadatasMap.get(metadatasKey);
 		if(offset == null) {
 			offset = askTimeOffset(metadatasKey);
@@ -79,23 +79,6 @@ public abstract class AskTimeOffsetComparator<M extends Media> implements MediaT
 	}
 
 	// *************************************************************
-
-	/**
-	 * @param metadatas
-	 * @return
-	 */
-	abstract public String getMetadatasKey(Metadatas metadatas);
-
-	// *************************************************************
-
-	/**
-	 * @param img
-	 * @return
-	 */
-	private String getMetadatasKey(M media) {
-		return getMetadatasKey(media.getMetadatas());
-	}
-
 	/**
 	 * @param key
 	 * @return
@@ -104,7 +87,7 @@ public abstract class AskTimeOffsetComparator<M extends Media> implements MediaT
 		SortedSet<M> images = new TreeSet<>((m1, m2) -> m1.getFile().compareTo(m2.getFile()));
 		for(FileFinder<M>.InfosFile infosFile : fileFinder.getAll()) {
 			M media = infosFile.getMain();
-			if(key.equals(getMetadatasKey(media))) {
+			if(key.equals(media.getDevice())) {
 				images.add(media);
 			}
 		}
@@ -142,6 +125,13 @@ public abstract class AskTimeOffsetComparator<M extends Media> implements MediaT
 	 * @return
 	 */
 	private boolean scanYesOrNo() {
+		return true;
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean scanYesOrNo_legacy() {
 		System.out.print("[y/n] ");
 		while(true) {
 			try {

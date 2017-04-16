@@ -21,10 +21,13 @@ package org.fagu.fmv.mymedia.classify;
  */
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.fagu.fmv.im.Image;
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.mymedia.classify.image.ReduceImageConverter;
@@ -70,8 +73,16 @@ public class DefaultClassifierProvider implements ClassifierProvider {
 			 * @see org.fagu.fmv.mymedia.classify.ConverterListener#eventPreConvert(org.fagu.fmv.media.Media,
 			 *      java.io.File)
 			 */
+			@Override
 			public void eventPreConvert(M srcMedia, File destFile) {
-				System.out.println("Convert " + srcMedia.getFile());
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				StringBuilder buf = new StringBuilder();
+				buf.append("Convert [").append(dateFormat.format(new Date(srcMedia.getTime()))).append("] ");
+				buf.append(StringUtils.rightPad(StringUtils.abbreviate(srcMedia.getDevice(), 20), 20)).append("  ");
+				buf.append(destFile.getParentFile().getName()).append(File.separator).append(destFile.getName());
+				buf.append(" from ").append(srcMedia.getFile());
+
+				System.out.println(buf.toString());
 			}
 		});
 	}

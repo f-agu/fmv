@@ -75,24 +75,12 @@ public class ByPatternClassifier<F extends FileFinder<M>, M extends Media> exten
 
 	// -------------------------------------------------
 
-	/**
-	 *
-	 */
 	private final MediaTimeComparator<M> mediaTimeComparator;
 
-	/**
-	 *
-	 */
 	private final MapSortedSet<String, FileFinder<M>.InfosFile> map;
 
-	/**
-	 *
-	 */
 	private final String pattern;
 
-	/**
-	 *
-	 */
 	private final ReplacerMap<M> replacerMap;
 
 	/**
@@ -102,7 +90,8 @@ public class ByPatternClassifier<F extends FileFinder<M>, M extends Media> exten
 	 * @param pattern
 	 * @param replacerMap
 	 */
-	public ByPatternClassifier(F fileFinder, File destFolder, MediaTimeComparator<M> mediaTimeComparator, String pattern, ReplacerMap<M> replacerMap) {
+	public ByPatternClassifier(F fileFinder, File destFolder, MediaTimeComparator<M> mediaTimeComparator, String pattern,
+			ReplacerMap<M> replacerMap) {
 		super(fileFinder, destFolder);
 		this.mediaTimeComparator = Objects.requireNonNull(mediaTimeComparator);
 		this.pattern = Objects.requireNonNull(pattern);

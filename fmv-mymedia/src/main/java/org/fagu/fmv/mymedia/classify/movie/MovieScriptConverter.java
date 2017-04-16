@@ -38,7 +38,6 @@ import org.fagu.fmv.ffmpeg.filter.impl.Transpose;
 import org.fagu.fmv.ffmpeg.filter.impl.Volume;
 import org.fagu.fmv.ffmpeg.filter.impl.VolumeDetected;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.mymedia.classify.Converter;
 import org.fagu.fmv.mymedia.classify.ConverterListener;
@@ -61,6 +60,8 @@ public class MovieScriptConverter extends Converter<Movie> {
 	private PrintStream script;
 
 	private Map<String, Rotation> rotateMap;
+
+	private int currentVideo;
 
 	/**
 	 * @param destFolder
@@ -109,8 +110,8 @@ public class MovieScriptConverter extends Converter<Movie> {
 
 		builder.hideBanner();
 
-		InputProcessor inputProcessor = builder.addMediaInputFile(srcFile);
-		inputProcessor.setMovieMetadatas(infos);
+		builder.addMediaInputFile(srcFile)
+				.setMovieMetadatas(infos);
 
 		Rotation rotation = rotateMap.get(srcFile.getName());
 		if(rotation != null) {
@@ -121,11 +122,16 @@ public class MovieScriptConverter extends Converter<Movie> {
 			builder.filter(AutoRotate.create(infos));
 		}
 		Size newSize = FFReducer.applyScaleIfNecessary(builder, infos, getMaxSize(), getScaleLogger());
+		writeLabel();
 		script.println("rem " + (newSize.isLandscape() ? "landscape" : newSize.isPortrait() ? "portrait" : "square"));
 
 		builder.filter(ResampleAudio.build().frequency(audioFrequency));
 
-		Optional<VolumeDetected> findFirst = infosFile.getInfos().stream().filter(o -> o instanceof VolumeDetected).map(o -> (VolumeDetected)o).findFirst();
+		Optional<VolumeDetected> findFirst = infosFile.getInfos()
+				.stream()
+				.filter(o -> o instanceof VolumeDetected)
+				.map(o -> (VolumeDetected)o)
+				.findFirst();
 		if(findFirst.isPresent()) {
 			VolumeDetected volumeDetected = findFirst.get();
 			builder.filter(Volume.build().increaseToMax(volumeDetected));
@@ -134,8 +140,7 @@ public class MovieScriptConverter extends Converter<Movie> {
 		File dest = new File(destFile.getParentFile(), FilenameUtils.getBaseName(destFile.getName()) + ".mp4");
 
 		OutputProcessor outputProcessor = builder.addMediaOutputFile(dest);
-		outputProcessor.qualityScaleAudio(0);
-		outputProcessor.qualityScaleVideo(0);
+		outputProcessor.qualityScale(0);
 
 		Transpose.addMetadataRotate(outputProcessor, Rotation.R_0);
 
@@ -144,6 +149,7 @@ public class MovieScriptConverter extends Converter<Movie> {
 
 		FFExecutor<Object> executor = builder.build();
 		try {
+			script.println("if exist \"" + dest.getPath() + "\" goto :movie_" + currentVideo);
 			script.println("echo.");
 			script.println("echo Frame: " + infos.getVideoStream().countEstimateFrames().getAsInt());
 			script.println(executor.getCommandLine());
@@ -159,6 +165,7 @@ public class MovieScriptConverter extends Converter<Movie> {
 	@Override
 	public void close() throws IOException {
 		if(script != null) {
+			writeLabel();
 			script.close();
 		}
 	}
@@ -170,7 +177,7 @@ public class MovieScriptConverter extends Converter<Movie> {
 	 */
 	private void openScript() throws IOException {
 		if(script == null) {
-			this.script = new PrintStream(new File(destFolder, "script.bat"));
+			script = new PrintStream(new File(destFolder, "script.bat"));
 			rotateMap = new HashMap<>();
 			script.println("@echo off");
 			script.println();
@@ -179,6 +186,13 @@ public class MovieScriptConverter extends Converter<Movie> {
 			script.println("rem Rotate 270: ... -filter:v \"transpose=dir=cclock\" ...");
 			script.println();
 		}
+	}
+
+	/**
+	 * 
+	 */
+	private void writeLabel() {
+		script.println(":movie_" + currentVideo++);
 	}
 
 	/**

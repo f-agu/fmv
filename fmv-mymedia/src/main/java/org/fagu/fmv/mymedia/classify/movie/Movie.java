@@ -21,9 +21,17 @@ package org.fagu.fmv.mymedia.classify.movie;
  */
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.OptionalInt;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.fagu.fmv.ffmpeg.metadatas.AudioStream;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.media.Media;
+import org.fagu.fmv.utils.media.Size;
 
 
 /**
@@ -66,6 +74,39 @@ public class Movie implements Media {
 	@Override
 	public long getTime() {
 		return videoMetadatas.getVideoStream().creationDate().getTime();
+	}
+
+	/**
+	 * @see org.fagu.fmv.media.Media#getDevice()
+	 */
+	@Override
+	public String getDevice() {
+		List<String> keys = new ArrayList<>();
+
+		VideoStream videoStream = videoMetadatas.getVideoStream();
+		if(videoStream != null) {
+			String handlerName = videoStream.handlerName();
+			if(StringUtils.isNotEmpty(handlerName)) {
+				keys.add(handlerName);
+			}
+			Size size = videoStream.size();
+			if(size != null) {
+				keys.add(size.toString());
+			}
+		}
+
+		AudioStream audioStream = videoMetadatas.getAudioStream();
+		if(audioStream != null) {
+			String handlerName = audioStream.handlerName();
+			if(StringUtils.isNotEmpty(handlerName)) {
+				keys.add(handlerName);
+			}
+			OptionalInt sampleRate = audioStream.sampleRate();
+			if(sampleRate.isPresent()) {
+				keys.add(sampleRate.getAsInt() + "Hz");
+			}
+		}
+		return keys.stream().collect(Collectors.joining(" "));
 	}
 
 }

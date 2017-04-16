@@ -105,4 +105,25 @@ public class Image implements Media, Comparable<Image>, Serializable {
 		return metadatas;
 	}
 
+	/**
+	 * @see org.fagu.fmv.media.Media#getDevice()
+	 */
+	@Override
+	public String getDevice() {
+		StringBuilder key = new StringBuilder();
+		String device = metadatas.getDevice();
+		String deviceModel = metadatas.getDeviceModel();
+		if(device != null) {
+			key.append(device);
+			if(deviceModel != null) {
+				key.append('/');
+			}
+		}
+		if(deviceModel != null) {
+			key.append(deviceModel);
+		}
+		return key.toString();
+
+	}
+
 }
