@@ -24,14 +24,14 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import jline.console.ConsoleReader;
-
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.cli.Command;
 import org.fagu.fmv.cli.CommandBuilder;
 import org.fagu.fmv.cli.CommandFactory;
 import org.fagu.fmv.cli.exception.LineParseException;
 import org.fagu.fmv.core.project.Project;
+
+import jline.console.ConsoleReader;
 
 
 /**
@@ -88,6 +88,9 @@ public class AliasCustomCommandFactory implements CommandFactory {
 						ln += " \"" + StringUtils.join(topArgs, "\" \"") + '"';
 					}
 					return commandBuilder.createAndExec(ln);
+				}
+				if("help".equals(method.getName())) {
+					// TODO
 				}
 				throw new RuntimeException("Undefined process");
 			}

@@ -22,6 +22,10 @@ package org.fagu.fmv.core.exec;
 
 import java.io.IOException;
 
+import org.fagu.fmv.core.exec.source.FilterSource;
+import org.fagu.fmv.ffmpeg.filter.Filter;
+import org.fagu.fmv.ffmpeg.filter.GeneratedSource;
+
 
 /**
  * @author f.agu
@@ -47,6 +51,20 @@ public class SourceFactory extends IdentifiableFactory<Source> {
 	 */
 	public static SourceFactory getSingleton() {
 		return SOURCE_FACTORY;
+	}
+
+	// *************************************************
+
+	/**
+	 * @see org.fagu.fmv.core.exec.Factory#notFound(java.lang.String)
+	 */
+	@Override
+	protected Source notFound(String code) {
+		Filter filter = FilterFactory.getSingleton().get(code); // exists ?
+		if(filter instanceof GeneratedSource) {
+			return new FilterSource((GeneratedSource)filter);
+		}
+		throw new IllegalStateException(code + " is not a generated source");
 	}
 
 }

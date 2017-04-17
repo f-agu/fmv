@@ -30,9 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jline.console.ConsoleReader;
-import jline.console.completer.Completer;
-
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
@@ -50,6 +47,9 @@ import org.fagu.fmv.core.project.Project;
 import org.fagu.fmv.utils.ClassResolver;
 import org.fagu.fmv.utils.collection.MapList;
 import org.fagu.fmv.utils.collection.MultiValueMaps;
+
+import jline.console.ConsoleReader;
+import jline.console.completer.Completer;
 
 
 /**
@@ -112,7 +112,7 @@ public class DefaultCommandBuilder implements CommandBuilder {
 		});
 
 		// alias
-		List<Alias> aliases = new ArrayList<Alias>();
+		List<Alias> aliases = new ArrayList<>();
 
 		Aliases aliasesAnno = cmdClass.getAnnotation(Aliases.class);
 		if(aliasesAnno != null) {

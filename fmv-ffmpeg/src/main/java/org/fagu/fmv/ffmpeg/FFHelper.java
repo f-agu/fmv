@@ -187,6 +187,7 @@ public class FFHelper {
 				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
+		// System.out.println(executor.getCommandLine());
 		executor.execute();
 	}
 
@@ -1004,7 +1005,11 @@ public class FFHelper {
 		// executor.execute();
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main0(String[] args) throws Exception {
 		captureWebCam(new File("D:\\tmp\\capture.mp4"), Duration.valueOf(10));
+	}
+
+	public static void main(String[] args) throws Exception {
+		audioGenerator(new File("D:\\tmp\\test.mp3"));
 	}
 }

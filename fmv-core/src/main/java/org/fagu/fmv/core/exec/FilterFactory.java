@@ -38,7 +38,7 @@ public class FilterFactory extends Factory<Filter> {
 	 *
 	 */
 	public FilterFactory() {
-		super(Filter.class, filter -> filter.name());
+		super(Filter.class, Filter::name);
 		try {
 			register(Filter.class.getPackage().getName());
 		} catch(IOException e) {

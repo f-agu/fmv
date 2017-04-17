@@ -117,7 +117,10 @@ public class Factory<T> {
 	 */
 	protected T instanciate(Class<T> cls) {
 		try {
+			cls.getConstructor(new Class[0]);
 			return cls.newInstance();
+		} catch(NoSuchMethodException e) {
+			return null;
 		} catch(Exception e) {
 			throw new RuntimeException("Error to instanciate " + cls, e);
 		}

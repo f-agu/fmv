@@ -75,14 +75,14 @@ public class Bootstrap {
 		options.addOption("c", "conf", true, "Conf properties");
 
 		CommandLine commandLine = parser.parse(options, args);
-		FMVCLIConfig fmvcliConfig = null;
+		FMVCLIConfig fmvcliConfig;
 		if(commandLine.hasOption('c')) {
 			String conf = commandLine.getOptionValue('c');
 			fmvcliConfig = openFMVCLIConfig(conf);
 		} else {
 			fmvcliConfig = new FMVCLIConfig();
 		}
-		Project project = null;
+		Project project;
 		String[] args2 = commandLine.getArgs();
 		if(args2.length > 0) {
 			project = loadProject(new File(args2[0]));
