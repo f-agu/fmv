@@ -92,7 +92,7 @@ public class SoftLogger {
 	 * @return
 	 */
 	public boolean logConclusion(Consumer<String> formatConsumer) {
-		int countNotFound = (int)softs.stream().map(soft -> soft.isFound()).filter(b -> ! b).count();
+		int countNotFound = (int)softs.stream().map(Soft::isFound).filter(b -> ! b).count();
 		if(countNotFound <= 0) {
 			return true;
 		}

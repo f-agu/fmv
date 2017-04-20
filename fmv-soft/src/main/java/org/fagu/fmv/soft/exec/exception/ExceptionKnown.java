@@ -1,6 +1,5 @@
 package org.fagu.fmv.soft.exec.exception;
 
-import java.io.IOException;
 /*-
  * #%L
  * fmv-soft
@@ -20,6 +19,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
  * #L%
  */
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -27,7 +28,9 @@ import java.util.function.Consumer;
 /**
  * @author fagu
  */
-public class ExceptionKnown {
+public class ExceptionKnown implements Serializable {
+
+	private static final long serialVersionUID = 5134762053343485467L;
 
 	private final NestedException nestedException;
 

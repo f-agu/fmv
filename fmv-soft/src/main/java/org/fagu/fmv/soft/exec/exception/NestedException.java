@@ -32,9 +32,9 @@ import org.fagu.fmv.soft.FMVExecuteException;
 /**
  * @author f.agu
  */
-public class NestedException {
+public class NestedException extends Exception {
 
-	private final IOException ioException;
+	private static final long serialVersionUID = - 3747437285854124037L;
 
 	private List<String> msgLines;
 
@@ -42,21 +42,21 @@ public class NestedException {
 	 * @param ioException
 	 */
 	public NestedException(IOException ioException) {
-		this.ioException = ioException;
+		super(ioException);
 	}
 
 	/**
 	 * @return
 	 */
 	public IOException getIOException() {
-		return ioException;
+		return (IOException)getCause();
 	}
 
 	/**
 	 * @return
 	 */
 	public boolean isFMVExecutorException() {
-		return ioException instanceof FMVExecuteException;
+		return getCause() instanceof FMVExecuteException;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class NestedException {
 	public List<String> messageToLines() {
 		if(msgLines == null) {
 			List<String> list = new ArrayList<>();
-			try (BufferedReader reader = new BufferedReader(new StringReader(ioException.getMessage()))) {
+			try (BufferedReader reader = new BufferedReader(new StringReader(getCause().getMessage()))) {
 				String line = null;
 				while((line = reader.readLine()) != null) {
 					list.add(line);
@@ -83,6 +83,6 @@ public class NestedException {
 	 * @return
 	 */
 	public boolean contains(String strToFind) {
-		return ioException.getMessage().contains(strToFind);
+		return getCause().getMessage().contains(strToFind);
 	}
 }

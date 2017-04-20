@@ -171,9 +171,7 @@ public class SoftFound implements Comparable<SoftFound> {
 			public FoundReason getFoundReason() {
 				FoundReason current = null;
 				for(SoftFound softFound : softFounds) {
-					if(current == null) {
-						current = softFound.getFoundReason();
-					} else if(current != softFound.getFoundReason()) {
+					if(current != softFound.getFoundReason()) {
 						return FoundReasons.MULTIPLE;
 					}
 					current = softFound.getFoundReason();
@@ -186,7 +184,7 @@ public class SoftFound implements Comparable<SoftFound> {
 			 */
 			@Override
 			public boolean isFound() {
-				return filteredSoftFounds.stream().anyMatch(sf -> sf.isFound());
+				return filteredSoftFounds.stream().anyMatch(SoftFound::isFound);
 			}
 
 			/**
@@ -194,7 +192,7 @@ public class SoftFound implements Comparable<SoftFound> {
 			 */
 			@Override
 			public String toString() {
-				return filteredSoftFounds.stream().map(sf -> sf.toString()).collect(Collectors.joining(","));
+				return filteredSoftFounds.stream().map(SoftFound::toString).collect(Collectors.joining(","));
 			}
 		};
 	}
