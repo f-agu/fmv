@@ -91,13 +91,11 @@ class AnotherBinarySoftProvider extends SoftProvider {
 
 			private Version version;
 			
-			@Override
 			public void readLine(String line) {
 				// parse each line of the output
 				version = ...;
 			}
 
-			@Override
 			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
 				SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
 				return softPolicy.toSoftFound(new VersionSoftInfo(file, softName, version));
