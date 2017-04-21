@@ -110,7 +110,7 @@ public class Locators {
 	 * @return
 	 */
 	public Locator byEnvPath() {
-		return st -> listByPath(System.getenv("PATH"));
+		return softname -> listByPath(System.getenv("PATH"));
 	}
 
 	// ***********************************************************

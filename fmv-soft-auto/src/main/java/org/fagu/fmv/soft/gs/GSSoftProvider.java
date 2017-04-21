@@ -119,7 +119,7 @@ public class GSSoftProvider extends SoftProvider {
 	Parser createParser(SoftName softName, File file) {
 		return new Parser() {
 
-			private Pattern pattern = Pattern.compile("GPL Ghostscript ([0-9\\.\\-]+) \\(([0-9\\-]+)\\)");
+			private final Pattern pattern = Pattern.compile("GPL Ghostscript ([0-9\\.\\-]+) \\(([0-9\\-]+)\\)");
 
 			private Version version;
 

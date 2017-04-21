@@ -49,9 +49,14 @@ import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.ExecHelper;
 import org.fagu.fmv.soft.exec.FMVCommandLine;
 import org.fagu.fmv.soft.exec.FMVExecutor;
-import org.fagu.fmv.soft.exec.exception.ExceptionKnowConsumer;
+import org.fagu.fmv.soft.exec.WrapFuture;
+import org.fagu.fmv.soft.exec.exception.ExceptionConsumer;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
+import org.fagu.fmv.soft.exec.exception.ExceptionKnownConsumer;
 import org.fagu.fmv.soft.find.Founds;
+import org.fagu.fmv.soft.find.Locator;
+import org.fagu.fmv.soft.find.Locators;
+import org.fagu.fmv.soft.find.PlateformFileFilter;
 import org.fagu.fmv.soft.find.SoftFindListener;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
@@ -207,7 +212,9 @@ public class Soft {
 
 		private final List<ExecListener> execListeners;
 
-		private ExceptionKnowConsumer exceptionKnowConsumer;
+		private ExceptionKnownConsumer exceptionKnowConsumer;
+
+		private ExceptionConsumer exceptionConsumer;
 
 		/**
 		 * @param softProvider
@@ -250,10 +257,19 @@ public class Soft {
 		 * @param exceptionKnowConsumer
 		 * @return
 		 */
-		public SoftExecutor ifExceptionIsKnownDo(ExceptionKnowConsumer exceptionKnowConsumer) {
+		public SoftExecutor ifExceptionIsKnownDo(ExceptionKnownConsumer exceptionKnowConsumer) {
 			if(softProvider.getExceptionKnownAnalyzerClass() != null) {
 				this.exceptionKnowConsumer = exceptionKnowConsumer;
 			}
+			return this;
+		}
+
+		/**
+		 * @param exceptionConsumer
+		 * @return
+		 */
+		public SoftExecutor ifExceptionDo(ExceptionConsumer exceptionConsumer) {
+			this.exceptionConsumer = exceptionConsumer;
 			return this;
 		}
 
@@ -282,7 +298,8 @@ public class Soft {
 					FMVExecuteException fmvExecuteException = new FMVExecuteException(softProvider.getExceptionKnownAnalyzerClass(), e, cmdLineStr,
 							readLineList);
 					execListener.eventException(fmvExecuteException);
-					ExceptionKnownAnalyzers.doOrThrows(softProvider.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer);
+					ExceptionKnownAnalyzers.doOrThrows(softProvider
+							.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer, exceptionConsumer);
 				}
 				return time;
 			});
@@ -293,11 +310,12 @@ public class Soft {
 		 * @return
 		 * @throws IOException
 		 */
-		public Future<Integer> executeInBackground(ExecutorService executorService) throws IOException {
+		public Future<BackgroundExecuted> executeInBackground(ExecutorService executorService) throws IOException {
 			return execute((fmvExecutor, commandLine, execListener, readLineList) -> {
 				final String cmdLineStr = CommandLineUtils.toLine(commandLine);
 				final AtomicLong startTime = new AtomicLong();
-				return fmvExecutor.executeAsynchronous(commandLine, executorService,
+				final AtomicLong time = new AtomicLong();
+				return new WrapFuture<>(fmvExecutor.executeAsynchronous(commandLine, executorService,
 						// before
 						() -> {
 							startTime.set(System.currentTimeMillis());
@@ -305,8 +323,8 @@ public class Soft {
 						},
 						// after
 						exitValue -> {
-							long time = System.currentTimeMillis() - startTime.get();
-							execListener.eventExecuted(cmdLineStr, exitValue, time);
+							time.set(System.currentTimeMillis() - startTime.get());
+							execListener.eventExecuted(cmdLineStr, exitValue, time.get());
 						},
 						// exception
 						exception -> {
@@ -315,11 +333,43 @@ public class Soft {
 								FMVExecuteException fmvExecuteException = new FMVExecuteException(softProvider.getExceptionKnownAnalyzerClass(), e,
 										cmdLineStr, readLineList);
 								execListener.eventException(fmvExecuteException);
-								ExceptionKnownAnalyzers.doOrThrows(softProvider.getExceptionKnownAnalyzerClass(), fmvExecuteException,
-										exceptionKnowConsumer);
+								ExceptionKnownAnalyzers.doOrThrows(softProvider
+										.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer, exceptionConsumer);
 							}
-						});
+						}),
+						exitValue -> new BackgroundExecuted(exitValue, time.get()));
 			});
+		}
+
+		// -------------------------------------------------------------
+
+		/**
+		 * @author fagu
+		 */
+		public static class BackgroundExecuted {
+
+			private final int exitValue;
+
+			private final long executeTime;
+
+			private BackgroundExecuted(int exitValue, long executeTime) {
+				this.exitValue = exitValue;
+				this.executeTime = executeTime;
+			}
+
+			public int getExitValue() {
+				return exitValue;
+			}
+
+			public long getExecuteTime() {
+				return executeTime;
+			}
+
+			@Override
+			public String toString() {
+				return "BackgroundExecuted[exit: " + exitValue + " ; time: " + executeTime + "ms]";
+			}
+
 		}
 
 		// -------------------------------------------------------------
@@ -412,7 +462,19 @@ public class Soft {
 	 * @throws IOException
 	 */
 	public static Soft withExecFile(String execFile) throws IOException {
-		return withExecFile(new File(execFile));
+		File file = new File(execFile);
+		if( ! execFile.contains("/") && ! execFile.contains("\\") && ! file.exists()) {
+			// search in ENV PATH
+			Locators locators = new Locators(PlateformFileFilter.getFileFilter(execFile));
+			Locator locator = locators.byEnvPath();
+			List<File> locatedFiles = locator.locate(null);
+			if(locatedFiles.isEmpty()) {
+				throw new FileNotFoundException(execFile);
+			}
+			Collections.sort(locatedFiles);
+			file = locatedFiles.get(0);
+		}
+		return withExecFile(file);
 	}
 
 	/**

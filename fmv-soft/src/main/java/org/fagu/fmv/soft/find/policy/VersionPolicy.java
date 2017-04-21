@@ -159,7 +159,10 @@ public class VersionPolicy extends SoftPolicy<VersionSoftInfo, VersionOnPlatform
 		Optional<String> propertyMinVersion = getProperty(versionSoftInfo, "minversion");
 		if(propertyMinVersion.isPresent()) {
 			Version minVersion = Version.parse(propertyMinVersion.get());
-			return new VersionPolicy().onAllPlatforms().minVersion(minVersion).byDefined(versionSoftInfo);
+			return new VersionPolicy()
+					.onAllPlatforms()
+					.minVersion(minVersion)
+					.byDefined(versionSoftInfo);
 		}
 		return null;
 	}

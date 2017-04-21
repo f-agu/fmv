@@ -26,11 +26,11 @@ import java.io.IOException;
  * @author fagu
  */
 @FunctionalInterface
-public interface ExceptionKnowConsumer {
+public interface ExceptionConsumer {
 
 	/**
-	 * @param exceptionKnown
+	 * @param exception
 	 * @throws IOException
 	 */
-	void accept(ExceptionKnown exceptionKnown) throws IOException;
+	void accept(Exception exception) throws IOException;
 }

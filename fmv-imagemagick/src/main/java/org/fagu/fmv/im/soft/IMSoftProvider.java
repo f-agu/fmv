@@ -143,9 +143,9 @@ public abstract class IMSoftProvider extends SoftProvider {
 	Parser createParser(SoftName softName, File file) {
 		return new Parser() {
 
-			private Pattern pattern = Pattern.compile("Version\\: ImageMagick ([0-9\\.\\-]+) (?:.*)([0-9]{4}-[0-9]{2}-[0-9]{2}) .*");
+			private final Pattern pattern = Pattern.compile("Version\\: ImageMagick ([0-9\\.\\-]+) (?:.*)([0-9]{4}-[0-9]{2}-[0-9]{2}) .*");
 
-			private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 			private Version version;
 

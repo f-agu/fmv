@@ -1,13 +1,10 @@
 package org.fagu.fmv.soft;
 
 import java.io.FileFilter;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.Consumer;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.find.Founds;
+import org.fagu.fmv.soft.find.PlateformFileFilter;
 
 
 /*
@@ -41,32 +38,17 @@ public interface SoftName {
 	String getName();
 
 	/**
-	 * @return
-	 */
-	default FileFilter getFileFilter() {
-		FileFilter fileFilter = f -> getName().equalsIgnoreCase(FilenameUtils.getBaseName(f.getName()));
-		if(SystemUtils.IS_OS_WINDOWS) {
-			Set<String> defaultExtensions = new HashSet<>(4);
-			defaultExtensions.add("exe");
-			defaultExtensions.add("com");
-			defaultExtensions.add("cmd");
-			defaultExtensions.add("bat");
-			return f -> {
-				if( ! fileFilter.accept(f)) {
-					return false;
-				}
-				String extension = FilenameUtils.getExtension(f.getName());
-				return extension != null ? defaultExtensions.contains(extension.toLowerCase()) : false;
-			};
-		}
-		return fileFilter;
-	}
-
-	/**
 	 * @param founds
 	 * @return
 	 */
 	Soft create(Founds founds);
+
+	/**
+	 * @return
+	 */
+	default FileFilter getFileFilter() {
+		return PlateformFileFilter.getFileFilter(getName());
+	}
 
 	/**
 	 * @return

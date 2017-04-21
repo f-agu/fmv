@@ -69,27 +69,36 @@ public class ExceptionKnownAnalyzers {
 
 	/**
 	 * @param cls
-	 * @param e
-	 * @param exceptionKnowConsumer
+	 * @param exception
+	 * @param exceptionKnownConsumer
+	 * @param exceptionConsumer
 	 * @throws E
 	 */
 	@SuppressWarnings("unchecked")
 	public static <E extends IOException> void doOrThrows(Class<? extends ExceptionKnownAnalyzer> cls, E exception,
-			ExceptionKnowConsumer exceptionKnowConsumer) throws E {
+			ExceptionKnownConsumer exceptionKnownConsumer, ExceptionConsumer exceptionConsumer) throws E {
 
-		boolean isKnown = false;
-		if(exceptionKnowConsumer != null) {
+		boolean applied = false;
+		if(exceptionKnownConsumer != null) {
 			Optional<ExceptionKnown> known = ExceptionKnownAnalyzers.getKnown(cls, exception);
 			if(known.isPresent()) {
-				isKnown = true;
 				try {
-					exceptionKnowConsumer.accept(known.get());
+					exceptionKnownConsumer.accept(known.get());
+					applied = true;
 				} catch(IOException e1) {
 					throw (E)e1;
 				}
 			}
+		} else if(exceptionConsumer != null) {
+			try {
+				exceptionConsumer.accept(exception);
+				applied = true;
+			} catch(IOException e1) {
+				throw (E)e1;
+			}
 		}
-		if( ! isKnown) {
+
+		if( ! applied) {
 			throw exception;
 		}
 	}

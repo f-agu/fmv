@@ -163,7 +163,9 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public SoftLocator getSoftLocator() {
-		return new SoftLocator(getName().toUpperCase() + "_HOME");
+		SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
+		Sorter sorter = softPolicy != null ? softPolicy.getSorter() : null;
+		return new SoftLocator(getName().toUpperCase() + "_HOME", sorter);
 	}
 
 	/**

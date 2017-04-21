@@ -62,8 +62,8 @@ public class JavaSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-version") //
-		.parseFactory(file -> createParser(getSoftName(), file)) //
-		.build();
+				.parseFactory(file -> createParser(getSoftName(), file)) //
+				.build();
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class JavaSoftProvider extends SoftProvider {
 	@Override
 	public SoftPolicy<?, ?, ?> getSoftPolicy() {
 		return new VersionPolicy() //
-		.onAllPlatforms().minVersion(new Version(1, 1));
+				.onAllPlatforms().minVersion(new Version(1, 1));
 	}
 
 	// ***********************************************************************
@@ -113,7 +113,7 @@ public class JavaSoftProvider extends SoftProvider {
 	Parser createParser(SoftName softName, File file) {
 		return new Parser() {
 
-			private Pattern pattern = Pattern.compile("(.*) version \"(.*)\"");
+			private final Pattern pattern = Pattern.compile("(.*) version \"(.*)\"");
 
 			private Version version;
 

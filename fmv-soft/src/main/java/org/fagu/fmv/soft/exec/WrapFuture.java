@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.exec;
 
+import java.util.Objects;
+
 /*
  * #%L
  * fmv-utils
@@ -24,20 +26,25 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 
 
 /**
  * @author f.agu
  */
-public class WrapFuture<V> implements Future<V> {
+public class WrapFuture<I, O> implements Future<O> {
 
-	private final Future<V> delegated;
+	private final Future<I> delegated;
+
+	private final Function<I, O> converter;
 
 	/**
 	 * @param delegated
+	 * @param converter
 	 */
-	public WrapFuture(Future<V> delegated) {
-		this.delegated = delegated;
+	public WrapFuture(Future<I> delegated, Function<I, O> converter) {
+		this.delegated = Objects.requireNonNull(delegated);
+		this.converter = Objects.requireNonNull(converter);
 	}
 
 	/**
@@ -68,22 +75,22 @@ public class WrapFuture<V> implements Future<V> {
 	 * @see java.util.concurrent.Future#get()
 	 */
 	@Override
-	public V get() throws InterruptedException, ExecutionException {
-		return delegated.get();
+	public O get() throws InterruptedException, ExecutionException {
+		return converter.apply(delegated.get());
 	}
 
 	/**
 	 * @see java.util.concurrent.Future#get(long, java.util.concurrent.TimeUnit)
 	 */
 	@Override
-	public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-		return delegated.get(timeout, unit);
+	public O get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+		return converter.apply(delegated.get(timeout, unit));
 	}
 
 	/**
 	 * @return
 	 */
-	public Future<V> delegated() {
+	public Future<I> delegated() {
 		return delegated;
 	}
 

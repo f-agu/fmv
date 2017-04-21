@@ -27,7 +27,7 @@ import java.util.concurrent.Future;
 /**
  * @author f.agu
  */
-public class FMVFuture<V> extends WrapFuture<V> {
+public class FMVFuture<V> extends UnaryWrapFuture<V> {
 
 	private final WritablePumpStreamHandler writablePumpStreamHandler;
 

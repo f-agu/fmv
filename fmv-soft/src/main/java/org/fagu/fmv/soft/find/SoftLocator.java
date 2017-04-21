@@ -34,7 +34,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 import org.fagu.fmv.soft.SoftName;
-import org.fagu.fmv.soft.find.strategy.HighestPrecedenceFoundStrategy;
+import org.fagu.fmv.soft.find.strategy.HighestPrecedenceSorter;
 
 
 /**
@@ -83,7 +83,7 @@ public class SoftLocator {
 
 	private String softPath;
 
-	private final FoundStrategy foundStrategy;
+	private final Sorter sorter;
 
 	private final Map<SoftName, String> pathMap;
 
@@ -107,14 +107,14 @@ public class SoftLocator {
 
 	/**
 	 * @param envName
-	 * @param foundStrategy
+	 * @param sorter
 	 */
-	public SoftLocator(String envName, FoundStrategy foundStrategy) {
+	public SoftLocator(String envName, Sorter sorter) {
 		this.envName = envName;
 		pathMap = new HashMap<>(2);
 		cacheFile = new HashMap<>();
 		definedLocators = new ArrayList<>();
-		this.foundStrategy = foundStrategy != null ? foundStrategy : new HighestPrecedenceFoundStrategy();
+		this.sorter = sorter != null ? sorter : new HighestPrecedenceSorter();
 	}
 
 	/**
@@ -134,8 +134,8 @@ public class SoftLocator {
 	/**
 	 * @return the foundStrategy
 	 */
-	public FoundStrategy getFoundStrategy() {
-		return foundStrategy;
+	public Sorter getSorter() {
+		return sorter;
 	}
 
 	/**
@@ -267,7 +267,7 @@ public class SoftLocator {
 		}
 
 		Locators locators = loc != null ? loc : createLocators(softName);
-		List<Locator> locatorList = new ArrayList<>(7);
+		List<Locator> locatorList = new ArrayList<>(4);
 		locatorList.add(locators.byPath(getPath(softName))); // cache
 		if(softPath != null) {
 			locatorList.add(locators.byPath(softPath));
@@ -329,7 +329,7 @@ public class SoftLocator {
 				}
 			}
 		}
-		NavigableSet<SoftFound> sort = foundStrategy.sort(softFounds);
+		NavigableSet<SoftFound> sort = sorter.sort(softFounds);
 		return new Founds(softName, sort);
 	}
 
@@ -338,7 +338,10 @@ public class SoftLocator {
 	 * @return
 	 */
 	private static <T> T firstFoundNotNull(@SuppressWarnings("unchecked") T... ts) {
-		return Arrays.stream(ts).filter(Objects::nonNull).findFirst().orElseThrow(IllegalArgumentException::new);
+		return Arrays.stream(ts)
+				.filter(Objects::nonNull)
+				.findFirst()
+				.orElseThrow(IllegalArgumentException::new);
 	}
 
 }

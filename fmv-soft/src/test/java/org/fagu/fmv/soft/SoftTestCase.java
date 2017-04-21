@@ -22,12 +22,18 @@ package org.fagu.fmv.soft;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.apache.commons.lang3.StringUtils;
+import org.fagu.fmv.soft.Soft.SoftExecutor.BackgroundExecuted;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -42,7 +48,7 @@ public class SoftTestCase {
 	public SoftTestCase() {}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void test1() throws Exception {
 		SoftFoundFactory ffSoftFoundFactory = ExecSoftFoundFactory.withParameters("-version").parseFactory(file -> new Parser() {
 
@@ -87,6 +93,29 @@ public class SoftTestCase {
 		// System.out.println(soft.getFounds());
 		// System.out.println(soft.getFile());
 		// soft.withParameters("").execute();
+	}
+
+	@Test
+	@Ignore
+	public void test2() throws Exception {
+		Soft soft = Soft.withExecFile("cmd");
+		System.out.println(soft);
+		System.out.println(soft.getFounds());
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		System.out.println(1);
+		soft.withoutParameter()
+				.ifExceptionDo(e -> {
+					System.out.println("error exec");
+				})
+				.execute();
+		System.out.println(2);
+		Future<BackgroundExecuted> future = soft.withoutParameter()
+				.ifExceptionDo(e -> {
+					System.out.println("error exec bg");
+				})
+				.executeInBackground(executorService);
+		System.out.println(new Date());
+		System.out.println(future.get());
 	}
 
 }

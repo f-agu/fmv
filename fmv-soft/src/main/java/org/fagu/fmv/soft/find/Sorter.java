@@ -28,7 +28,7 @@ import java.util.NavigableSet;
  * @author f.agu
  */
 @FunctionalInterface
-public interface FoundStrategy {
+public interface Sorter {
 
 	/**
 	 * @param founds

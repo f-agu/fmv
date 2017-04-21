@@ -26,22 +26,22 @@ import java.util.Collections;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
-import org.fagu.fmv.soft.find.FoundStrategy;
+import org.fagu.fmv.soft.find.Sorter;
 import org.fagu.fmv.soft.find.SoftFound;
 
 
 /**
  * @author f.agu
  */
-public class HighestPrecedenceFoundStrategy implements FoundStrategy {
+public class HighestPrecedenceSorter implements Sorter {
 
 	/**
 	 * 
 	 */
-	public HighestPrecedenceFoundStrategy() {}
+	public HighestPrecedenceSorter() {}
 
 	/**
-	 * @see org.fagu.fmv.soft.find.FoundStrategy#sort(java.util.Collection)
+	 * @see org.fagu.fmv.soft.find.Sorter#sort(java.util.Collection)
 	 */
 	@Override
 	public NavigableSet<SoftFound> sort(Collection<SoftFound> founds) {

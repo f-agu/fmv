@@ -58,3 +58,76 @@ PATH: ......
 ```
 
 
+## Add another binary in 3 steps
+
+#### 1. Implement a SoftProvider
+
+Example for `another-binary` with minimal version 4.7.
+
+```java
+class AnotherBinarySoftProvider extends SoftProvider {
+
+	public static final String NAME = "another-binary"; // the file name on Linux, the base file name on Windows
+
+	public AnotherBinarySoftProvider() {
+		super(NAME);
+	}
+	
+	// Used to extract the version of the binary
+	// Command line executed: another-binary --version
+	public SoftFoundFactory createSoftFoundFactory() {
+		return ExecSoftFoundFactory.withParameters("--version")
+				.parseFactory(file -> createParser(getSoftName(), file))
+				.build();
+	}
+	
+	// minimal version
+	public SoftPolicy<?, ?, ?> getSoftPolicy() {
+		return new VersionPolicy().onAllPlatforms().minVersion(new Version(7, 7));
+	}
+	
+	Parser createParser(SoftName softName, File file) {
+		return new Parser() {
+
+			private Version version;
+			
+			@Override
+			public void readLine(String line) {
+				// parse each line of the output
+				version = ...;
+			}
+
+			@Override
+			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
+				SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
+				return softPolicy.toSoftFound(new VersionSoftInfo(file, softName, version));
+			}
+
+		};
+	}
+}
+```
+
+#### 2. Declare your new SoftProvider
+
+Create the file META-INF/services/org.fagu.fmv.soft.find.SoftProvider and add into the class name.
+Example:
+```
+org.test.AnotherBinarySoftProvider
+```
+
+#### 3. Shortcut your soft
+
+Create a simple class like:
+```java
+public class AnotherBinary {
+
+	public static Soft search() {
+		return Soft.search(AnotherBinarySoftProvider.NAME);
+	}
+
+}
+```
+
+
+For more examples, take a look a the module fmv-soft-auto.

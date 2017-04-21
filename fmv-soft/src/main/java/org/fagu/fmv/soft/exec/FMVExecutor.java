@@ -199,7 +199,7 @@ public class FMVExecutor extends DefaultExecutor {
 			IOExceptionConsumer ioExceptionConsumer) {
 		ExecuteStreamHandler streamHandler = getStreamHandler();
 		WritablePumpStreamHandler wpsh = streamHandler instanceof WritablePumpStreamHandler ? (WritablePumpStreamHandler)streamHandler : null;
-		return new FMVFuture<Integer>(executorService.submit(() -> {
+		return new FMVFuture<>(executorService.submit(() -> {
 			if(before != null) {
 				before.run();
 			}
@@ -210,10 +210,14 @@ public class FMVExecutor extends DefaultExecutor {
 				}
 				return exitValue;
 			} catch(IOException e) {
-				if(ioExceptionConsumer != null) {
-					ioExceptionConsumer.accept(e);
+				if(ioExceptionConsumer == null) {
+					throw e;
 				}
-				throw e;
+				ioExceptionConsumer.accept(e);
+				if(e instanceof ExecuteException) {
+					return ((ExecuteException)e).getExitValue();
+				}
+				return - 1; // TODO
 			}
 		}), wpsh);
 	}

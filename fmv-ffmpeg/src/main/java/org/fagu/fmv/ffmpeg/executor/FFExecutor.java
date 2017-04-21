@@ -45,8 +45,9 @@ import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.soft.exec.MultiReadLine;
 import org.fagu.fmv.soft.exec.ReadLine;
-import org.fagu.fmv.soft.exec.exception.ExceptionKnowConsumer;
+import org.fagu.fmv.soft.exec.exception.ExceptionConsumer;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
+import org.fagu.fmv.soft.exec.exception.ExceptionKnownConsumer;
 import org.fagu.fmv.utils.Proxifier;
 
 
@@ -89,7 +90,9 @@ public class FFExecutor<R> {
 
 	private final FFMPEGExecutorBuilder ffmpegExecutorBuilder;
 
-	private ExceptionKnowConsumer exceptionKnowConsumer;
+	private ExceptionKnownConsumer exceptionKnownConsumer;
+
+	private ExceptionConsumer exceptionConsumer;
 
 	private Consumer<SoftExecutor> customizeSoftExecutor;
 
@@ -241,8 +244,15 @@ public class FFExecutor<R> {
 	/**
 	 * @param exceptionKnowConsumer
 	 */
-	public void ifExceptionIsKnownDo(ExceptionKnowConsumer exceptionKnowConsumer) {
-		this.exceptionKnowConsumer = exceptionKnowConsumer;
+	public void ifExceptionIsKnownDo(ExceptionKnownConsumer exceptionKnowConsumer) {
+		this.exceptionKnownConsumer = exceptionKnowConsumer;
+	}
+
+	/**
+	 * @param exceptionKnowConsumer
+	 */
+	public void ifExceptionDo(ExceptionConsumer exceptionConsumer) {
+		this.exceptionConsumer = exceptionConsumer;
 	}
 
 	/**
@@ -422,7 +432,7 @@ public class FFExecutor<R> {
 				if(runFallbacks != null) {
 					return runFallbacks;
 				}
-				ExceptionKnownAnalyzers.doOrThrows(FFExceptionKnownAnalyzer.class, e, exceptionKnowConsumer);
+				ExceptionKnownAnalyzers.doOrThrows(FFExceptionKnownAnalyzer.class, e, exceptionKnownConsumer, exceptionConsumer);
 				return null;
 			}
 		}

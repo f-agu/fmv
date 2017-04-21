@@ -40,6 +40,8 @@ public abstract class SoftPolicy<S extends SoftInfo, P extends OnPlatform, T ext
 
 	protected final List<Pair<P, Predicate<S>>> list;
 
+	private Sorter sorter;
+
 	// -------------------------------------------------
 
 	/**
@@ -93,6 +95,15 @@ public abstract class SoftPolicy<S extends SoftInfo, P extends OnPlatform, T ext
 	}
 
 	/**
+	 * @param sorter
+	 * @return
+	 */
+	public T withSorter(Sorter sorter) {
+		this.sorter = sorter;
+		return getThis();
+	}
+
+	/**
 	 * @return
 	 */
 	public P onAllPlatforms() {
@@ -132,6 +143,13 @@ public abstract class SoftPolicy<S extends SoftInfo, P extends OnPlatform, T ext
 	 * @return
 	 */
 	public abstract SoftFound toSoftFound(Object softInfo);
+
+	/**
+	 * @return
+	 */
+	public Sorter getSorter() {
+		return sorter;
+	}
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -178,7 +196,7 @@ public abstract class SoftPolicy<S extends SoftInfo, P extends OnPlatform, T ext
 	 */
 	protected static Optional<String> getProperty(SoftInfo softInfo, String name) {
 		// global
-		String key = softInfo.getName() + "." + name;
+		String key = softInfo.getName() + '.' + name;
 		String property = System.getProperty("fmv." + key, System.getProperty(key));
 		if(property == null) {
 			// by OS
