@@ -83,7 +83,7 @@ class AnotherBinarySoftProvider extends SoftProvider {
 	
 	// minimal version
 	public SoftPolicy<?, ?, ?> getSoftPolicy() {
-		return new VersionPolicy().onAllPlatforms().minVersion(new Version(7, 7));
+		return new VersionPolicy().onAllPlatforms().minVersion(new Version(4, 7));
 	}
 	
 	Parser createParser(SoftName softName, File file) {
