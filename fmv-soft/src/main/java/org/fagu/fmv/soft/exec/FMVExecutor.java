@@ -23,7 +23,9 @@ package org.fagu.fmv.soft.exec;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.OptionalLong;
 import java.util.concurrent.ExecutorService;
+import java.util.function.IntConsumer;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -41,9 +43,7 @@ import org.fagu.fmv.soft.utils.Proxifier;
  */
 public class FMVExecutor extends DefaultExecutor {
 
-	private static final long DEFAULT_TIME_OUT = 1L * 60L * 60L * 1000L; // 1 hour
-
-	private long timeOutMilliSeconds = DEFAULT_TIME_OUT;
+	private Long timeOutMilliSeconds;
 
 	private ExecuteWatchdog executeWatchdog;
 
@@ -113,6 +113,9 @@ public class FMVExecutor extends DefaultExecutor {
 	 * @param timeOutMilliSeconds
 	 */
 	public void setTimeOut(long timeOutMilliSeconds) {
+		if(timeOutMilliSeconds >= 0 && timeOutMilliSeconds < 10) {
+			throw new IllegalArgumentException("Incredible timeout: " + timeOutMilliSeconds + "ms");
+		}
 		this.timeOutMilliSeconds = Math.max(timeOutMilliSeconds, org.apache.commons.exec.ExecuteWatchdog.INFINITE_TIMEOUT);
 		executeWatchdog = new ExecuteWatchdog(timeOutMilliSeconds);
 		setWatchdog(executeWatchdog);
@@ -121,8 +124,17 @@ public class FMVExecutor extends DefaultExecutor {
 	/**
 	 * @return
 	 */
-	public long getTimeOut() {
-		return timeOutMilliSeconds;
+	public OptionalLong getTimeOut() {
+		return timeOutMilliSeconds == null ? OptionalLong.empty() : OptionalLong.of(timeOutMilliSeconds);
+	}
+
+	/**
+	 * 
+	 */
+	public void removeTimeOut() {
+		timeOutMilliSeconds = null;
+		executeWatchdog = null;
+		setWatchdog(null);
 	}
 
 	/**
@@ -170,11 +182,9 @@ public class FMVExecutor extends DefaultExecutor {
 	 * @param command
 	 * @param executorService
 	 * @return
-	 * @throws ExecuteException
-	 * @throws IOException
 	 */
-	public FMVFuture<Integer> executeAsynchronous(CommandLine command, ExecutorService executorService) throws ExecuteException, IOException {
-		return executeAsynchronous(command, executorService, null, null);
+	public FMVFuture<Integer> executeAsynchronous(CommandLine command, ExecutorService executorService) {
+		return executeAsynchronous(command, executorService, null, null, null);
 	}
 
 	/**
@@ -182,23 +192,29 @@ public class FMVExecutor extends DefaultExecutor {
 	 * @param executorService
 	 * @param before
 	 * @param after
+	 * @param ioExceptionConsumer
 	 * @return
-	 * @throws ExecuteException
-	 * @throws IOException
 	 */
-	public FMVFuture<Integer> executeAsynchronous(CommandLine command, ExecutorService executorService, Runnable before, Runnable after)
-			throws ExecuteException, IOException {
+	public FMVFuture<Integer> executeAsynchronous(CommandLine command, ExecutorService executorService, Runnable before, IntConsumer after,
+			IOExceptionConsumer ioExceptionConsumer) {
 		ExecuteStreamHandler streamHandler = getStreamHandler();
 		WritablePumpStreamHandler wpsh = streamHandler instanceof WritablePumpStreamHandler ? (WritablePumpStreamHandler)streamHandler : null;
 		return new FMVFuture<Integer>(executorService.submit(() -> {
 			if(before != null) {
 				before.run();
 			}
-			int exitValue = execute(command);
-			if(after != null) {
-				after.run();
+			try {
+				int exitValue = execute(command);
+				if(after != null) {
+					after.accept(exitValue);
+				}
+				return exitValue;
+			} catch(IOException e) {
+				if(ioExceptionConsumer != null) {
+					ioExceptionConsumer.accept(e);
+				}
+				throw e;
 			}
-			return exitValue;
 		}), wpsh);
 	}
 
@@ -210,6 +226,18 @@ public class FMVExecutor extends DefaultExecutor {
 			executeWatchdog.destroyProcess();
 			executeWatchdog = null;
 		}
+	}
+
+	// -------------------------------------------
+
+	/**
+	 * @author Oodrive
+	 * @author f.agu
+	 * @created 21 avr. 2017 10:45:12
+	 */
+	public interface IOExceptionConsumer {
+
+		void accept(IOException exception) throws IOException;
 	}
 
 }

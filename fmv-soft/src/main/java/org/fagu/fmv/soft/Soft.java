@@ -36,6 +36,9 @@ import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -282,6 +285,67 @@ public class Soft {
 		 * @throws IOException
 		 */
 		public long execute() throws IOException {
+			return execute((fmvExecutor, commandLine, execListener, readLineList) -> {
+				final String cmdLineStr = CommandLineUtils.toLine(commandLine);
+				long startTime = System.currentTimeMillis();
+				long time = 0;
+				try {
+					execListener.eventExecuting(cmdLineStr);
+					int exitValue = fmvExecutor.execute(commandLine);
+					time = System.currentTimeMillis() - startTime;
+					execListener.eventExecuted(cmdLineStr, exitValue, time);
+				} catch(ExecuteException e) {
+					FMVExecuteException fmvExecuteException = new FMVExecuteException(softProvider.getExceptionKnownAnalyzerClass(), e, cmdLineStr,
+							readLineList);
+					execListener.eventException(fmvExecuteException);
+					ExceptionKnownAnalyzers.doOrThrows(softProvider.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer);
+				}
+				return time;
+			});
+		}
+
+		/**
+		 * @param executorService
+		 * @return
+		 * @throws IOException
+		 */
+		public Future<Integer> executeInBackground(ExecutorService executorService) throws IOException {
+			return execute((fmvExecutor, commandLine, execListener, readLineList) -> {
+				final String cmdLineStr = CommandLineUtils.toLine(commandLine);
+				final AtomicLong startTime = new AtomicLong();
+				return fmvExecutor.executeAsynchronous(commandLine, executorService,
+						// before
+						() -> {
+							startTime.set(System.currentTimeMillis());
+							execListener.eventExecuting(cmdLineStr);
+						},
+						// after
+						exitValue -> {
+							long time = System.currentTimeMillis() - startTime.get();
+							execListener.eventExecuted(cmdLineStr, exitValue, time);
+						},
+						// exception
+						exception -> {
+							if(exception instanceof ExecuteException) {
+								ExecuteException e = (ExecuteException)exception;
+								FMVExecuteException fmvExecuteException = new FMVExecuteException(softProvider.getExceptionKnownAnalyzerClass(), e,
+										cmdLineStr, readLineList);
+								execListener.eventException(fmvExecuteException);
+								ExceptionKnownAnalyzers.doOrThrows(softProvider.getExceptionKnownAnalyzerClass(), fmvExecuteException,
+										exceptionKnowConsumer);
+							}
+						});
+			});
+		}
+
+		// -------------------------------------------------------------
+
+		/**
+		 * @param executorService
+		 * @return
+		 * @throws IOException
+		 */
+		private <R> R execute(ForExec<R> forExec) throws IOException {
 			ExecListener execListener = new Proxifier<>(ExecListener.class).addAll(execListeners).proxify();
 
 			CommandLine commandLine = getCommandLine();
@@ -293,19 +357,20 @@ public class Soft {
 			FMVExecutor fmvExecutor = createFMVExecutor(execFile.getParentFile(), bufferedReadLine);
 			applyCustomizeExecutor(fmvExecutor);
 
-			long startTime = System.currentTimeMillis();
-			long time = 0;
-			try {
-				int exitValue = fmvExecutor.execute(commandLine);
-				time = System.currentTimeMillis() - startTime;
-				execListener.eventExecuted(cmdLineStr, exitValue, time);
-			} catch(ExecuteException e) {
-				FMVExecuteException fmvExecuteException = new FMVExecuteException(softProvider.getExceptionKnownAnalyzerClass(), e, cmdLineStr,
-						readLineList);
-				execListener.eventException(fmvExecuteException);
-				ExceptionKnownAnalyzers.doOrThrows(softProvider.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer);
-			}
-			return time;
+			return forExec.exec(fmvExecutor, commandLine, execListener, readLineList);
+		}
+
+		// --------------------------------------------------
+
+		/**
+		 * @param <R>
+		 * @author Oodrive
+		 * @author f.agu
+		 * @created 21 avr. 2017 11:31:39
+		 */
+		private static interface ForExec<R> {
+
+			R exec(FMVExecutor fmvExecutor, CommandLine commandLine, ExecListener execListener, List<String> readLineList) throws IOException;
 		}
 
 	}
@@ -321,6 +386,11 @@ public class Soft {
 		 * @param cmdLineStr
 		 */
 		default void eventPrepare(String cmdLineStr) {}
+
+		/**
+		 * @param cmdLineStr
+		 */
+		default void eventExecuting(String cmdLineStr) {}
 
 		/**
 		 * @param cmdLineStr
