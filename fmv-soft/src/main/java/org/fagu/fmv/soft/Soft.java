@@ -51,7 +51,6 @@ import org.fagu.fmv.soft.exec.FMVCommandLine;
 import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnowConsumer;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
-import org.fagu.fmv.soft.find.FoundStrategy;
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFindListener;
 import org.fagu.fmv.soft.find.SoftFound;
@@ -84,8 +83,6 @@ public class Soft {
 		private SoftLocator softLocator;
 
 		private List<SoftFindListener> softFindListeners;
-
-		private FoundStrategy foundStrategy;
 
 		/**
 		 * @param softName
@@ -123,15 +120,6 @@ public class Soft {
 			if(softFindListeners != null) {
 				softFindListeners.stream().filter(Objects::nonNull).forEach(this.softFindListeners::add);
 			}
-			return this;
-		}
-
-		/**
-		 * @param foundStrategy
-		 * @return
-		 */
-		public SoftSearch withFoundStrategy(FoundStrategy foundStrategy) {
-			this.foundStrategy = foundStrategy;
 			return this;
 		}
 
@@ -182,11 +170,7 @@ public class Soft {
 		 * @return
 		 */
 		private SoftLocator getSoftLocator() {
-			SoftLocator softLoc = softLocator != null ? softLocator : new SoftLocator();
-			if(foundStrategy != null) {
-				softLoc.setFoundStrategy(foundStrategy);
-			}
-			return softLoc;
+			return softLocator != null ? softLocator : new SoftLocator();
 		}
 
 		/**

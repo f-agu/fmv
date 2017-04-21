@@ -20,15 +20,14 @@ package org.fagu.fmv.soft.find;
  * #L%
  */
 
-
 import java.util.Collection;
 import java.util.NavigableSet;
 
 
 /**
  * @author f.agu
- *
  */
+@FunctionalInterface
 public interface FoundStrategy {
 
 	/**

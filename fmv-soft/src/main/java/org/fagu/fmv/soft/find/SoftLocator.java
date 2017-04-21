@@ -83,7 +83,7 @@ public class SoftLocator {
 
 	private String softPath;
 
-	private FoundStrategy foundStrategy;
+	private final FoundStrategy foundStrategy;
 
 	private final Map<SoftName, String> pathMap;
 
@@ -102,11 +102,19 @@ public class SoftLocator {
 	 * @param envName
 	 */
 	public SoftLocator(String envName) {
+		this(envName, null);
+	}
+
+	/**
+	 * @param envName
+	 * @param foundStrategy
+	 */
+	public SoftLocator(String envName, FoundStrategy foundStrategy) {
 		this.envName = envName;
 		pathMap = new HashMap<>(2);
 		cacheFile = new HashMap<>();
 		definedLocators = new ArrayList<>();
-		foundStrategy = new HighestPrecedenceFoundStrategy();
+		this.foundStrategy = foundStrategy != null ? foundStrategy : new HighestPrecedenceFoundStrategy();
 	}
 
 	/**
@@ -128,13 +136,6 @@ public class SoftLocator {
 	 */
 	public FoundStrategy getFoundStrategy() {
 		return foundStrategy;
-	}
-
-	/**
-	 * @param foundStrategy the foundStrategy to set
-	 */
-	public void setFoundStrategy(FoundStrategy foundStrategy) {
-		this.foundStrategy = Objects.requireNonNull(foundStrategy);
 	}
 
 	/**

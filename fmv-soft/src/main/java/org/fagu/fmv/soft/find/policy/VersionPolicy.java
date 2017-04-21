@@ -69,6 +69,21 @@ public class VersionPolicy extends SoftPolicy<VersionSoftInfo, VersionOnPlatform
 			});
 		}
 
+		public VersionPolicy maxVersion(Version maxVersion) {
+			return validate(new Predicate<VersionSoftInfo>() {
+
+				@Override
+				public boolean test(VersionSoftInfo versionSoftInfo) {
+					return maxVersion.isUpperThan(versionSoftInfo.getVersion().get());
+				}
+
+				@Override
+				public String toString() {
+					return "< v" + maxVersion;
+				}
+			});
+		}
+
 		public VersionPolicy allVersion() {
 			return validate(v -> true);
 		}
@@ -95,6 +110,7 @@ public class VersionPolicy extends SoftPolicy<VersionSoftInfo, VersionOnPlatform
 	/**
 	 * @see org.fagu.fmv.soft.find.SoftPolicy#toSoftFound(org.fagu.fmv.soft.find.SoftInfo)
 	 */
+	@Override
 	public SoftFound toSoftFound(Object object) {
 		VersionSoftInfo versionSoftInfo = (VersionSoftInfo)object;
 		if(list.isEmpty()) {
@@ -143,7 +159,6 @@ public class VersionPolicy extends SoftPolicy<VersionSoftInfo, VersionOnPlatform
 		Optional<String> propertyMinVersion = getProperty(versionSoftInfo, "minversion");
 		if(propertyMinVersion.isPresent()) {
 			Version minVersion = Version.parse(propertyMinVersion.get());
-
 			return new VersionPolicy().onAllPlatforms().minVersion(minVersion).byDefined(versionSoftInfo);
 		}
 		return null;
