@@ -23,13 +23,13 @@ package org.fagu.fmv.ffmpeg.executor;
 import java.io.IOException;
 
 import org.fagu.fmv.soft.exec.FMVFuture;
-import org.fagu.fmv.soft.exec.WrapFuture;
+import org.fagu.fmv.soft.exec.UnaryWrapFuture;
 
 
 /**
  * @author f.agu
  */
-public class FFFuture<V> extends WrapFuture<V> {
+public class FFFuture<V> extends UnaryWrapFuture<V> {
 
 	/**
 	 * @param delegated
