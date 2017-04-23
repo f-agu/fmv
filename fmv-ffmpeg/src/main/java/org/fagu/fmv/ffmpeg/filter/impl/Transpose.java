@@ -106,6 +106,15 @@ public class Transpose extends AbstractFilter {
 	}
 
 	/**
+	 * @param expr
+	 * @return
+	 */
+	public Transpose dir(String expr) {
+		parameter("dir", "'" + expr + "'");
+		return this;
+	}
+
+	/**
 	 * @param direction
 	 * @return
 	 */

@@ -51,6 +51,7 @@ public class FileMediaInput extends AbstractIOEntity<FileMediaInput> implements 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return file.getPath();
 	}

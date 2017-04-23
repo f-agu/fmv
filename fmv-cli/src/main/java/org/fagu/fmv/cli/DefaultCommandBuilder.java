@@ -77,7 +77,7 @@ public class DefaultCommandBuilder implements CommandBuilder {
 		this.fmvCliConfig = environnement.getFMVCLIConfig();
 		this.project = environnement.getProject();
 		this.consoleReader = environnement.getConsoleReader();
-		cmdBuilderMap = new HashMap<String, CommandFactory>(32);
+		cmdBuilderMap = new HashMap<>(32);
 		completerMap = MultiValueMaps.hashMapArrayList();
 	}
 
@@ -129,7 +129,9 @@ public class DefaultCommandBuilder implements CommandBuilder {
 				if(StringUtils.isBlank(aliasCommand)) {
 					aliasCommand = cmd.value();
 				}
-				addAlias(alias.value(), aliasCommand);
+				for(String aliasName : alias.value()) {
+					addAlias(aliasName, aliasCommand);
+				}
 			}
 		}
 
@@ -236,6 +238,8 @@ public class DefaultCommandBuilder implements CommandBuilder {
 
 		CommandFactory commandFactory = cmdBuilderMap.get(executable.toLowerCase());
 		if(commandFactory == null) {
+			// TODO
+			// command not found
 			throw new LineParseException(line);
 		}
 

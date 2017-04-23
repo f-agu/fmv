@@ -171,8 +171,11 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 				inserted = true;
 			} else {
 				for(Type type : types) {
-					inputMap.put(IOKey.of(outputKey, type, hasExplicitType()), new In(filterInput, type));
-					inserted = true;
+					if(getTypes().contains(type) && outputKey.contains(type)) {
+						// System.out.println(filterInput + "/" + type + " --> " + this);
+						inputMap.put(IOKey.of(outputKey, type, hasExplicitType()), new In(filterInput, type));
+						inserted = true;
+					}
 				}
 			}
 		}
@@ -250,6 +253,7 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 	/**
 	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getInputKeys()
 	 */
+	@Override
 	public Set<IOKey> getInputKeys() {
 		return inputMap.keySet();
 	}

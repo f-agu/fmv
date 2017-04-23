@@ -141,8 +141,7 @@ public class InputProcessor extends Processor<InputProcessor> implements FilterI
 	@Override
 	public boolean contains(Type type) {
 		try {
-			MovieMetadatas videoMetadatas = getMovieMetadatas();
-			return videoMetadatas.contains(type);
+			return getMovieMetadatas().contains(type);
 		} catch(IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -156,4 +155,11 @@ public class InputProcessor extends Processor<InputProcessor> implements FilterI
 		return Collections.singletonList(new OutputKey(this, Label.input(getIndex())));
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Input[" + input + "]";
+	}
 }

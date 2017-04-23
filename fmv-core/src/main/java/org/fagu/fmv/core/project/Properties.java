@@ -59,6 +59,20 @@ public class Properties {
 		}
 	};
 
+	/**
+	 *
+	 */
+	public static final Property<Integer> VIEW_LAST_MEDIA = new IntegerProperty("view.last.media") {
+
+		/**
+		 * @see org.fagu.fmv.core.project.Properties.IntegerProperty#getDefaultValue()
+		 */
+		@Override
+		public Integer getDefaultValue() {
+			return null;
+		}
+	};
+
 	// -------------------------------------------------------------------
 
 	/**

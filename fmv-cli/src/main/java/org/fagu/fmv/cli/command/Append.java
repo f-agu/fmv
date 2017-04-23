@@ -99,10 +99,10 @@ public class Append extends AbstractCommand {
 			return (ConcatExecutable)currentExecutable;
 		}
 
-		List<ConcatExecutable> execs = BaseIdentifiable.stream(project).//
-		filter(id -> id instanceof ConcatExecutable).//
-		map(id -> (ConcatExecutable)id). //
-		collect(Collectors.toList());
+		List<ConcatExecutable> execs = BaseIdentifiable.stream(project).
+				filter(id -> id instanceof ConcatExecutable).
+				map(id -> (ConcatExecutable)id).
+				collect(Collectors.toList());
 
 		int size = execs.size();
 		if(size == 0) {

@@ -102,7 +102,7 @@ public class FiltersGenerator {
 		boolean check = true;
 		if(filterI instanceof GeneratedSource) {
 			if( ! filterD.getInputType().isSourceOrSink()) {
-				System.err.println("Source");
+				System.err.println("Source"); // TODO
 			}
 		} else {
 			check &= isApplicable(filterI.getInputTypes(), filterD.getInputType());

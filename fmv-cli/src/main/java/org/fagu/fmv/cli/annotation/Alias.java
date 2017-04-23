@@ -20,7 +20,6 @@ package org.fagu.fmv.cli.annotation;
  * #L%
  */
 
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -39,7 +38,7 @@ public @interface Alias {
 	/**
 	 * @return
 	 */
-	String value();
+	String[] value();
 
 	/**
 	 * @return

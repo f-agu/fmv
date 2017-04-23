@@ -44,6 +44,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.core.Hash;
 import org.fagu.fmv.core.project.OutputInfos;
 import org.fagu.fmv.core.project.Project;
@@ -54,7 +55,8 @@ import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
 import org.fagu.fmv.ffmpeg.filter.impl.Drawtext;
 import org.fagu.fmv.ffmpeg.filter.impl.Scale;
 import org.fagu.fmv.ffmpeg.filter.impl.ScaleMode;
-import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
+import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.ffmpeg.utils.Color;
 import org.fagu.fmv.utils.media.Size;
 
@@ -302,7 +304,6 @@ public class FileCache {
 	 * @param executable
 	 * @param executableCache
 	 * @param cacheToReturn
-	 * @param cause
 	 * @return
 	 */
 	private Callable<File> createCallable(final Hash previousHash, final Executable executable, final ExecutableCache executableCache,
@@ -325,22 +326,25 @@ public class FileCache {
 				// if(ExecCause.RUN_BACKGROUND == cause && !
 				// executable.getOptions().contains(ExecutableOptions.STOP_PROPAGATION_MAKE_BACKGROUND)) {
 				makeFile = getFile(id, currentHash, Cache.MAKE);
-				if( ! makeFile.exists()) {
+				if( ! existsAndNotEmpty(makeFile)) {
 					executable.execute(makeFile, Cache.MAKE);
 				}
-				if( ! makeFile.exists()) {
+				if( ! existsAndNotEmpty(makeFile)) {
 					throw new FileNotFoundException(makeFile.getPath());
 				}
+
+				scaleForMake(makeFile);
+
 				executableCache.setFile(makeFile, Cache.MAKE);
 				executableCache.makeState = State.DONE;
 				// }
 
 				// preview
 				File previewFile = getFile(id, currentHash, Cache.PREVIEW);
-				if( ! previewFile.exists()) {
+				if( ! existsAndNotEmpty(previewFile)) {
 					File tmpFile = null;
 					if(makeFile == null || ! makeFile.exists()) {
-						tmpFile = getFile(id + ".tmp", currentHash, Cache.PREVIEW);
+						tmpFile = getTempFile(id, currentHash, Cache.PREVIEW);
 						executable.execute(tmpFile, Cache.PREVIEW);
 						makeFile = tmpFile;
 					}
@@ -360,6 +364,14 @@ public class FileCache {
 		// TODO ############################################
 		// TODO ############################################
 		// TODO ############################################
+	}
+
+	/**
+	 * @param file
+	 * @return
+	 */
+	private boolean existsAndNotEmpty(File file) {
+		return file.exists() && file.length() > 0;
 	}
 
 	/**
@@ -418,8 +430,8 @@ public class FileCache {
 		if( ! previewFile.exists()) {
 			File tmpFile = null;
 			File makeFile = getFile(id, currentHash, Cache.MAKE);
-			if(makeFile == null || ! makeFile.exists()) {
-				tmpFile = getFile(id + ".tmp", currentHash, Cache.PREVIEW);
+			if( ! makeFile.exists()) {
+				tmpFile = getTempFile(id, currentHash, Cache.PREVIEW);
 				projectListener.eventExecPrePreviewViaMake(executable);
 				executable.execute(tmpFile, Cache.PREVIEW);
 				if( ! tmpFile.exists()) {
@@ -437,6 +449,52 @@ public class FileCache {
 		executableCache.setFile(previewFile, Cache.PREVIEW);
 		executableCache.previewState = State.DONE;
 		return previewFile;
+	}
+
+	/**
+	 * @param inFile
+	 * @throws IOException
+	 */
+	private void scaleForMake(File inFile) throws IOException {
+		OutputInfos outputInfos = project.getOutputInfos();
+		Size makeSize = outputInfos.getSize();
+		MovieMetadatas metadatas = MovieMetadatas.with(inFile).extract();
+		VideoStream videoStream = metadatas.getVideoStream();
+		if(videoStream == null) {
+			return;
+		}
+		Size videoSize = videoStream.size();
+		if(videoSize.equals(makeSize)) {
+			return;
+		}
+
+		File makeTmpFile = File.createTempFile(inFile.getName() + "-", "." + FilenameUtils.getExtension(inFile.getName()), inFile.getParentFile());
+		try {
+			makeTmpFile.delete();
+			if( ! inFile.renameTo(makeTmpFile)) {
+				throw new IOException("Unable to rename " + inFile + " to " + makeTmpFile);
+			}
+
+			File toFile = inFile;
+
+			FFMPEGExecutorBuilder builder = FFUtils.builder(project);
+
+			// input
+			builder.addMediaInputFile(makeTmpFile);
+
+			// filter
+			builder.filter(Scale.to(makeSize, ScaleMode.fitToBox()));
+
+			// output
+			builder.addMediaOutputFile(toFile)
+					.format(outputInfos.getFormat())
+					.overwrite();
+
+			FFExecutor<Object> build = builder.build();
+			build.execute();
+		} finally {
+			makeTmpFile.delete();
+		}
 	}
 
 	/**
@@ -459,9 +517,9 @@ public class FileCache {
 		drawtext.text(identifiable.getId() + " - %{pts} / %{n}").fontColor(Color.WHITE).fontSize(15);
 		builder.filter(drawtext);
 
-		OutputProcessor outputProcessor = builder.addMediaOutputFile(toFile);
-		outputProcessor.format(outputInfos.getFormat());
-		outputProcessor.overwrite();
+		builder.addMediaOutputFile(toFile)
+				.format(outputInfos.getFormat())
+				.overwrite();
 
 		FFExecutor<Object> build = builder.build();
 		build.execute();
@@ -503,6 +561,17 @@ public class FileCache {
 	 * @return
 	 * @throws IOException
 	 */
+	private File getTempFile(String id, Hash hash, Cache cache) throws IOException {
+		return getFile(id + ".tmp", hash, cache);
+	}
+
+	/**
+	 * @param id
+	 * @param hash
+	 * @param cache
+	 * @return
+	 * @throws IOException
+	 */
 	private File getFile(String id, Hash hash, Cache cache) throws IOException {
 		File folder = getFolder(cache);
 		FileUtils.forceMkdir(folder);
@@ -515,10 +584,10 @@ public class FileCache {
 	private Runnable backgroundService() {
 		return () -> {
 			try {
-				List<Executable> execs = BaseIdentifiable.stream(project).//
-				filter(ident -> ident instanceof Executable). //
-				map(ident -> (Executable)ident). //
-				collect(Collectors.toList());
+				List<Executable> execs = BaseIdentifiable.stream(project)
+						.filter(ident -> ident instanceof Executable)
+						.map(ident -> (Executable)ident)
+						.collect(Collectors.toList());
 
 				if(execs.isEmpty()) {
 					addSynchronous(BaseIdentifiable.getRoots(project));

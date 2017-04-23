@@ -101,7 +101,7 @@ public class Volume extends AbstractFilter {
 	}
 
 	/**
-	 * @param factor
+	 * @param expr
 	 * @return
 	 */
 	public Volume expr(String expr) {

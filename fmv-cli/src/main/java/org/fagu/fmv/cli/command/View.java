@@ -25,6 +25,7 @@ import org.fagu.fmv.cli.annotation.Alias;
 import org.fagu.fmv.cli.annotation.Command;
 import org.fagu.fmv.cli.utils.OpenFile;
 import org.fagu.fmv.core.project.FileSource;
+import org.fagu.fmv.core.project.Properties;
 
 
 /**
@@ -44,23 +45,23 @@ public class View extends AbstractCommand {
 	 */
 	@Override
 	public void run(String[] args) {
-		if(args.length == 0) {
+		if(args.length != 1) {
 			println(getSyntax());
 			return;
 		}
-		for(String arg : args) {
-			int num = NumberUtils.toInt(arg, - 1);
-			if(num < 0) {
-				println("Media number error: " + arg);
-				continue;
-			}
-			FileSource source = project.getSource(num);
-			if(source == null) {
-				println("Media number not found: " + num);
-				continue;
-			}
-			open(source);
+		int num = NumberUtils.toInt(args[0], - 1);
+
+		if(num < 0) {
+			println("Media number error: " + args[0]);
+			return;
 		}
+		FileSource source = project.getSource(num);
+		if(source == null) {
+			println("Media number not found: " + num);
+			return;
+		}
+		open(source);
+		project.setProperty(Properties.VIEW_LAST_MEDIA, num);
 	}
 
 	/**
@@ -76,7 +77,7 @@ public class View extends AbstractCommand {
 	 */
 	@Override
 	public String getSyntax() {
-		return "view <media num> [media num] ...";
+		return "view <media num>";
 	}
 
 	// **********************************************

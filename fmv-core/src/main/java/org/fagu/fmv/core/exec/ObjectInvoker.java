@@ -31,6 +31,7 @@ import org.fagu.fmv.ffmpeg.filter.impl.AudioMix.MixAudioDuration;
 import org.fagu.fmv.ffmpeg.utils.Color;
 import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
+import org.fagu.fmv.ffmpeg.utils.Time;
 import org.fagu.fmv.utils.media.Size;
 
 
@@ -85,6 +86,7 @@ public class ObjectInvoker {
 		add(Size.class, Size::parse);
 		add(Color.class, Color::valueOf);
 		add(Duration.class, Duration::parse);
+		add(Time.class, Time::parse);
 		add(FrameRate.class, FrameRate::parse);
 		add(MixAudioDuration.class, s -> MixAudioDuration.valueOf(s.toUpperCase()));
 	}
@@ -101,9 +103,9 @@ public class ObjectInvoker {
 	 */
 	public static List<Method> findMethodsWithOnlyOneParameter(Object object, String name) {
 		return Arrays.stream(object.getClass().getMethods()) //
-		.filter(m -> name.equalsIgnoreCase(m.getName())) //
-		.filter(m -> m.getParameterTypes().length == 1) //
-		.collect(Collectors.toList());
+				.filter(m -> name.equalsIgnoreCase(m.getName())) //
+				.filter(m -> m.getParameterTypes().length == 1) //
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -111,22 +113,21 @@ public class ObjectInvoker {
 	 * @param attributeMap
 	 */
 	public static void invoke(Object object, Map<String, String> attributeMap) {
-		attributeMap.entrySet().stream().forEach(entry -> {
-			String name = entry.getKey();
+		attributeMap.forEach((name, value) -> {
 			List<Method> methods = ObjectInvoker.findMethodsWithOnlyOneParameter(object, name);
 			if(methods.isEmpty()) {
 				throw new RuntimeException("Method not found in " + object.getClass().getName() + " for name: " + name + " ; " + attributeMap);
 			}
-			Method method = methods.stream() //
-			.filter(m -> m.getParameterTypes()[0] == String.class) //
-			.findFirst() //
-			.orElse(methods.get(0));
+			Method method = methods.stream()
+					.filter(m -> m.getParameterTypes()[0] == String.class)
+					.findFirst()
+					.orElse(methods.get(0));
 			if(method != null) {
 				try {
-					Object value = ObjectInvoker.toObject(entry.getValue(), method.getParameterTypes()[0]);
-					method.invoke(object, value);
+					Object objValue = ObjectInvoker.toObject(value, method.getParameterTypes()[0]);
+					method.invoke(object, objValue);
 				} catch(Exception e) {
-					throw new RuntimeException(method + " / " + name + '=' + entry.getValue(), e);
+					throw new RuntimeException(method + " / " + name + '=' + value, e);
 				}
 			} else {
 				throw new RuntimeException("Method not found " + object.getClass().getName() + " for name: " + name + " ; " + attributeMap);
