@@ -9,24 +9,22 @@ import org.fagu.fmv.core.project.Properties;
 /**
  * @author f.agu
  */
-@Command("appendlastview")
-@Alias("++")
-public class AppendLastView extends Append {
+@Command("viewnext")
+@Alias("vv")
+public class ViewNext extends View {
 
 	/**
 	 * 
 	 */
-	public AppendLastView() {
-		super();
-	}
+	public ViewNext() {}
 
 	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override
 	public void run(String[] args) {
-		if(args.length == 0) {
-			getPrinter().println("usage: appendlastview ...");
+		if(args.length != 0) {
+			println(getSyntax());
 			return;
 		}
 		Integer lastView = project.getProperty(Properties.VIEW_LAST_MEDIA);
@@ -36,26 +34,24 @@ public class AppendLastView extends Append {
 		}
 		FileSource source = project.getSource(lastView);
 		getPrinter().println("Last view n°" + lastView + ": " + source.getFile().getName());
-		String[] strs = new String[args.length + 1];
-		strs[0] = lastView.toString();
-		System.arraycopy(args, 0, strs, 1, args.length);
-		super.run(strs);
+		lastView = Integer.valueOf(lastView + 1);
+		super.run(new String[] {lastView.toString()});
 	}
 
 	/**
 	 * @see org.fagu.fmv.cli.Command#getShortDescription()
 	 */
-	// @Override
-	// public String getShortDescription() {
-	// return "Append a media in the timeline";
-	// }
+	@Override
+	public String getShortDescription() {
+		return "View next media";
+	}
 
 	/**
 	 * @see org.fagu.fmv.cli.Command#getSyntax()
 	 */
 	@Override
 	public String getSyntax() {
-		return "appendlastview <time start> <duration>";
+		return "viewnext";
 	}
 
 }
