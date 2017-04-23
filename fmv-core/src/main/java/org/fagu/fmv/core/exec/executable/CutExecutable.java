@@ -188,7 +188,7 @@ public class CutExecutable extends AbstractExecutable {
 		BasicStreamMuxer muxer = BasicStreamMuxer.to(toFile, outputInfos.getFormat()).avoidNegativeTs(AvoidNegativeTs.MAKE_NON_NEGATIVE);
 		OutputProcessor outputProcessor = builder.mux(muxer);
 		outputProcessor.duration(duration);
-		FFUtils.outputProcessor(outputProcessor, outputInfos);
+		outputProcessor(outputProcessor, cache);
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();

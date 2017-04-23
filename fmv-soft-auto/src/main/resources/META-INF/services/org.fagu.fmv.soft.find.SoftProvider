@@ -1,4 +1,5 @@
 org.fagu.fmv.soft.gs.GSSoftProvider
+org.fagu.fmv.soft.vlc.VLCSoftProvider
 org.fagu.fmv.soft.xpdf.PdfDetachSoftProvider
 org.fagu.fmv.soft.xpdf.PdfFontsSoftProvider
 org.fagu.fmv.soft.xpdf.PdfInfoSoftProvider

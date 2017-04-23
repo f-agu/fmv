@@ -79,7 +79,7 @@ public class GenericExecutable extends AbstractExecutable {
 
 		populateWithIdentifiables(toFile, cache, builder);
 
-		OutputProcessor outputProcessor = FFUtils.outputProcessor(builder, toFile, getProject().getOutputInfos());
+		OutputProcessor outputProcessor = outputProcessor(builder, toFile, cache);
 		ObjectInvoker.invoke(outputProcessor, attributeMap);
 		fixOutput(outputProcessor);
 

@@ -61,8 +61,8 @@ public class JavaSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
-		return ExecSoftFoundFactory.withParameters("-version") //
-				.parseFactory(file -> createParser(getSoftName(), file)) //
+		return ExecSoftFoundFactory.withParameters("-version")
+				.parseFactory(file -> createParser(getSoftName(), file))
 				.build();
 	}
 

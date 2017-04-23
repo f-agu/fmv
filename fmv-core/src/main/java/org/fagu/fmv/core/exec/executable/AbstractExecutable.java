@@ -1,5 +1,7 @@
 package org.fagu.fmv.core.exec.executable;
 
+import java.io.File;
+
 /*
  * #%L
  * fmv-core
@@ -28,9 +30,16 @@ import org.dom4j.Element;
 import org.fagu.fmv.core.exec.Attributable;
 import org.fagu.fmv.core.exec.Executable;
 import org.fagu.fmv.core.exec.ExecutableOption;
+import org.fagu.fmv.core.exec.FileCache.Cache;
 import org.fagu.fmv.core.exec.Identifiable;
 import org.fagu.fmv.core.project.LoadException;
+import org.fagu.fmv.core.project.OutputInfos;
 import org.fagu.fmv.core.project.Project;
+import org.fagu.fmv.core.project.Properties;
+import org.fagu.fmv.ffmpeg.coder.Libx264;
+import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
+import org.fagu.fmv.ffmpeg.format.BasicStreamMuxer;
+import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 
 
 /**
@@ -112,6 +121,48 @@ public abstract class AbstractExecutable extends Attributable implements Executa
 		Set<String> set = super.ignoreAttributes();
 		set.add("options");
 		return set;
+	}
+
+	/**
+	 * @param builder
+	 * @param outfile
+	 * @param cache
+	 * @return
+	 */
+	protected OutputProcessor outputProcessor(FFMPEGExecutorBuilder builder, File outfile, Cache cache) {
+		OutputInfos outputInfos = getProject().getOutputInfos();
+		BasicStreamMuxer muxer = BasicStreamMuxer.to(outfile, outputInfos.getFormat());
+		return outputProcessor(builder.mux(muxer), cache);
+	}
+
+	/**
+	 * @param outputProcessor
+	 * @param cache
+	 * @return
+	 */
+	protected OutputProcessor outputProcessor(OutputProcessor outputProcessor, Cache cache) {
+		int crf = getX264CRFQuality(cache);
+		outputProcessor.codec(Libx264.build().mostCompatible().crf(crf));
+		outputProcessor.qualityScaleAudio(0);
+		outputProcessor.qualityScaleVideo(0);
+		outputProcessor.overwrite();
+		return outputProcessor;
+	}
+
+	// ************************************
+
+	/**
+	 * @param cache
+	 * @return
+	 */
+	private int getX264CRFQuality(Cache cache) {
+		if(cache == Cache.PREVIEW) {
+			return getProject().getProperty(Properties.PREVIEW_X264_CRF);
+		}
+		if(cache != Cache.MAKE) {
+			throw new RuntimeException("Not implemented");
+		}
+		return getProject().getProperty(isRoot() ? Properties.MAKE_X264_CRF : Properties.PREPARE_MAKE_X264_CRF);
 	}
 
 }

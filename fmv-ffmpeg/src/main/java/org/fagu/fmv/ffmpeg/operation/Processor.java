@@ -2,6 +2,8 @@ package org.fagu.fmv.ffmpeg.operation;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /*
  * #%L
@@ -24,6 +26,7 @@ import java.util.List;
  */
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.fagu.fmv.ffmpeg.coder.Coder;
@@ -223,6 +226,41 @@ public abstract class Processor<P extends Processor<?>> {
 			}
 		}
 		return getThis();
+	}
+
+	/**
+	 * @param type
+	 * @return
+	 */
+	public Stream<Coder<?>> getCoders(Type type) {
+		return coderMap.values()
+				.stream()
+				.flatMap(map -> map.entrySet().stream())
+				.filter(e -> e.getKey() == type)
+				.map(Entry::getValue);
+	}
+
+	/**
+	 * @param coderClass
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <C extends Coder<C>> Stream<C> getCoders(Class<C> coderClass) {
+		return coderMap.values()
+				.stream()
+				.flatMap(map -> map.entrySet().stream())
+				.map(Entry::getValue)
+				.filter(c -> coderClass.isAssignableFrom(c.getClass()))
+				.map(c -> (C)c);
+	}
+
+	/**
+	 * @param coderClass
+	 * @return
+	 */
+	public java.util.Map<Type, Coder<?>> getCoders(String name) {
+		Map<Type, Coder<?>> map = coderMap.get(name);
+		return map != null ? Collections.unmodifiableMap(map) : Collections.emptyMap();
 	}
 
 	/**

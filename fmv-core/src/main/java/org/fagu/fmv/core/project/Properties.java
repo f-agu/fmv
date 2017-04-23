@@ -73,6 +73,48 @@ public class Properties {
 		}
 	};
 
+	/**
+	 *
+	 */
+	public static final Property<Integer> PREVIEW_X264_CRF = new IntegerProperty("preview.x264.crf") {
+
+		/**
+		 * @see org.fagu.fmv.core.project.Properties.IntegerProperty#getDefaultValue()
+		 */
+		@Override
+		public Integer getDefaultValue() {
+			return 23;
+		}
+	};
+
+	/**
+	 *
+	 */
+	public static final Property<Integer> PREPARE_MAKE_X264_CRF = new IntegerProperty("make-prepare.x264.crf") {
+
+		/**
+		 * @see org.fagu.fmv.core.project.Properties.IntegerProperty#getDefaultValue()
+		 */
+		@Override
+		public Integer getDefaultValue() {
+			return 5;
+		}
+	};
+
+	/**
+	 *
+	 */
+	public static final Property<Integer> MAKE_X264_CRF = new IntegerProperty("make.x264.crf") {
+
+		/**
+		 * @see org.fagu.fmv.core.project.Properties.IntegerProperty#getDefaultValue()
+		 */
+		@Override
+		public Integer getDefaultValue() {
+			return 20;
+		}
+	};
+
 	// -------------------------------------------------------------------
 
 	/**

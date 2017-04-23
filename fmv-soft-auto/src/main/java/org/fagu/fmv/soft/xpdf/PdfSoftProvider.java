@@ -67,8 +67,8 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
-		return ExecSoftFoundFactory.withParameters("-v") //
-				.parseFactory(file -> createParser(getSoftName(), file)) //
+		return ExecSoftFoundFactory.withParameters("-v")
+				.parseFactory(file -> createParser(getSoftName(), file))
 				.customizeExecutor(ex -> {
 					ex.setExitValues(exitValues());
 					ex.setTimeOut(10_000);
@@ -95,11 +95,11 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	public SoftPolicy<?, ?, ?> getSoftPolicy() {
 		Version v012 = new Version(0, 12);
 		BiPredicate<VersionSoftInfo, Provider> isProvider = (s, p) -> s instanceof XPdfVersionSoftInfo && ((XPdfVersionSoftInfo)s).getProvider() == p;
-		return new VersionPolicy() //
+		return new VersionPolicy()
 				.on("xpdf", s -> isProvider.test(s, Provider.XPDF))
-				.minVersion(Version.V3) //
+				.minVersion(Version.V3)
 				.on("poppler", s -> isProvider.test(s, Provider.POPPLER))
-				.minVersion(v012) //
+				.minVersion(v012)
 				.onAllPlatforms()
 				.minVersion(v012);
 	}

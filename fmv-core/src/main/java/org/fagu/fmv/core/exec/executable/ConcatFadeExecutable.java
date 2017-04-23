@@ -144,7 +144,7 @@ public class ConcatFadeExecutable extends GenericExecutable {
 			}
 		}
 
-		applyConcatFade(builder, inputProcessors, toFile);
+		applyConcatFade(builder, inputProcessors, toFile, cache);
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -175,9 +175,10 @@ public class ConcatFadeExecutable extends GenericExecutable {
 	 * @param builder
 	 * @param inputProcessors
 	 * @param toFile
+	 * @param cache
 	 * @throws IOException
 	 */
-	protected void applyConcatFade(FFMPEGExecutorBuilder builder, List<InputProcessor> inputProcessors, File toFile) throws IOException {
+	protected void applyConcatFade(FFMPEGExecutorBuilder builder, List<InputProcessor> inputProcessors, File toFile, Cache cache) throws IOException {
 		if(inputProcessors.size() != 2) {
 			throw new RuntimeException("Need 2 inputs ! : " + inputProcessors);
 		}
@@ -195,18 +196,30 @@ public class ConcatFadeExecutable extends GenericExecutable {
 
 		// source 1: video
 		NullSourceVideo nullSourceVideo1 = NullSourceVideo.build().size(videoStream1.size()).duration(duration_T2_END);
-		Concat concat1V = Concat.create(builder, video1InputProcessor, FilterComplex.create(nullSourceVideo1)).countVideo(1).countAudio(0).countInputs(2);
+		Concat concat1V = Concat.create(builder, video1InputProcessor, FilterComplex.create(nullSourceVideo1))
+				.countVideo(1)
+				.countAudio(0)
+				.countInputs(2);
 		// source 1: audio
 		AudioGenerator audioGenerator1 = AudioGenerator.build().silence().duration(duration_T2_END);
-		Concat concat1A = Concat.create(builder, video1InputProcessor, FilterComplex.create(audioGenerator1)).countVideo(0).countAudio(1).countInputs(2);
+		Concat concat1A = Concat.create(builder, video1InputProcessor, FilterComplex.create(audioGenerator1))
+				.countVideo(0)
+				.countAudio(1)
+				.countInputs(2);
 		FilterComplex fadeAudio1 = FilterComplex.create(FadeAudio.out().startTime(startTime_T1).duration(duration)).addInput(concat1A);
 
 		// source 2: video
 		NullSourceVideo nullSourceVideo2 = NullSourceVideo.build().size(videoStream2.size()).duration(duration_0_T1);
-		Concat concat2V = Concat.create(builder, FilterComplex.create(nullSourceVideo2), video2InputProcessor).countVideo(1).countAudio(0).countInputs(2);
+		Concat concat2V = Concat.create(builder, FilterComplex.create(nullSourceVideo2), video2InputProcessor)
+				.countVideo(1)
+				.countAudio(0)
+				.countInputs(2);
 		// source 2: audio
 		AudioGenerator audioGenerator2 = AudioGenerator.build().silence().duration(duration_0_T1);
-		Concat concat2A = Concat.create(builder, FilterComplex.create(audioGenerator2), video2InputProcessor).countVideo(0).countAudio(1).countInputs(2);
+		Concat concat2A = Concat.create(builder, FilterComplex.create(audioGenerator2), video2InputProcessor)
+				.countVideo(0)
+				.countAudio(1)
+				.countInputs(2);
 		FilterComplex fadeAudio2 = FilterComplex.create(FadeAudio.in().startTime(startTime_T1).duration(duration)).addInput(concat2A);
 
 		// blend / merge video
@@ -223,7 +236,7 @@ public class ConcatFadeExecutable extends GenericExecutable {
 		FilterComplex audioMix = AudioMix.build().duration(MixAudioDuration.SHORTEST).addInput(fadeAudio1).addInput(fadeAudio2);
 		builder.filter(audioMix);
 
-		FFUtils.outputProcessor(builder, toFile, getProject().getOutputInfos());
+		outputProcessor(builder, toFile, cache);
 	}
 
 }

@@ -155,7 +155,7 @@ public class AudioMixExecutable extends GenericExecutable {
 
 		audioMix.duration(mixAudioDuration);
 
-		OutputProcessor outputProcessor = FFUtils.outputProcessor(builder, toFile, getProject().getOutputInfos());
+		OutputProcessor outputProcessor = outputProcessor(builder, toFile, cache);
 		ObjectInvoker.invoke(outputProcessor, attributeMap);
 
 		builder.filter(audioMix);

@@ -64,8 +64,8 @@ public class GSSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
-		return ExecSoftFoundFactory.withParameters("-version", "-q") //
-				.parseFactory(file -> createParser(getSoftName(), file)) //
+		return ExecSoftFoundFactory.withParameters("-version", "-q")
+				.parseFactory(file -> createParser(getSoftName(), file))
 				.build();
 	}
 
@@ -97,7 +97,7 @@ public class GSSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftPolicy<?, ?, ?> getSoftPolicy() {
-		return new VersionPolicy() //
+		return new VersionPolicy()
 				.onAllPlatforms().minVersion(new Version(9, 15));
 	}
 

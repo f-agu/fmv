@@ -376,8 +376,7 @@ public class Libx264 extends Encoder<Libx264> implements LibLog {
 
 	/**
 	 * {@link http://trac.ffmpeg.org/wiki/Encode/H.264}<br>
-	 * {@link https
-	 * ://developer.apple .com/library/mac/documentation/NetworkingInternet/Conceptual /StreamingMediaGuide
+	 * {@link https ://developer.apple .com/library/mac/documentation/NetworkingInternet/Conceptual /StreamingMediaGuide
 	 * /UsingHTTPLiveStreaming/UsingHTTPLiveStreaming.html#//apple_ref /doc/uid/TP40008332-CH102-SW8}
 	 *
 	 * @author f.agu
@@ -465,7 +464,7 @@ public class Libx264 extends Encoder<Libx264> implements LibLog {
 		preset(Preset.MEDIUM);
 		compression(Compression.ALL_DEVICES);
 		// http://slhck.info/articles/crf
-		return crf(23);
+		return crf(21);
 	}
 
 	/**
