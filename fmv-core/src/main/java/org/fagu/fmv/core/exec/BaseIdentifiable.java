@@ -21,6 +21,7 @@ package org.fagu.fmv.core.exec;
  */
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -442,10 +443,22 @@ public abstract class BaseIdentifiable implements Identifiable {
 	 */
 	protected Duration getGlobalDuration() {
 		Duration currentDuration = Duration.valueOf(0);
-		filterExecs.forEach(fe -> currentDuration.add(fe.getDuration()));
-		executables.forEach(fe -> currentDuration.add(fe.getDuration()));
-		sources.forEach(fe -> currentDuration.add(fe.getDuration()));
+		currentDuration = currentDuration.add(sumDuration(filterExecs));
+		currentDuration = currentDuration.add(sumDuration(executables));
+		currentDuration = currentDuration.add(sumDuration(sources));
 		return currentDuration;
+	}
+
+	/**
+	 * @param identifiables
+	 * @return
+	 */
+	private Duration sumDuration(Collection<? extends Identifiable> identifiables) {
+		Duration duration = Duration.valueOf(0);
+		for(Identifiable identifiable : identifiables) {
+			duration = duration.add(identifiable.getDuration());
+		}
+		return duration;
 	}
 
 	/**

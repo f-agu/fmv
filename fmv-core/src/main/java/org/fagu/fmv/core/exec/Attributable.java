@@ -80,8 +80,9 @@ public abstract class Attributable extends BaseIdentifiable {
 	public void save(Element toElement) {
 		super.save(toElement);
 		attributeMap.forEach(toElement::addAttribute);
-		if(duration != null) {
-			toElement.addAttribute(ATTRIBUTE_RAWDURATION, duration.toString());
+		Duration curDuration = getDuration();
+		if(curDuration != null) {
+			toElement.addAttribute(ATTRIBUTE_RAWDURATION, curDuration.toString());
 		}
 	}
 

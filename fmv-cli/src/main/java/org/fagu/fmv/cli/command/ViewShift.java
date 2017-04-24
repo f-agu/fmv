@@ -32,8 +32,9 @@ public abstract class ViewShift extends View {
 		}
 		Integer lastView = project.getProperty(Properties.VIEW_LAST_MEDIA);
 		if(lastView == null) {
-			getPrinter().println("last view not defined");
-			return;
+			// getPrinter().println("last view not defined");
+			// return;
+			lastView = Integer.valueOf(0);
 		}
 		FileSource source = project.getSource(lastView);
 		getPrinter().println("Last view n°" + lastView + ": " + source.getFile().getName());

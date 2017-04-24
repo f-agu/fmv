@@ -129,9 +129,12 @@ public class LoadUtils {
 	 */
 	public static Duration attributeDuration(Element element, String attributeName) {
 		String value = element.attributeValue(attributeName);
+		if(value == null) {
+			return null;
+		}
 		try {
 			return Duration.parse(value);
-		} catch(NumberFormatException e) {
+		} catch(Exception e) {
 			return null;
 		}
 	}

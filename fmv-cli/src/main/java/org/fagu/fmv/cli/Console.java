@@ -22,16 +22,24 @@ package org.fagu.fmv.cli;
 
 import java.io.File;
 import java.io.IOException;
-
-import jline.console.ConsoleReader;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.cli.exception.ExitException;
 import org.fagu.fmv.cli.exception.LineParseException;
 import org.fagu.fmv.core.exec.Executable;
+import org.fagu.fmv.core.exec.executable.ConcatExecutable;
+import org.fagu.fmv.core.exec.executable.GenericExecutable;
+import org.fagu.fmv.core.exec.filter.FadeAudioVideoFilterExec;
+import org.fagu.fmv.core.exec.filter.GenericFilterExec;
 import org.fagu.fmv.core.project.FileSource;
 import org.fagu.fmv.core.project.Project;
 import org.fagu.fmv.core.project.ProjectListener;
+import org.fagu.fmv.ffmpeg.filter.impl.FadeType;
+import org.fagu.fmv.ffmpeg.utils.Duration;
+import org.fagu.fmv.ffmpeg.utils.Time;
+
+import jline.console.ConsoleReader;
 
 
 /**
@@ -104,6 +112,7 @@ public class Console {
 		addCommands();
 		initListener(consoleReader);
 		// initCommands(consoleReader);
+		startConsole(consoleReader);
 
 		while(true) {
 			consoleReader.setPrompt(prompt.get(environnement));
@@ -203,5 +212,32 @@ public class Console {
 				}
 			}
 		});
+	}
+
+	/**
+	 * @param consoleReader
+	 * @throws IOException
+	 */
+	private void startConsole(ConsoleReader consoleReader) throws IOException {
+		List<Executable> executables = project.getExecutables();
+		if( ! executables.isEmpty()) {
+			return;
+		}
+		consoleReader.println("Create a default structure");
+		GenericExecutable rootExec = new GenericExecutable(project);
+
+		FadeAudioVideoFilterExec fadeOut = new FadeAudioVideoFilterExec(project, FadeType.OUT, Time.valueOf(0), Duration.valueOf(3));
+		rootExec.add(fadeOut);
+
+		FadeAudioVideoFilterExec fadeIn = new FadeAudioVideoFilterExec(project, FadeType.IN, Time.valueOf(60), Duration.valueOf(3));
+		fadeOut.add(fadeIn);
+
+		GenericFilterExec audioMerge = new GenericFilterExec(project, "amerge");
+		fadeIn.add(audioMerge);
+
+		ConcatExecutable concat = new ConcatExecutable(project);
+		audioMerge.add(concat);
+
+		project.modified();
 	}
 }

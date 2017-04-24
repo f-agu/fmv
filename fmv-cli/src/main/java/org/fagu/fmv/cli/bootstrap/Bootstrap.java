@@ -185,6 +185,7 @@ public class Bootstrap {
 			outputInfos.setFormat(format);
 
 			Project project = new Project(saveFile, outputInfos);
+			project.setName(name);
 			try {
 				project.save();
 			} catch(IOException e) {

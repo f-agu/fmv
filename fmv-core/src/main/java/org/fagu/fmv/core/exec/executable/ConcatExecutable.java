@@ -67,7 +67,7 @@ public class ConcatExecutable extends GenericExecutable {
 		if(opts.contains(ExecutableOption.PROPAGATION_MAKE_BACKGROUND) || opts.contains(ExecutableOption.STOP_PROPAGATION_MAKE_BACKGROUND)) {
 			return opts;
 		}
-		if(getIdentifiableChildren().size() < 3) {
+		if( ! getIdentifiableChildren().isEmpty() && getIdentifiableChildren().size() < 3) {
 			return opts;
 		}
 		opts = new HashSet<>(opts);

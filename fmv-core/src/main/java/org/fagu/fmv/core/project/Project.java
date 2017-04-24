@@ -482,6 +482,7 @@ public class Project {
 	private void loadMain(Element root) {
 		Element element = root.element("main");
 		setName(element.attributeValue("name"));
+		fmvVersion = element.attributeValue("fmv-version");
 	}
 
 	/**
@@ -607,6 +608,7 @@ public class Project {
 	private void saveMain(Element root) {
 		Element mainElement = root.addElement("main");
 		mainElement.addAttribute("name", getName());
+		mainElement.addAttribute("fmv-version", fmvVersion);
 	}
 
 	/**
