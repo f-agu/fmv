@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.fagu.fmv.ffmpeg.Properties;
 import org.fagu.fmv.ffmpeg.format.IO;
 import org.fagu.fmv.ffmpeg.operation.LibLog;
 import org.fagu.fmv.ffmpeg.operation.Type;
+import org.fagu.fmv.utils.PropertyValues;
 
 
 /**
@@ -277,18 +279,16 @@ public class Libx264 extends Encoder<Libx264> implements LibLog {
 	 * @author f.agu
 	 */
 	public enum Preset {
-
 		// presets in descending order of speed are :
-
-		ULTRAFAST("ultrafast"), //
-		SUPERFAST("superfast"), //
-		VERYFAST("veryfast"), //
-		FASTER("faster"), //
-		FAST("fast"), //
-		MEDIUM("medium"), //
-		SLOW("slow"), //
-		SLOWER("slower"), //
-		VERYSLOW("veryslow"), //
+		ULTRAFAST("ultrafast"),
+		SUPERFAST("superfast"),
+		VERYFAST("veryfast"),
+		FASTER("faster"),
+		FAST("fast"),
+		MEDIUM("medium"),
+		SLOW("slow"),
+		SLOWER("slower"),
+		VERYSLOW("veryslow"),
 		PLACEBO("placebo");
 
 		private final String value;
@@ -461,10 +461,11 @@ public class Libx264 extends Encoder<Libx264> implements LibLog {
 	 * @return
 	 */
 	public Libx264 mostCompatible() {
-		preset(Preset.MEDIUM);
+		Preset preset = Preset.valueOf(PropertyValues.fromSystemProperties(Properties.X264_PRESET).toUpperCase());
+		preset(preset);
 		compression(Compression.ALL_DEVICES);
 		// http://slhck.info/articles/crf
-		return crf(21);
+		return crf(PropertyValues.fromSystemProperties(Properties.X264_CRF));
 	}
 
 	/**

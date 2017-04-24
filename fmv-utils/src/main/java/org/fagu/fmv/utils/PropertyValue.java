@@ -1,4 +1,4 @@
-package org.fagu.fmv.core.project;
+package org.fagu.fmv.utils;
 
 /*
  * #%L
@@ -24,7 +24,7 @@ package org.fagu.fmv.core.project;
 /**
  * @author f.agu
  */
-public interface Property<V> {
+public interface PropertyValue<V> {
 
 	/**
 	 * @return

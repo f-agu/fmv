@@ -56,6 +56,8 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.im.ImageMetadatas;
 import org.fagu.fmv.media.FileType;
 import org.fagu.fmv.media.Metadatas;
+import org.fagu.fmv.utils.PropertyValue;
+import org.fagu.fmv.utils.PropertyValues;
 import org.fagu.fmv.utils.Proxifier;
 import org.fagu.fmv.utils.collection.MapSortedSet;
 import org.fagu.fmv.utils.collection.MultiValueMaps;
@@ -86,6 +88,8 @@ public class Project {
 
 	private final NavigableMap<String, String> propertyMap;
 
+	private final PropertyValues propertyValues;
+
 	private final FileCache fileCache;
 
 	/**
@@ -95,6 +99,7 @@ public class Project {
 		this.saveFile = saveFile;
 
 		propertyMap = new TreeMap<>();
+		propertyValues = new PropertyValues(propertyMap);
 		fileSources = new TreeMap<>();
 		extensions = MultiValueMaps.hashMapTreeSet();
 		fileFilter = pathname -> {
@@ -132,12 +137,8 @@ public class Project {
 	 * @param property
 	 * @return
 	 */
-	public <V> V getProperty(Property<V> property) {
-		String str = propertyMap.get(property.name());
-		if(str == null) {
-			return property.getDefaultValue();
-		}
-		return property.toValue(str);
+	public <V> V getProperty(PropertyValue<V> propertyValue) {
+		return propertyValues.getProperty(propertyValue);
 	}
 
 	/**
@@ -160,7 +161,7 @@ public class Project {
 	 * @param value
 	 * @return
 	 */
-	public <V> V setProperty(Property<V> property, V value) {
+	public <V> V setProperty(PropertyValue<V> property, V value) {
 		String before = propertyMap.put(property.name(), property.fromValue(value));
 		return before == null ? null : property.toValue(before);
 	}
