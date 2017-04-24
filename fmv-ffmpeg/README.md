@@ -56,6 +56,6 @@ builder.build().execute();
 
 name                   | type           | comments
 -----------------------|----------------|-------------------------------
-fmv.ffmpeg.x264.crf    | integer[0..50] | Constant Rate Factor (quality), 0 <better> 23 <worse> 50 (default: 22). http://slhck.info/video/2017/02/24/crf-guide.html
+fmv.ffmpeg.x264.crf    | integer[0..50] | Constant Rate Factor (quality), 0 better 23 worse 50 (default: 22). http://slhck.info/video/2017/02/24/crf-guide.html
 fmv.ffmpeg.x264.preset | string         | Preset (default: medium). https://trac.ffmpeg.org/wiki/Encode/H.264 chapter 2
 
