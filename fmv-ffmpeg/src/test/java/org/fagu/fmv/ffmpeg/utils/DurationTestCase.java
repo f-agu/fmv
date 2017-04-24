@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.utils;
  * #L%
  */
 
-
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -76,6 +75,15 @@ public class DurationTestCase {
 		// assertEquals(0, Duration.valueOf(0).toSeconds(), 0.01D);
 		// assertEquals(1.23, Duration.valueOf(1.23).toSeconds(), 0.01D);
 		assertEquals( - 9.87, Duration.valueOf( - 9.87).toSeconds(), 0.01D);
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void testUnlimited() {
+		Duration unlimited = Duration.unlimited();
+		System.out.println(unlimited);
 	}
 
 }

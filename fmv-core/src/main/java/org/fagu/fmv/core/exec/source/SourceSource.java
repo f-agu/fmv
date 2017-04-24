@@ -26,12 +26,17 @@ import org.dom4j.Element;
 import org.fagu.fmv.core.Hash;
 import org.fagu.fmv.core.exec.Identifiable;
 import org.fagu.fmv.core.exec.ObjectInvoker;
+import org.fagu.fmv.core.project.FileSource;
 import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.LoadUtils;
 import org.fagu.fmv.core.project.Project;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
 import org.fagu.fmv.ffmpeg.filter.FilterInput;
+import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatasUtils;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
+import org.fagu.fmv.ffmpeg.utils.Duration;
+import org.fagu.fmv.media.FileType;
 
 
 /**
@@ -79,7 +84,6 @@ public class SourceSource extends AbstractSource {
 	@Override
 	public void save(Element toElement) {
 		super.save(toElement);
-
 		toElement.addAttribute("n", Integer.toString(number));
 	}
 
@@ -121,6 +125,22 @@ public class SourceSource extends AbstractSource {
 		Set<String> set = super.ignoreAttributes();
 		set.add("n");
 		return set;
+	}
+
+	/**
+	 * @see org.fagu.fmv.core.exec.Attributable#getSpecificDuration()
+	 */
+	@Override
+	protected Duration getSpecificDuration() {
+		FileSource source = getProject().getSource(number);
+		if(source.getFileType() == FileType.AUDIO || source.getFileType() == FileType.VIDEO) {
+			MovieMetadatas videoMetadatas = source.getVideoMetadatas();
+			return MovieMetadatasUtils.getDuration(videoMetadatas).orElse(null);
+		}
+		if(source.getFileType() == FileType.IMAGE) {
+			// TODO
+		}
+		return null;
 	}
 
 }

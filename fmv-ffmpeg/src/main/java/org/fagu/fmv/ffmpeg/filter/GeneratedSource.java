@@ -20,8 +20,8 @@ package org.fagu.fmv.ffmpeg.filter;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
 /**
@@ -33,4 +33,9 @@ public interface GeneratedSource extends Filter {
 	 * @return
 	 */
 	MediaInput forInput();
+
+	/**
+	 * @return
+	 */
+	Duration getDuration();
 }

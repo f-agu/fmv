@@ -36,6 +36,8 @@ import org.fagu.fmv.utils.media.Size;
  */
 public abstract class SrcVideo<T> extends AbstractFilter implements MediaInput, GeneratedSource {
 
+	private Duration duration;
+
 	/**
 	 * @param name
 	 */
@@ -75,6 +77,7 @@ public abstract class SrcVideo<T> extends AbstractFilter implements MediaInput, 
 	 * @return
 	 */
 	public T duration(Duration duration) {
+		this.duration = duration;
 		parameter("d", Double.toString(duration.toSeconds()));
 		return getThis();
 	}
@@ -91,6 +94,14 @@ public abstract class SrcVideo<T> extends AbstractFilter implements MediaInput, 
 	@Override
 	public MediaInput forInput() {
 		return new GeneratedSourceMediaInput(this);
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.filter.GeneratedSource#getDuration()
+	 */
+	@Override
+	public Duration getDuration() {
+		return duration;
 	}
 
 	// **********************************************

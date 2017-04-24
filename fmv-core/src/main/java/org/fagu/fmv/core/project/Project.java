@@ -48,6 +48,7 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+import org.fagu.fmv.core.FMV;
 import org.fagu.fmv.core.exec.BaseIdentifiable;
 import org.fagu.fmv.core.exec.Executable;
 import org.fagu.fmv.core.exec.ExecutableFactory;
@@ -71,6 +72,8 @@ public class Project {
 	private boolean modified;
 
 	private String name;
+
+	private String fmvVersion;
 
 	private File saveFile;
 
@@ -127,6 +130,7 @@ public class Project {
 	public Project(File saveFile, OutputInfos outputInfos) {
 		this(saveFile);
 		this.outputInfos = outputInfos;
+		fmvVersion = FMV.getVersion();
 
 		extensions.addAll(FileType.AUDIO, Arrays.asList("mp3", "ogg", "wav")); // TODO
 		extensions.addAll(FileType.VIDEO, Arrays.asList("mov", "mp4", "avi")); // TODO

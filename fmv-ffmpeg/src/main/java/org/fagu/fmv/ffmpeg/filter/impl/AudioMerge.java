@@ -37,17 +37,6 @@ import org.fagu.fmv.ffmpeg.utils.Time;
  */
 public class AudioMerge extends FilterComplex {
 
-	// ---------------------------------------------
-
-	/**
-	 * @author f.agu
-	 */
-	public enum MixAudioDuration {
-		LONGEST, SHORTEST, FIRST
-	}
-
-	// ---------------------------------------------
-
 	/**
 	 * <input, audioStart>
 	 */
@@ -88,10 +77,15 @@ public class AudioMerge extends FilterComplex {
 	}
 
 	/**
+	 * Specify the number of inputs (from 1 to 64) (default 2)
+	 * 
 	 * @param countInputs
 	 * @return
 	 */
 	public AudioMerge inputs(int countInputs) {
+		if(1 > countInputs || countInputs > 64) {
+			throw new IllegalArgumentException("inputs must be between 1 and 64: " + countInputs);
+		}
 		parameter("inputs", Integer.toString(countInputs));
 		return this;
 	}

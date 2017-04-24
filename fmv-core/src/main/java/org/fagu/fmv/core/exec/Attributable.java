@@ -32,6 +32,7 @@ import org.fagu.fmv.core.Hash;
 import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.LoadUtils;
 import org.fagu.fmv.core.project.Project;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
 /**
@@ -39,7 +40,11 @@ import org.fagu.fmv.core.project.Project;
  */
 public abstract class Attributable extends BaseIdentifiable {
 
+	private static final String ATTRIBUTE_RAWDURATION = "rawduration";
+
 	protected Map<String, String> attributeMap = new TreeMap<>();
+
+	private Duration duration;
 
 	/**
 	 *
@@ -59,12 +64,13 @@ public abstract class Attributable extends BaseIdentifiable {
 	@Override
 	public void load(Project project, Element fromElement, Identifiable parent) throws LoadException {
 		super.load(project, fromElement, parent);
+		duration = LoadUtils.attributeDuration(fromElement, ATTRIBUTE_RAWDURATION);
 
 		Set<String> ignoreAttributes = ignoreAttributes();
 
-		LoadUtils.attributes(fromElement).stream() //
-		.filter(attr -> ! ignoreAttributes.contains(attr.getName())) //
-		.forEach(attr -> attributeMap.put(attr.getName(), attr.getValue()));
+		LoadUtils.attributes(fromElement).stream()
+				.filter(attr -> ! ignoreAttributes.contains(attr.getName()))
+				.forEach(attr -> attributeMap.put(attr.getName(), attr.getValue()));
 	}
 
 	/**
@@ -73,10 +79,10 @@ public abstract class Attributable extends BaseIdentifiable {
 	@Override
 	public void save(Element toElement) {
 		super.save(toElement);
-
-		attributeMap.entrySet().stream().forEach(e -> {
-			toElement.addAttribute(e.getKey(), e.getValue());
-		});
+		attributeMap.forEach(toElement::addAttribute);
+		if(duration != null) {
+			toElement.addAttribute(ATTRIBUTE_RAWDURATION, duration.toString());
+		}
 	}
 
 	/**
@@ -87,6 +93,26 @@ public abstract class Attributable extends BaseIdentifiable {
 		Hash hash = super.getHash();
 		attributeMap.entrySet().stream().forEach(e -> hash.append(e.getKey() + '=' + e.getValue()));
 		return hash;
+	}
+
+	/**
+	 * @see org.fagu.fmv.core.exec.Identifiable#getDuration()
+	 */
+	@Override
+	public Duration getDuration() {
+		if(duration != null) {
+			return duration;
+		}
+		return setDuration(getSpecificDuration());
+	}
+
+	/**
+	 * @see org.fagu.fmv.core.exec.Identifiable#resetDuration()
+	 */
+	@Override
+	public void resetDuration() {
+		duration = null;
+		getProject().modified();
 	}
 
 	/**
@@ -121,7 +147,25 @@ public abstract class Attributable extends BaseIdentifiable {
 		set.add("id");
 		set.add("hash");
 		set.add("code");
+		set.add(ATTRIBUTE_RAWDURATION);
 		return set;
+	}
+
+	/**
+	 * @param duration
+	 * @return
+	 */
+	protected Duration setDuration(Duration duration) {
+		getProject().modified();
+		this.duration = duration;
+		return duration;
+	}
+
+	/**
+	 * @return
+	 */
+	protected Duration getSpecificDuration() {
+		return getGlobalDuration();
 	}
 
 }

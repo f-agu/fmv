@@ -30,6 +30,49 @@ import org.apache.commons.lang.math.NumberUtils;
  */
 public class Duration extends AbstractTime implements Comparable<Duration> {
 
+	private static final Duration UNLIMITED = new Duration(Double.POSITIVE_INFINITY) {
+
+		@Override
+		public int hour() {
+			return 0;
+		}
+
+		@Override
+		public int minute() {
+			return 0;
+		}
+
+		@Override
+		public double second() {
+			return 0;
+		}
+
+		@Override
+		public double toSeconds() {
+			return Double.POSITIVE_INFINITY;
+		}
+
+		@Override
+		public Duration add(double seconds) {
+			return UNLIMITED;
+		}
+
+		@Override
+		public Duration add(Duration duration) {
+			return UNLIMITED;
+		}
+
+		@Override
+		public Duration multiplyBy(double multiple) {
+			return UNLIMITED;
+		}
+
+		@Override
+		public String toString() {
+			return "unlimited";
+		}
+	};
+
 	/**
 	 * @param seconds
 	 */
@@ -38,6 +81,13 @@ public class Duration extends AbstractTime implements Comparable<Duration> {
 	}
 
 	// *****************
+
+	/**
+	 * @return
+	 */
+	public static Duration unlimited() {
+		return UNLIMITED;
+	}
 
 	/**
 	 * @param seconds

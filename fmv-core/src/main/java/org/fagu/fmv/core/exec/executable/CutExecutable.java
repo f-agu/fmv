@@ -42,6 +42,8 @@ import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
 import org.fagu.fmv.ffmpeg.flags.AvoidNegativeTs;
 import org.fagu.fmv.ffmpeg.format.BasicStreamMuxer;
+import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatasUtils;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.ffmpeg.utils.Duration;
@@ -192,6 +194,11 @@ public class CutExecutable extends AbstractExecutable {
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
+
+		if(cache == Cache.MAKE) {
+			MovieMetadatas movieMetadatas = MovieMetadatas.with(toFile).extract();
+			MovieMetadatasUtils.getDuration(movieMetadatas).ifPresent(this::setDuration);
+		}
 	}
 
 	/**
@@ -216,6 +223,17 @@ public class CutExecutable extends AbstractExecutable {
 		set.add("duration");
 		return set;
 	}
+
+	/**
+	 * @see org.fagu.fmv.core.exec.Attributable#getSpecificDuration()
+	 */
+	@Override
+	protected Duration getSpecificDuration() {
+		// TODO instead of output file, maybe the duration is over the output
+		return duration;
+	}
+
+	// **********************************************
 
 	/**
 	 * @return

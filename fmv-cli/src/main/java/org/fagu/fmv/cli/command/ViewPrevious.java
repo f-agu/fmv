@@ -7,15 +7,15 @@ import org.fagu.fmv.cli.annotation.Command;
 /**
  * @author f.agu
  */
-@Command("viewnext")
-@Alias("v+")
-public class ViewNext extends ViewShift {
+@Command("viewprevious")
+@Alias("v-")
+public class ViewPrevious extends ViewShift {
 
 	/**
 	 * 
 	 */
-	public ViewNext() {
-		super(lastView -> lastView + 1);
+	public ViewPrevious() {
+		super(lastView -> lastView - 1);
 	}
 
 	/**
@@ -23,7 +23,7 @@ public class ViewNext extends ViewShift {
 	 */
 	@Override
 	public String getShortDescription() {
-		return "View next media";
+		return "View previous media";
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class ViewNext extends ViewShift {
 	 */
 	@Override
 	public String getSyntax() {
-		return "viewnext";
+		return "viewprevious";
 	}
 
 }

@@ -36,6 +36,7 @@ import org.fagu.fmv.core.exec.executable.GenericExecutable;
 import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.LoadUtils;
 import org.fagu.fmv.core.project.Project;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.utils.collection.MapMap;
 import org.fagu.fmv.utils.collection.MultiValueMaps;
 
@@ -434,6 +435,17 @@ public abstract class BaseIdentifiable implements Identifiable {
 			baseParent.identifiableChildren.add(this);
 		}
 		return previousParent == null ? this : previousParent;
+	}
+
+	/**
+	 * @return
+	 */
+	protected Duration getGlobalDuration() {
+		Duration currentDuration = Duration.valueOf(0);
+		filterExecs.forEach(fe -> currentDuration.add(fe.getDuration()));
+		executables.forEach(fe -> currentDuration.add(fe.getDuration()));
+		sources.forEach(fe -> currentDuration.add(fe.getDuration()));
+		return currentDuration;
 	}
 
 	/**

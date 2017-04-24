@@ -39,6 +39,8 @@ import org.fagu.fmv.ffmpeg.utils.Duration;
  */
 public class AudioGenerator extends AbstractFilter implements MediaInput, GeneratedSource {
 
+	private Duration duration;
+
 	/**
 	 * 
 	 */
@@ -93,6 +95,7 @@ public class AudioGenerator extends AbstractFilter implements MediaInput, Genera
 	 * @return
 	 */
 	public AudioGenerator duration(Duration duration) {
+		this.duration = duration;
 		parameter("d", Double.toString(duration.toSeconds()));
 		return this;
 	}
@@ -126,6 +129,14 @@ public class AudioGenerator extends AbstractFilter implements MediaInput, Genera
 	@Override
 	public MediaInput forInput() {
 		return new GeneratedSourceMediaInput(this);
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.filter.GeneratedSource#getDuration()
+	 */
+	@Override
+	public Duration getDuration() {
+		return duration;
 	}
 
 }

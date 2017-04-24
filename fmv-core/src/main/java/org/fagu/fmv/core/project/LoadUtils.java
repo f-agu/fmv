@@ -50,7 +50,7 @@ public class LoadUtils {
 		if(element == null) {
 			return Collections.emptyList();
 		}
-		return (List<Element>)element.elements();
+		return element.elements();
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class LoadUtils {
 		if(element == null) {
 			return Collections.emptyList();
 		}
-		return (List<Element>)element.elements(name);
+		return element.elements(name);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class LoadUtils {
 		if(element == null) {
 			return Collections.emptyList();
 		}
-		return (List<Attribute>)element.attributes();
+		return element.attributes();
 	}
 
 	/**
@@ -116,6 +116,21 @@ public class LoadUtils {
 		String value = element.attributeValue(attributeName);
 		try {
 			return Integer.parseInt(value);
+		} catch(NumberFormatException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * @param element
+	 * @param attributeName
+	 * @return
+	 * @throws LoadException
+	 */
+	public static Duration attributeDuration(Element element, String attributeName) {
+		String value = element.attributeValue(attributeName);
+		try {
+			return Duration.parse(value);
 		} catch(NumberFormatException e) {
 			return null;
 		}

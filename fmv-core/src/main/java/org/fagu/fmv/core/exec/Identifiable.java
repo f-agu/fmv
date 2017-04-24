@@ -20,12 +20,12 @@ package org.fagu.fmv.core.exec;
  * #L%
  */
 
-
 import java.util.List;
 import java.util.function.Predicate;
 
 import org.fagu.fmv.core.Hash;
 import org.fagu.fmv.core.project.Project;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
 /**
@@ -143,5 +143,15 @@ public interface Identifiable extends IODom {
 	 * @return
 	 */
 	Hash getHash();
+
+	/**
+	 * @return
+	 */
+	Duration getDuration();
+
+	/**
+	 * 
+	 */
+	void resetDuration();
 
 }

@@ -25,6 +25,7 @@ import org.fagu.fmv.core.exec.ObjectInvoker;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
 import org.fagu.fmv.ffmpeg.filter.FilterInput;
 import org.fagu.fmv.ffmpeg.filter.GeneratedSource;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
 /**
@@ -57,6 +58,16 @@ public class FilterSource extends AbstractSource {
 		ObjectInvoker.invoke(generatedSource, attributeMap);
 		return builder.addMediaInput(generatedSource.forInput())
 				.format("lavfi");
+	}
+
+	// *********************************************
+
+	/**
+	 * @see org.fagu.fmv.core.exec.Attributable#getSpecificDuration()
+	 */
+	@Override
+	protected Duration getSpecificDuration() {
+		return generatedSource.getDuration();
 	}
 
 }
