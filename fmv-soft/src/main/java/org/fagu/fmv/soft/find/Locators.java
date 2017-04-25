@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.fagu.fmv.soft.SoftName;
 
 
 /**
@@ -55,7 +56,7 @@ public class Locators {
 	 * @return
 	 */
 	public Locator byPath(String path) {
-		return path == null ? NOTHING : softName -> listByPath(path);
+		return path == null ? NOTHING : named("path[" + path + ']', softName -> listByPath(path));
 	}
 
 	/**
@@ -63,7 +64,7 @@ public class Locators {
 	 * @return
 	 */
 	public Locator byPropertyPath(String propertyName) {
-		return propertyName == null ? NOTHING : byPath(System.getProperty(propertyName));
+		return propertyName == null ? NOTHING : named("property-path[" + propertyName + ']', byPath(System.getProperty(propertyName)));
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class Locators {
 		if(envName == null) {
 			return NOTHING;
 		}
-		return st -> {
+		return named("env[" + envName + ']', st -> {
 			List<File> files = new ArrayList<>();
 			String env = System.getenv(envName);
 			if(StringUtils.isNotEmpty(env)) {
@@ -103,14 +104,42 @@ public class Locators {
 				}
 			}
 			return files;
-		};
+		});
 	}
 
 	/**
 	 * @return
 	 */
 	public Locator byEnvPath() {
-		return softname -> listByPath(System.getenv("PATH"));
+		return named("env[PATH]", softname -> listByPath(System.getenv("PATH")));
+	}
+
+	/**
+	 * @return
+	 */
+	public static Locator nothing() {
+		return NOTHING;
+	}
+
+	/**
+	 * @param name
+	 * @param locator
+	 * @return
+	 */
+	public static Locator named(String name, Locator locator) {
+		return new Locator() {
+
+			@Override
+			public List<File> locate(SoftName softName) {
+				return locator.locate(softName);
+			}
+
+			@Override
+			public String toString() {
+				String string = locator.toString();
+				return string.startsWith(Locator.class.getName()) ? name : name + "," + string;
+			}
+		};
 	}
 
 	// ***********************************************************

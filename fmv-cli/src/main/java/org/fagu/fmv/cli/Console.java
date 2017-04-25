@@ -162,7 +162,7 @@ public class Console {
 			 */
 			@Override
 			public void eventAddSourcePost(File fromFile, FileSource fileSource, int index) {
-				println(ConsoleOutput.forOutput(fileSource, fromFile));
+				println("1 " + ConsoleOutput.forOutput(fileSource, fromFile));
 			}
 
 			/**
@@ -170,7 +170,7 @@ public class Console {
 			 */
 			@Override
 			public void eventExecPrePreviewViaMake(Executable executable) {
-				println(getPadding(executable) + executable);
+				println("2 " + getPadding(executable) + executable);
 			}
 
 			/**
@@ -179,7 +179,7 @@ public class Console {
 			 */
 			@Override
 			public void eventExecPrePreviewScale(Executable executable, File destinationFile) {
-				println(getPadding(executable) + "[PREVIEW] " + executable);
+				println("3 " + getPadding(executable) + "[PREVIEW] " + executable);
 			}
 
 			// *******************************

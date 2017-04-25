@@ -1,4 +1,4 @@
-package org.fagu.fmv.soft;
+package org.fagu.fmv.soft.win32;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

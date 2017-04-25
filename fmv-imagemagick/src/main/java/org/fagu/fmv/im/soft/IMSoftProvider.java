@@ -32,6 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.im.exception.IMExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.Soft.SoftExecutor;
@@ -42,11 +43,13 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftInfo;
+import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
 
@@ -72,8 +75,8 @@ public abstract class IMSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
-		return ExecSoftFoundFactory.withParameters("-version") //
-				.parseFactory(file -> createParser(getSoftName(), file)) //
+		return ExecSoftFoundFactory.withParameters("-version")
+				.parseFactory(file -> createParser(getSoftName(), file))
 				.build();
 	}
 
@@ -90,6 +93,21 @@ public abstract class IMSoftProvider extends SoftProvider {
 	}
 
 	/**
+	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftLocator()
+	 */
+	@Override
+	public SoftLocator getSoftLocator() {
+		SoftLocator softLocator = super.getSoftLocator();
+		if(SystemUtils.IS_OS_WINDOWS) {
+			softLocator.addDefaultLocator(getSoftName());
+			ProgramFilesLocatorSupplier.with(getSoftName().getFileFilter())
+					.findFolder(folder -> folder.getName().toLowerCase().startsWith("imagemagick"))
+					.supplyIn(softLocator);
+		}
+		return softLocator;
+	}
+
+	/**
 	 * @see org.fagu.fmv.soft.find.SoftProvider#getDownloadURL()
 	 */
 	@Override
@@ -102,7 +120,7 @@ public abstract class IMSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftPolicy<?, ?, ?> getSoftPolicy() {
-		return new VersionPolicy() //
+		return new VersionPolicy()
 				.onAllPlatforms().minVersion(new Version(6, 6));
 	}
 

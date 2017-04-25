@@ -25,13 +25,13 @@ import java.io.FileFilter;
 import java.util.Collections;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.fagu.fmv.soft.SoftOnWindows;
 import org.fagu.fmv.soft.find.PlateformFileFilter;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.fmv.soft.win32.SoftOnWindows;
 import org.fagu.version.Version;
 
 
@@ -74,8 +74,11 @@ public class VLCSoftProvider extends SoftProvider {
 	@Override
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = super.getSoftLocator();
-		FileFilter fileFilter = PlateformFileFilter.getFileFilter(NAME);
-		SoftOnWindows.addProgramFilesLocator(softLocator, fileFilter, Collections.singleton("VideoLAN" + File.separator + "VLC"));
+		if(SystemUtils.IS_OS_WINDOWS) {
+			FileFilter fileFilter = PlateformFileFilter.getFileFilter(NAME);
+			SoftOnWindows.addProgramFilesLocator(softLocator, fileFilter, Collections.singleton("VideoLAN" + File.separator + "VLC"));
+			softLocator.addDefaultLocator(getSoftName());
+		}
 		return softLocator;
 	}
 

@@ -32,9 +32,10 @@ public interface SoftFoundFactory {
 
 	/**
 	 * @param file
+	 * @param locator
 	 * @return
 	 * @throws ExecutionException
 	 * @throws IOException
 	 */
-	SoftFound create(File file) throws ExecutionException, IOException;
+	SoftFound create(File file, Locator locator) throws ExecutionException, IOException;
 }

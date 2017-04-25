@@ -27,10 +27,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.fagu.fmv.soft.SoftName;
@@ -77,7 +79,8 @@ public class SoftLocator {
 
 	private static final Function<Founds, File> DEFAULT_FOUND_POLICY = founds -> founds.getFirstFound().getFile();
 
-	private static final SoftTester DEFAULT_SOFT_TESTER = SoftFound::found;
+	private static final SoftTester DEFAULT_SOFT_TESTER = (file, locator) -> SoftFound.found(file)
+			.setLocalizedBy(locator != null ? locator.toString() : null);
 
 	private final String envName;
 
@@ -152,6 +155,13 @@ public class SoftLocator {
 	 */
 	public void setPath(SoftName softName, String path) {
 		pathMap.put(softName, path);
+	}
+
+	/**
+	 * @return
+	 */
+	public SoftLocator addDefaultLocator(SoftName softName) {
+		return addLocators(getDefaultLocators(softName, null));
 	}
 
 	/**
@@ -265,7 +275,15 @@ public class SoftLocator {
 		if( ! definedLocators.isEmpty()) {
 			return new ArrayList<>(definedLocators); // defensive copy
 		}
+		return getDefaultLocators(softName, loc);
+	}
 
+	/**
+	 * @param softName
+	 * @param loc
+	 * @return
+	 */
+	protected List<Locator> getDefaultLocators(SoftName softName, Locators loc) {
 		Locators locators = loc != null ? loc : createLocators(softName);
 		List<Locator> locatorList = new ArrayList<>(4);
 		locatorList.add(locators.byPath(getPath(softName))); // cache
@@ -321,11 +339,14 @@ public class SoftLocator {
 	 */
 	private Founds find(Collection<Locator> locators, SoftName softName, SoftTester tester) {
 		List<SoftFound> softFounds = new ArrayList<>();
+		Set<File> fileDones = new HashSet<>(4);
 		for(Locator locator : locators) {
 			for(File file : locator.locate(softName)) {
-				SoftFound found = tester.test(file);
-				if(found != null) {
-					softFounds.add(found);
+				if(fileDones.add(file)) {
+					SoftFound found = tester.test(file, locator);
+					if(found != null) {
+						softFounds.add(found);
+					}
 				}
 			}
 		}

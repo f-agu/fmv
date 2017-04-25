@@ -42,7 +42,14 @@ public class PlateformFileFilter {
 	 * @return
 	 */
 	public static FileFilter getFileFilter(String softName) {
-		FileFilter fileFilter = f -> softName.equalsIgnoreCase(FilenameUtils.getBaseName(f.getName()));
+		return getFileFilter(f -> softName.equalsIgnoreCase(FilenameUtils.getBaseName(f.getName())));
+	}
+
+	/**
+	 * @param subFileFilter
+	 * @return
+	 */
+	public static FileFilter getFileFilter(FileFilter subFileFilter) {
 		if(SystemUtils.IS_OS_WINDOWS) {
 			Set<String> defaultExtensions = new HashSet<>(4);
 			defaultExtensions.add("exe");
@@ -50,14 +57,14 @@ public class PlateformFileFilter {
 			defaultExtensions.add("cmd");
 			defaultExtensions.add("bat");
 			return f -> {
-				if( ! fileFilter.accept(f)) {
+				if( ! subFileFilter.accept(f)) {
 					return false;
 				}
 				String extension = FilenameUtils.getExtension(f.getName());
 				return extension != null ? defaultExtensions.contains(extension.toLowerCase()) : false;
 			};
 		}
-		return fileFilter;
+		return subFileFilter;
 	}
 
 }

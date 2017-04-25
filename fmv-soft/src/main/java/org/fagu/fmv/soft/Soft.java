@@ -153,17 +153,17 @@ public class Soft {
 		 */
 		public Soft search(SoftFoundFactory softFoundFactory) {
 			SoftLocator softLoc = getSoftLocator();
-			Founds founds = softLoc.find(softName, file -> {
+			Founds founds = softLoc.find(softName, (file, locator) -> {
 				try {
-					SoftFound softFound = softFoundFactory.create(file);
+					SoftFound softFound = softFoundFactory.create(file, locator);
 					if(softFound == null) {
 						return SoftFound.foundBadSoft(file);
 					}
 					return softFound;
 				} catch(ExecutionException e) {
-					return SoftFound.foundError(file, e.getMessage());
+					return SoftFound.foundError(file, e.getMessage()).setLocalizedBy(locator.toString());
 				} catch(IOException e) {
-					return SoftFound.foundError(file, e.getMessage());
+					return SoftFound.foundError(file, e.getMessage()).setLocalizedBy(locator.toString());
 				}
 			});
 			return createAndfireEventFound(founds, softLoc);

@@ -42,6 +42,8 @@ public class SoftFound implements Comparable<SoftFound> {
 
 	private final SoftInfo softInfo;
 
+	private String localizedBy;
+
 	/**
 	 *
 	 */
@@ -218,6 +220,21 @@ public class SoftFound implements Comparable<SoftFound> {
 	 */
 	public String getReason() {
 		return reason;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getLocalizedBy() {
+		return localizedBy;
+	}
+
+	/**
+	 * @param localizedBy
+	 */
+	public SoftFound setLocalizedBy(String localizedBy) {
+		this.localizedBy = localizedBy;
+		return this;
 	}
 
 	/**

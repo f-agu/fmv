@@ -24,9 +24,11 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.ffmpeg.exception.FFExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
@@ -41,8 +44,10 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
+import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
+import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParseException;
 import org.fagu.version.VersionParserManager;
@@ -77,6 +82,30 @@ public abstract class FFSoftProvider extends SoftProvider {
 		return ExecSoftFoundFactory.withParameters("-version") //
 				.parseFactory(file -> createParser(getSoftName(), file)) //
 				.build();
+	}
+
+	/**
+	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftLocator()
+	 */
+	@Override
+	public SoftLocator getSoftLocator() {
+		SoftLocator softLocator = super.getSoftLocator();
+		if(SystemUtils.IS_OS_WINDOWS) {
+			softLocator.addDefaultLocator(getSoftName());
+			ProgramFilesLocatorSupplier.with(getSoftName().getFileFilter())
+					.find(programFile -> {
+						List<File> files = new ArrayList<>();
+						File[] folders = programFile.listFiles(f -> f.getName().toLowerCase().startsWith("ffmpeg"));
+						if(folders != null) {
+							for(File folder : folders) {
+								files.add(folder);
+								files.add(new File(folder, "bin"));
+							}
+						}
+						return files;
+					}).supplyIn(softLocator);
+		}
+		return softLocator;
 	}
 
 	/**

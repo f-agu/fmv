@@ -82,6 +82,10 @@ public class Bootstrap {
 		} else {
 			fmvcliConfig = new FMVCLIConfig();
 		}
+
+		System.out.println("FMV " + FMV.getVersion());
+		System.out.println();
+
 		Project project;
 		String[] args2 = commandLine.getArgs();
 		if(args2.length > 0) {
@@ -101,8 +105,6 @@ public class Bootstrap {
 	 * @return
 	 */
 	private static Project menu(PrintStream printStream) {
-		printStream.println("FMV " + FMV.getVersion());
-		printStream.println();
 		printStream.print("New project ? ");
 		try (Scanner scanner = new Scanner(new UnclosedInputStream(System.in))) {
 			String answer = scanner.nextLine();
@@ -214,6 +216,7 @@ public class Bootstrap {
 	 * @return
 	 */
 	private static Project loadProject(File saveFile) {
+		System.out.println("Loading " + saveFile.getName() + " ...");
 		Project project = new Project(saveFile);
 		try {
 			project.load();

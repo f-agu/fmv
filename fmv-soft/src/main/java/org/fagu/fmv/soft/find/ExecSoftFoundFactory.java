@@ -192,10 +192,10 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 	}
 
 	/**
-	 * @see org.fagu.fmv.soft.find.SoftFoundFactory#create(java.io.File)
+	 * @see org.fagu.fmv.soft.find.SoftFoundFactory#create(java.io.File, Locator)
 	 */
 	@Override
-	public final SoftFound create(File file) throws ExecutionException, IOException {
+	public final SoftFound create(File file, Locator locator) throws ExecutionException, IOException {
 		Parser parser = parserFactory.create(file);
 		CommandLine commandLine = FMVCommandLine.create(file, parameters);
 		String cmdLineStr = CommandLineUtils.toLine(commandLine);
@@ -204,7 +204,11 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 		try {
 			int exitValue = executor.execute(commandLine);
-			return parser.closeAndParse(cmdLineStr, exitValue);
+			SoftFound softFound = parser.closeAndParse(cmdLineStr, exitValue);
+			if(locator != null) {
+				softFound.setLocalizedBy(locator.toString());
+			}
+			return softFound;
 		} catch(ExecuteException e) {
 			return parser.closeAndParse(e, cmdLineStr, builder.readLineList);
 		} catch(IOException e) {

@@ -62,7 +62,10 @@ public class FFInfoTestCase {
 		Founds founds = FFMpeg.search().getFounds();
 		founds.forEach(softFound -> {
 			FFInfo ffInfo = (FFInfo)softFound.getSoftInfo();
+			System.out.println(softFound);
 			System.out.println(softFound.getFile() + "  " + ffInfo);
+			System.out.println("    " + softFound.getLocalizedBy());
+			System.out.println();
 		});
 		System.out.println(founds.getFirstFound());
 	}

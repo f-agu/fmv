@@ -35,7 +35,9 @@ import org.fagu.fmv.core.exec.Identifiable;
 @Alias("el")
 public class ExecList extends AbstractCommand {
 
-	private static final int ID_WIDTH = 10;
+	private static final int ID_WIDTH = 7;
+
+	private static final int TIME_WIDTH = 15;
 
 	/**
 	 *
@@ -75,7 +77,9 @@ public class ExecList extends AbstractCommand {
 	private void displayIdentifiable(List<? extends Identifiable> identifiables, int paddingSize) {
 		for(Identifiable identifiable : identifiables) {
 			StringBuilder buf = new StringBuilder(100);
-			buf.append(StringUtils.rightPad(identifiable.getId(), ID_WIDTH)).append(StringUtils.leftPad("", paddingSize));
+			buf.append(StringUtils.rightPad(identifiable.getId(), ID_WIDTH));
+			buf.append(StringUtils.rightPad(identifiable.getDuration().toString(), TIME_WIDTH));
+			buf.append(StringUtils.leftPad("", paddingSize));
 			buf.append(identifiable.toString());
 			println(buf.toString());
 			displayIdentifiable(identifiable.getIdentifiableChildren(), paddingSize + 3);
