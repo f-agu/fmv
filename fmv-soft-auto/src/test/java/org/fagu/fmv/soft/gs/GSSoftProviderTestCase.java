@@ -97,7 +97,7 @@ public class GSSoftProviderTestCase {
 		SoftFound softFound = parser.closeAndParse("", 0);
 		VersionDateSoftInfo softInfo = (VersionDateSoftInfo)softFound.getSoftInfo();
 		assertEquals(expectedVersion, softInfo.getVersion().orElse(null));
-		assertEquals(expectedDate, softInfo.getDate());
+		assertEquals(expectedDate, softInfo.getDate().orElse(null));
 	}
 
 }

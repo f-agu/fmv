@@ -1,8 +1,8 @@
-package org.fagu.fmv.ffmpeg;
+package org.fagu.fmv.soft.spring.actuator;
 
 /*-
  * #%L
- * fmv-ffmpeg
+ * fmv-soft
  * %%
  * Copyright (C) 2014 - 2017 fagu
  * %%
@@ -19,24 +19,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
  * #L%
  */
-import org.fagu.fmv.utils.PropertyValue;
-import org.fagu.fmv.utils.PropertyValues.IntegerPropertyValue;
-import org.fagu.fmv.utils.PropertyValues.StringPropertyValue;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 
 /**
- * @author Oodrive
  * @author f.agu
- * @created 24 avr. 2017 10:32:04
  */
-public class Properties {
+@Configuration
+public class ActuatorConfig {
 
-	public static final String PROPERTY_PREFIX = "fmv.ffmpeg.";
+	/**
+	 * @return
+	 */
+	@Bean
+	public SoftInfoContributor softVersionInfoContributor() {
+		return new SoftInfoContributor();
+	}
 
-	public static final PropertyValue<String> X264_PRESET = new StringPropertyValue(PROPERTY_PREFIX + "x264.preset", "medium");
-
-	public static final PropertyValue<Integer> X264_CRF = new IntegerPropertyValue(PROPERTY_PREFIX + "x264.crf", 22);
-
-	private Properties() {}
+	/**
+	 * @return
+	 */
+	@Bean
+	public SoftHealthIndicator softHealthIndicator() {
+		return new SoftHealthIndicator();
+	}
 
 }

@@ -22,6 +22,7 @@ package org.fagu.fmv.soft.find.info;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Optional;
 
 import org.fagu.fmv.soft.SoftName;
 import org.fagu.version.Version;
@@ -48,8 +49,8 @@ public class VersionDateSoftInfo extends VersionSoftInfo {
 	/**
 	 * @return
 	 */
-	public Date getDate() {
-		return cloneDate(date);
+	public Optional<Date> getDate() {
+		return Optional.ofNullable(cloneDate(date));
 	}
 
 	// ************************************

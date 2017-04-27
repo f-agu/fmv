@@ -32,6 +32,7 @@ import org.fagu.fmv.soft.find.FoundReasons;
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftProvider;
+import org.fagu.fmv.soft.spring.actuator.Softs;
 
 
 /**
@@ -61,7 +62,7 @@ public class SoftLogger {
 	/**
 	 * @param formatConsumer
 	 */
-	public void logDetails(Consumer<String> formatConsumer) {
+	public SoftLogger logDetails(Consumer<String> formatConsumer) {
 		int maxLength = getNameMaxLength() + 3;
 		for(Soft soft : softs) {
 			Founds founds = soft.getFounds();
@@ -85,6 +86,23 @@ public class SoftLogger {
 				softName.moreInfo(formatConsumer);
 			}
 		}
+		return this;
+	}
+
+	/**
+	 * @return
+	 */
+	public SoftLogger supplyInfoContributor() {
+		softs.forEach(Softs::contributeInfo);
+		return this;
+	}
+
+	/**
+	 * @return
+	 */
+	public SoftLogger supplyHealthIndicator() {
+		softs.forEach(Softs::indicateHealth);
+		return this;
 	}
 
 	/**

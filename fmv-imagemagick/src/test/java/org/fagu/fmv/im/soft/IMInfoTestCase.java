@@ -28,7 +28,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
-import org.fagu.fmv.im.soft.ConvertSoftProvider;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.version.Version;
@@ -134,7 +133,7 @@ public class IMInfoTestCase {
 		SoftFound softFound = parser.closeAndParse("", 0);
 		VersionDateSoftInfo imInfo = (VersionDateSoftInfo)softFound.getSoftInfo();
 		assertEquals(expectedVersion, imInfo.getVersion().orElse(null));
-		assertEquals(expectedDate, imInfo.getDate());
+		assertEquals(expectedDate, imInfo.getDate().orElse(null));
 		assertEquals(expectedInfo, imInfo.getInfo());
 	}
 
