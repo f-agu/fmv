@@ -21,6 +21,7 @@ package org.fagu.fmv.ffmpeg.soft;
  */
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,14 +39,13 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.ffmpeg.exception.FFExceptionKnownAnalyzer;
-import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.Locators;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
-import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.version.Version;
@@ -80,7 +80,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-version")
-				.parseFactory((file, softPolicy) -> createParser(getSoftName(), file, softPolicy))
+				.parseFactory((file, softPolicy) -> createParser(file))
 				.build();
 	}
 
@@ -89,10 +89,18 @@ public abstract class FFSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftLocator getSoftLocator() {
+		FileFilter fileFilter = getFileFilter();
 		SoftLocator softLocator = super.getSoftLocator();
+		softLocator.enableCache(n -> getGroupName(), founds -> {
+			File file = founds.getFirstFound().getFile();
+			if(file != null) {
+				return new Locators(fileFilter).byPath(file.getParent());
+			}
+			return null;
+		});
 		if(SystemUtils.IS_OS_WINDOWS) {
-			softLocator.addDefaultLocator(getSoftName());
-			ProgramFilesLocatorSupplier.with(getFileFilter())
+			softLocator.addDefaultLocator();
+			ProgramFilesLocatorSupplier.with(fileFilter)
 					.find(programFile -> {
 						List<File> files = new ArrayList<>();
 						File[] folders = programFile.listFiles(f -> f.getName().toLowerCase().startsWith("ffmpeg"));
@@ -138,12 +146,10 @@ public abstract class FFSoftProvider extends SoftProvider {
 	// ***********************************************************************
 
 	/**
-	 * @param softName
 	 * @param file
-	 * @param softPolicy
 	 * @return
 	 */
-	static Parser createParser(SoftName softName, File file, SoftPolicy<?, ?, ?> softPolicy) {
+	Parser createParser(File file) {
 		return new Parser() {
 
 			private Version version = null;
@@ -169,11 +175,11 @@ public abstract class FFSoftProvider extends SoftProvider {
 				Matcher matcher = FF_FIRSTLINE_PATTERN.matcher(line);
 				if(matcher.matches()) {
 					String parsedTool = matcher.group(1).trim();
-					if(parsedTool.equalsIgnoreCase(softName.getName())) {
+					if(parsedTool.equalsIgnoreCase(getName())) {
 						version = getVersion(matcher.group(2).trim());
 						return;
 					}
-					softFound = SoftFound.foundError(file, "Wrong tool, need " + softName + " and found " + parsedTool + ": " + line);
+					softFound = SoftFound.foundError(file, "Wrong tool, need " + getName() + " and found " + parsedTool + ": " + line);
 				}
 
 				// configuration
@@ -213,7 +219,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 					}
 				}
 
-				FFInfo ffInfo = new FFInfo(file, version, softName, builtDate, builtVersion, configuration, libVersions);
+				FFInfo ffInfo = new FFInfo(file, version, getName(), builtDate, builtVersion, configuration, libVersions);
 				return FFSoftPolicy.toSoftFound(ffInfo);
 			}
 		};

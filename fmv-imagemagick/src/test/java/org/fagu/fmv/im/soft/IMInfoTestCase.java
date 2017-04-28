@@ -93,7 +93,7 @@ public class IMInfoTestCase {
 	 */
 	private Parser newParser() {
 		ConvertSoftProvider softProvider = new ConvertSoftProvider();
-		return softProvider.createParser(softProvider.getSoftName(), new File("."), softProvider.getSoftPolicy());
+		return softProvider.createParser(new File("."), softProvider.getSoftPolicy());
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class IMInfoTestCase {
 	 */
 	private void assertInfo(String firstLine, Version expectedVersion, Date expectedDate, String expectedInfo) throws IOException {
 		ConvertSoftProvider softProvider = new ConvertSoftProvider();
-		Parser parser = new ConvertSoftProvider().createParser(softProvider.getSoftName(), new File("."), softProvider.getSoftPolicy());
+		Parser parser = new ConvertSoftProvider().createParser(new File("."), softProvider.getSoftPolicy());
 
 		parser.readLine(firstLine);
 

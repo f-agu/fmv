@@ -27,7 +27,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.fagu.fmv.soft.FMVExecuteException;
+import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.junit.Test;
 
 

@@ -69,7 +69,7 @@ public class SoftSearchTestCase {
 			}
 		});
 
-		assertEquals("Test1ASoftProvider", Soft.search("provider1").getName());
-		assertEquals("Test2ASoftProvider", Soft.search("provider2").getName());
+		assertEquals("Test1ASoftProvider", Soft.search("provider1").getSoftProvider().getClass().getSimpleName());
+		assertEquals("Test2ASoftProvider", Soft.search("provider2").getSoftProvider().getClass().getSimpleName());
 	}
 }

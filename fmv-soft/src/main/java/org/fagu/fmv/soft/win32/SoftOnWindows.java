@@ -20,9 +20,7 @@ limitations under the License.
  * #L%
  */
 import java.io.File;
-import java.util.function.Supplier;
 
-import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.version.Version;
@@ -39,14 +37,13 @@ public class SoftOnWindows {
 	private SoftOnWindows() {}
 
 	/**
-	 * @param softNameSupplier
+	 * @param softName
 	 * @return
 	 */
-	public static SoftFoundFactory createSoftFoundFactory(Supplier<SoftName> softNameSupplier) {
+	public static SoftFoundFactory createSoftFoundFactory(String softName) {
 		return (file, locator, softPolicy) -> {
 			String versionStr = SoftOnWindows.getExeVersion(file);
 			Version version = Version.parse(versionStr);
-			SoftName softName = softNameSupplier.get();
 			return softPolicy.toSoftFound(new VersionSoftInfo(file, softName, version));
 		};
 	}

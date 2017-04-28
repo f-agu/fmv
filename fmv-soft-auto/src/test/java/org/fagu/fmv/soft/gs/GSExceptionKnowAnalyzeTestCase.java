@@ -36,10 +36,10 @@ import java.util.function.Consumer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.fagu.fmv.soft.FMVExecuteException;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.soft.SoftTestCase;
+import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.fagu.fmv.soft.exec.exception.NestedException;
 import org.junit.Test;
 
@@ -148,8 +148,8 @@ public class GSExceptionKnowAnalyzeTestCase {
 				list.add(srcFile.getAbsolutePath());
 
 				SoftExecutor customizeExecutor = gsSoft.withParameters(list)
-						.customizeExecutor(exec -> exec.setWorkingDirectory(srcFile.getParentFile()))
-						.logCommandLine(System.out::println);
+						.customizeExecutor(exec -> exec.setWorkingDirectory(srcFile.getParentFile()));
+				// .logCommandLine(System.out::println);
 				if(consumer != null) {
 					consumer.accept(customizeExecutor);
 				}

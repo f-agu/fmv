@@ -1,4 +1,4 @@
-package org.fagu.fmv.soft;
+package org.fagu.fmv.soft.exec.exception;
 
 /*
  * #%L
@@ -27,9 +27,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.soft.exec.exception.ExceptionKnown;
-import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
-import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
 
 
 /**

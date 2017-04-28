@@ -31,9 +31,9 @@ import java.io.OutputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.fagu.fmv.soft.FMVExecuteException;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftTestCase;
+import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.junit.Test;
 
 

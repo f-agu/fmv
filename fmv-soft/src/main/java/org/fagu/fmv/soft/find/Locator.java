@@ -23,8 +23,6 @@ package org.fagu.fmv.soft.find;
 import java.io.File;
 import java.util.List;
 
-import org.fagu.fmv.soft.SoftName;
-
 
 /**
  * @author f.agu
@@ -36,6 +34,6 @@ public interface Locator {
 	 * @param softName
 	 * @return
 	 */
-	List<File> locate(SoftName softName);
+	List<File> locate(String softName);
 
 }

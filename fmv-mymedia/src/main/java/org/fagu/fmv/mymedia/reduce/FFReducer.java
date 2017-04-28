@@ -65,9 +65,9 @@ import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.mymedia.movie.StreamOrder;
 import org.fagu.fmv.mymedia.utils.FFMpegTextProgressBar;
-import org.fagu.fmv.soft.FMVExecuteException;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.FMVExecutor;
+import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.fagu.fmv.utils.media.Rotation;
 import org.fagu.fmv.utils.media.Size;
 

@@ -299,15 +299,15 @@ public class FFInfoTestCase {
 	 */
 	private Parser newParserProbe() {
 		FFProbeSoftProvider softProvider = new FFProbeSoftProvider();
-		return FFProbeSoftProvider.createParser(softProvider.getSoftName(), new File("."), softProvider.getSoftPolicy());
+		return softProvider.createParser(new File("."));
 	}
 
 	/**
 	 * @return
 	 */
 	private Parser newParserFFMpeg() {
-		FFProbeSoftProvider softProvider = new FFProbeSoftProvider();
-		return FFMpegSoftProvider.createParser(softProvider.getSoftName(), new File("."), softProvider.getSoftPolicy());
+		FFMpegSoftProvider softProvider = new FFMpegSoftProvider();
+		return softProvider.createParser(new File("."));
 	}
 
 	/**

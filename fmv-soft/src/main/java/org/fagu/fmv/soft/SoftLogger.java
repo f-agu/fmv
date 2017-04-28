@@ -47,7 +47,7 @@ public class SoftLogger {
 	 */
 	public SoftLogger(List<Soft> softs) {
 		this.softs = new ArrayList<>(softs);
-		Collections.sort(this.softs, (s1, s2) -> s1.getSoftName().getName().compareToIgnoreCase(s2.getSoftName().getName()));
+		Collections.sort(this.softs, (s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
 	}
 
 	/**
@@ -66,8 +66,7 @@ public class SoftLogger {
 		int maxLength = getNameMaxLength() + 3;
 		for(Soft soft : softs) {
 			Founds founds = soft.getFounds();
-			SoftName softName = founds.getSoftName();
-			String name = softName.getName();
+			String name = soft.getName();
 
 			SoftFound firstFound = founds.getFirstFound();
 			SoftProvider softProvider = soft.getSoftProvider();
@@ -83,7 +82,10 @@ public class SoftLogger {
 					}
 				}
 
-				softName.moreInfo(formatConsumer);
+				String downloadURL = softProvider.getDownloadURL();
+				if(downloadURL != null && ! "".equals(downloadURL.trim())) {
+					formatConsumer.accept("    Download " + name + " at " + downloadURL + " and add the path in your system environment PATH");
+				}
 			}
 		}
 		return this;
@@ -184,9 +186,7 @@ public class SoftLogger {
 
 			FoundReason foundReason = softFound.getFoundReason();
 			if(foundReason == FoundReasons.BAD_VERSION) {
-				line.append(" (find version ").append(info != null ? info : "?").append(" but I need (maybe at least) version "
-						+ softFound.getReason() + ')');
-
+				line.append(" (find version ").append(info != null ? info : "?").append(" but I need version " + softFound.getReason() + ')');
 				formatConsumer.accept(line.toString());
 				return;
 			}

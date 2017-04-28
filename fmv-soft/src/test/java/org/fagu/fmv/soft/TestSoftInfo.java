@@ -35,7 +35,7 @@ public class TestSoftInfo extends SoftInfo {
 	private final int build;
 
 	public TestSoftInfo(int build) {
-		super(mock(File.class), new TestSoftName("prout"));
+		super(mock(File.class), "prout");
 		this.build = build;
 	}
 

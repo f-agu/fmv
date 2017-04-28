@@ -24,7 +24,6 @@ import java.io.File;
 import java.util.Date;
 import java.util.Optional;
 
-import org.fagu.fmv.soft.SoftName;
 import org.fagu.version.Version;
 
 
@@ -41,7 +40,7 @@ public class VersionDateSoftInfo extends VersionSoftInfo {
 	 * @param version
 	 * @param date
 	 */
-	public VersionDateSoftInfo(File file, SoftName softName, Version version, Date date) {
+	public VersionDateSoftInfo(File file, String softName, Version version, Date date) {
 		super(file, softName, version);
 		this.date = cloneDate(date);
 	}

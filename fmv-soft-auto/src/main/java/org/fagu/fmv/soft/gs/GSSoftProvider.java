@@ -30,7 +30,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SystemUtils;
-import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
@@ -65,7 +64,7 @@ public class GSSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-version", "-q")
-				.parseFactory((file, softPolicy) -> createParser(getSoftName(), file, softPolicy))
+				.parseFactory((file, softPolicy) -> createParser(file, softPolicy))
 				.build();
 	}
 
@@ -112,12 +111,11 @@ public class GSSoftProvider extends SoftProvider {
 	// ***********************************************************************
 
 	/**
-	 * @param softName
 	 * @param file
 	 * @param softPolicy
 	 * @return
 	 */
-	Parser createParser(SoftName softName, File file, SoftPolicy<?, ?, ?> softPolicy) {
+	Parser createParser(File file, SoftPolicy<?, ?, ?> softPolicy) {
 		return new Parser() {
 
 			private final Pattern pattern = Pattern.compile("GPL Ghostscript ([0-9\\.\\-]+) \\(([0-9\\-]+)\\)");
@@ -149,8 +147,7 @@ public class GSSoftProvider extends SoftProvider {
 
 			@Override
 			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-				// SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
-				return softPolicy.toSoftFound(new VersionDateSoftInfo(file, softName, version, date));
+				return softPolicy.toSoftFound(new VersionDateSoftInfo(file, getName(), version, date));
 			}
 
 		};

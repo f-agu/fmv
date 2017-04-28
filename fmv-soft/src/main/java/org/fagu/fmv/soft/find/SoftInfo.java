@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.soft.SoftName;
 
 
 /*
@@ -34,13 +33,13 @@ public abstract class SoftInfo implements Comparable<SoftInfo> {
 
 	private final File file;
 
-	private final SoftName softName;
+	private final String softName;
 
 	/**
 	 * @param file
 	 * @param softName
 	 */
-	public SoftInfo(File file, SoftName softName) {
+	public SoftInfo(File file, String softName) {
 		this.file = Objects.requireNonNull(file);
 		this.softName = Objects.requireNonNull(softName);
 	}
@@ -58,13 +57,6 @@ public abstract class SoftInfo implements Comparable<SoftInfo> {
 	 * @return
 	 */
 	public String getName() {
-		return softName.getName();
-	}
-
-	/**
-	 * @return
-	 */
-	public SoftName getSoftName() {
 		return softName;
 	}
 

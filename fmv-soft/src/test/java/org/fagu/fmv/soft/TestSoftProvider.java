@@ -61,18 +61,7 @@ public class TestSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public Soft search() {
-		SoftName softName = new SoftName() {
-
-			@Override
-			public String getName() {
-				return TestSoftProvider.this.toString();
-			}
-
-			@Override
-			public Soft create(Founds founds) {
-				return null;
-			}
-		};
+		String softName = "test";
 		return new Soft(new Founds(softName, Collections.emptyNavigableSet(), null), this);
 	}
 

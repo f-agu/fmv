@@ -23,7 +23,6 @@ package org.fagu.fmv.soft.find.info;
 import java.io.File;
 import java.util.Optional;
 
-import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.find.SoftInfo;
 import org.fagu.version.Version;
 
@@ -40,7 +39,7 @@ public class VersionSoftInfo extends SoftInfo {
 	 * @param softName
 	 * @param version
 	 */
-	public VersionSoftInfo(File file, SoftName softName, Version version) {
+	public VersionSoftInfo(File file, String softName, Version version) {
 		super(file, softName);
 		this.version = version;
 	}

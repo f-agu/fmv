@@ -34,8 +34,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.soft.Soft.SoftSearch;
-import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
+import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.version.Version;
 
 
 /**
@@ -97,14 +98,22 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public Soft search() {
-		return search(null);
+		return searchConfigurable(null);
+	}
+
+	/**
+	 * @param minVersion
+	 * @return
+	 */
+	public Soft searchMinVersion(Version minVersion) {
+		return searchConfigurable(ss -> ss.withPolicy(new VersionPolicy().onAllPlatforms().minVersion(new Version(10))));
 	}
 
 	/**
 	 * @param softSearchConsumer
 	 * @return
 	 */
-	public Soft search(Consumer<SoftSearch> softSearchConsumer) {
+	public Soft searchConfigurable(Consumer<SoftSearch> softSearchConsumer) {
 		SoftSearch softSearch = Soft.with(this).withLocator(getSoftLocator());
 		if(softSearchConsumer != null) {
 			softSearchConsumer.accept(softSearch);
@@ -130,34 +139,12 @@ public abstract class SoftProvider {
 	/**
 	 * @return
 	 */
-	public SoftName getSoftName() {
-		return new SoftName() {
-
-			/**
-			 * @see org.fagu.fmv.soft.SoftName#getName()
-			 */
-			@Override
-			public String getName() {
-				return SoftProvider.this.getName();
-			}
-
-			/**
-			 * @see org.fagu.fmv.soft.SoftName#create(org.fagu.fmv.soft.find.Founds)
-			 */
-			@Override
-			public Soft create(Founds founds) {
-				return SoftProvider.this.createSoft(founds);
-			}
-		};
-	}
-
-	/**
-	 * @return
-	 */
 	public SoftLocator getSoftLocator() {
 		SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
 		Sorter sorter = softPolicy != null ? softPolicy.getSorter() : null;
-		return new SoftLocator(getName().toUpperCase() + "_HOME", sorter);
+		SoftLocator softLocator = new SoftLocator(getName(), sorter);
+		softLocator.setEnvName(getName().toUpperCase() + "_HOME");
+		return softLocator;
 	}
 
 	/**

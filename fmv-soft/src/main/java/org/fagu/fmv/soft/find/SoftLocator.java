@@ -34,8 +34,8 @@ import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
-import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.find.strategy.HighestPrecedenceSorter;
 
 
@@ -44,80 +44,42 @@ import org.fagu.fmv.soft.find.strategy.HighestPrecedenceSorter;
  */
 public class SoftLocator {
 
-	// -----------------------------------------------
-
-	/**
-	 * @author f.agu
-	 */
-	private class Cache {
-
-		private final File file;
-
-		private final long lastModified;
-
-		private final long size;
-
-		/**
-		 * @param file
-		 */
-		private Cache(File file) {
-			this.file = file;
-			this.lastModified = file.lastModified();
-			this.size = file.length();
-		}
-
-		/**
-		 * @return
-		 */
-		private boolean isChanged() {
-			return file.lastModified() != lastModified || file.length() != size;
-		}
-
-	}
-
-	// -----------------------------------------------
-
 	private static final Function<Founds, File> DEFAULT_FOUND_POLICY = founds -> founds.getFirstFound().getFile();
 
 	private static final SoftTester DEFAULT_SOFT_TESTER = (file, locator, softPolicy) -> SoftFound.found(file)
 			.setLocalizedBy(locator != null ? locator.toString() : null);
 
-	private final String envName;
+	private static final Map<String, Founds> CACHE_MAP = new HashMap<>();
+
+	private final String softName;
+
+	private String envName;
 
 	private String softPath;
+
+	private UnaryOperator<String> cacheNaming;
+
+	private Function<Founds, Locator> cachePopulator;
 
 	private final Sorter sorter;
 
 	private SoftPolicy<?, ?, ?> softPolicy;
 
-	private final Map<SoftName, String> pathMap;
-
-	private final Map<SoftName, Cache> cacheFile;
-
 	private final List<Locator> definedLocators;
 
 	/**
-	 *
+	 * @param softName
 	 */
-	public SoftLocator() {
-		this(null);
+	public SoftLocator(String softName) {
+		this(softName, null);
 	}
 
 	/**
-	 * @param envName
-	 */
-	public SoftLocator(String envName) {
-		this(envName, null);
-	}
-
-	/**
-	 * @param envName
+	 * @param softName
 	 * @param sorter
 	 */
-	public SoftLocator(String envName, Sorter sorter) {
-		this.envName = envName;
-		pathMap = new HashMap<>(2);
-		cacheFile = new HashMap<>();
+	public SoftLocator(String softName, Sorter sorter) {
+		this.softName = Objects.requireNonNull(softName);
 		definedLocators = new ArrayList<>();
 		this.sorter = sorter != null ? sorter : new HighestPrecedenceSorter();
 	}
@@ -151,6 +113,31 @@ public class SoftLocator {
 	}
 
 	/**
+	 * @return
+	 */
+	public String getEnvName() {
+		return envName;
+	}
+
+	/**
+	 * @param envName
+	 */
+	public void setEnvName(String envName) {
+		this.envName = envName;
+	}
+
+	/**
+	 * @param cacheNaming
+	 * @param cachePopulator
+	 * @return
+	 */
+	public SoftLocator enableCache(UnaryOperator<String> cacheNaming, Function<Founds, Locator> cachePopulator) {
+		this.cacheNaming = Objects.requireNonNull(cacheNaming);
+		this.cachePopulator = Objects.requireNonNull(cachePopulator);
+		return this;
+	}
+
+	/**
 	 * @return the foundStrategy
 	 */
 	public Sorter getSorter() {
@@ -158,36 +145,18 @@ public class SoftLocator {
 	}
 
 	/**
-	 * @param softName
 	 * @return
 	 */
-	public String getPath(SoftName softName) {
-		return pathMap.get(softName);
+	public SoftLocator addDefaultLocator() {
+		return addDefaultLocator(null);
 	}
 
 	/**
-	 * @param softName
-	 * @param path
-	 */
-	public void setPath(SoftName softName, String path) {
-		pathMap.put(softName, path);
-	}
-
-	/**
-	 * @param softName
-	 * @return
-	 */
-	public SoftLocator addDefaultLocator(SoftName softName) {
-		return addDefaultLocator(softName, null);
-	}
-
-	/**
-	 * @param softName
 	 * @param defaultFileFilter
 	 * @return
 	 */
-	public SoftLocator addDefaultLocator(SoftName softName, FileFilter defaultFileFilter) {
-		return addLocators(getDefaultLocators(softName, null, defaultFileFilter));
+	public SoftLocator addDefaultLocator(FileFilter defaultFileFilter) {
+		return addLocators(getDefaultLocators(null, defaultFileFilter));
 	}
 
 	/**
@@ -212,131 +181,108 @@ public class SoftLocator {
 	}
 
 	/**
-	 * @param softName
 	 * @return
 	 */
-	public Founds find(SoftName softName) {
-		return find(softName, null, null);
+	public Founds find() {
+		return find(null, null);
 	}
 
 	/**
-	 * @param softName
 	 * @param defaultFileFilter
 	 * @return
 	 */
-	public Founds find(SoftName softName, FileFilter defaultFileFilter) {
-		return find(softName, null, defaultFileFilter);
+	public Founds find(FileFilter defaultFileFilter) {
+		return find(null, defaultFileFilter);
 	}
 
 	/**
-	 * @param softName
 	 * @param softTester
 	 * @return
 	 */
-	public Founds find(SoftName softName, SoftTester softTester) {
-		return find(softName, softTester, null);
+	public Founds find(SoftTester softTester) {
+		return find(softTester, null);
 	}
 
 	/**
-	 * @param softName
 	 * @param softTester
 	 * @param defaultFileFilter
 	 * @return
 	 */
-	public Founds find(SoftName softName, SoftTester softTester, FileFilter defaultFileFilter) {
+	public Founds find(SoftTester softTester, FileFilter defaultFileFilter) {
 		SoftTester tester = firstFoundNotNull(softTester, defaultSoftTester(), DEFAULT_SOFT_TESTER);
 
-		// 1 - system properties
-		Locators locators = createLocators(softName, defaultFileFilter);
+		// 1 - cache
+		if(cachePopulator != null) {
+			Founds founds = CACHE_MAP.get(cacheNaming.apply(softName));
+			if(founds != null) {
+				Locator locator = cachePopulator.apply(founds);
+				if(locator != null) {
+					founds = finding(locator, tester);
+					if(founds.isFound()) {
+						return cache(founds);
+					}
+				}
+			}
+		}
+
+		// 2 - system properties
+		Locators locators = createLocators(defaultFileFilter);
 		List<Locator> locatorList = new ArrayList<>(2);
-		locatorList.add(locators.byPropertyPath("fmv." + softName.getName() + ".path"));
-		locatorList.add(locators.byPropertyPath(softName.getName() + ".path"));
-		Founds founds = find(locatorList, softName, tester);
+		locatorList.add(locators.byPropertyPath("fmv." + softName + ".path"));
+		locatorList.add(locators.byPropertyPath(softName + ".path"));
+		Founds founds = finding(locatorList, tester);
 		if(founds.isFound()) {
-			return founds;
+			return cache(founds);
 		}
 
-		// 2 - env
+		// 3 - env
 		if(envName != null) {
-			founds = find(Collections.singletonList(locators.byEnv(envName)), softName, tester);
+			founds = finding(locators.byEnv(envName), tester);
 			if(founds.isFound()) {
-				return founds;
+				return cache(founds);
 			}
 		}
 
-		// 3 - other
-		return find(getLocators(softName, locators, defaultFileFilter), softName, tester);
+		// 4 - other
+		return cache(finding(getLocators(locators, defaultFileFilter), tester));
 	}
 
 	/**
-	 * @param softName
-	 * @param defaultFileFilter
-	 * @return
+	 * 
 	 */
-	public File findFile(SoftName softName, FileFilter defaultFileFilter) {
-		return findFile(softName, null, defaultFileFilter);
-	}
-
-	/**
-	 * @param softName
-	 * @param softTester
-	 * @param defaultFileFilter
-	 * @return
-	 */
-	public File findFile(SoftName softName, SoftTester softTester, FileFilter defaultFileFilter) {
-		Cache cache = cacheFile.get(softName);
-		if(cache != null && ! cache.isChanged()) {
-			return cache.file;
-		}
-
-		Founds founds = find(softName, softTester, defaultFileFilter);
-		File file = null;
-		if(founds.isFound()) {
-			@SuppressWarnings("unchecked")
-			Function<Founds, File> foundPolicy = firstFoundNotNull(getFoundPolicy(), DEFAULT_FOUND_POLICY);
-			file = foundPolicy.apply(founds);
-			if(file == null) {
-				throw new IllegalArgumentException("file is null (" + softName + ')');
-			}
-			cache = new Cache(file);
-			cacheFile.put(softName, cache);
-		}
-		return file;
+	public static void evictCache() {
+		CACHE_MAP.clear();
 	}
 
 	// ************************************************
 
 	/**
-	 * @param softName
 	 * @return
 	 */
-	protected FileFilter fileFilter(SoftName softName) {
+	protected FileFilter fileFilter() {
 		return null;
 	}
 
 	/**
-	 * @param softName
 	 * @param loc
 	 * @param defaultFileFilter
 	 * @return
 	 */
-	protected List<Locator> getLocators(SoftName softName, Locators loc, FileFilter defaultFileFilter) {
+	protected List<Locator> getLocators(Locators loc, FileFilter defaultFileFilter) {
 		if( ! definedLocators.isEmpty()) {
 			return new ArrayList<>(definedLocators); // defensive copy
 		}
-		return getDefaultLocators(softName, loc, defaultFileFilter);
+		return getDefaultLocators(loc, defaultFileFilter);
 	}
 
 	/**
-	 * @param softName
 	 * @param loc
 	 * @param defaultFileFilter
 	 * @return
 	 */
-	protected List<Locator> getDefaultLocators(SoftName softName, Locators loc, FileFilter defaultFileFilter) {
-		Locators locators = loc != null ? loc : createLocators(softName, defaultFileFilter);
+	protected List<Locator> getDefaultLocators(Locators loc, FileFilter defaultFileFilter) {
+		Locators locators = loc != null ? loc : createLocators(defaultFileFilter);
 		List<Locator> locatorList = new ArrayList<>(4);
-		locatorList.add(locators.byPath(getPath(softName))); // cache
 		if(softPath != null) {
 			locatorList.add(locators.byPath(softPath));
 		}
@@ -346,17 +292,16 @@ public class SoftLocator {
 	}
 
 	/**
-	 * @param softName
 	 * @param defaultFileFilter
 	 * @return
 	 */
-	protected Locators createLocators(SoftName softName, FileFilter defaultFileFilter) {
-		FileFilter fileFilter = fileFilter(softName);
+	protected Locators createLocators(FileFilter defaultFileFilter) {
+		FileFilter fileFilter = fileFilter();
 		if(fileFilter == null) {
 			fileFilter = defaultFileFilter;
 		}
 		if(fileFilter == null) {
-			fileFilter = PlateformFileFilter.getFileFilter(softName.getName());
+			fileFilter = PlateformFileFilter.getFileFilter(softName);
 		}
 		return new Locators(fileFilter);
 	}
@@ -369,14 +314,6 @@ public class SoftLocator {
 	}
 
 	/**
-	 * @param softName
-	 * @return
-	 */
-	// protected final FileFilter defaultFileFilter(SoftName softName) {
-	// return softName.getFileFilter();
-	// }
-
-	/**
 	 * @return
 	 */
 	protected Function<Founds, File> getFoundPolicy() {
@@ -386,12 +323,20 @@ public class SoftLocator {
 	// ********************************************
 
 	/**
-	 * @param locators
-	 * @param softName
+	 * @param locator
 	 * @param tester
 	 * @return
 	 */
-	private Founds find(Collection<Locator> locators, SoftName softName, SoftTester tester) {
+	private Founds finding(Locator locator, SoftTester tester) {
+		return finding(Collections.singletonList(locator), tester);
+	}
+
+	/**
+	 * @param locators
+	 * @param tester
+	 * @return
+	 */
+	private Founds finding(Collection<Locator> locators, SoftTester tester) {
 		List<SoftFound> softFounds = new ArrayList<>();
 		Set<File> fileDones = new HashSet<>(4);
 		for(Locator locator : locators) {
@@ -406,6 +351,17 @@ public class SoftLocator {
 		}
 		NavigableSet<SoftFound> sort = sorter.sort(softFounds);
 		return new Founds(softName, sort, softPolicy);
+	}
+
+	/**
+	 * @param founds
+	 * @return
+	 */
+	private Founds cache(Founds founds) {
+		if(cachePopulator != null) {
+			CACHE_MAP.putIfAbsent(cacheNaming.apply(softName), founds);
+		}
+		return founds;
 	}
 
 	/**

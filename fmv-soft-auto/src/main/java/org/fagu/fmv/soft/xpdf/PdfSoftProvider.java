@@ -27,7 +27,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
@@ -68,7 +67,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-v")
-				.parseFactory((file, softPolicy) -> createParser(getSoftName(), file, softPolicy))
+				.parseFactory((file, softPolicy) -> createParser(file))
 				.customizeExecutor(ex -> {
 					ex.setExitValues(exitValues());
 					ex.setTimeOut(10_000);
@@ -150,15 +149,13 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	// ***********************************************************************
 
 	/**
-	 * @param softName
 	 * @param file
-	 * @param softPolicy
 	 * @return
 	 */
-	Parser createParser(SoftName softName, File file, SoftPolicy<?, ?, ?> softPolicy) {
+	Parser createParser(File file) {
 		return new Parser() {
 
-			private Pattern pattern = Pattern.compile(softName.getName() + " version ([0-9\\.]+)");
+			private Pattern pattern = Pattern.compile(getName() + " version ([0-9\\.]+)");
 
 			private Version version;
 
@@ -176,7 +173,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 			@Override
 			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-				return getVersionPolicy(provider).toSoftFound(new XPdfVersionSoftInfo(file, softName, version, provider));
+				return getVersionPolicy(provider).toSoftFound(new XPdfVersionSoftInfo(file, getName(), version, provider));
 			}
 
 		};

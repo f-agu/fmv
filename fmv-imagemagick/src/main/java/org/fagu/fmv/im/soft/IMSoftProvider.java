@@ -36,10 +36,10 @@ import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.im.exception.IMExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.Soft.SoftExecutor;
-import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.Locators;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftInfo;
@@ -76,7 +76,7 @@ public abstract class IMSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-version")
-				.parseFactory((file, softPolicy) -> createParser(getSoftName(), file, softPolicy))
+				.parseFactory((file, softPolicy) -> createParser(file, softPolicy))
 				.build();
 	}
 
@@ -97,10 +97,18 @@ public abstract class IMSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftLocator getSoftLocator() {
+		FileFilter fileFilter = getFileFilter();
 		SoftLocator softLocator = super.getSoftLocator();
+		softLocator.enableCache(n -> getGroupName(), founds -> {
+			File file = founds.getFirstFound().getFile();
+			if(file != null) {
+				return new Locators(fileFilter).byPath(file.getParent());
+			}
+			return null;
+		});
 		if(SystemUtils.IS_OS_WINDOWS) {
-			softLocator.addDefaultLocator(getSoftName());
-			ProgramFilesLocatorSupplier.with(getFileFilter())
+			softLocator.addDefaultLocator();
+			ProgramFilesLocatorSupplier.with(fileFilter)
 					.findFolder(folder -> folder.getName().toLowerCase().startsWith("imagemagick"))
 					.supplyIn(softLocator);
 		}
@@ -154,12 +162,11 @@ public abstract class IMSoftProvider extends SoftProvider {
 	// ***********************************************************************
 
 	/**
-	 * @param softName
 	 * @param file
 	 * @param softPolicy
 	 * @return
 	 */
-	Parser createParser(SoftName softName, File file, SoftPolicy<?, ?, ?> softPolicy) {
+	Parser createParser(File file, SoftPolicy<?, ?, ?> softPolicy) {
 		return new Parser() {
 
 			private final Pattern pattern = Pattern.compile("Version\\: ImageMagick ([0-9\\.\\-]+) (?:.*)([0-9]{4}-[0-9]{2}-[0-9]{2}) .*");
@@ -191,7 +198,7 @@ public abstract class IMSoftProvider extends SoftProvider {
 
 			@Override
 			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-				return getSoftPolicy().toSoftFound(new VersionDateSoftInfo(file, softName, version, date));
+				return softPolicy.toSoftFound(new VersionDateSoftInfo(file, getName(), version, date));
 			}
 
 		};

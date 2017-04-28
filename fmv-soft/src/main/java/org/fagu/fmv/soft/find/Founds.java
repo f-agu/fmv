@@ -24,15 +24,13 @@ import java.util.Iterator;
 import java.util.NavigableSet;
 import java.util.Objects;
 
-import org.fagu.fmv.soft.SoftName;
-
 
 /**
  * @author f.agu
  */
 public class Founds implements Iterable<SoftFound> {
 
-	private final SoftName softName;
+	private final String softName;
 
 	private final NavigableSet<SoftFound> founds;
 
@@ -43,7 +41,7 @@ public class Founds implements Iterable<SoftFound> {
 	 * @param founds
 	 * @param softPolicy
 	 */
-	public Founds(SoftName softName, NavigableSet<SoftFound> founds, SoftPolicy<?, ?, ?> softPolicy) {
+	public Founds(String softName, NavigableSet<SoftFound> founds, SoftPolicy<?, ?, ?> softPolicy) {
 		this.softName = Objects.requireNonNull(softName);
 		this.founds = Objects.requireNonNull(founds);
 		this.softPolicy = softPolicy;
@@ -52,7 +50,7 @@ public class Founds implements Iterable<SoftFound> {
 	/**
 	 * @return
 	 */
-	public SoftName getSoftName() {
+	public String getSoftName() {
 		return softName;
 	}
 
@@ -86,7 +84,8 @@ public class Founds implements Iterable<SoftFound> {
 	 * @return
 	 */
 	public SoftFound getFirstFound(SoftFound defaultValue) {
-		return founds.descendingSet().stream()
+		return founds.descendingSet()
+				.stream()
 				.filter(f -> f.isFound() && f.getFile().exists())
 				.findFirst()
 				.orElse(defaultValue);

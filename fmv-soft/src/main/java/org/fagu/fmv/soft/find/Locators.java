@@ -32,7 +32,6 @@ import java.util.Objects;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.soft.SoftName;
 
 
 /**
@@ -130,7 +129,7 @@ public class Locators {
 		return new Locator() {
 
 			@Override
-			public List<File> locate(SoftName softName) {
+			public List<File> locate(String softName) {
 				return locator.locate(softName);
 			}
 

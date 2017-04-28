@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.Locator;
@@ -63,7 +62,7 @@ public class JavaSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-version")
-				.parseFactory((file, softPolicy) -> createParser(getSoftName(), file, softPolicy))
+				.parseFactory((file, softPolicy) -> createParser(file, softPolicy))
 				.build();
 	}
 
@@ -72,16 +71,16 @@ public class JavaSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftLocator getSoftLocator() {
-		return new SoftLocator() {
+		return new SoftLocator(getName()) {
 
 			/**
-			 * @see org.fagu.fmv.soft.find.SoftLocator#getLocators(org.fagu.fmv.soft.SoftName,
-			 *      org.fagu.fmv.soft.find.Locators)
+			 * @see org.fagu.fmv.soft.find.SoftLocator#getLocators(java.lang.String, org.fagu.fmv.soft.find.Locators,
+			 *      java.io.FileFilter)
 			 */
 			@Override
-			protected List<Locator> getLocators(SoftName softName, Locators loc, FileFilter defaultFileFilter) {
-				List<Locator> list = super.getLocators(softName, loc, defaultFileFilter);
-				list.add(0, createLocators(softName, defaultFileFilter).byPropertyPath("java.home"));
+			protected List<Locator> getLocators(Locators loc, FileFilter defaultFileFilter) {
+				List<Locator> list = super.getLocators(loc, defaultFileFilter);
+				list.add(0, createLocators(defaultFileFilter).byPropertyPath("java.home"));
 				return list;
 			}
 		};
@@ -107,12 +106,11 @@ public class JavaSoftProvider extends SoftProvider {
 	// ***********************************************************************
 
 	/**
-	 * @param softName
 	 * @param file
 	 * @param softPolicy
 	 * @return
 	 */
-	Parser createParser(SoftName softName, File file, SoftPolicy<?, ?, ?> softPolicy) {
+	Parser createParser(File file, SoftPolicy<?, ?, ?> softPolicy) {
 		return new Parser() {
 
 			private final Pattern pattern = Pattern.compile("(.*) version \"(.*)\"");
@@ -129,7 +127,7 @@ public class JavaSoftProvider extends SoftProvider {
 
 			@Override
 			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-				return getSoftPolicy().toSoftFound(new VersionSoftInfo(file, softName, version));
+				return softPolicy.toSoftFound(new VersionSoftInfo(file, getName(), version));
 			}
 
 		};

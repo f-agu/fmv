@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.fagu.fmv.soft.SoftName;
 import org.fagu.fmv.soft.find.SoftInfo;
 import org.fagu.version.Version;
 
@@ -58,7 +57,7 @@ public class FFInfo extends SoftInfo {
 	 * @param configSet
 	 * @param libVersionMap
 	 */
-	protected FFInfo(File file, Version version, SoftName softName, Date builtDate, Integer builtVersion, Set<String> configSet,
+	protected FFInfo(File file, Version version, String softName, Date builtDate, Integer builtVersion, Set<String> configSet,
 			Map<String, Version> libVersionMap) {
 		super(file, softName);
 		this.version = version;

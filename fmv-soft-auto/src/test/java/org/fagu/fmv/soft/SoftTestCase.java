@@ -1,10 +1,13 @@
 package org.fagu.fmv.soft;
 
+import java.util.Collections;
+
 import org.fagu.fmv.soft.find.SoftFindListener;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.policy.VersionPolicy;
 import org.fagu.fmv.soft.gs.GSSoftProvider;
 import org.fagu.version.Version;
+import org.junit.Ignore;
 /*-
  * #%L
  * fmv-soft-auto
@@ -38,7 +41,7 @@ public class SoftTestCase {
 	public SoftTestCase() {}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testFindAll() throws Exception {
 		Soft.searchAll(ss -> ss.withListener(new SoftFindListener() {
 
@@ -53,12 +56,18 @@ public class SoftTestCase {
 	}
 
 	@Test
+	@Ignore
 	public void testGS() throws Exception {
 		GSSoftProvider gsSoftProvider = new GSSoftProvider();
-		Soft soft = gsSoftProvider.search(ss -> {
-			ss.withPolicy(new VersionPolicy().onAllPlatforms().minVersion(new Version(10)));
+		Soft soft = gsSoftProvider.searchConfigurable(ss -> {
+			ss.withPolicy(new VersionPolicy().onAllPlatforms().maxVersion(new Version(8)));
 		});
-		System.out.println(soft);
+		soft.getFounds().forEach(sf -> {
+			System.out.println(sf.getFoundReason() + "  " + sf.getFile() + "  " + sf.getReason());
+		});
+		SoftLogger softLogger = new SoftLogger(Collections.singletonList(soft));
+		softLogger.log(System.out::println);
+		// System.out.println(soft);
 	}
 
 }

@@ -53,7 +53,7 @@ public class VLCSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		if(SystemUtils.IS_OS_WINDOWS) {
-			return SoftOnWindows.createSoftFoundFactory(this::getSoftName);
+			return SoftOnWindows.createSoftFoundFactory(getName());
 		}
 		throw new RuntimeException("Not implemented"); // TODO
 	}
@@ -76,7 +76,7 @@ public class VLCSoftProvider extends SoftProvider {
 			ProgramFilesLocatorSupplier.with(getFileFilter())
 					.findFolder("VideoLAN" + File.separator + "VLC")
 					.supplyIn(softLocator);
-			softLocator.addDefaultLocator(getSoftName());
+			softLocator.addDefaultLocator();
 		}
 		return softLocator;
 	}

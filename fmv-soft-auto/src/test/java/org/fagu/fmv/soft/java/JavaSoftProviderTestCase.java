@@ -73,7 +73,7 @@ public class JavaSoftProviderTestCase {
 	 */
 	private Parser newParser() {
 		JavaSoftProvider softProvider = new JavaSoftProvider();
-		return softProvider.createParser(softProvider.getSoftName(), new File("."), softProvider.getSoftPolicy());
+		return softProvider.createParser(new File("."), softProvider.getSoftPolicy());
 	}
 
 	/**

@@ -92,7 +92,7 @@ public class PdfInfoSoftProviderTestCase {
 	 */
 	private Parser newParser() {
 		PdfInfoSoftProvider softProvider = new PdfInfoSoftProvider();
-		return softProvider.createParser(softProvider.getSoftName(), new File("."), softProvider.getSoftPolicy());
+		return softProvider.createParser(new File("."));
 	}
 
 	/**
