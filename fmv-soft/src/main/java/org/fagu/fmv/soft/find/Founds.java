@@ -36,13 +36,17 @@ public class Founds implements Iterable<SoftFound> {
 
 	private final NavigableSet<SoftFound> founds;
 
+	private final SoftPolicy<?, ?, ?> softPolicy;
+
 	/**
 	 * @param softName
 	 * @param founds
+	 * @param softPolicy
 	 */
-	public Founds(SoftName softName, NavigableSet<SoftFound> founds) {
+	public Founds(SoftName softName, NavigableSet<SoftFound> founds, SoftPolicy<?, ?, ?> softPolicy) {
 		this.softName = Objects.requireNonNull(softName);
 		this.founds = Objects.requireNonNull(founds);
+		this.softPolicy = softPolicy;
 	}
 
 	/**
@@ -86,6 +90,13 @@ public class Founds implements Iterable<SoftFound> {
 				.filter(f -> f.isFound() && f.getFile().exists())
 				.findFirst()
 				.orElse(defaultValue);
+	}
+
+	/**
+	 * @return
+	 */
+	public SoftPolicy<?, ?, ?> getSoftPolicy() {
+		return softPolicy;
 	}
 
 	/**

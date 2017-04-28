@@ -92,7 +92,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 		SoftLocator softLocator = super.getSoftLocator();
 		if(SystemUtils.IS_OS_WINDOWS) {
 			softLocator.addDefaultLocator(getSoftName());
-			ProgramFilesLocatorSupplier.with(getSoftName().getFileFilter())
+			ProgramFilesLocatorSupplier.with(getFileFilter())
 					.find(programFile -> {
 						List<File> files = new ArrayList<>();
 						File[] folders = programFile.listFiles(f -> f.getName().toLowerCase().startsWith("ffmpeg"));

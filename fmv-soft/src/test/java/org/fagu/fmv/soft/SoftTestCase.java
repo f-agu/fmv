@@ -83,7 +83,7 @@ public class SoftTestCase {
 		// }
 		// }).build();
 
-		Soft soft = Soft.with(new TestSoftName("ffprout")).search(ffSoftFoundFactory);
+		Soft soft = Soft.with(new TestSoftProvider("ffprout")).search(ffSoftFoundFactory);
 		// Soft ffprobeSoft = Soft.with("ffprobe").search(ffSoftFoundFactory);
 		// Soft identifySoft = Soft.withName("identify").search(identifyFoundFactory);
 

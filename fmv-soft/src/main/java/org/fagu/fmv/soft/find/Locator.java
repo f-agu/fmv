@@ -29,6 +29,7 @@ import org.fagu.fmv.soft.SoftName;
 /**
  * @author f.agu
  */
+@FunctionalInterface
 public interface Locator {
 
 	/**

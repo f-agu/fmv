@@ -45,7 +45,7 @@ public class SoftOnWindows {
 	 * @return
 	 */
 	public static SoftFoundFactory createSoftFoundFactory(Supplier<SoftPolicy<?, ?, ?>> softPolicySupplier, Supplier<SoftName> softNameSupplier) {
-		return (file, locator) -> {
+		return (file, locator, softPolicy) -> {
 			String versionStr = SoftOnWindows.getExeVersion(file);
 			Version version = Version.parse(versionStr);
 			SoftPolicy<?, ?, ?> softPolicy = softPolicySupplier.get();

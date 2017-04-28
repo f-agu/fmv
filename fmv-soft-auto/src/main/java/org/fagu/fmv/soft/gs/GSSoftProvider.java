@@ -65,15 +65,15 @@ public class GSSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-version", "-q")
-				.parseFactory(file -> createParser(getSoftName(), file))
+				.parseFactory((file, softPolicy) -> createParser(getSoftName(), file, softPolicy))
 				.build();
 	}
 
 	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSearchFileFilter()
+	 * @see org.fagu.fmv.soft.find.SoftProvider#getFileFilter()
 	 */
 	@Override
-	public FileFilter getSearchFileFilter() {
+	public FileFilter getFileFilter() {
 		if(SystemUtils.IS_OS_WINDOWS) {
 			return f -> {
 				String name = f.getName();
@@ -81,7 +81,7 @@ public class GSSoftProvider extends SoftProvider {
 				return ("gswin32c".equals(baseName) || "gswin64c".equals(baseName)) && "exe".equalsIgnoreCase(FilenameUtils.getExtension(name));
 			};
 		}
-		return super.getSearchFileFilter();
+		return super.getFileFilter();
 	}
 
 	/**
@@ -114,9 +114,10 @@ public class GSSoftProvider extends SoftProvider {
 	/**
 	 * @param softName
 	 * @param file
+	 * @param softPolicy
 	 * @return
 	 */
-	Parser createParser(SoftName softName, File file) {
+	Parser createParser(SoftName softName, File file, SoftPolicy<?, ?, ?> softPolicy) {
 		return new Parser() {
 
 			private final Pattern pattern = Pattern.compile("GPL Ghostscript ([0-9\\.\\-]+) \\(([0-9\\-]+)\\)");
@@ -148,7 +149,7 @@ public class GSSoftProvider extends SoftProvider {
 
 			@Override
 			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-				SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
+				// SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
 				return softPolicy.toSoftFound(new VersionDateSoftInfo(file, softName, version, date));
 			}
 

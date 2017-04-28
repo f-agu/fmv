@@ -21,10 +21,8 @@ package org.fagu.fmv.soft.vlc;
  */
 
 import java.io.File;
-import java.io.FileFilter;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.fagu.fmv.soft.find.PlateformFileFilter;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
@@ -75,7 +73,7 @@ public class VLCSoftProvider extends SoftProvider {
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = super.getSoftLocator();
 		if(SystemUtils.IS_OS_WINDOWS) {
-			ProgramFilesLocatorSupplier.with(getSoftName().getFileFilter())
+			ProgramFilesLocatorSupplier.with(getFileFilter())
 					.findFolder("VideoLAN" + File.separator + "VLC")
 					.supplyIn(softLocator);
 			softLocator.addDefaultLocator(getSoftName());

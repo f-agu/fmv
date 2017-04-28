@@ -68,7 +68,7 @@ public class SoftInfoContributor implements InfoContributor {
 				}
 			}
 
-			builder.withDetail(soft.getName(), buf.toString());
+			builder.withDetail("soft." + soft.getName(), buf.toString());
 		}
 	}
 

@@ -26,6 +26,7 @@ import java.util.Properties;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.mymedia.sync.Storage;
 import org.fagu.fmv.mymedia.sync.StorageFactory;
+import org.fagu.fmv.soft.find.SoftPolicy;
 
 
 /**
@@ -43,7 +44,7 @@ public class FTPStorageFactory extends StorageFactory {
 	}
 
 	/**
-	 * @see org.fagu.sync.StorageFactory#create(NavigableMap, MovieMetadatas)
+	 * @see org.fagu.sync.StorageFactory#create(NavigableMap, MovieMetadatas, SoftPolicy)
 	 */
 	@Override
 	public Storage create(Properties properties) {

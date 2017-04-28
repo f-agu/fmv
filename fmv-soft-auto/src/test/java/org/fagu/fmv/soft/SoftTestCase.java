@@ -2,7 +2,9 @@ package org.fagu.fmv.soft;
 
 import org.fagu.fmv.soft.find.SoftFindListener;
 import org.fagu.fmv.soft.find.SoftLocator;
-
+import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.fmv.soft.gs.GSSoftProvider;
+import org.fagu.version.Version;
 /*-
  * #%L
  * fmv-soft-auto
@@ -22,7 +24,6 @@ import org.fagu.fmv.soft.find.SoftLocator;
  * limitations under the License.
  * #L%
  */
-
 import org.junit.Test;
 
 
@@ -46,9 +47,18 @@ public class SoftTestCase {
 				// soft.getFounds().forEach(System.out::println);
 			}
 		})).forEach(s -> {
-			String url = s.isFound() ? "" : " ; " + s.getSoftProvider().getDownloadURL();
-			System.out.println("[" + s.getSoftProvider().getGroupName() + "] " + s.getName() + ": " + s + url);
+			// String url = s.isFound() ? "" : " ; " + s.getSoftProvider().getDownloadURL();
+			System.out.println("[" + s.getSoftProvider().getGroupName() + "] " + s.getName() + ": " + s.getFirstInfo());
 		});
+	}
+
+	@Test
+	public void testGS() throws Exception {
+		GSSoftProvider gsSoftProvider = new GSSoftProvider();
+		Soft soft = gsSoftProvider.search(ss -> {
+			ss.withPolicy(new VersionPolicy().onAllPlatforms().minVersion(new Version(10)));
+		});
+		System.out.println(soft);
 	}
 
 }

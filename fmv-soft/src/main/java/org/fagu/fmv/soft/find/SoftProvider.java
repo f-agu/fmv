@@ -103,8 +103,7 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public Soft search(Consumer<SoftSearch> softSearchConsumer) {
-		SoftName softName = getSoftName();
-		SoftSearch softSearch = Soft.with(softName).with(getSoftLocator());
+		SoftSearch softSearch = Soft.with(this).withLocator(getSoftLocator());
 		if(softSearchConsumer != null) {
 			softSearchConsumer.accept(softSearch);
 		}
@@ -141,15 +140,6 @@ public abstract class SoftProvider {
 			}
 
 			/**
-			 * @see org.fagu.fmv.soft.SoftName#getFileFilter()
-			 */
-			@Override
-			public FileFilter getFileFilter() {
-				FileFilter fileFilter = getSearchFileFilter();
-				return fileFilter != null ? fileFilter : SoftName.super.getFileFilter();
-			}
-
-			/**
 			 * @see org.fagu.fmv.soft.SoftName#create(org.fagu.fmv.soft.find.Founds)
 			 */
 			@Override
@@ -166,6 +156,13 @@ public abstract class SoftProvider {
 		SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
 		Sorter sorter = softPolicy != null ? softPolicy.getSorter() : null;
 		return new SoftLocator(getName().toUpperCase() + "_HOME", sorter);
+	}
+
+	/**
+	 * @return
+	 */
+	public FileFilter getFileFilter() {
+		return PlateformFileFilter.getFileFilter(getName());
 	}
 
 	/**
@@ -202,12 +199,4 @@ public abstract class SoftProvider {
 		return StreamSupport.stream(ServiceLoader.load(SoftProvider.class).spliterator(), false);
 	}
 
-	// ---------------------------------------------------
-
-	/**
-	 * @return
-	 */
-	protected FileFilter getSearchFileFilter() {
-		return null;
-	}
 }

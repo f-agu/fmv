@@ -81,10 +81,10 @@ public abstract class IMSoftProvider extends SoftProvider {
 	}
 
 	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSearchFileFilter()
+	 * @see org.fagu.fmv.soft.find.SoftProvider#getFileFilter()
 	 */
 	@Override
-	public FileFilter getSearchFileFilter() {
+	public FileFilter getFileFilter() {
 		return f -> {
 			String name = f.getName();
 			String baseName = FilenameUtils.getBaseName(name);
@@ -100,7 +100,7 @@ public abstract class IMSoftProvider extends SoftProvider {
 		SoftLocator softLocator = super.getSoftLocator();
 		if(SystemUtils.IS_OS_WINDOWS) {
 			softLocator.addDefaultLocator(getSoftName());
-			ProgramFilesLocatorSupplier.with(getSoftName().getFileFilter())
+			ProgramFilesLocatorSupplier.with(getFileFilter())
 					.findFolder(folder -> folder.getName().toLowerCase().startsWith("imagemagick"))
 					.supplyIn(softLocator);
 		}

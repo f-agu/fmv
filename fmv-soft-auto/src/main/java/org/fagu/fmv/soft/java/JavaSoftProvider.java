@@ -21,6 +21,7 @@ package org.fagu.fmv.soft.java;
  */
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -62,7 +63,7 @@ public class JavaSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-version")
-				.parseFactory(file -> createParser(getSoftName(), file))
+				.parseFactory((file, softPolicy) -> createParser(getSoftName(), file, softPolicy))
 				.build();
 	}
 
@@ -78,9 +79,9 @@ public class JavaSoftProvider extends SoftProvider {
 			 *      org.fagu.fmv.soft.find.Locators)
 			 */
 			@Override
-			protected List<Locator> getLocators(SoftName softName, Locators loc) {
-				List<Locator> list = super.getLocators(softName, loc);
-				list.add(0, createLocators(softName).byPropertyPath("java.home"));
+			protected List<Locator> getLocators(SoftName softName, Locators loc, FileFilter defaultFileFilter) {
+				List<Locator> list = super.getLocators(softName, loc, defaultFileFilter);
+				list.add(0, createLocators(softName, defaultFileFilter).byPropertyPath("java.home"));
 				return list;
 			}
 		};
@@ -108,9 +109,10 @@ public class JavaSoftProvider extends SoftProvider {
 	/**
 	 * @param softName
 	 * @param file
+	 * @param softPolicy
 	 * @return
 	 */
-	Parser createParser(SoftName softName, File file) {
+	Parser createParser(SoftName softName, File file, SoftPolicy<?, ?, ?> softPolicy) {
 		return new Parser() {
 
 			private final Pattern pattern = Pattern.compile("(.*) version \"(.*)\"");

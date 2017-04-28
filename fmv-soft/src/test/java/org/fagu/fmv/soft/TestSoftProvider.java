@@ -20,7 +20,6 @@ package org.fagu.fmv.soft;
  * #L%
  */
 
-
 import java.util.Collections;
 
 import org.fagu.fmv.soft.find.Founds;
@@ -74,7 +73,7 @@ public class TestSoftProvider extends SoftProvider {
 				return null;
 			}
 		};
-		return new Soft(new Founds(softName, Collections.emptyNavigableSet()), this);
+		return new Soft(new Founds(softName, Collections.emptyNavigableSet(), null), this);
 	}
 
 	/**

@@ -1,10 +1,8 @@
 package org.fagu.fmv.soft;
 
-import java.io.FileFilter;
 import java.util.function.Consumer;
 
 import org.fagu.fmv.soft.find.Founds;
-import org.fagu.fmv.soft.find.PlateformFileFilter;
 
 
 /*
@@ -42,13 +40,6 @@ public interface SoftName {
 	 * @return
 	 */
 	Soft create(Founds founds);
-
-	/**
-	 * @return
-	 */
-	default FileFilter getFileFilter() {
-		return PlateformFileFilter.getFileFilter(getName());
-	}
 
 	/**
 	 * @return

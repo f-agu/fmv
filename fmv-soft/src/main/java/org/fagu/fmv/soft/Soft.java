@@ -21,6 +21,7 @@ package org.fagu.fmv.soft;
  */
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -87,13 +88,17 @@ public class Soft {
 
 		private SoftLocator softLocator;
 
+		private FileFilter fileFilter;
+
 		private List<SoftFindListener> softFindListeners;
 
 		/**
-		 * @param softName
+		 * @param softProvider
 		 */
-		private SoftSearch(SoftName softName) {
-			this.softName = Objects.requireNonNull(softName);
+		private SoftSearch(SoftProvider softProvider) {
+			softName = softProvider.getSoftName();
+			fileFilter = softProvider.getFileFilter();
+			softLocator = softProvider.getSoftLocator();
 			softFindListeners = new ArrayList<>();
 		}
 
@@ -101,8 +106,26 @@ public class Soft {
 		 * @param softLocator
 		 * @return
 		 */
-		public SoftSearch with(SoftLocator softLocator) {
+		public SoftSearch withLocator(SoftLocator softLocator) {
 			this.softLocator = Objects.requireNonNull(softLocator);
+			return this;
+		}
+
+		/**
+		 * @param softPolicy
+		 * @return
+		 */
+		public SoftSearch withPolicy(SoftPolicy<?, ?, ?> softPolicy) {
+			softLocator.setSoftPolicy(softPolicy);
+			return this;
+		}
+
+		/**
+		 * @param fileFilter
+		 * @return
+		 */
+		public SoftSearch withFileFilter(FileFilter fileFilter) {
+			this.fileFilter = fileFilter;
 			return this;
 		}
 
@@ -132,9 +155,8 @@ public class Soft {
 		 * @return
 		 */
 		public Soft search() {
-			SoftLocator softLoc = getSoftLocator();
-			Founds founds = softLoc.find(softName);
-			return createAndfireEventFound(founds, softLoc);
+			Founds founds = softLocator.find(softName, fileFilter);
+			return createAndfireEventFound(founds, softLocator);
 		}
 
 		/**
@@ -142,9 +164,8 @@ public class Soft {
 		 * @return
 		 */
 		public Soft search(SoftTester softTester) {
-			SoftLocator softLoc = getSoftLocator();
-			Founds founds = softLoc.find(softName, softTester);
-			return createAndfireEventFound(founds, softLoc);
+			Founds founds = softLocator.find(softName, softTester, fileFilter);
+			return createAndfireEventFound(founds, softLocator);
 		}
 
 		/**
@@ -152,10 +173,9 @@ public class Soft {
 		 * @return
 		 */
 		public Soft search(SoftFoundFactory softFoundFactory) {
-			SoftLocator softLoc = getSoftLocator();
-			Founds founds = softLoc.find(softName, (file, locator) -> {
+			Founds founds = softLocator.find(softName, (file, locator, softPolicy) -> {
 				try {
-					SoftFound softFound = softFoundFactory.create(file, locator);
+					SoftFound softFound = softFoundFactory.create(file, locator, softPolicy);
 					if(softFound == null) {
 						return SoftFound.foundBadSoft(file);
 					}
@@ -165,17 +185,8 @@ public class Soft {
 				} catch(IOException e) {
 					return SoftFound.foundError(file, e.getMessage()).setLocalizedBy(locator.toString());
 				}
-			});
-			return createAndfireEventFound(founds, softLoc);
-		}
-
-		// ****************************************************
-
-		/**
-		 * @return
-		 */
-		private SoftLocator getSoftLocator() {
-			return softLocator != null ? softLocator : new SoftLocator();
+			}, fileFilter);
+			return createAndfireEventFound(founds, softLocator);
 		}
 
 		/**
@@ -445,10 +456,6 @@ public class Soft {
 
 	private final SoftProvider softProvider;
 
-	/**
-	 * @param founds
-	 * @param softProvider
-	 */
 	public Soft(Founds founds, SoftProvider softProvider) {
 		this.founds = Objects.requireNonNull(founds);
 		this.softProvider = Objects.requireNonNull(softProvider);
@@ -505,7 +512,7 @@ public class Soft {
 			}
 		};
 		TreeSet<SoftFound> founds = new TreeSet<>(Collections.singleton(SoftFound.found(file)));
-		return new Soft(new Founds(softProvider.getSoftName(), founds), softProvider);
+		return new Soft(new Founds(softProvider.getSoftName(), founds, null), softProvider);
 	}
 
 	/**
@@ -546,14 +553,14 @@ public class Soft {
 	 * @param softName
 	 * @return
 	 */
-	public static SoftSearch with(SoftName softName) {
-		return new SoftSearch(softName);
+	public static SoftSearch with(SoftProvider softProvider) {
+		return new SoftSearch(softProvider);
 	}
 
 	// =============
 
 	/**
-	 * @return the softTool
+	 * @return
 	 */
 	public SoftName getSoftName() {
 		return founds.getSoftName();
@@ -644,6 +651,14 @@ public class Soft {
 	 */
 	public SoftProvider getSoftProvider() {
 		return softProvider;
+	}
+
+	/**
+	 * @return
+	 */
+	public SoftPolicy<?, ?, ?> getSoftPolicy() {
+		SoftPolicy<?, ?, ?> softPolicy = founds.getSoftPolicy();
+		return softPolicy != null ? softPolicy : softProvider.getSoftPolicy();
 	}
 
 	/**

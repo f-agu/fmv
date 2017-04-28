@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.mymedia.sync.Storage;
 import org.fagu.fmv.mymedia.sync.StorageFactory;
+import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.utils.PlaceHolder;
 import org.fagu.fmv.utils.Replacers;
 
@@ -48,7 +49,7 @@ public class FileStorageFactory extends StorageFactory {
 	}
 
 	/**
-	 * @see org.fagu.sync.StorageFactory#create(NavigableMap, MovieMetadatas)
+	 * @see org.fagu.sync.StorageFactory#create(NavigableMap, MovieMetadatas, SoftPolicy)
 	 */
 	@Override
 	public Storage create(Properties properties) {

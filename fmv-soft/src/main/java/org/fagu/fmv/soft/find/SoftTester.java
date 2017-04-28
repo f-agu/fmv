@@ -31,7 +31,8 @@ public interface SoftTester {
 	/**
 	 * @param file
 	 * @param locator
+	 * @param softPolicy
 	 * @return
 	 */
-	SoftFound test(File file, Locator locator);
+	SoftFound test(File file, Locator locator, SoftPolicy<?, ?, ?> softPolicy);
 }

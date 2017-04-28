@@ -68,7 +68,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-v")
-				.parseFactory(file -> createParser(getSoftName(), file))
+				.parseFactory((file, softPolicy) -> createParser(getSoftName(), file, softPolicy))
 				.customizeExecutor(ex -> {
 					ex.setExitValues(exitValues());
 					ex.setTimeOut(10_000);
@@ -152,9 +152,10 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	/**
 	 * @param softName
 	 * @param file
+	 * @param softPolicy
 	 * @return
 	 */
-	Parser createParser(SoftName softName, File file) {
+	Parser createParser(SoftName softName, File file, SoftPolicy<?, ?, ?> softPolicy) {
 		return new Parser() {
 
 			private Pattern pattern = Pattern.compile(softName.getName() + " version ([0-9\\.]+)");
