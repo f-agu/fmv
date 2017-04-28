@@ -73,7 +73,7 @@ public class GSSoftProviderTestCase {
 	 */
 	private Parser newParser() {
 		GSSoftProvider softProvider = new GSSoftProvider();
-		return softProvider.createParser(softProvider.getSoftName(), new File("."));
+		return softProvider.createParser(softProvider.getSoftName(), new File("."), softProvider.getSoftPolicy());
 	}
 
 	/**

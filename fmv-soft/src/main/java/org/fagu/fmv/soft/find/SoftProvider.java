@@ -76,12 +76,14 @@ public abstract class SoftProvider {
 	 */
 	public abstract SoftFoundFactory createSoftFoundFactory();
 
+	// --------------------------------------
+
 	/**
 	 * @return
 	 */
-	public abstract SoftPolicy<?, ?, ?> getSoftPolicy();
-
-	// --------------------------------------
+	public SoftPolicy<?, ?, ?> getSoftPolicy() {
+		return null;
+	}
 
 	/**
 	 * @param founds

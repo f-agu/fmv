@@ -86,6 +86,8 @@ public class Soft {
 
 		private final SoftName softName;
 
+		private final SoftPolicy<?, ?, ?> providerSoftPolicy;
+
 		private SoftLocator softLocator;
 
 		private FileFilter fileFilter;
@@ -99,6 +101,7 @@ public class Soft {
 			softName = softProvider.getSoftName();
 			fileFilter = softProvider.getFileFilter();
 			softLocator = softProvider.getSoftLocator();
+			providerSoftPolicy = softProvider.getSoftPolicy();
 			softFindListeners = new ArrayList<>();
 		}
 
@@ -155,7 +158,7 @@ public class Soft {
 		 * @return
 		 */
 		public Soft search() {
-			Founds founds = softLocator.find(softName, fileFilter);
+			Founds founds = prepareLocator().find(softName, fileFilter);
 			return createAndfireEventFound(founds, softLocator);
 		}
 
@@ -164,7 +167,7 @@ public class Soft {
 		 * @return
 		 */
 		public Soft search(SoftTester softTester) {
-			Founds founds = softLocator.find(softName, softTester, fileFilter);
+			Founds founds = prepareLocator().find(softName, softTester, fileFilter);
 			return createAndfireEventFound(founds, softLocator);
 		}
 
@@ -173,7 +176,7 @@ public class Soft {
 		 * @return
 		 */
 		public Soft search(SoftFoundFactory softFoundFactory) {
-			Founds founds = softLocator.find(softName, (file, locator, softPolicy) -> {
+			Founds founds = prepareLocator().find(softName, (file, locator, softPolicy) -> {
 				try {
 					SoftFound softFound = softFoundFactory.create(file, locator, softPolicy);
 					if(softFound == null) {
@@ -187,6 +190,16 @@ public class Soft {
 				}
 			}, fileFilter);
 			return createAndfireEventFound(founds, softLocator);
+		}
+
+		/**
+		 * 
+		 */
+		private SoftLocator prepareLocator() {
+			if(softLocator.getSoftPolicy() == null) {
+				softLocator.setSoftPolicy(providerSoftPolicy);
+			}
+			return softLocator;
 		}
 
 		/**

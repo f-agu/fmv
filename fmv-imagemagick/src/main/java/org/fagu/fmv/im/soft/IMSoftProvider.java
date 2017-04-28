@@ -76,7 +76,7 @@ public abstract class IMSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-version")
-				.parseFactory(file -> createParser(getSoftName(), file))
+				.parseFactory((file, softPolicy) -> createParser(getSoftName(), file, softPolicy))
 				.build();
 	}
 
@@ -156,9 +156,10 @@ public abstract class IMSoftProvider extends SoftProvider {
 	/**
 	 * @param softName
 	 * @param file
+	 * @param softPolicy
 	 * @return
 	 */
-	Parser createParser(SoftName softName, File file) {
+	Parser createParser(SoftName softName, File file, SoftPolicy<?, ?, ?> softPolicy) {
 		return new Parser() {
 
 			private final Pattern pattern = Pattern.compile("Version\\: ImageMagick ([0-9\\.\\-]+) (?:.*)([0-9]{4}-[0-9]{2}-[0-9]{2}) .*");

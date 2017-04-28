@@ -52,10 +52,10 @@ public class IMInfoTestCase {
 		assertInfo("Version: ImageMagick 6.6.0-4 2012-05-02 Q16 http://www.imagemagick.org", new Version(6, 6, 0, 4), d(2012, 5, 2), "6.6.0.4");
 		assertInfo("Version: ImageMagick 6.7.9-10 2012-10-08 Q16 http://www.imagemagick.org", new Version(6, 7, 9, 10), d(2012, 10, 8), "6.7.9.10");
 		assertInfo("Version: ImageMagick 6.8.7-1 2013-10-17 Q16 http://www.imagemagick.org", new Version(6, 8, 7, 1), d(2013, 10, 17), "6.8.7.1");
-		assertInfo("Version: ImageMagick 6.9.2-0 Q16 x86_64 2015-09-10 http://www.imagemagick.org", new Version(6, 9, 2, 0), d(2015, 9, 10),
-				"6.9.2.0");
-		assertInfo("Version: ImageMagick 6.9.2-1 Q16 x86_64 2015-09-18 http://www.imagemagick.org", new Version(6, 9, 2, 1), d(2015, 9, 18),
-				"6.9.2.1");
+		assertInfo("Version: ImageMagick 6.9.2-0 Q16 x86_64 2015-09-10 http://www.imagemagick.org", new Version(6, 9, 2,
+				0), d(2015, 9, 10), "6.9.2.0");
+		assertInfo("Version: ImageMagick 6.9.2-1 Q16 x86_64 2015-09-18 http://www.imagemagick.org", new Version(6, 9, 2,
+				1), d(2015, 9, 18), "6.9.2.1");
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class IMInfoTestCase {
 	 */
 	private Parser newParser() {
 		ConvertSoftProvider softProvider = new ConvertSoftProvider();
-		return softProvider.createParser(softProvider.getSoftName(), new File("."));
+		return softProvider.createParser(softProvider.getSoftName(), new File("."), softProvider.getSoftPolicy());
 	}
 
 	/**
@@ -115,7 +115,8 @@ public class IMInfoTestCase {
 	 * @throws IOException
 	 */
 	private void assertInfo(String firstLine, Version expectedVersion, Date expectedDate, String expectedInfo) throws IOException {
-		Parser parser = new ConvertSoftProvider().createParser(new ConvertSoftProvider().getSoftName(), new File("."));
+		ConvertSoftProvider softProvider = new ConvertSoftProvider();
+		Parser parser = new ConvertSoftProvider().createParser(softProvider.getSoftName(), new File("."), softProvider.getSoftPolicy());
 
 		parser.readLine(firstLine);
 

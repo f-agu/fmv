@@ -53,7 +53,7 @@ public class VLCSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		if(SystemUtils.IS_OS_WINDOWS) {
-			return SoftOnWindows.createSoftFoundFactory(this::getSoftPolicy, this::getSoftName);
+			return SoftOnWindows.createSoftFoundFactory(this::getSoftName);
 		}
 		throw new RuntimeException("Not implemented"); // TODO
 	}

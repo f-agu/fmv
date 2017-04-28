@@ -79,8 +79,8 @@ public abstract class FFSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
-		return ExecSoftFoundFactory.withParameters("-version") //
-				.parseFactory(file -> createParser(getSoftName(), file)) //
+		return ExecSoftFoundFactory.withParameters("-version")
+				.parseFactory((file, softPolicy) -> createParser(getSoftName(), file, softPolicy))
 				.build();
 	}
 
@@ -103,7 +103,8 @@ public abstract class FFSoftProvider extends SoftProvider {
 							}
 						}
 						return files;
-					}).supplyIn(softLocator);
+					})
+					.supplyIn(softLocator);
 		}
 		return softLocator;
 	}
@@ -114,14 +115,6 @@ public abstract class FFSoftProvider extends SoftProvider {
 	@Override
 	public String getDownloadURL() {
 		return "http://ffmpeg.org/download.html";
-	}
-
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftPolicy()
-	 */
-	@Override
-	public SoftPolicy<?, ?, ?> getSoftPolicy() {
-		return null;
 	}
 
 	/**
@@ -147,9 +140,10 @@ public abstract class FFSoftProvider extends SoftProvider {
 	/**
 	 * @param softName
 	 * @param file
+	 * @param softPolicy
 	 * @return
 	 */
-	static Parser createParser(SoftName softName, File file) {
+	static Parser createParser(SoftName softName, File file, SoftPolicy<?, ?, ?> softPolicy) {
 		return new Parser() {
 
 			private Version version = null;

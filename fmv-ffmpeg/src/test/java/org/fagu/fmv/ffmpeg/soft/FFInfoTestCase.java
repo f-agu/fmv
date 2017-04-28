@@ -93,9 +93,8 @@ public class FFInfoTestCase {
 		assertEquals("--mandir=/usr/share/man", it.next());
 		assertEquals("--incdir=/usr/include", it.next());
 		assertEquals("--disable-avisynth", it.next());
-		assertEquals(
-				"--extra-cflags=-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m64 -mtune=generic -fPIC",
-				it.next());
+		assertEquals("--extra-cflags=-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m64 -mtune=generic -fPIC", it
+				.next());
 		assertEquals("--enable-avfilter", it.next());
 		assertEquals("--enable-libdc1394", it.next());
 		assertEquals("--enable-libfaac", it.next());
@@ -127,8 +126,7 @@ public class FFInfoTestCase {
 
 		parser.readLine("ffmpeg version N-70767-gd24af70 Copyright (c) 2000-2015 the FFmpeg developers");
 		parser.readLine("built with gcc 4.9.2 (GCC)");
-		parser.readLine(
-				"configuration: --enable-gpl --enable-version3 --disable-w32threads --enable-avisynth --enable-bzlib --enable-fontconfig --enable-frei0r --enable-gnutls --enable-iconv --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca --enable-libfreetype --enable-libgme --enable-libgsm --enable-libilbc --enable-libmodplug --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librtmp --enable-libschroedinger --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvo-aacenc --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs --enable-libxvid --enable-lzma --enable-decklink --enable-zlib");
+		parser.readLine("configuration: --enable-gpl --enable-version3 --disable-w32threads --enable-avisynth --enable-bzlib --enable-fontconfig --enable-frei0r --enable-gnutls --enable-iconv --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca --enable-libfreetype --enable-libgme --enable-libgsm --enable-libilbc --enable-libmodplug --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librtmp --enable-libschroedinger --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvo-aacenc --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs --enable-libxvid --enable-lzma --enable-decklink --enable-zlib");
 		parser.readLine("libavutil      54. 20.100 / 54. 20.100");
 		parser.readLine("libavcodec     56. 28.100 / 56. 28.100");
 		parser.readLine("libavformat    56. 25.101 / 56. 25.101");
@@ -150,8 +148,7 @@ public class FFInfoTestCase {
 
 		parser.readLine("ffprobe version N-70767-gd24af70 Copyright (c) 2000-2015 the FFmpeg developers");
 		parser.readLine("built with gcc 4.9.2 (GCC)");
-		parser.readLine(
-				"configuration: --enable-gpl --enable-version3 --disable-w32threads --enable-avisynth --enable-bzlib --enable-fontconfig --enable-frei0r --enable-gnutls --enable-iconv --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca --enable-libfreetype --enable-libgme --enable-libgsm --enable-libilbc --enable-libmodplug --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librtmp --enable-libschroedinger --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvo-aacenc --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs --enable-libxvid --enable-lzma --enable-decklink --enable-zlib");
+		parser.readLine("configuration: --enable-gpl --enable-version3 --disable-w32threads --enable-avisynth --enable-bzlib --enable-fontconfig --enable-frei0r --enable-gnutls --enable-iconv --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca --enable-libfreetype --enable-libgme --enable-libgsm --enable-libilbc --enable-libmodplug --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librtmp --enable-libschroedinger --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvo-aacenc --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs --enable-libxvid --enable-lzma --enable-decklink --enable-zlib");
 		parser.readLine("libavutil      54. 20.100 / 54. 20.100");
 		parser.readLine("libavcodec     56. 28.100 / 56. 28.100");
 		parser.readLine("libavformat    56. 25.101 / 56. 25.101");
@@ -175,8 +172,7 @@ public class FFInfoTestCase {
 
 		parser.readLine("ffmpeg version n2.2.10-2-g418e9a6");
 		parser.readLine("built on Nov 14 2014 14:59:05 with gcc 4.4.7 (GCC) 20120313 (Red Hat 4.4.7-4)");
-		parser.readLine(
-				"configuration: --prefix=/root/ffmpeg_build --extra-cflags=-I/root/ffmpeg_build/include --extra-ldflags=-L/root/ffmpeg_build/lib --bindir=/root/bin --extra-libs=-ldl --enable-version3 --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvpx --enable-libfaac --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libvo-aacenc --enable-libxvid --disable-ffplay --enable-gpl --enable-postproc --enable-nonfree --enable-avfilter --enable-pthreads --arch=x86_64");
+		parser.readLine("configuration: --prefix=/root/ffmpeg_build --extra-cflags=-I/root/ffmpeg_build/include --extra-ldflags=-L/root/ffmpeg_build/lib --bindir=/root/bin --extra-libs=-ldl --enable-version3 --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvpx --enable-libfaac --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libvo-aacenc --enable-libxvid --disable-ffplay --enable-gpl --enable-postproc --enable-nonfree --enable-avfilter --enable-pthreads --arch=x86_64");
 		parser.readLine("libavutil      52. 66.100 / 52. 66.100");
 		parser.readLine("libavcodec     55. 52.102 / 55. 52.102");
 		parser.readLine("libavformat    55. 33.100 / 55. 33.100");
@@ -200,8 +196,7 @@ public class FFInfoTestCase {
 
 		parser.readLine("ffmpeg version N-63696-g2c23f87");
 		parser.readLine("built on Jun  1 2014 22:09:10 with gcc 4.8.2 (GCC)");
-		parser.readLine(
-				"configuration: --enable-gpl --enable-version3 --disable-w32threads --enable-avisynth --enable-bzlib --enable-fontconfig --enable-frei0r --enable-gnutls --enable-iconv --enable-libass --enable-libbluray --enable-libcaca --enable-libfreetype --enable-libgme --enable-libgsm --enable-libilbc --enable-libmodplug --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librtmp --enable-libschroedinger --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvo-aacenc --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs --enable-libxvid --enable-decklink --enable-zlib");
+		parser.readLine("configuration: --enable-gpl --enable-version3 --disable-w32threads --enable-avisynth --enable-bzlib --enable-fontconfig --enable-frei0r --enable-gnutls --enable-iconv --enable-libass --enable-libbluray --enable-libcaca --enable-libfreetype --enable-libgme --enable-libgsm --enable-libilbc --enable-libmodplug --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librtmp --enable-libschroedinger --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvo-aacenc --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs --enable-libxvid --enable-decklink --enable-zlib");
 		parser.readLine("libavutil      52. 89.100 / 52. 89.100");
 		parser.readLine("libavcodec     55. 66.100 / 55. 66.100");
 		parser.readLine("libavformat    55. 42.100 / 55. 42.100");
@@ -225,8 +220,7 @@ public class FFInfoTestCase {
 
 		parser.readLine("ffmpeg version N-65107-ga507623 Copyright (c) 2000-2014 the FFmpeg developers");
 		parser.readLine("built on Jul 29 2014 22:10:17 with gcc 4.8.3 (GCC)");
-		parser.readLine(
-				"configuration: --enable-gpl --enable-version3 --disable-w32threads --enable-avisynth --enable-bzlib --enable-fontconfig --enable-frei0r --enable-gnutls --enable-iconv --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca --enable-libfreetype --enable-libgme --enable-libgsm --enable-libilbc --enable-libmodplug --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librtmp --enable-libschroedinger --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvo-aacenc --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs --enable-libxvid --enable-decklink --enable-zlib");
+		parser.readLine("configuration: --enable-gpl --enable-version3 --disable-w32threads --enable-avisynth --enable-bzlib --enable-fontconfig --enable-frei0r --enable-gnutls --enable-iconv --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca --enable-libfreetype --enable-libgme --enable-libgsm --enable-libilbc --enable-libmodplug --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librtmp --enable-libschroedinger --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvo-aacenc --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs --enable-libxvid --enable-decklink --enable-zlib");
 		parser.readLine("libavutil      52. 93.100 / 52. 93.100");
 		parser.readLine("libavcodec     55. 71.100 / 55. 71.100");
 		parser.readLine("libavformat    55. 49.100 / 55. 49.100");
@@ -250,8 +244,7 @@ public class FFInfoTestCase {
 
 		parser.readLine("ffmpeg version 2.6.1 Copyright (c) 2000-2015 the FFmpeg developers");
 		parser.readLine("built with gcc 4.8 (Ubuntu 4.8.2-19ubuntu1)");
-		parser.readLine(
-				"configuration: --extra-libs=-ldl --prefix=/opt/ffmpeg --enable-avresample --disable-debug --enable-nonfree --enable-gpl --enable-version3 --enable-libopencore-amrnb --enable-libopencore-amrwb --disable-decoder=amrnb --disable-decoder=amrwb --enable-libpulse --enable-libx264 --enable-libx265 --enable-libfdk-aac --enable-libvorbis --enable-libmp3lame --enable-libopus --enable-libvpx --enable-libspeex --enable-libass --enable-avisynth --enable-libsoxr --enable-libxvid --enable-libvo-aacenc --enable-libvidstab");
+		parser.readLine("configuration: --extra-libs=-ldl --prefix=/opt/ffmpeg --enable-avresample --disable-debug --enable-nonfree --enable-gpl --enable-version3 --enable-libopencore-amrnb --enable-libopencore-amrwb --disable-decoder=amrnb --disable-decoder=amrwb --enable-libpulse --enable-libx264 --enable-libx265 --enable-libfdk-aac --enable-libvorbis --enable-libmp3lame --enable-libopus --enable-libvpx --enable-libspeex --enable-libass --enable-avisynth --enable-libsoxr --enable-libxvid --enable-libvo-aacenc --enable-libvidstab");
 		parser.readLine("libavutil      54. 20.100 / 54. 20.100");
 		parser.readLine("libavcodec     56. 26.100 / 56. 26.100");
 		parser.readLine("libavformat    56. 25.101 / 56. 25.101");
@@ -273,8 +266,7 @@ public class FFInfoTestCase {
 
 		parser.readLine("ffprobe version 2.6.1 Copyright (c) 2007-2015 the FFmpeg developers");
 		parser.readLine("built with gcc 4.8 (Ubuntu 4.8.2-19ubuntu1)");
-		parser.readLine(
-				"configuration: --extra-libs=-ldl --prefix=/opt/ffmpeg --enable-avresample --disable-debug --enable-nonfree --enable-gpl --enable-version3 --enable-libopencore-amrnb --enable-libopencore-amrwb --disable-decoder=amrnb --disable-decoder=amrwb --enable-libpulse --enable-libx264 --enable-libx265 --enable-libfdk-aac --enable-libvorbis --enable-libmp3lame --enable-libopus --enable-libvpx --enable-libspeex --enable-libass --enable-avisynth --enable-libsoxr --enable-libxvid --enable-libvo-aacenc --enable-libvidstab");
+		parser.readLine("configuration: --extra-libs=-ldl --prefix=/opt/ffmpeg --enable-avresample --disable-debug --enable-nonfree --enable-gpl --enable-version3 --enable-libopencore-amrnb --enable-libopencore-amrwb --disable-decoder=amrnb --disable-decoder=amrwb --enable-libpulse --enable-libx264 --enable-libx265 --enable-libfdk-aac --enable-libvorbis --enable-libmp3lame --enable-libopus --enable-libvpx --enable-libspeex --enable-libass --enable-avisynth --enable-libsoxr --enable-libxvid --enable-libvo-aacenc --enable-libvidstab");
 		parser.readLine("libavutil      54. 20.100 / 54. 20.100");
 		parser.readLine("libavcodec     56. 26.100 / 56. 26.100");
 		parser.readLine("libavformat    56. 25.101 / 56. 25.101");
@@ -306,14 +298,16 @@ public class FFInfoTestCase {
 	 * @return
 	 */
 	private Parser newParserProbe() {
-		return FFProbeSoftProvider.createParser(new FFProbeSoftProvider().getSoftName(), new File("."));
+		FFProbeSoftProvider softProvider = new FFProbeSoftProvider();
+		return FFProbeSoftProvider.createParser(softProvider.getSoftName(), new File("."), softProvider.getSoftPolicy());
 	}
 
 	/**
 	 * @return
 	 */
 	private Parser newParserFFMpeg() {
-		return FFMpegSoftProvider.createParser(new FFMpegSoftProvider().getSoftName(), new File("."));
+		FFProbeSoftProvider softProvider = new FFProbeSoftProvider();
+		return FFMpegSoftProvider.createParser(softProvider.getSoftName(), new File("."), softProvider.getSoftPolicy());
 	}
 
 	/**

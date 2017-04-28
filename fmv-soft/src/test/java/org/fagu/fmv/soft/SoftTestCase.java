@@ -50,26 +50,28 @@ public class SoftTestCase {
 	@Test
 	@Ignore
 	public void test1() throws Exception {
-		SoftFoundFactory ffSoftFoundFactory = ExecSoftFoundFactory.withParameters("-version").parseFactory(file -> new Parser() {
+		SoftFoundFactory ffSoftFoundFactory = ExecSoftFoundFactory.withParameters("-version")
+				.parseFactory((file, softPolicy) -> new Parser() {
 
-			private Integer build;
+					private Integer build;
 
-			@Override
-			public void readLine(String line) {
-				if(line.startsWith("ff")) {
-					build = Integer.parseInt(StringUtils.substringBetween(line, "N-", "-"));
-				}
-			}
+					@Override
+					public void readLine(String line) {
+						if(line.startsWith("ff")) {
+							build = Integer.parseInt(StringUtils.substringBetween(line, "N-", "-"));
+						}
+					}
 
-			@Override
-			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-				if(build == null) {
-					return SoftFound.foundBadSoft(file);
-				}
-				// return SoftFound.found(file, new TestSoftInfo(build));
-				return SoftFound.foundBadVersion(new TestSoftInfo(49), "85");
-			}
-		}).build();
+					@Override
+					public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
+						if(build == null) {
+							return SoftFound.foundBadSoft(file);
+						}
+						// return SoftFound.found(file, new TestSoftInfo(build));
+						return SoftFound.foundBadVersion(new TestSoftInfo(49), "85");
+					}
+				})
+				.build();
 
 		// SoftFoundFactory identifyFoundFactory = ExecSoftFoundFactory.withParameters("-version").parseFactory(file ->
 		// new Parser() {
