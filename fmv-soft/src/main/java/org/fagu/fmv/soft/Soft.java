@@ -21,11 +21,11 @@ package org.fagu.fmv.soft;
  */
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,6 +45,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteException;
+import org.fagu.fmv.soft.Soft.SoftExecutor.Executed;
 import org.fagu.fmv.soft.exec.BufferedReadLine;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.ExecHelper;
@@ -87,9 +88,9 @@ public class Soft {
 
 		private final SoftProvider softProvider;
 
-		private SoftLocator softLocator;
+		private final SoftLocator softLocator;
 
-		private FileFilter fileFilter;
+		private SoftPolicy<?, ?, ?> softPolicy;
 
 		private List<SoftFindListener> softFindListeners;
 
@@ -97,19 +98,17 @@ public class Soft {
 		 * @param softProvider
 		 */
 		private SoftSearch(SoftProvider softProvider) {
-			this.softProvider = Objects.requireNonNull(softProvider);
-			fileFilter = softProvider.getFileFilter();
-			softLocator = softProvider.getSoftLocator();
-			softFindListeners = new ArrayList<>();
+			this(softProvider, null);
 		}
 
 		/**
+		 * @param softProvider
 		 * @param softLocator
-		 * @return
 		 */
-		public SoftSearch withLocator(SoftLocator softLocator) {
-			this.softLocator = Objects.requireNonNull(softLocator);
-			return this;
+		private SoftSearch(SoftProvider softProvider, SoftLocator softLocator) {
+			this.softProvider = Objects.requireNonNull(softProvider);
+			this.softLocator = softLocator;
+			softFindListeners = new ArrayList<>();
 		}
 
 		/**
@@ -117,16 +116,7 @@ public class Soft {
 		 * @return
 		 */
 		public SoftSearch withPolicy(SoftPolicy<?, ?, ?> softPolicy) {
-			softLocator.setSoftPolicy(softPolicy);
-			return this;
-		}
-
-		/**
-		 * @param fileFilter
-		 * @return
-		 */
-		public SoftSearch withFileFilter(FileFilter fileFilter) {
-			this.fileFilter = fileFilter;
+			this.softPolicy = softPolicy;
 			return this;
 		}
 
@@ -147,7 +137,9 @@ public class Soft {
 		 */
 		public SoftSearch withListeners(Collection<SoftFindListener> softFindListeners) {
 			if(softFindListeners != null) {
-				softFindListeners.stream().filter(Objects::nonNull).forEach(this.softFindListeners::add);
+				softFindListeners.stream()
+						.filter(Objects::nonNull)
+						.forEach(this.softFindListeners::add);
 			}
 			return this;
 		}
@@ -156,8 +148,9 @@ public class Soft {
 		 * @return
 		 */
 		public Soft search() {
-			Founds founds = prepareLocator().find(fileFilter);
-			return createAndfireEventFound(founds, softLocator);
+			SoftLocator locator = getLocator();
+			Founds founds = locator.find();
+			return createAndfireEventFound(founds, locator);
 		}
 
 		/**
@@ -165,8 +158,9 @@ public class Soft {
 		 * @return
 		 */
 		public Soft search(SoftTester softTester) {
-			Founds founds = prepareLocator().find(softTester, fileFilter);
-			return createAndfireEventFound(founds, softLocator);
+			SoftLocator locator = getLocator();
+			Founds founds = locator.find(softTester);
+			return createAndfireEventFound(founds, locator);
 		}
 
 		/**
@@ -174,9 +168,10 @@ public class Soft {
 		 * @return
 		 */
 		public Soft search(SoftFoundFactory softFoundFactory) {
-			Founds founds = prepareLocator().find((file, locator, softPolicy) -> {
+			SoftLocator locator = getLocator();
+			Founds founds = locator.find((file, loc, softPolicy) -> {
 				try {
-					SoftFound softFound = softFoundFactory.create(file, locator, softPolicy);
+					SoftFound softFound = softFoundFactory.create(file, loc, softPolicy);
 					if(softFound == null) {
 						return SoftFound.foundBadSoft(file);
 					}
@@ -186,8 +181,8 @@ public class Soft {
 				} catch(IOException e) {
 					return SoftFound.foundError(file, e.getMessage()).setLocalizedBy(locator.toString());
 				}
-			}, fileFilter);
-			return createAndfireEventFound(founds, softLocator);
+			});
+			return createAndfireEventFound(founds, locator);
 		}
 
 		// *****************
@@ -195,11 +190,15 @@ public class Soft {
 		/**
 		 * 
 		 */
-		private SoftLocator prepareLocator() {
-			if(softLocator.getSoftPolicy() == null) {
-				softLocator.setSoftPolicy(softProvider.getSoftPolicy());
+		private SoftLocator getLocator() {
+			SoftLocator myLoc = softLocator;
+			if(myLoc == null) {
+				myLoc = softProvider.getSoftLocator();
 			}
-			return softLocator;
+			if(softPolicy != null) {
+				myLoc.setSoftPolicy(softPolicy);
+			}
+			return myLoc;
 		}
 
 		/**
@@ -308,14 +307,15 @@ public class Soft {
 		 * @return Executed time in milliseconds
 		 * @throws IOException
 		 */
-		public long execute() throws IOException {
+		public Executed execute() throws IOException {
 			return execute((fmvExecutor, commandLine, execListener, readLineList) -> {
 				final String cmdLineStr = CommandLineUtils.toLine(commandLine);
 				long startTime = System.currentTimeMillis();
 				long time = 0;
+				int exitValue = 0;
 				try {
 					execListener.eventExecuting(cmdLineStr);
-					int exitValue = fmvExecutor.execute(commandLine);
+					exitValue = fmvExecutor.execute(commandLine);
 					time = System.currentTimeMillis() - startTime;
 					execListener.eventExecuted(cmdLineStr, exitValue, time);
 				} catch(ExecuteException e) {
@@ -325,7 +325,7 @@ public class Soft {
 					ExceptionKnownAnalyzers.doOrThrows(softProvider
 							.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer, exceptionConsumer);
 				}
-				return time;
+				return new Executed(exitValue, time);
 			});
 		}
 
@@ -334,7 +334,7 @@ public class Soft {
 		 * @return
 		 * @throws IOException
 		 */
-		public Future<BackgroundExecuted> executeInBackground(ExecutorService executorService) throws IOException {
+		public Future<Executed> executeInBackground(ExecutorService executorService) throws IOException {
 			return execute((fmvExecutor, commandLine, execListener, readLineList) -> {
 				final String cmdLineStr = CommandLineUtils.toLine(commandLine);
 				final AtomicLong startTime = new AtomicLong();
@@ -361,7 +361,7 @@ public class Soft {
 										.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer, exceptionConsumer);
 							}
 						}),
-						exitValue -> new BackgroundExecuted(exitValue, time.get()));
+						exitValue -> new Executed(exitValue, time.get()));
 			});
 		}
 
@@ -370,13 +370,13 @@ public class Soft {
 		/**
 		 * @author fagu
 		 */
-		public static class BackgroundExecuted {
+		public static class Executed {
 
 			private final int exitValue;
 
 			private final long executeTime;
 
-			private BackgroundExecuted(int exitValue, long executeTime) {
+			private Executed(int exitValue, long executeTime) {
 				this.exitValue = exitValue;
 				this.executeTime = executeTime;
 			}
@@ -391,7 +391,8 @@ public class Soft {
 
 			@Override
 			public String toString() {
-				return "BackgroundExecuted[exit: " + exitValue + " ; time: " + executeTime + "ms]";
+				Duration duration = Duration.ofMillis(executeTime);
+				return "Executed[exit: " + exitValue + " ; time: " + duration.toString() + ']';
 			}
 
 		}
@@ -548,6 +549,20 @@ public class Soft {
 	}
 
 	/**
+	 * @param name
+	 * @return
+	 */
+	public static Soft search(SoftProvider softProvider) {
+		Soft soft = SOFT_NAME_CACHE.get(softProvider.getName());
+		if(soft != null) {
+			return soft;
+		}
+		soft = softProvider.search();
+		SOFT_NAME_CACHE.put(softProvider.getName(), soft);
+		return soft;
+	}
+
+	/**
 	 * @return
 	 */
 	public static Stream<Soft> searchAll() {
@@ -563,11 +578,20 @@ public class Soft {
 	}
 
 	/**
-	 * @param softName
+	 * @param softProvider
 	 * @return
 	 */
 	public static SoftSearch with(SoftProvider softProvider) {
 		return new SoftSearch(softProvider);
+	}
+
+	/**
+	 * @param softProvider
+	 * @param softLocator
+	 * @return
+	 */
+	public static SoftSearch with(SoftProvider softProvider, SoftLocator softLocator) {
+		return new SoftSearch(softProvider, softLocator);
 	}
 
 	// =============
@@ -648,7 +672,7 @@ public class Soft {
 	 * @return
 	 * @throws IOException
 	 */
-	public long execute() throws IOException {
+	public Executed execute() throws IOException {
 		return withoutParameter().execute();
 	}
 

@@ -39,7 +39,6 @@ import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
-import org.fagu.fmv.soft.find.Locators;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftInfo;
@@ -76,7 +75,7 @@ public abstract class IMSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-version")
-				.parseFactory((file, softPolicy) -> createParser(file, softPolicy))
+				.parseFactory(this::createParser)
 				.build();
 	}
 
@@ -97,20 +96,13 @@ public abstract class IMSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftLocator getSoftLocator() {
-		FileFilter fileFilter = getFileFilter();
 		SoftLocator softLocator = super.getSoftLocator();
-		softLocator.enableCache(n -> getGroupName(), founds -> {
-			File file = founds.getFirstFound().getFile();
-			if(file != null) {
-				return new Locators(fileFilter).byPath(file.getParent());
-			}
-			return null;
-		});
+		softLocator.enableCacheInSameFolderOfGroup(getGroupName());
 		if(SystemUtils.IS_OS_WINDOWS) {
 			softLocator.addDefaultLocator();
-			ProgramFilesLocatorSupplier.with(fileFilter)
+			ProgramFilesLocatorSupplier.with(softLocator)
 					.findFolder(folder -> folder.getName().toLowerCase().startsWith("imagemagick"))
-					.supplyIn(softLocator);
+					.supplyIn();
 		}
 		return softLocator;
 	}

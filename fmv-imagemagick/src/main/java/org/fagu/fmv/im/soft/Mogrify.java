@@ -44,7 +44,7 @@ public class Mogrify {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(MogrifySoftProvider.NAME);
+		return Soft.search(new MogrifySoftProvider());
 	}
 
 }

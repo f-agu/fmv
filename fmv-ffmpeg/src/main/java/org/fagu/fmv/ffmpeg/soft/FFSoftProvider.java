@@ -21,7 +21,6 @@ package org.fagu.fmv.ffmpeg.soft;
  */
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,7 +41,6 @@ import org.fagu.fmv.ffmpeg.exception.FFExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
-import org.fagu.fmv.soft.find.Locators;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
@@ -89,18 +87,11 @@ public abstract class FFSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftLocator getSoftLocator() {
-		FileFilter fileFilter = getFileFilter();
 		SoftLocator softLocator = super.getSoftLocator();
-		softLocator.enableCache(n -> getGroupName(), founds -> {
-			File file = founds.getFirstFound().getFile();
-			if(file != null) {
-				return new Locators(fileFilter).byPath(file.getParent());
-			}
-			return null;
-		});
+		softLocator.enableCacheInSameFolderOfGroup(getGroupName());
 		if(SystemUtils.IS_OS_WINDOWS) {
 			softLocator.addDefaultLocator();
-			ProgramFilesLocatorSupplier.with(fileFilter)
+			ProgramFilesLocatorSupplier.with(softLocator)
 					.find(programFile -> {
 						List<File> files = new ArrayList<>();
 						File[] folders = programFile.listFiles(f -> f.getName().toLowerCase().startsWith("ffmpeg"));
@@ -112,7 +103,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 						}
 						return files;
 					})
-					.supplyIn(softLocator);
+					.supplyIn();
 		}
 		return softLocator;
 	}

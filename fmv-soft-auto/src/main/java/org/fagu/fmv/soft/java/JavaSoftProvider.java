@@ -21,7 +21,6 @@ package org.fagu.fmv.soft.java;
  */
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -78,9 +77,9 @@ public class JavaSoftProvider extends SoftProvider {
 			 *      java.io.FileFilter)
 			 */
 			@Override
-			protected List<Locator> getLocators(Locators loc, FileFilter defaultFileFilter) {
-				List<Locator> list = super.getLocators(loc, defaultFileFilter);
-				list.add(0, createLocators(defaultFileFilter).byPropertyPath("java.home"));
+			protected List<Locator> getLocators(Locators loc) {
+				List<Locator> list = super.getLocators(loc);
+				list.add(0, createLocators().byPropertyPath("java.home"));
 				return list;
 			}
 		};

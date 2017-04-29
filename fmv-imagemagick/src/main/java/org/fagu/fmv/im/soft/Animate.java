@@ -42,7 +42,7 @@ public class Animate {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(AnimateSoftProvider.NAME);
+		return Soft.search(new AnimateSoftProvider());
 	}
 
 }

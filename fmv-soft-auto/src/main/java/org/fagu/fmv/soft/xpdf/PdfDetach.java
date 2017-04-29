@@ -39,7 +39,7 @@ public class PdfDetach {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(PdfDetachSoftProvider.NAME);
+		return Soft.search(new PdfDetachSoftProvider());
 	}
 
 }

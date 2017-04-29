@@ -114,7 +114,7 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public Soft searchConfigurable(Consumer<SoftSearch> softSearchConsumer) {
-		SoftSearch softSearch = Soft.with(this).withLocator(getSoftLocator());
+		SoftSearch softSearch = Soft.with(this);
 		if(softSearchConsumer != null) {
 			softSearchConsumer.accept(softSearch);
 		}
@@ -142,7 +142,8 @@ public abstract class SoftProvider {
 	public SoftLocator getSoftLocator() {
 		SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
 		Sorter sorter = softPolicy != null ? softPolicy.getSorter() : null;
-		SoftLocator softLocator = new SoftLocator(getName(), sorter);
+		SoftLocator softLocator = new SoftLocator(getName(), sorter, getFileFilter());
+		softLocator.setSoftPolicy(softPolicy);
 		softLocator.setEnvName(getName().toUpperCase() + "_HOME");
 		return softLocator;
 	}
@@ -151,7 +152,7 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public FileFilter getFileFilter() {
-		return PlateformFileFilter.getFileFilter(getName());
+		return null;
 	}
 
 	/**

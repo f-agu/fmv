@@ -42,7 +42,7 @@ public class Composite {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(CompositeSoftProvider.NAME);
+		return Soft.search(new CompositeSoftProvider());
 	}
 
 }

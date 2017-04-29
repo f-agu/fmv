@@ -73,9 +73,9 @@ public class VLCSoftProvider extends SoftProvider {
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = super.getSoftLocator();
 		if(SystemUtils.IS_OS_WINDOWS) {
-			ProgramFilesLocatorSupplier.with(getFileFilter())
+			ProgramFilesLocatorSupplier.with(softLocator)
 					.findFolder("VideoLAN" + File.separator + "VLC")
-					.supplyIn(softLocator);
+					.supplyIn();
 			softLocator.addDefaultLocator();
 		}
 		return softLocator;

@@ -39,7 +39,7 @@ public class PdfToPng {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(PdfToPngSoftProvider.NAME);
+		return Soft.search(new PdfToPngSoftProvider());
 	}
 
 }

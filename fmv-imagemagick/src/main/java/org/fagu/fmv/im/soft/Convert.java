@@ -43,7 +43,7 @@ public class Convert {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(ConvertSoftProvider.NAME);
+		return Soft.search(new ConvertSoftProvider());
 	}
 
 }

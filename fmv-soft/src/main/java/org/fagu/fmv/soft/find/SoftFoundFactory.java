@@ -33,7 +33,7 @@ public interface SoftFoundFactory {
 	/**
 	 * @param file
 	 * @param locator
-	 * @param softPolicy TODO
+	 * @param softPolicy
 	 * @return
 	 * @throws ExecutionException
 	 * @throws IOException

@@ -39,7 +39,7 @@ public class GS {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(GSSoftProvider.NAME);
+		return Soft.search(new GSSoftProvider());
 	}
 
 }

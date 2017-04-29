@@ -39,7 +39,7 @@ public class PdfInfo {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(PdfInfoSoftProvider.NAME);
+		return Soft.search(new PdfInfoSoftProvider());
 	}
 
 }

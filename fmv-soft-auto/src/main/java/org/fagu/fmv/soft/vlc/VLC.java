@@ -39,7 +39,7 @@ public class VLC {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(VLCSoftProvider.NAME);
+		return Soft.search(new VLCSoftProvider());
 	}
 
 	// public static void main(String[] args) throws Exception {

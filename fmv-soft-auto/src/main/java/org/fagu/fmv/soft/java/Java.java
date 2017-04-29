@@ -20,7 +20,6 @@ package org.fagu.fmv.soft.java;
  * #L%
  */
 
-
 import org.fagu.fmv.soft.Soft;
 
 
@@ -40,7 +39,7 @@ public class Java {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(JavaSoftProvider.NAME);
+		return Soft.search(new JavaSoftProvider());
 	}
 
 }

@@ -39,7 +39,7 @@ public class PdfFonts {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(PdfFontsSoftProvider.NAME);
+		return Soft.search(new PdfFontsSoftProvider());
 	}
 
 }

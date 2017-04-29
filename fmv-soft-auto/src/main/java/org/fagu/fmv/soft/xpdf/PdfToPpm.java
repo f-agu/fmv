@@ -39,7 +39,7 @@ public class PdfToPpm {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(PdfToPpmSoftProvider.NAME);
+		return Soft.search(new PdfToPpmSoftProvider());
 	}
 
 }

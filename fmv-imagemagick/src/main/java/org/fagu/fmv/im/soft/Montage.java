@@ -43,7 +43,7 @@ public class Montage {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(MontageSoftProvider.NAME);
+		return Soft.search(new MontageSoftProvider());
 	}
 
 }

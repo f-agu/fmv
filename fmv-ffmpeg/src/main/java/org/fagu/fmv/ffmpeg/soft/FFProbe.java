@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.soft;
  * #L%
  */
 
-
 import org.fagu.fmv.soft.Soft;
 
 
@@ -40,7 +39,7 @@ public class FFProbe {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(FFProbeSoftProvider.NAME);
+		return Soft.search(new FFProbeSoftProvider());
 	}
 
 }

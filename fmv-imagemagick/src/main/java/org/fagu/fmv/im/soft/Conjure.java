@@ -45,7 +45,7 @@ public class Conjure {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(ConjureSoftProvider.NAME);
+		return Soft.search(new ConjureSoftProvider());
 	}
 
 }

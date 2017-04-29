@@ -39,7 +39,7 @@ public class FFMpeg {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(FFMpegSoftProvider.NAME);
+		return Soft.search(new FFMpegSoftProvider());
 	}
 
 }

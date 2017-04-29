@@ -49,14 +49,22 @@ public class ProgramFilesLocatorSupplier {
 	 */
 	public static class ProgramFilesLocatorBuilder {
 
-		private final Locators locators;
+		private final SoftLocator softLocator;
+
+		private Locators locators;
 
 		private ProgramFilesLocatorBuilder() {
-			locators = null;
+			this.softLocator = null;
 		}
 
-		private ProgramFilesLocatorBuilder(Locators locators) {
+		private ProgramFilesLocatorBuilder(SoftLocator softLocator) {
+			this.softLocator = Objects.requireNonNull(softLocator);
+			locators = softLocator.createLocators();
+		}
+
+		public ProgramFilesLocatorBuilder withLocators(Locators locators) {
 			this.locators = Objects.requireNonNull(locators);
+			return this;
 		}
 
 		public ProgramFilesLocatorSupplier findFolder(String folderName) {
@@ -74,48 +82,44 @@ public class ProgramFilesLocatorSupplier {
 		}
 
 		public ProgramFilesLocatorSupplier find(Function<File, Collection<File>> foldersToAnalyze) {
-			return new ProgramFilesLocatorSupplier(locators, foldersToAnalyze);
+			return new ProgramFilesLocatorSupplier(softLocator, locators, foldersToAnalyze);
 		}
 
 	}
+
+	private final SoftLocator softLocator;
 
 	private final Locators locators;
 
 	private final Function<File, Collection<File>> foldersToAnalyze;
 
 	/**
+	 * @param softLocator
 	 * @param locators
 	 * @param foldersToAnalyze
 	 */
-	private ProgramFilesLocatorSupplier(Locators locators, Function<File, Collection<File>> foldersToAnalyze) {
+	private ProgramFilesLocatorSupplier(SoftLocator softLocator, Locators locators, Function<File, Collection<File>> foldersToAnalyze) {
+		this.softLocator = softLocator;
 		this.locators = locators;
 		this.foldersToAnalyze = foldersToAnalyze;
 	}
 
 	/**
-	 * @param locators
+	 * @param softLocator
 	 * @return
 	 */
-	public static ProgramFilesLocatorBuilder with(Locators locators) {
+	public static ProgramFilesLocatorBuilder with(SoftLocator softLocator) {
 		if(SystemUtils.IS_OS_WINDOWS) {
-			return new ProgramFilesLocatorBuilder(locators);
+			return new ProgramFilesLocatorBuilder(softLocator);
 		}
 		return new ProgramFilesLocatorBuilder();
 	}
 
 	/**
-	 * @param locatorsFileFilter
-	 * @return
+	 * 
 	 */
-	public static ProgramFilesLocatorBuilder with(FileFilter locatorsFileFilter) {
-		return with(new Locators(locatorsFileFilter));
-	}
-
-	/**
-	 * @param softLocator
-	 */
-	public void supplyIn(SoftLocator softLocator) {
-		if(locators != null) {
+	public void supplyIn() {
+		if(softLocator != null && locators != null) {
 			for(File programPath : getProgramPaths()) {
 				for(File folder : foldersToAnalyze.apply(programPath)) {
 					if(folder.exists()) {

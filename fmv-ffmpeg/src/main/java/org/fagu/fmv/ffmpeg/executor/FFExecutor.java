@@ -37,6 +37,7 @@ import org.fagu.fmv.ffmpeg.operation.Operation;
 import org.fagu.fmv.ffmpeg.operation.OperationListener;
 import org.fagu.fmv.ffmpeg.operation.Progress;
 import org.fagu.fmv.ffmpeg.soft.FFMpegSoftProvider;
+import org.fagu.fmv.ffmpeg.soft.FFSoft;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.soft.exec.BufferedReadLine;
@@ -211,7 +212,7 @@ public class FFExecutor<R> {
 	public String getCommandLine() throws IOException {
 		List<String> arguments = operation.toArguments();
 
-		File fffile = Soft.search(operation.getFFName()).getFile();
+		File fffile = FFSoft.search(operation.getFFName()).getFile();
 		if(fffile == null) {
 			throw new IOException("FFName " + operation.getFFName() + " not found or not declared. Use FFLocator.");
 		}
@@ -393,7 +394,7 @@ public class FFExecutor<R> {
 		 * @throws IOException
 		 */
 		private Prepare() throws IOException {
-			soft = customSoft != null ? customSoft : Soft.search(operation.getFFName());
+			soft = customSoft != null ? customSoft : FFSoft.search(operation.getFFName());
 		}
 
 		/**
@@ -496,8 +497,8 @@ public class FFExecutor<R> {
 		 * @throws IOException
 		 */
 		protected Executed<R> _execute() throws IOException {
-			long time = getSoftExecutor().execute();
-			return createExecuted(time, operation.getResult());
+			org.fagu.fmv.soft.Soft.SoftExecutor.Executed executed = getSoftExecutor().execute();
+			return createExecuted(executed.getExecuteTime(), operation.getResult());
 		}
 
 	}

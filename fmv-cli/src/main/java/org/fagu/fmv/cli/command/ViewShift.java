@@ -56,7 +56,7 @@ public abstract class ViewShift extends View {
 			lastView = Integer.valueOf(0);
 		}
 		FileSource source = project.getSource(lastView);
-		getPrinter().println("Last view nÂ°" + lastView + ": " + source.getFile().getName());
+		getPrinter().println("Last view n°" + lastView + ": " + source.getFile().getName());
 		lastView = operator.applyAsInt(lastView);
 		super.run(new String[] {lastView.toString()});
 	}

@@ -46,7 +46,7 @@ public class Identify {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(IdentifySoftProvider.NAME);
+		return Soft.search(new IdentifySoftProvider());
 	}
 
 }

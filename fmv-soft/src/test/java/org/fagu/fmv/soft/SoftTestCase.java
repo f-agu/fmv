@@ -28,7 +28,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.soft.Soft.SoftExecutor.BackgroundExecuted;
+import org.fagu.fmv.soft.Soft.SoftExecutor.Executed;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
@@ -111,7 +111,7 @@ public class SoftTestCase {
 				})
 				.execute();
 		System.out.println(2);
-		Future<BackgroundExecuted> future = soft.withoutParameter()
+		Future<Executed> future = soft.withoutParameter()
 				.ifExceptionDo(e -> {
 					System.out.println("error exec bg");
 				})

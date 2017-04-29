@@ -39,7 +39,7 @@ public class PdfToHtml {
 	 * @return
 	 */
 	public static Soft search() {
-		return Soft.search(PdfToHtmlSoftProvider.NAME);
+		return Soft.search(new PdfToHtmlSoftProvider());
 	}
 
 }
