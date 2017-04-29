@@ -21,6 +21,8 @@ package org.fagu.fmv.soft.exec;
  */
 
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.Objects;
 import java.util.Scanner;
 
 
@@ -33,15 +35,18 @@ public class ReadLineStreamPumper implements Runnable {
 
 	private final ReadLine readLine;
 
+	private final Charset charset;
+
 	private boolean finished;
 
 	/**
 	 * @param inputStream
 	 * @param readLine
 	 */
-	public ReadLineStreamPumper(InputStream inputStream, ReadLine readLine) {
-		this.inputStream = inputStream;
-		this.readLine = readLine;
+	public ReadLineStreamPumper(InputStream inputStream, ReadLine readLine, Charset charset) {
+		this.inputStream = Objects.requireNonNull(inputStream);
+		this.readLine = Objects.requireNonNull(readLine);
+		this.charset = charset;
 	}
 
 	/**
@@ -54,7 +59,7 @@ public class ReadLineStreamPumper implements Runnable {
 			finished = false;
 		}
 		// Use Scanner, I don't why it doesn't work with a BufferedReader and an InputStreamReader...
-		try (Scanner scanner = new Scanner(inputStream)) {
+		try (Scanner scanner = openScanner()) {
 			while(scanner.hasNext()) {
 				readLine.read(scanner.nextLine());
 			}
@@ -88,6 +93,18 @@ public class ReadLineStreamPumper implements Runnable {
 		while( ! isFinished()) {
 			wait();
 		}
+	}
+
+	// *******************************************
+
+	/**
+	 * @return
+	 */
+	private Scanner openScanner() {
+		if(charset != null) {
+			return new Scanner(inputStream, charset.name());
+		}
+		return new Scanner(inputStream);
 	}
 
 }

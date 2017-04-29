@@ -22,11 +22,16 @@ package org.fagu.fmv.soft.xpdf;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
@@ -85,6 +90,37 @@ public abstract class PdfSoftProvider extends SoftProvider {
 			return DEFAULT_URL;
 		}
 		return DEFAULT_URL + " (or http://poppler.freedesktop.org)";
+	}
+
+	/**
+	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftExecutor(org.fagu.fmv.soft.Soft, java.io.File, java.util.List)
+	 */
+	@Override
+	public SoftExecutor createSoftExecutor(Soft soft, File execFile, List<String> parameters) {
+		XPdfVersionSoftInfo softInfo = (XPdfVersionSoftInfo)soft.getFirstInfo();
+
+		// On Windows & Eclipse, file.encoding=UTF-8 -> fix encoding
+		// On Windows & DOS, file.encoding=cp1252 -> do nothing
+		if(softInfo != null && Provider.XPDF.equals(softInfo.getProvider()) && SystemUtils.IS_OS_WINDOWS && "UTF-8".equals(System
+				.getProperty("file.encoding"))) {
+			List<String> newParams = new ArrayList<>(parameters);
+			if( ! parameters.contains("-enc")) {
+				newParams.add(0, "-enc");
+				newParams.add(1, "UTF-8");
+			}
+			SoftExecutor softExecutor = new SoftExecutor(this, execFile, newParams);
+			softExecutor.charset(StandardCharsets.UTF_8);
+			// depends on minimal version ? I don't know
+			// Version minVer = new Version(3, 4);
+			// softInfo.getVersion().ifPresent(v -> {
+			// if(v.isUpperOrEqualsThan(minVer)) {
+			// softExecutor.charset(StandardCharsets.UTF_8);
+			// }
+			// });
+			return softExecutor;
+		}
+
+		return super.createSoftExecutor(soft, execFile, parameters);
 	}
 
 	/**

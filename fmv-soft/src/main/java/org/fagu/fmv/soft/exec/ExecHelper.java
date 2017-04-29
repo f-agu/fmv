@@ -1,10 +1,5 @@
 package org.fagu.fmv.soft.exec;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 /*
  * #%L
  * fmv-soft
@@ -25,6 +20,11 @@ import java.io.OutputStream;
  * #L%
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,6 +61,8 @@ public class ExecHelper<T> {
 	protected ExecuteStreamHandler executeStreamHandler;
 
 	protected List<Consumer<FMVExecutor>> customizeExecutors;
+
+	protected Charset charset;
 
 	/**
 	 *
@@ -180,6 +182,22 @@ public class ExecHelper<T> {
 		return getThis();
 	}
 
+	/**
+	 * @param charset
+	 * @return
+	 */
+	public T charset(Charset charset) {
+		this.charset = charset;
+		return getThis();
+	}
+
+	/**
+	 * @return
+	 */
+	public Charset getCharset() {
+		return charset;
+	}
+
 	// *******************************************************
 
 	/**
@@ -217,7 +235,9 @@ public class ExecHelper<T> {
 
 		if(externLines != null) {
 			for(List<ReadLine> readLines : externLines) {
-				readLines.stream().filter(Objects::nonNull).forEach(toAddLines::add);
+				readLines.stream()
+						.filter(Objects::nonNull)
+						.forEach(toAddLines::add);
 			}
 		}
 	}
@@ -262,7 +282,7 @@ public class ExecHelper<T> {
 		}
 
 		// ReadLine
-		return FMVExecutor.create(workingFolder, getOutReadLine(defaultReaDLine), getErrReadLine(defaultReaDLine));
+		return FMVExecutor.create(workingFolder, getOutReadLine(defaultReaDLine), getErrReadLine(defaultReaDLine), charset);
 	}
 
 	// *******************************************************

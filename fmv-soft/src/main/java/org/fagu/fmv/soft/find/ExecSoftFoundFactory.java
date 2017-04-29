@@ -84,8 +84,8 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 			readLineList = new ArrayList<>();
 			BufferedReadLine bufferedReadLine = new BufferedReadLine(readLineList);
 
-			FMVExecutor fmvExecutor = FMVExecutor.create(file.getParentFile(), getOutReadLine(bufferedReadLine, parser::readLineOut), getErrReadLine(
-					bufferedReadLine, parser::readLineErr));
+			FMVExecutor fmvExecutor = FMVExecutor.create(file
+					.getParentFile(), getOutReadLine(bufferedReadLine, parser::readLineOut), getErrReadLine(bufferedReadLine, parser::readLineErr), charset);
 			fmvExecutor.setTimeOut(10_000); // default: 10 seconds
 			applyCustomizeExecutor(fmvExecutor);
 			return fmvExecutor;

@@ -64,7 +64,7 @@ public class GSSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		return ExecSoftFoundFactory.withParameters("-version", "-q")
-				.parseFactory((file, softPolicy) -> createParser(file, softPolicy))
+				.parseFactory(this::createParser)
 				.build();
 	}
 

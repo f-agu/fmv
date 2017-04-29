@@ -23,6 +23,7 @@ package org.fagu.fmv.soft.exec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 
 /**
@@ -34,20 +35,25 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 
 	private final ReadLine errReadLine;
 
+	private final Charset charset;
+
 	/**
 	 * @param outAndErrReadLine
+	 * @param charset
 	 */
-	public ReadLinePumpStreamHandler(ReadLine outAndErrReadLine) {
-		this(outAndErrReadLine, outAndErrReadLine);
+	public ReadLinePumpStreamHandler(ReadLine outAndErrReadLine, Charset charset) {
+		this(outAndErrReadLine, outAndErrReadLine, charset);
 	}
 
 	/**
 	 * @param outReadLine
 	 * @param errReadLine
+	 * @param charset
 	 */
-	public ReadLinePumpStreamHandler(ReadLine outReadLine, ReadLine errReadLine) {
+	public ReadLinePumpStreamHandler(ReadLine outReadLine, ReadLine errReadLine, Charset charset) {
 		this.outReadLine = outReadLine;
 		this.errReadLine = errReadLine;
+		this.charset = charset;
 	}
 
 	/**
@@ -64,6 +70,13 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 	@Override
 	public void setProcessErrorStream(InputStream is) {
 		createProcessErrorPump(new ReadLineInputStream(is, errReadLine), null);
+	}
+
+	/**
+	 * @return
+	 */
+	public Charset getCharset() {
+		return charset;
 	}
 
 	// *************************************************
@@ -83,7 +96,7 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 	 * @return
 	 */
 	protected Thread createPump(InputStream is, ReadLine readLine) {
-		final Thread result = new Thread(new ReadLineStreamPumper(is, readLine), "ReadLineStreamPumper");
+		final Thread result = new Thread(new ReadLineStreamPumper(is, readLine, charset), "ReadLineStreamPumper");
 		result.setDaemon(true);
 		return result;
 	}

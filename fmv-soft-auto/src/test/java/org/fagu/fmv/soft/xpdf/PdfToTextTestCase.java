@@ -58,11 +58,12 @@ public class PdfToTextTestCase {
 			List<String> output = new ArrayList<>();
 			PdfToText.search()
 					.withParameters(getParameters(srcFile.getPath(), "-"))
-					// .logCommandLine(System.out::println)
+					.logCommandLine(System.out::println)
 					.addCommonReadLine(output::add)
-					// .addCommonReadLine(System.out::println)
+					.addCommonReadLine(System.out::println)
 					.execute();
 			assertEquals(1, output.size());
+			System.out.println(output.get(0));
 			assertEquals("Salut, E\u00E9\u00E9\u00E9 de test", output.get(0));
 		} finally {
 			FileUtils.deleteDirectory(folder);
@@ -77,8 +78,8 @@ public class PdfToTextTestCase {
 	private List<String> getParameters(String... parameters) {
 		List<String> params = new ArrayList<>(4);
 		if(SystemUtils.IS_OS_WINDOWS) {
-			params.add("-enc");
-			params.add("UTF-8");
+			// params.add("-enc");
+			// params.add("UTF-8");
 		}
 		for(String param : parameters) {
 			params.add(param);

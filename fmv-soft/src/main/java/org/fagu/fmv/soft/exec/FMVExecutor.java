@@ -22,6 +22,7 @@ package org.fagu.fmv.soft.exec;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.OptionalLong;
 import java.util.concurrent.ExecutorService;
@@ -56,20 +57,22 @@ public class FMVExecutor extends DefaultExecutor {
 	/**
 	 * @param workingFolder
 	 * @param outAndErrReadLine
+	 * @param charset
 	 * @return
 	 */
-	public static FMVExecutor create(File workingFolder, ReadLine outAndErrReadLine) {
-		return create(workingFolder, new ReadLinePumpStreamHandler(outAndErrReadLine));
+	public static FMVExecutor create(File workingFolder, ReadLine outAndErrReadLine, Charset charset) {
+		return create(workingFolder, new ReadLinePumpStreamHandler(outAndErrReadLine, charset));
 	}
 
 	/**
 	 * @param workingFolder
 	 * @param outReadLine
 	 * @param errReadLine
+	 * @param charset
 	 * @return
 	 */
-	public static FMVExecutor create(File workingFolder, ReadLine outReadLine, ReadLine errReadLine) {
-		return create(workingFolder, new ReadLinePumpStreamHandler(outReadLine, errReadLine));
+	public static FMVExecutor create(File workingFolder, ReadLine outReadLine, ReadLine errReadLine, Charset charset) {
+		return create(workingFolder, new ReadLinePumpStreamHandler(outReadLine, errReadLine, charset));
 	}
 
 	/**
