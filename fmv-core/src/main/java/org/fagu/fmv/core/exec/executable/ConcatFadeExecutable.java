@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.dom4j.Element;
+import org.fagu.fmv.core.Hash;
 import org.fagu.fmv.core.exec.Executable;
 import org.fagu.fmv.core.exec.FFUtils;
 import org.fagu.fmv.core.exec.FileCache.Cache;
@@ -83,6 +84,14 @@ public class ConcatFadeExecutable extends GenericExecutable {
 	@Override
 	public String getCode() {
 		return "concat-fade";
+	}
+
+	/**
+	 * @see org.fagu.fmv.core.exec.Attributable#getHash()
+	 */
+	@Override
+	public Hash getHash() {
+		return super.getHash().append(startTime).append(duration);
 	}
 
 	/**

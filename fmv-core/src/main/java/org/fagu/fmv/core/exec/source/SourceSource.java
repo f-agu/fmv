@@ -1,5 +1,8 @@
 package org.fagu.fmv.core.exec.source;
 
+import java.util.Collections;
+import java.util.Optional;
+
 /*
  * #%L
  * fmv-core
@@ -35,6 +38,7 @@ import org.fagu.fmv.ffmpeg.filter.FilterInput;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatasUtils;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
+import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.media.FileType;
 
@@ -108,6 +112,22 @@ public class SourceSource extends AbstractSource {
 	}
 
 	/**
+	 * @see org.fagu.fmv.core.exec.Identifiable#getTypes()
+	 */
+	@Override
+	public Set<Type> getTypes() {
+		FileSource source = getProject().getSource(number);
+		if(source.getFileType() == FileType.AUDIO || source.getFileType() == FileType.VIDEO) {
+			MovieMetadatas videoMetadatas = source.getVideoMetadatas();
+			return MovieMetadatasUtils.getTypes(videoMetadatas);
+		}
+		if(source.getFileType() == FileType.IMAGE) {
+			return Collections.singleton(Type.VIDEO);
+		}
+		return Collections.emptySet();
+	}
+
+	/**
 	 * @see org.fagu.fmv.core.exec.source.AbstractSource#toString()
 	 */
 	@Override
@@ -131,11 +151,11 @@ public class SourceSource extends AbstractSource {
 	 * @see org.fagu.fmv.core.exec.Attributable#getSpecificDuration()
 	 */
 	@Override
-	protected Duration getSpecificDuration() {
+	protected Optional<Duration> getSpecificDuration() {
 		FileSource source = getProject().getSource(number);
 		if(source.getFileType() == FileType.AUDIO || source.getFileType() == FileType.VIDEO) {
 			MovieMetadatas videoMetadatas = source.getVideoMetadatas();
-			return MovieMetadatasUtils.getDuration(videoMetadatas).orElse(null);
+			return MovieMetadatasUtils.getDuration(videoMetadatas);
 		}
 		if(source.getFileType() == FileType.IMAGE) {
 			// TODO

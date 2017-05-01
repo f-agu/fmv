@@ -441,24 +441,35 @@ public abstract class BaseIdentifiable implements Identifiable {
 	/**
 	 * @return
 	 */
-	protected Duration getGlobalDuration() {
-		Duration currentDuration = Duration.valueOf(0);
-		currentDuration = currentDuration.add(sumDuration(filterExecs));
-		currentDuration = currentDuration.add(sumDuration(executables));
-		currentDuration = currentDuration.add(sumDuration(sources));
-		return currentDuration;
+	protected Optional<Duration> getGlobalDuration() {
+		List<Duration> durations = new ArrayList<>(3);
+		sumDuration(filterExecs).ifPresent(durations::add);
+		sumDuration(executables).ifPresent(durations::add);
+		sumDuration(sources).ifPresent(durations::add);
+		if(durations.size() != 3) {
+			return Optional.empty();
+		}
+		Duration dur = Duration.valueOf(0);
+		for(Duration d : durations) {
+			dur = dur.add(d);
+		}
+		return Optional.of(dur);
 	}
 
 	/**
 	 * @param identifiables
 	 * @return
 	 */
-	private Duration sumDuration(Collection<? extends Identifiable> identifiables) {
+	private Optional<Duration> sumDuration(Collection<? extends Identifiable> identifiables) {
 		Duration duration = Duration.valueOf(0);
 		for(Identifiable identifiable : identifiables) {
-			duration = duration.add(identifiable.getDuration());
+			Optional<Duration> dur = identifiable.getDuration();
+			if( ! dur.isPresent()) {
+				return Optional.empty();
+			}
+			duration = duration.add(dur.get());
 		}
-		return duration;
+		return Optional.of(duration);
 	}
 
 	/**

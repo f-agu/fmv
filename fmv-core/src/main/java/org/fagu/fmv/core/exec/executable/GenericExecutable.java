@@ -88,18 +88,18 @@ public class GenericExecutable extends AbstractExecutable {
 	}
 
 	/**
+	 * @return
+	 */
+	public boolean hasChildren() {
+		return ! filterExecs.isEmpty() || ! executables.isEmpty() || ! sources.isEmpty();
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "generic-exec " + super.toString();
-	}
-
-	/**
-	 * @return
-	 */
-	public boolean hasChildren() {
-		return ! filterExecs.isEmpty() || ! executables.isEmpty() || ! sources.isEmpty();
 	}
 
 	// *******************************************************

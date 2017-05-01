@@ -23,10 +23,12 @@ package org.fagu.fmv.ffmpeg.filter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.Type;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
 /**
@@ -84,6 +86,14 @@ public class OutputKey implements FilterInput {
 	@Override
 	public boolean contains(Type type) {
 		return filterInput.contains(type);
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getDuration()
+	 */
+	@Override
+	public Optional<Duration> getDuration() {
+		return filterInput.getDuration();
 	}
 
 }

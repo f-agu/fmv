@@ -23,6 +23,7 @@ package org.fagu.fmv.ffmpeg.format;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.fagu.fmv.ffmpeg.flags.ErrDetect;
@@ -30,6 +31,7 @@ import org.fagu.fmv.ffmpeg.operation.IOEntity;
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.Processor;
 import org.fagu.fmv.ffmpeg.utils.Binary;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
 /**
@@ -230,6 +232,14 @@ public abstract class Demuxer<M> extends Format<M> implements MediaInput {
 	public M correctTsOverflow(boolean correctTsOverflow) {
 		parameter("-correct_ts_overflow", Integer.toString(correctTsOverflow ? 1 : 0));
 		return getMThis();
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.operation.MediaInput#getDuration()
+	 */
+	@Override
+	public Optional<Duration> getDuration() {
+		return Optional.empty();
 	}
 
 	/**

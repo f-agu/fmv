@@ -23,6 +23,7 @@ package org.fagu.fmv.core.exec.filter;
 import java.util.Set;
 
 import org.dom4j.Element;
+import org.fagu.fmv.core.Hash;
 import org.fagu.fmv.core.exec.Identifiable;
 import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.LoadUtils;
@@ -60,6 +61,14 @@ public class AudioMixFilterExec extends GenericFilterExec {
 	@Override
 	public String getCode() {
 		return "audiomix";
+	}
+
+	/**
+	 * @see org.fagu.fmv.core.exec.Attributable#getHash()
+	 */
+	@Override
+	public Hash getHash() {
+		return super.getHash().append(audioStart);
 	}
 
 	/**

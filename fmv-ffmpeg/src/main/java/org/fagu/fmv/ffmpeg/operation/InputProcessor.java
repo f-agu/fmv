@@ -23,6 +23,7 @@ package org.fagu.fmv.ffmpeg.operation;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.fagu.fmv.ffmpeg.executor.Executed;
@@ -33,6 +34,7 @@ import org.fagu.fmv.ffmpeg.filter.Label;
 import org.fagu.fmv.ffmpeg.filter.OutputKey;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.require.Require;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.Time;
 
 
@@ -133,6 +135,14 @@ public class InputProcessor extends Processor<InputProcessor> implements FilterI
 	@Override
 	public Set<IOKey> getInputKeys() {
 		return Collections.emptySet(); // ????
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getDuration()
+	 */
+	@Override
+	public Optional<Duration> getDuration() {
+		return input.getDuration();
 	}
 
 	/**

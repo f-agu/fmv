@@ -27,11 +27,14 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.Type;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
 /**
@@ -270,6 +273,18 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 	 */
 	public Map<IOKey, In> getInputMap() {
 		return Collections.unmodifiableMap(inputMap);
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.utils.Durable#getDuration()
+	 */
+	@Override
+	public Optional<Duration> getDuration() {
+		return inputMap.values()
+				.stream()
+				.map(i -> i.filterInput.getDuration().orElse(null))
+				.filter(Objects::nonNull)
+				.max((d1, d2) -> d1.compareTo(d2));
 	}
 
 	/**

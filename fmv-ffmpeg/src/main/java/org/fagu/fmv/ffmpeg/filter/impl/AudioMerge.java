@@ -23,12 +23,15 @@ package org.fagu.fmv.ffmpeg.filter.impl;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import org.fagu.fmv.ffmpeg.filter.FilterComplex;
 import org.fagu.fmv.ffmpeg.filter.FilterInput;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Type;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.Time;
 
 
@@ -96,6 +99,18 @@ public class AudioMerge extends FilterComplex {
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#getDuration()
+	 */
+	@Override
+	public Optional<Duration> getDuration() {
+		return filterInputMap.keySet()
+				.stream()
+				.map(i -> i.getDuration().orElse(null))
+				.filter(Objects::nonNull)
+				.min((d1, d2) -> d1.compareTo(d2));
 	}
 
 	/**

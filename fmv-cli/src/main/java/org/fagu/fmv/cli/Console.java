@@ -226,10 +226,10 @@ public class Console {
 		consoleReader.println("Create a default structure");
 		GenericExecutable rootExec = new GenericExecutable(project);
 
-		FadeAudioVideoFilterExec fadeOut = new FadeAudioVideoFilterExec(project, FadeType.OUT, Time.valueOf(0), Duration.valueOf(3));
+		FadeAudioVideoFilterExec fadeOut = new FadeAudioVideoFilterExec(project, FadeType.OUT, Time.valueOf(200), Duration.valueOf(3));
 		rootExec.add(fadeOut);
 
-		FadeAudioVideoFilterExec fadeIn = new FadeAudioVideoFilterExec(project, FadeType.IN, Time.valueOf(60), Duration.valueOf(3));
+		FadeAudioVideoFilterExec fadeIn = new FadeAudioVideoFilterExec(project, FadeType.IN, Time.valueOf(0), Duration.valueOf(2));
 		fadeOut.add(fadeIn);
 
 		GenericFilterExec audioMerge = new GenericFilterExec(project, "amerge");

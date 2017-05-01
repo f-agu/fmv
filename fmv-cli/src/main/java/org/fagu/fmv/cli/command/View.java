@@ -45,21 +45,29 @@ public class View extends AbstractCommand {
 	 */
 	@Override
 	public void run(String[] args) {
-		if(args.length != 1) {
+		int num = 0;
+		FileSource source = null;
+		if(args.length == 0) {
+			Integer lastView = project.getProperty(Properties.VIEW_LAST_MEDIA);
+			if(lastView == null) {
+				getPrinter().println("Last view undefined");
+				return;
+			}
+			source = project.getSource(lastView);
+			getPrinter().println("Last view n°" + lastView + ": " + source.getFile().getName());
+			num = lastView.intValue();
+		} else if(args.length > 1) {
 			println(getSyntax());
 			return;
+		} else {
+			num = NumberUtils.toInt(args[0], - 1);
+			source = project.getSource(num);
+			if(source == null) {
+				println("Media number not found: " + num);
+				return;
+			}
 		}
-		int num = NumberUtils.toInt(args[0], - 1);
 
-		if(num < 0) {
-			println("Media number error: " + args[0]);
-			return;
-		}
-		FileSource source = project.getSource(num);
-		if(source == null) {
-			println("Media number not found: " + num);
-			return;
-		}
 		open(source);
 		project.setProperty(Properties.VIEW_LAST_MEDIA, num);
 	}
@@ -77,7 +85,7 @@ public class View extends AbstractCommand {
 	 */
 	@Override
 	public String getSyntax() {
-		return "view <media num>";
+		return "view [media num]";
 	}
 
 	// **********************************************

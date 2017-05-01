@@ -20,11 +20,14 @@ limitations under the License.
  * #L%
  */
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 import org.fagu.fmv.core.exec.ObjectInvoker;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
 import org.fagu.fmv.ffmpeg.filter.FilterInput;
 import org.fagu.fmv.ffmpeg.filter.GeneratedSource;
+import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
@@ -51,6 +54,14 @@ public class FilterSource extends AbstractSource {
 	}
 
 	/**
+	 * @see org.fagu.fmv.core.exec.Identifiable#getTypes()
+	 */
+	@Override
+	public Set<Type> getTypes() {
+		return generatedSource.getTypes();
+	}
+
+	/**
 	 * @see org.fagu.fmv.core.exec.Source#createAndAdd(org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder)
 	 */
 	@Override
@@ -66,7 +77,7 @@ public class FilterSource extends AbstractSource {
 	 * @see org.fagu.fmv.core.exec.Attributable#getSpecificDuration()
 	 */
 	@Override
-	protected Duration getSpecificDuration() {
+	protected Optional<Duration> getSpecificDuration() {
 		return generatedSource.getDuration();
 	}
 

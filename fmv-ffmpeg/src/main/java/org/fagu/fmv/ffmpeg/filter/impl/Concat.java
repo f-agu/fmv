@@ -36,7 +36,6 @@ import org.fagu.fmv.ffmpeg.filter.FilterComplex;
 import org.fagu.fmv.ffmpeg.filter.FilterInput;
 import org.fagu.fmv.ffmpeg.filter.FilterNaming;
 import org.fagu.fmv.ffmpeg.filter.GeneratedSource;
-import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.Operation;
@@ -236,18 +235,16 @@ public class Concat extends FilterComplex {
 	 * @return
 	 */
 	private Set<Type> getTypes(InputProcessor inputProcessor) {
-		MovieMetadatas movieMetadatas = null;
-		try {
-			movieMetadatas = inputProcessor.getMovieMetadatas();
-		} catch(IOException e) {
-			throw new RuntimeException(e);
-		}
 		Set<Type> types = new HashSet<>(2);
-		if(movieMetadatas.contains(Type.AUDIO)) {
+		if(inputProcessor.contains(Type.AUDIO)) {
 			types.add(Type.AUDIO);
 		}
-		if(movieMetadatas.contains(Type.VIDEO) && ! movieMetadatas.getVideoStream().containsAttachedPicture()) {
-			types.add(Type.VIDEO);
+		try {
+			if(inputProcessor.contains(Type.VIDEO) && ! inputProcessor.getMovieMetadatas().getVideoStream().containsAttachedPicture()) {
+				types.add(Type.VIDEO);
+			}
+		} catch(IOException e) {
+			throw new RuntimeException(e);
 		}
 		return types;
 	}

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.dom4j.Element;
@@ -114,9 +115,7 @@ public class CutExecutable extends AbstractExecutable {
 	 */
 	@Override
 	public Hash getHash() {
-		Hash hash = super.getHash();
-		hash.append(startTime).append(duration);
-		return hash;
+		return super.getHash().append(startTime).append(duration);
 	}
 
 	/**
@@ -228,9 +227,9 @@ public class CutExecutable extends AbstractExecutable {
 	 * @see org.fagu.fmv.core.exec.Attributable#getSpecificDuration()
 	 */
 	@Override
-	protected Duration getSpecificDuration() {
+	protected Optional<Duration> getSpecificDuration() {
 		// TODO instead of output file, maybe the duration is over the output
-		return duration;
+		return Optional.ofNullable(duration);
 	}
 
 	// **********************************************

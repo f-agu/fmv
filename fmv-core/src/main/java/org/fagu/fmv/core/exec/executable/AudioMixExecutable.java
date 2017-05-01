@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.dom4j.Element;
+import org.fagu.fmv.core.Hash;
 import org.fagu.fmv.core.exec.Executable;
 import org.fagu.fmv.core.exec.FFUtils;
 import org.fagu.fmv.core.exec.FileCache.Cache;
@@ -77,6 +78,14 @@ public class AudioMixExecutable extends GenericExecutable {
 	@Override
 	public String getCode() {
 		return "audiomix";
+	}
+
+	/**
+	 * @see org.fagu.fmv.core.exec.Attributable#getHash()
+	 */
+	@Override
+	public Hash getHash() {
+		return super.getHash().append(mixAudioDuration).append(audioStart);
 	}
 
 	/**

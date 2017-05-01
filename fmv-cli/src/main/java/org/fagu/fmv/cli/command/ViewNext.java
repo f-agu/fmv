@@ -53,4 +53,15 @@ public class ViewNext extends ViewShift {
 		return "viewnext";
 	}
 
+	/**
+	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
+	 */
+	@Override
+	public void run(String[] args) {
+		if(args.length != 0) {
+			println(getSyntax());
+			return;
+		}
+		view();
+	}
 }

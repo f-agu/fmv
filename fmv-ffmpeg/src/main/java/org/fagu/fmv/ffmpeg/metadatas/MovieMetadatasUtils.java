@@ -1,5 +1,6 @@
 package org.fagu.fmv.ffmpeg.metadatas;
 
+import java.util.HashSet;
 /*-
  * #%L
  * fmv-ffmpeg
@@ -20,7 +21,9 @@ limitations under the License.
  * #L%
  */
 import java.util.Optional;
+import java.util.Set;
 
+import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
@@ -50,6 +53,20 @@ public class MovieMetadatasUtils {
 			return Optional.ofNullable(audioStream.duration());
 		}
 		return Optional.empty();
+	}
+
+	/**
+	 * @param movieMetadatas
+	 * @return
+	 */
+	public static Set<Type> getTypes(MovieMetadatas movieMetadatas) {
+		Set<Type> types = new HashSet<>(8);
+		for(Type type : Type.values()) {
+			if( ! movieMetadatas.getStreams(type).isEmpty()) {
+				types.add(type);
+			}
+		}
+		return types;
 	}
 
 }

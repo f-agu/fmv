@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.ioe;
 
+import java.util.Optional;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -21,6 +23,7 @@ package org.fagu.fmv.ffmpeg.ioe;
  */
 
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
 /**
@@ -36,6 +39,14 @@ public class IntMediaInput extends AbstractIOEntity<IntMediaInput> implements Me
 	public IntMediaInput(int i) {
 		super(Integer.toString(i));
 		this.i = i;
+	}
+
+	/**
+	 * @return
+	 */
+	@Override
+	public Optional<Duration> getDuration() {
+		return Optional.empty();
 	}
 
 	/**

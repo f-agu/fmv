@@ -21,11 +21,14 @@ package org.fagu.fmv.cli.command;
  */
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.cli.annotation.Alias;
 import org.fagu.fmv.cli.annotation.Command;
 import org.fagu.fmv.core.exec.Identifiable;
+import org.fagu.fmv.ffmpeg.operation.Type;
 
 
 /**
@@ -36,6 +39,8 @@ import org.fagu.fmv.core.exec.Identifiable;
 public class ExecList extends AbstractCommand {
 
 	private static final int ID_WIDTH = 7;
+
+	private static final int TYPE_WIDTH = 4;
 
 	private static final int TIME_WIDTH = 15;
 
@@ -78,12 +83,31 @@ public class ExecList extends AbstractCommand {
 		for(Identifiable identifiable : identifiables) {
 			StringBuilder buf = new StringBuilder(100);
 			buf.append(StringUtils.rightPad(identifiable.getId(), ID_WIDTH));
-			buf.append(StringUtils.rightPad(identifiable.getDuration().toString(), TIME_WIDTH));
+			buf.append(StringUtils.rightPad(typesToString(identifiable.getTypes()), TYPE_WIDTH));
+			buf.append(StringUtils.rightPad(identifiable.getDuration()
+					.flatMap(d -> Optional.of(d == null ? "-" : d.toString()))
+					.get(), TIME_WIDTH));
 			buf.append(StringUtils.leftPad("", paddingSize));
 			buf.append(identifiable.toString());
 			println(buf.toString());
 			displayIdentifiable(identifiable.getIdentifiableChildren(), paddingSize + 3);
 		}
+	}
+
+	/**
+	 * @param types
+	 * @return
+	 */
+	private String typesToString(Set<Type> types) {
+		StringBuilder buf = new StringBuilder();
+		for(Type type : Type.values()) {
+			if(types.contains(type)) {
+				buf.append(type.name().charAt(0));
+			} else {
+				buf.append(' ');
+			}
+		}
+		return buf.toString();
 	}
 
 }

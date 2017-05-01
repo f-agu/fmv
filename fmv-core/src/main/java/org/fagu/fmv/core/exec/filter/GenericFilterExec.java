@@ -92,6 +92,14 @@ public class GenericFilterExec extends Attributable implements FilterExec {
 	}
 
 	/**
+	 * @see org.fagu.fmv.core.exec.Identifiable#getTypes()
+	 */
+	@Override
+	public Set<Type> getTypes() {
+		return getFilter().getTypes();
+	}
+
+	/**
 	 * @see org.fagu.fmv.core.exec.Attributable#toString()
 	 */
 	@Override
@@ -137,8 +145,10 @@ public class GenericFilterExec extends Attributable implements FilterExec {
 	 */
 	protected void undeclaredTypes(Set<Type> undeclaredTypes, FilterComplexBase filterComplex, Cache cache, FFMPEGExecutorBuilder builder) {
 		for(Type type : undeclaredTypes) {
-			builder.getFFMPEGOperation().getInputProcessorStream()
-					.filter(ip -> ip.contains(type)).forEach(ip -> {
+			builder.getFFMPEGOperation()
+					.getInputProcessorStream()
+					.filter(ip -> ip.contains(type))
+					.forEach(ip -> {
 						filterComplex.addInput(ip, type);
 					});
 		}

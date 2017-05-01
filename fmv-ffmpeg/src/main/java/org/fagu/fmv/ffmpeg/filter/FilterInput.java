@@ -25,12 +25,13 @@ import java.util.Set;
 
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.Type;
+import org.fagu.fmv.ffmpeg.utils.Durable;
 
 
 /**
  * @author f.agu
  */
-public interface FilterInput {
+public interface FilterInput extends Durable {
 
 	/**
 	 * @return
@@ -52,4 +53,5 @@ public interface FilterInput {
 	 * @return
 	 */
 	boolean contains(Type type);
+
 }

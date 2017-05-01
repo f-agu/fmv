@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -32,6 +33,7 @@ import org.fagu.fmv.core.Hash;
 import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.LoadUtils;
 import org.fagu.fmv.core.project.Project;
+import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
@@ -65,10 +67,14 @@ public abstract class Attributable extends BaseIdentifiable {
 	public void load(Project project, Element fromElement, Identifiable parent) throws LoadException {
 		super.load(project, fromElement, parent);
 		duration = LoadUtils.attributeDuration(fromElement, ATTRIBUTE_RAWDURATION);
+		if(Duration.valueOf(0).equals(duration)) {
+			duration = null;
+		}
 
 		Set<String> ignoreAttributes = ignoreAttributes();
 
-		LoadUtils.attributes(fromElement).stream()
+		LoadUtils.attributes(fromElement)
+				.stream()
 				.filter(attr -> ! ignoreAttributes.contains(attr.getName()))
 				.forEach(attr -> attributeMap.put(attr.getName(), attr.getValue()));
 	}
@@ -80,10 +86,7 @@ public abstract class Attributable extends BaseIdentifiable {
 	public void save(Element toElement) {
 		super.save(toElement);
 		attributeMap.forEach(toElement::addAttribute);
-		Duration curDuration = getDuration();
-		if(curDuration != null) {
-			toElement.addAttribute(ATTRIBUTE_RAWDURATION, curDuration.toString());
-		}
+		getDuration().ifPresent(d -> toElement.addAttribute(ATTRIBUTE_RAWDURATION, d.toString()));
 	}
 
 	/**
@@ -100,11 +103,23 @@ public abstract class Attributable extends BaseIdentifiable {
 	 * @see org.fagu.fmv.core.exec.Identifiable#getDuration()
 	 */
 	@Override
-	public Duration getDuration() {
+	public Optional<Duration> getDuration() {
 		if(duration != null) {
-			return duration;
+			return Optional.of(duration);
 		}
-		return setDuration(getSpecificDuration());
+		return setDuration(getSpecificDuration().orElse(null));
+	}
+
+	/**
+	 * @see org.fagu.fmv.core.exec.Identifiable#getTypes()
+	 */
+	@Override
+	public Set<Type> getTypes() {
+		Set<Type> types = new HashSet<>(8);
+		filterExecs.forEach(fe -> types.addAll(fe.getTypes()));
+		executables.forEach(fe -> types.addAll(fe.getTypes()));
+		sources.forEach(fe -> types.addAll(fe.getTypes()));
+		return types;
 	}
 
 	/**
@@ -122,9 +137,9 @@ public abstract class Attributable extends BaseIdentifiable {
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder(50);
-		buf.append('[');
 		Iterator<Entry<String, String>> iterator = attributeMap.entrySet().iterator();
 		if(iterator.hasNext()) {
+			buf.append('[');
 			for(;;) {
 				Entry<String, String> entry = iterator.next();
 				buf.append(entry.getKey()).append(':').append(entry.getValue());
@@ -133,8 +148,8 @@ public abstract class Attributable extends BaseIdentifiable {
 				}
 				buf.append(',').append(' ');
 			}
+			buf.append(']');
 		}
-		buf.append(']');
 		return buf.toString();
 	}
 
@@ -156,16 +171,16 @@ public abstract class Attributable extends BaseIdentifiable {
 	 * @param duration
 	 * @return
 	 */
-	protected Duration setDuration(Duration duration) {
+	protected Optional<Duration> setDuration(Duration duration) {
 		getProject().modified();
 		this.duration = duration;
-		return duration;
+		return Optional.ofNullable(duration);
 	}
 
 	/**
 	 * @return
 	 */
-	protected Duration getSpecificDuration() {
+	protected Optional<Duration> getSpecificDuration() {
 		return getGlobalDuration();
 	}
 

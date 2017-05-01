@@ -21,17 +21,19 @@ package org.fagu.fmv.core.exec;
  */
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.fagu.fmv.core.Hash;
 import org.fagu.fmv.core.project.Project;
-import org.fagu.fmv.ffmpeg.utils.Duration;
+import org.fagu.fmv.ffmpeg.operation.Type;
+import org.fagu.fmv.ffmpeg.utils.Durable;
 
 
 /**
  * @author f.agu
  */
-public interface Identifiable extends IODom {
+public interface Identifiable extends IODom, Durable {
 
 	/**
 	 * @return
@@ -145,9 +147,10 @@ public interface Identifiable extends IODom {
 	Hash getHash();
 
 	/**
+	 * @param type
 	 * @return
 	 */
-	Duration getDuration();
+	Set<Type> getTypes();
 
 	/**
 	 * 

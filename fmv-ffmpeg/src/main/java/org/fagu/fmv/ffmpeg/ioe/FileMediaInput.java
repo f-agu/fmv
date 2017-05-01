@@ -21,9 +21,14 @@ package org.fagu.fmv.ffmpeg.ioe;
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
+import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatasUtils;
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
 /**
@@ -32,6 +37,8 @@ import org.fagu.fmv.ffmpeg.operation.MediaInput;
 public class FileMediaInput extends AbstractIOEntity<FileMediaInput> implements MediaInput {
 
 	private final File file;
+
+	private MovieMetadatas movieMetadatas;
 
 	/**
 	 * @param file
@@ -46,6 +53,21 @@ public class FileMediaInput extends AbstractIOEntity<FileMediaInput> implements 
 	 */
 	public File getFile() {
 		return file;
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.operation.MediaInput#getDuration()
+	 */
+	@Override
+	public Optional<Duration> getDuration() {
+		if(movieMetadatas != null) {
+			try {
+				movieMetadatas = MovieMetadatas.with(file).extract();
+			} catch(IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return MovieMetadatasUtils.getDuration(movieMetadatas);
 	}
 
 	/**

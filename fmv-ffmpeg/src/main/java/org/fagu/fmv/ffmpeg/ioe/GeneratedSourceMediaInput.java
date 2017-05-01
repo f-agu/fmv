@@ -21,11 +21,13 @@ package org.fagu.fmv.ffmpeg.ioe;
  */
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.fagu.fmv.ffmpeg.filter.GeneratedSource;
 import org.fagu.fmv.ffmpeg.operation.IOEntity;
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.Processor;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
 /**
@@ -52,8 +54,17 @@ public class GeneratedSourceMediaInput extends AbstractIOEntity<GeneratedSourceM
 	}
 
 	/**
+	 * @see org.fagu.fmv.ffmpeg.operation.MediaInput#getDuration()
+	 */
+	@Override
+	public Optional<Duration> getDuration() {
+		return generatedSource.getDuration();
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return generatedSource.toString();
 	}

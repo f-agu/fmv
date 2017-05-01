@@ -54,7 +54,7 @@ public class AppendLastView extends Append {
 			return;
 		}
 		FileSource source = project.getSource(lastView);
-		getPrinter().println("Last view n°" + lastView + ": " + source.getFile().getName());
+		getPrinter().println("Last view nÂ°" + lastView + ": " + source.getFile().getName());
 		String[] strs = new String[args.length + 1];
 		strs[0] = lastView.toString();
 		System.arraycopy(args, 0, strs, 1, args.length);

@@ -23,6 +23,7 @@ package org.fagu.fmv.core.exec.filter;
 import java.util.Set;
 
 import org.dom4j.Element;
+import org.fagu.fmv.core.Hash;
 import org.fagu.fmv.core.exec.Identifiable;
 import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.LoadUtils;
@@ -72,6 +73,14 @@ public class FadeAudioVideoFilterExec extends GenericFilterExec {
 	}
 
 	/**
+	 * @see org.fagu.fmv.core.exec.Attributable#getHash()
+	 */
+	@Override
+	public Hash getHash() {
+		return super.getHash().append(fadeType).append(startTime).append(duration);
+	}
+
+	/**
 	 * @see org.fagu.fmv.core.exec.executable.GenericExecutable#load(org.fagu.fmv.core.project.Project,
 	 *      org.dom4j.Element, org.fagu.fmv.core.exec.Identifiable)
 	 */
@@ -96,12 +105,13 @@ public class FadeAudioVideoFilterExec extends GenericFilterExec {
 	}
 
 	/**
-	 * @return
+	 * @see org.fagu.fmv.core.exec.filter.GenericFilterExec#toString()
 	 */
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder(50);
-		buf.append(getCode()).append(' ').append(super.toString());
+		buf.append(super.toString()).append(' ').append(fadeType).append(" ; starts at ").append(startTime);
+		buf.append(" on ").append(duration);
 		return buf.toString();
 	}
 

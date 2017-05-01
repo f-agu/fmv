@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.filter;
 
+import java.util.Optional;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -37,5 +39,5 @@ public interface GeneratedSource extends Filter {
 	/**
 	 * @return
 	 */
-	Duration getDuration();
+	Optional<Duration> getDuration();
 }

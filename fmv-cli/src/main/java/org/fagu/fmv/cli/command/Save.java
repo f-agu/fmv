@@ -22,6 +22,7 @@ package org.fagu.fmv.cli.command;
 
 import java.io.IOException;
 
+import org.fagu.fmv.cli.annotation.Alias;
 import org.fagu.fmv.cli.annotation.Command;
 
 
@@ -29,6 +30,7 @@ import org.fagu.fmv.cli.annotation.Command;
  * @author f.agu
  */
 @Command("save")
+@Alias("s")
 public class Save extends AbstractCommand {
 
 	/**

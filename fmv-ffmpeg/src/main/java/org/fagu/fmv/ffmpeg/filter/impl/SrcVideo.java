@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.filter.impl;
 
+import java.util.Optional;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -100,8 +102,8 @@ public abstract class SrcVideo<T> extends AbstractFilter implements MediaInput, 
 	 * @see org.fagu.fmv.ffmpeg.filter.GeneratedSource#getDuration()
 	 */
 	@Override
-	public Duration getDuration() {
-		return duration;
+	public Optional<Duration> getDuration() {
+		return Optional.ofNullable(duration);
 	}
 
 	// **********************************************

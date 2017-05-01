@@ -21,6 +21,7 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  */
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -135,8 +136,8 @@ public class AudioGenerator extends AbstractFilter implements MediaInput, Genera
 	 * @see org.fagu.fmv.ffmpeg.filter.GeneratedSource#getDuration()
 	 */
 	@Override
-	public Duration getDuration() {
-		return duration;
+	public Optional<Duration> getDuration() {
+		return Optional.ofNullable(duration);
 	}
 
 }

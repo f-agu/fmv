@@ -41,14 +41,9 @@ public abstract class ViewShift extends View {
 	}
 
 	/**
-	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
+	 * 
 	 */
-	@Override
-	public void run(String[] args) {
-		if(args.length != 0) {
-			println(getSyntax());
-			return;
-		}
+	public void view() {
 		Integer lastView = project.getProperty(Properties.VIEW_LAST_MEDIA);
 		if(lastView == null) {
 			// getPrinter().println("last view not defined");
@@ -56,7 +51,7 @@ public abstract class ViewShift extends View {
 			lastView = Integer.valueOf(0);
 		}
 		FileSource source = project.getSource(lastView);
-		getPrinter().println("Last view n°" + lastView + ": " + source.getFile().getName());
+		getPrinter().println("Last view nÂ°" + lastView + ": " + source.getFile().getName());
 		lastView = operator.applyAsInt(lastView);
 		super.run(new String[] {lastView.toString()});
 	}

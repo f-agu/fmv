@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.ioe;
 
+import java.util.Optional;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -21,6 +23,7 @@ package org.fagu.fmv.ffmpeg.ioe;
  */
 
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
+import org.fagu.fmv.ffmpeg.utils.Duration;
 
 
 /**
@@ -40,5 +43,13 @@ public class PipeMediaInput extends AbstractPipeMedia<PipeMediaInput> implements
 	 */
 	public PipeMediaInput(Pipe pipe) {
 		super(pipe);
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.operation.MediaInput#getDuration()
+	 */
+	@Override
+	public Optional<Duration> getDuration() {
+		return Optional.empty();
 	}
 }

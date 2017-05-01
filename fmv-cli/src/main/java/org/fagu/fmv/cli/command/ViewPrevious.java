@@ -53,4 +53,16 @@ public class ViewPrevious extends ViewShift {
 		return "viewprevious";
 	}
 
+	/**
+	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
+	 */
+	@Override
+	public void run(String[] args) {
+		if(args.length != 0) {
+			println(getSyntax());
+			return;
+		}
+		view();
+	}
+
 }

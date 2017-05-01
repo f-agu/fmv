@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.dom4j.Element;
+import org.fagu.fmv.core.Hash;
 import org.fagu.fmv.core.exec.FileCache.Cache;
 import org.fagu.fmv.core.exec.Identifiable;
 import org.fagu.fmv.core.project.LoadException;
@@ -60,6 +61,14 @@ public class SpeedExecutable extends GenericExecutable {
 	@Override
 	public String getCode() {
 		return "speed";
+	}
+
+	/**
+	 * @see org.fagu.fmv.core.exec.Attributable#getHash()
+	 */
+	@Override
+	public Hash getHash() {
+		return super.getHash().append(multiply);
 	}
 
 	/**
