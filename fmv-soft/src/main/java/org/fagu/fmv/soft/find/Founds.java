@@ -58,10 +58,10 @@ public class Founds implements Iterable<SoftFound> {
 	 * @return
 	 */
 	public boolean isFound() {
-		return founds.stream() //
-				.map(f -> f.isFound()) //
-				.filter(f -> f) //
-				.findFirst() //
+		return founds.stream()
+				.map(f -> f.isFound())
+				.filter(f -> f)
+				.findFirst()
 				.orElse(false);
 	}
 

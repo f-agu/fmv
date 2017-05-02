@@ -103,6 +103,7 @@ public class FMVExecutor extends DefaultExecutor {
 		proxyFMVExecListener = listenerProxifier.proxify();
 
 		addProcessDestroyer(new ShutdownHookProcessDestroyer());
+		addListener(ExecStats.getInstance().getExecListener());
 	}
 
 	/**
@@ -161,9 +162,14 @@ public class FMVExecutor extends DefaultExecutor {
 	@Override
 	public int execute(CommandLine command, Map<String, String> environment) throws ExecuteException, IOException {
 		proxyFMVExecListener.eventPreExecute(this, command, environment, null);
-		int exitValue = super.execute(command, environment);
-		proxyFMVExecListener.eventPostExecute(this, command, environment, null);
-		return exitValue;
+		try {
+			int exitValue = super.execute(command, environment);
+			proxyFMVExecListener.eventPostExecute(this, command, environment, null);
+			return exitValue;
+		} catch(IOException e) {
+			proxyFMVExecListener.eventFailed(this, command, environment, null, e);
+			throw e;
+		}
 	}
 
 	/**
@@ -172,12 +178,17 @@ public class FMVExecutor extends DefaultExecutor {
 	 */
 	@Override
 	public void execute(CommandLine command, Map<String, String> environment, ExecuteResultHandler handler) throws ExecuteException, IOException {
+		proxyFMVExecListener.eventPreExecute(this, command, environment, handler);
 		try {
-			proxyFMVExecListener.eventPreExecute(this, command, environment, handler);
-			super.execute(command, environment, handler);
-			proxyFMVExecListener.eventPostExecute(this, command, environment, handler);
-		} catch(ExecuteException e) {
-			throw new ExecuteException(command.toString(), e.getExitValue(), e);
+			try {
+				super.execute(command, environment, handler);
+				proxyFMVExecListener.eventPostExecute(this, command, environment, handler);
+			} catch(ExecuteException e) {
+				throw new ExecuteException(command.toString(), e.getExitValue(), e);
+			}
+		} catch(IOException e) {
+			proxyFMVExecListener.eventFailed(this, command, environment, handler, e);
+			throw e;
 		}
 	}
 

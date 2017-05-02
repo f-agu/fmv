@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.exec;
 
+import java.io.IOException;
+
 /*
  * #%L
  * fmv-utils
@@ -47,4 +49,15 @@ public interface FMVExecListener {
 	 */
 	default void eventPostExecute(FMVExecutor fmvExecutor, CommandLine command, @SuppressWarnings("rawtypes") Map environment,
 			ExecuteResultHandler handler) {}
+
+	/**
+	 * @param fmvExecutor
+	 * @param command
+	 * @param environment
+	 * @param handler
+	 * @param ioe
+	 */
+	default void eventFailed(FMVExecutor fmvExecutor, CommandLine command, @SuppressWarnings("rawtypes") Map environment,
+			ExecuteResultHandler handler, IOException ioe) {}
+
 }

@@ -29,20 +29,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ActuatorConfig {
 
-	/**
-	 * @return
-	 */
 	@Bean
 	public SoftInfoContributor softVersionInfoContributor() {
 		return new SoftInfoContributor();
 	}
 
-	/**
-	 * @return
-	 */
 	@Bean
 	public SoftHealthIndicator softHealthIndicator() {
 		return new SoftHealthIndicator();
+	}
+
+	@Bean
+	public SoftMetrics softMetrics() {
+		return new SoftMetrics();
 	}
 
 }
