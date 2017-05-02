@@ -41,6 +41,7 @@ import org.fagu.fmv.soft.Soft.SoftExecutor;
 import org.fagu.fmv.soft.SoftTestCase;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.fagu.fmv.soft.exec.exception.NestedException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -101,6 +102,7 @@ public class GSExceptionKnowAnalyzeTestCase {
 	 * @throws IOException
 	 */
 	@Test
+	@Ignore
 	public void testPDFToImage() throws IOException {
 		StringJoiner joiner = new StringJoiner(";");
 		List<Consumer<SoftExecutor>> consumers = Arrays.asList(null, se -> se.ifExceptionIsKnownDo(ek -> ek.onMessage(joiner::add).doThrow()));

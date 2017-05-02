@@ -38,7 +38,7 @@ import org.apache.commons.exec.PumpStreamHandler;
 /**
  * @author f.agu
  */
-public class ExecHelper<T> {
+public class ExecHelper<T extends ExecHelper<?>> {
 
 	protected boolean debug;
 
