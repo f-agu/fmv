@@ -32,8 +32,8 @@ import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.Soft.SoftExecutor;
-import org.fagu.fmv.soft.Soft.SoftSearch;
+import org.fagu.fmv.soft.SoftExecutor;
+import org.fagu.fmv.soft.SoftSearch;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.policy.VersionPolicy;
 import org.fagu.version.Version;

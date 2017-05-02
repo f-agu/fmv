@@ -47,7 +47,7 @@ import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.media.Metadatas;
 import org.fagu.fmv.media.MetadatasBuilder;
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.Soft.SoftExecutor;
+import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.utils.collection.MapList;
 import org.fagu.fmv.utils.collection.MultiValueMaps;
 

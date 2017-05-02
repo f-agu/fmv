@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.Soft.SoftExecutor;
+import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;

@@ -39,7 +39,7 @@ import org.fagu.fmv.ffmpeg.operation.Progress;
 import org.fagu.fmv.ffmpeg.soft.FFMpegSoftProvider;
 import org.fagu.fmv.ffmpeg.soft.FFSoft;
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.Soft.SoftExecutor;
+import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.soft.exec.BufferedReadLine;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.FMVExecutor;
@@ -497,7 +497,7 @@ public class FFExecutor<R> {
 		 * @throws IOException
 		 */
 		protected Executed<R> _execute() throws IOException {
-			org.fagu.fmv.soft.Soft.SoftExecutor.Executed executed = getSoftExecutor().execute();
+			org.fagu.fmv.soft.SoftExecutor.Executed executed = getSoftExecutor().execute();
 			return createExecuted(executed.getExecuteTime(), operation.getResult());
 		}
 

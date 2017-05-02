@@ -52,7 +52,7 @@ import org.fagu.fmv.media.MetadataProperties;
 import org.fagu.fmv.media.Metadatas;
 import org.fagu.fmv.media.MetadatasBuilder;
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.Soft.SoftExecutor;
+import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.utils.media.Size;
 
 import net.sf.json.JSONObject;

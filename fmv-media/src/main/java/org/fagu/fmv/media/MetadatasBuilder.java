@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.Soft.SoftExecutor;
+import org.fagu.fmv.soft.SoftExecutor;
 
 
 /**

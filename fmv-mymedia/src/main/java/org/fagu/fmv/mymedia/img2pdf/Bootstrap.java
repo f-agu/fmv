@@ -35,8 +35,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.im.soft.Convert;
+import org.fagu.fmv.soft.ExecListener;
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.Soft.ExecListener;
 import org.fagu.fmv.soft.gs.GS;
 import org.fagu.fmv.utils.ByteSize;
 
