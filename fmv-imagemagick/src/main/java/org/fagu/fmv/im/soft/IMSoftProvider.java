@@ -22,12 +22,12 @@ package org.fagu.fmv.im.soft;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,15 +37,12 @@ import org.fagu.fmv.im.exception.IMExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
-import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
-import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
-import org.fagu.fmv.soft.find.SoftFound;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftInfo;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
-import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.fmv.soft.find.policy.VersionPolicy;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
@@ -74,8 +71,29 @@ public abstract class IMSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
-		return ExecSoftFoundFactory.withParameters("-version")
-				.parseFactory(this::createParser)
+		Pattern pattern = Pattern.compile("Version\\: ImageMagick ([0-9\\.\\-]+) (?:.*)([0-9]{4}-[0-9]{2}-[0-9]{2}) .*");
+		AtomicBoolean firstPass = new AtomicBoolean(false);
+		return prepareSoftFoundFactory()
+				.withParameters("-version")
+				.parseVersionDate(line -> {
+					if(firstPass.get()) {
+						return null;
+					}
+					firstPass.set(true);
+					Matcher matcher = pattern.matcher(line);
+					if(matcher.matches()) {
+						Version version = VersionParserManager.parse(matcher.group(1));
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						Date date = null;
+						try {
+							date = dateFormat.parse(matcher.group(2));
+						} catch(Exception e) {
+							// ignore
+						}
+						return new VersionDate(version, date);
+					}
+					return null;
+				})
 				.build();
 	}
 
@@ -151,48 +169,5 @@ public abstract class IMSoftProvider extends SoftProvider {
 	public Class<? extends ExceptionKnownAnalyzer> getExceptionKnownAnalyzerClass() {
 		return IMExceptionKnownAnalyzer.class;
 	}
-	// ***********************************************************************
 
-	/**
-	 * @param file
-	 * @param softPolicy
-	 * @return
-	 */
-	Parser createParser(File file, SoftPolicy<?, ?, ?> softPolicy) {
-		return new Parser() {
-
-			private final Pattern pattern = Pattern.compile("Version\\: ImageMagick ([0-9\\.\\-]+) (?:.*)([0-9]{4}-[0-9]{2}-[0-9]{2}) .*");
-
-			private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-			private Version version;
-
-			private Date date;
-
-			private boolean firstPass;
-
-			@Override
-			public void readLine(String line) {
-				if(firstPass) {
-					return;
-				}
-				firstPass = true;
-				Matcher matcher = pattern.matcher(line);
-				if(matcher.matches()) {
-					version = VersionParserManager.parse(matcher.group(1));
-					try {
-						date = dateFormat.parse(matcher.group(2));
-					} catch(Exception e) {
-						// ignore
-					}
-				}
-			}
-
-			@Override
-			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-				return softPolicy.toSoftFound(new VersionDateSoftInfo(file, getName(), version, date));
-			}
-
-		};
-	}
 }

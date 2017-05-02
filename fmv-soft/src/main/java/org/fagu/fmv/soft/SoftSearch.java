@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.ServiceLoader;
-import java.util.concurrent.ExecutionException;
 
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFindListener;
@@ -17,6 +16,7 @@ import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.SoftTester;
 import org.fagu.fmv.soft.utils.Proxifier;
+
 
 /**
  * @author f.agu
@@ -113,8 +113,6 @@ public class SoftSearch {
 					return SoftFound.foundBadSoft(file);
 				}
 				return softFound;
-			} catch(ExecutionException e) {
-				return SoftFound.foundError(file, e.getMessage()).setLocalizedBy(locator.toString());
 			} catch(IOException e) {
 				return SoftFound.foundError(file, e.getMessage()).setLocalizedBy(locator.toString());
 			}

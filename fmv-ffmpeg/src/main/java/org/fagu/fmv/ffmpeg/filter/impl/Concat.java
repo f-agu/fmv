@@ -161,7 +161,6 @@ public class Concat extends FilterComplex {
 	/**
 	 * @param operation
 	 * @param filterNaming
-	 * @param builder
 	 */
 	@Override
 	protected void beforeAddAround(Operation<?, ?> operation, FilterNaming filterNaming) {

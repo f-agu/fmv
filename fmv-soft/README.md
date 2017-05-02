@@ -1,6 +1,6 @@
 # FMV-Soft
 
-Easy way to fInd and execute an external binary. 
+Easy way to find and execute an external binary. 
 
 
 ## Getting started
@@ -34,8 +34,10 @@ private boolean checkSome() {
 	softs.add(PdfInfo.search());
 	softs.add(PdfToText.search());
 	softs.add(GS.search());
-	SoftLogger softLogger = new SoftLogger(softs);
-	return softLogger.log(System.out::println);
+	return new SoftLogger(softs)
+		.supplyInfoContributor()  // for spring actuator
+		.supplyHealthIndicator() // for spring actuator
+		.log(System.out::println);
 }
 ```
 display
@@ -75,34 +77,20 @@ class AnotherBinarySoftProvider extends SoftProvider {
 	
 	// Used to extract the version of the binary
 	// Command line executed: another-binary --version
-	public SoftFoundFactory createSoftFoundFactory() {
-		return ExecSoftFoundFactory.withParameters("--version")
-				.parseFactory(file -> createParser(getSoftName(), file))
+		final Pattern pattern = Pattern.compile(".* version \"(.*)\"");
+		return prepareSoftFoundFactory()
+				.withParameters("-version")
+				.parseVersion(line -> {
+					Matcher matcher = pattern.matcher(line);
+					return matcher.matches() ? VersionParserManager.parse(matcher.group(1)) : null;
+				})
 				.build();
-	}
 	
 	// minimal version
 	public SoftPolicy<?, ?, ?> getSoftPolicy() {
 		return new VersionPolicy().onAllPlatforms().minVersion(new Version(4, 7));
 	}
 	
-	Parser createParser(SoftName softName, File file) {
-		return new Parser() {
-
-			private Version version;
-			
-			public void readLine(String line) {
-				// parse each line of the output
-				version = ...;
-			}
-
-			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-				SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
-				return softPolicy.toSoftFound(new VersionSoftInfo(file, softName, version));
-			}
-
-		};
-	}
 }
 ```
 

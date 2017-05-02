@@ -27,7 +27,9 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.version.Version;
@@ -73,7 +75,8 @@ public class GSSoftProviderTestCase {
 	 */
 	private Parser newParser() {
 		GSSoftProvider softProvider = new GSSoftProvider();
-		return softProvider.createParser(new File("."), softProvider.getSoftPolicy());
+		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory()).getParserFactory();
+		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
 	/**

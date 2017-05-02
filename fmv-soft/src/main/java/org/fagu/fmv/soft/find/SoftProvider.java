@@ -35,6 +35,7 @@ import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.soft.SoftSearch;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryPrepare;
 import org.fagu.fmv.soft.find.policy.VersionPolicy;
 import org.fagu.version.Version;
 
@@ -187,6 +188,15 @@ public abstract class SoftProvider {
 	 */
 	public static Stream<SoftProvider> getSoftProviders() {
 		return StreamSupport.stream(ServiceLoader.load(SoftProvider.class).spliterator(), false);
+	}
+
+	// ************************************************
+
+	/**
+	 * @return
+	 */
+	protected ExecSoftFoundFactoryPrepare prepareSoftFoundFactory() {
+		return ExecSoftFoundFactory.forProvider(this);
 	}
 
 }

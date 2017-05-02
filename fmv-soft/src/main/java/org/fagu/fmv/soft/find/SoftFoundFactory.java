@@ -22,7 +22,6 @@ package org.fagu.fmv.soft.find;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -35,8 +34,7 @@ public interface SoftFoundFactory {
 	 * @param locator
 	 * @param softPolicy
 	 * @return
-	 * @throws ExecutionException
 	 * @throws IOException
 	 */
-	SoftFound create(File file, Locator locator, SoftPolicy<?, ?, ?> softPolicy) throws ExecutionException, IOException;
+	SoftFound create(File file, Locator locator, SoftPolicy<?, ?, ?> softPolicy) throws IOException;
 }

@@ -25,8 +25,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.exec.CommandLine;
@@ -37,6 +39,10 @@ import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.ExecHelper;
 import org.fagu.fmv.soft.exec.FMVCommandLine;
 import org.fagu.fmv.soft.exec.FMVExecutor;
+import org.fagu.fmv.soft.exec.ReadLine;
+import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
+import org.fagu.fmv.soft.find.info.VersionSoftInfo;
+import org.fagu.version.Version;
 
 
 /**
@@ -49,21 +55,98 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 	/**
 	 * @author f.agu
 	 */
+	public static class ExecSoftFoundFactoryPrepare {
+
+		private final SoftProvider softProvider;
+
+		private ExecSoftFoundFactoryPrepare(SoftProvider softProvider) {
+			this.softProvider = Objects.requireNonNull(softProvider);
+		}
+
+		public ExecSoftFoundFactoryBuilder withParameters(String... parameters) {
+			return new ExecSoftFoundFactoryBuilder(softProvider, Collections.unmodifiableList(new ArrayList<>(Arrays.asList(parameters))));
+		}
+	}
+
+	// ------------------------------------------------------------
+
+	/**
+	 * @author f.agu
+	 */
 	public static class ExecSoftFoundFactoryBuilder extends ExecHelper<ExecSoftFoundFactoryBuilder> {
 
-		private final ExecSoftFoundFactory execSoftInfoFactory;
+		private final SoftProvider softProvider;
+
+		private final List<String> parameters;
+
+		private ParserFactory parserFactory;
 
 		private boolean build;
 
-		private List<String> readLineList;
+		private ExecutorFactory executorFactory;
 
-		private ExecSoftFoundFactoryBuilder(ExecSoftFoundFactory execSoftInfoFactory) {
-			this.execSoftInfoFactory = execSoftInfoFactory;
-			execSoftInfoFactory.builder = this;
+		private ExecSoftFoundFactoryBuilder(SoftProvider softProvider, List<String> parameters) {
+			this.softProvider = softProvider;
+			this.parameters = parameters;
+
 		}
 
 		public ExecSoftFoundFactoryBuilder parseFactory(ParserFactory parserFactory) {
-			execSoftInfoFactory.parserFactory = parserFactory;
+			this.parserFactory = parserFactory;
+			return this;
+		}
+
+		public ExecSoftFoundFactoryBuilder parseVersion(ParseVersion parseVersion) {
+			Objects.requireNonNull(parseVersion);
+			return parseFactory((file, softPolicy) -> {
+				return new Parser() {
+
+					private Version version;
+
+					@Override
+					public void readLine(String line) {
+						Version v = parseVersion.readLineAndParse(line);
+						if(v != null) {
+							version = v;
+						}
+					}
+
+					@Override
+					public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
+						return softPolicy.toSoftFound(new VersionSoftInfo(file, softProvider.getName(), version));
+					}
+				};
+			});
+		}
+
+		public ExecSoftFoundFactoryBuilder parseVersionDate(ParseVersionDate parseVersiondate) {
+			Objects.requireNonNull(parseVersiondate);
+			return parseFactory((file, softPolicy) -> {
+				return new Parser() {
+
+					private Version version;
+
+					private Date date;
+
+					@Override
+					public void readLine(String line) {
+						VersionDate versionDate = parseVersiondate.readLineAndParse(line);
+						if(versionDate != null) {
+							versionDate.getVersion().ifPresent(v -> version = v);
+							versionDate.getDate().ifPresent(d -> date = d);
+						}
+					}
+
+					@Override
+					public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
+						return softPolicy.toSoftFound(new VersionDateSoftInfo(file, softProvider.getName(), version, date));
+					}
+				};
+			});
+		}
+
+		public ExecSoftFoundFactoryBuilder withExecutorFactory(ExecutorFactory executorFactory) {
+			this.executorFactory = executorFactory;
 			return this;
 		}
 
@@ -72,23 +155,23 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 			if( ! build) {
 				throw new IllegalStateException("Already call");
 			}
-			if(execSoftInfoFactory.parserFactory == null) {
+			if(parserFactory == null) {
 				throw new IllegalStateException("ParserFactory is missing");
 			}
-			return execSoftInfoFactory;
+			ExecutorFactory execFact = executorFactory != null ? executorFactory : getDefaultExecutorFactory();
+			return new ExecSoftFoundFactory(execFact, parameters, parserFactory);
 		}
 
 		// **********************************************************
 
-		private FMVExecutor createExecutor(File file, Parser parser) {
-			readLineList = new ArrayList<>();
-			BufferedReadLine bufferedReadLine = new BufferedReadLine(readLineList);
-
-			FMVExecutor fmvExecutor = FMVExecutor.create(file
-					.getParentFile(), getOutReadLine(bufferedReadLine, parser::readLineOut), getErrReadLine(bufferedReadLine, parser::readLineErr), charset);
-			fmvExecutor.setTimeOut(10_000); // default: 10 seconds
-			applyCustomizeExecutor(fmvExecutor);
-			return fmvExecutor;
+		private ExecutorFactory getDefaultExecutorFactory() {
+			return (file, parser, readLine) -> {
+				FMVExecutor fmvExecutor = FMVExecutor.create(file
+						.getParentFile(), getOutReadLine(readLine, parser::readLineOut), getErrReadLine(readLine, parser::readLineErr), charset);
+				fmvExecutor.setTimeOut(10_000); // default: 10 seconds
+				applyCustomizeExecutor(fmvExecutor);
+				return fmvExecutor;
+			};
 		}
 
 	}
@@ -171,37 +254,131 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	// ------------------------------------------------------------
 
-	private final List<String> parameters;
+	/**
+	 * @author fagu
+	 */
+	@FunctionalInterface
+	public interface ParseVersion {
 
-	private ParserFactory parserFactory;
+		/**
+		 * @param line
+		 * @return
+		 */
+		Version readLineAndParse(String line);
+	}
 
-	private ExecSoftFoundFactoryBuilder builder;
+	// ------------------------------------------------------------
 
 	/**
-	 * @param parameters
+	 * @author fagu
 	 */
-	private ExecSoftFoundFactory(String... parameters) {
-		this.parameters = Collections.unmodifiableList(Arrays.asList(parameters));
+	@FunctionalInterface
+	public interface ParseVersionDate {
+
+		/**
+		 * @param line
+		 * @return
+		 */
+		VersionDate readLineAndParse(String line);
+	}
+
+	// ------------------------------------------------------------
+
+	/**
+	 * @author fagu
+	 */
+	public static class VersionDate {
+
+		private final Version version;
+
+		private final Date date;
+
+		public VersionDate(Version version, Date date) {
+			this.version = version;
+			this.date = date;
+		}
+
+		public VersionDate(Version version) {
+			this(version, null);
+		}
+
+		public VersionDate(Date date) {
+			this(null, date);
+		}
+
+		Optional<Date> getDate() {
+			return Optional.ofNullable(date);
+		}
+
+		Optional<Version> getVersion() {
+			return Optional.ofNullable(version);
+		}
+
+	}
+
+	// ------------------------------------------------------------
+	/**
+	 * @author fagu
+	 */
+	@FunctionalInterface
+	public interface ExecutorFactory {
+
+		/**
+		 * @param file
+		 * @param parser
+		 * @param readLine
+		 * @return
+		 */
+		FMVExecutor create(File file, Parser parser, ReadLine readLine);
+	}
+
+	// ------------------------------------------------------------
+
+	private final List<String> parameters;
+
+	private final ExecutorFactory executorFactory;
+
+	private final ParserFactory parserFactory;
+
+	/**
+	 * @param executorFactory
+	 * @param parameters
+	 * @param parserFactory
+	 */
+	private ExecSoftFoundFactory(ExecutorFactory executorFactory, List<String> parameters, ParserFactory parserFactory) {
+		this.executorFactory = Objects.requireNonNull(executorFactory);
+		this.parameters = parameters;
+		this.parserFactory = parserFactory;
 	}
 
 	/**
-	 * @param parameters
+	 * @param softProvider
 	 * @return
 	 */
-	public static ExecSoftFoundFactoryBuilder withParameters(String... parameters) {
-		return new ExecSoftFoundFactoryBuilder(new ExecSoftFoundFactory(parameters));
+	public static ExecSoftFoundFactoryPrepare forProvider(SoftProvider softProvider) {
+		return new ExecSoftFoundFactoryPrepare(softProvider);
+	}
+
+	/**
+	 * @return
+	 */
+	public ParserFactory getParserFactory() {
+		return parserFactory;
 	}
 
 	/**
 	 * @see org.fagu.fmv.soft.find.SoftFoundFactory#create(java.io.File, Locator, SoftPolicy)
 	 */
 	@Override
-	public final SoftFound create(File file, Locator locator, SoftPolicy<?, ?, ?> softPolicy) throws ExecutionException, IOException {
+	public final SoftFound create(File file, Locator locator, SoftPolicy<?, ?, ?> softPolicy) throws IOException {
 		Parser parser = parserFactory.create(file, softPolicy);
 		CommandLine commandLine = FMVCommandLine.create(file, parameters);
 		String cmdLineStr = CommandLineUtils.toLine(commandLine);
 
-		FMVExecutor executor = builder.createExecutor(file, parser);
+		List<String> readLineList = new ArrayList<>();
+		BufferedReadLine bufferedReadLine = new BufferedReadLine(readLineList);
+
+		FMVExecutor executor = executorFactory.create(file, parser, bufferedReadLine);
 
 		try {
 			int exitValue = executor.execute(commandLine);
@@ -210,10 +387,8 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 				softFound.setLocalizedBy(locator.toString());
 			}
 			return softFound;
-		} catch(ExecuteException e) {
-			return parser.closeAndParse(e, cmdLineStr, builder.readLineList);
 		} catch(IOException e) {
-			return parser.closeAndParse(e, cmdLineStr, builder.readLineList);
+			return parser.closeAndParse(e, cmdLineStr, readLineList);
 		}
 	}
 

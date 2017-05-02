@@ -50,7 +50,8 @@ public class SoftTestCase {
 	@Test
 	@Ignore
 	public void test1() throws Exception {
-		SoftFoundFactory ffSoftFoundFactory = ExecSoftFoundFactory.withParameters("-version")
+		SoftFoundFactory ffSoftFoundFactory = ExecSoftFoundFactory.forProvider(new TestSoftProvider("ffprout"))
+				.withParameters("-version")
 				.parseFactory((file, softPolicy) -> new Parser() {
 
 					private Integer build;

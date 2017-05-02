@@ -27,7 +27,9 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.version.Version;
@@ -93,7 +95,8 @@ public class IMInfoTestCase {
 	 */
 	private Parser newParser() {
 		ConvertSoftProvider softProvider = new ConvertSoftProvider();
-		return softProvider.createParser(new File("."), softProvider.getSoftPolicy());
+		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory()).getParserFactory();
+		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
 	/**
@@ -115,11 +118,8 @@ public class IMInfoTestCase {
 	 * @throws IOException
 	 */
 	private void assertInfo(String firstLine, Version expectedVersion, Date expectedDate, String expectedInfo) throws IOException {
-		ConvertSoftProvider softProvider = new ConvertSoftProvider();
-		Parser parser = new ConvertSoftProvider().createParser(new File("."), softProvider.getSoftPolicy());
-
+		Parser parser = newParser();
 		parser.readLine(firstLine);
-
 		assertInfo(parser, expectedVersion, expectedDate, expectedInfo);
 	}
 

@@ -25,7 +25,9 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.version.Version;
@@ -73,7 +75,8 @@ public class JavaSoftProviderTestCase {
 	 */
 	private Parser newParser() {
 		JavaSoftProvider softProvider = new JavaSoftProvider();
-		return softProvider.createParser(new File("."), softProvider.getSoftPolicy());
+		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory()).getParserFactory();
+		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
 	/**
