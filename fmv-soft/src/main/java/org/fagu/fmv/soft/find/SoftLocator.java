@@ -340,14 +340,22 @@ public class SoftLocator {
 	}
 
 	/**
-	 * @param ts
+	 * @param t1
+	 * @param t2
+	 * @param t3
 	 * @return
 	 */
-	private static <T> T firstFoundNotNull(@SuppressWarnings("unchecked") T... ts) {
-		return Arrays.stream(ts)
-				.filter(Objects::nonNull)
-				.findFirst()
-				.orElseThrow(IllegalArgumentException::new);
+	private static <T> T firstFoundNotNull(T t1, T t2, T t3) {
+		if(t1 != null) {
+			return t1;
+		}
+		if(t2 != null) {
+			return t2;
+		}
+		if(t3 != null) {
+			return t3;
+		}
+		throw new IllegalArgumentException();
 	}
 
 }

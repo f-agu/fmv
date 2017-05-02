@@ -203,26 +203,24 @@ public class ExecHelper<T extends ExecHelper<?>> {
 	/**
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	protected ReadLine getOutReadLine(ReadLine... readLines) {
 		List<ReadLine> lines = new ArrayList<>();
 		if(debug) {
 			lines.add(outDebugConsumer::accept);
 		}
-		populateReadLine(lines, outReadLines, Arrays.asList(readLines));
+		populateReadLine(lines, Arrays.asList(outReadLines, Arrays.asList(readLines)));
 		return MultiReadLine.createWith(lines);
 	}
 
 	/**
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	protected ReadLine getErrReadLine(ReadLine... readLines) {
 		List<ReadLine> lines = new ArrayList<>();
 		if(debug) {
 			lines.add(errDebugConsumer::accept);
 		}
-		populateReadLine(lines, errReadLines, Arrays.asList(readLines));
+		populateReadLine(lines, Arrays.asList(errReadLines, Arrays.asList(readLines)));
 		return MultiReadLine.createWith(lines);
 	}
 
@@ -230,7 +228,7 @@ public class ExecHelper<T extends ExecHelper<?>> {
 	 * @param toAddLines
 	 * @param externLines
 	 */
-	protected void populateReadLine(List<ReadLine> toAddLines, @SuppressWarnings("unchecked") List<ReadLine>... externLines) {
+	protected void populateReadLine(List<ReadLine> toAddLines, List<List<ReadLine>> externLines) {
 		toAddLines.addAll(commonReadLines);
 
 		if(externLines != null) {
