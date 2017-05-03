@@ -47,7 +47,7 @@ import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
  */
 public abstract class AbstractExecutable extends Attributable implements Executable {
 
-	protected Set<ExecutableOption> options = new HashSet<>();
+	protected Set<ExecutableOption> options = new HashSet<>(2);
 
 	/**
 	 *

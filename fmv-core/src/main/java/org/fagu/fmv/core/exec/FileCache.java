@@ -27,17 +27,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,7 +73,7 @@ public class FileCache {
 
 	private Map<Executable, ExecutableCache> previousKeyMap;
 
-	private ExecutorService previewOrMakeExecutorService;
+	private ThreadPoolExecutor previewOrMakeExecutorService;
 
 	private ScheduledExecutorService lookupService;
 
@@ -101,8 +102,8 @@ public class FileCache {
 	 */
 	public FileCache(Project project) {
 		this.project = project;
-		previousKeyMap = new HashMap<>();
-		previewOrMakeExecutorService = Executors.newSingleThreadExecutor();
+		previousKeyMap = new ConcurrentHashMap<>();
+		previewOrMakeExecutorService = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 
 	/**
@@ -144,17 +145,6 @@ public class FileCache {
 	}
 
 	/**
-	 * @return
-	 */
-	public boolean isReady() {
-		try {
-			return previewOrMakeExecutorService.awaitTermination(100, TimeUnit.MILLISECONDS);
-		} catch(InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
 	 * @param executable
 	 * @param cache
 	 * @return
@@ -170,12 +160,6 @@ public class FileCache {
 			} catch(Exception e) {
 				throw new RuntimeException(e);
 			}
-			// Future<File> future = executorService.submit(createCallable(null, executable, executableCache, cache));
-			// try {
-			// return future.get();
-			// } catch(InterruptedException | ExecutionException e) {
-			// throw new RuntimeException(e);
-			// }
 		}
 		return executableCache.getFile(cache);
 	}
@@ -590,15 +574,17 @@ public class FileCache {
 						.collect(Collectors.toList());
 
 				if(execs.isEmpty()) {
-					addSynchronous(BaseIdentifiable.getRoots(project));
+					addSynchronous(BaseIdentifiable.getRoots(project), 0, 1);
 					return;
 				}
 
+				int index = 0;
 				for(Executable exec : execs) {
+					++index;
 					if(containsExecutableStopPropagation(exec)) {
 						continue;
 					}
-					addSynchronous(findFirstExecutables(exec));
+					addSynchronous(findFirstExecutables(exec), index - 1, execs.size());
 				}
 			} catch(Exception e) {
 				e.printStackTrace();
@@ -608,9 +594,10 @@ public class FileCache {
 
 	/**
 	 * @param executables
-	 * @return
+	 * @param index
+	 * @param total
 	 */
-	private void addSynchronous(List<Executable> executables) {
+	private void addSynchronous(List<Executable> executables, int index, int total) {
 		for(Executable executable : executables) {
 			try {
 				Future<File> add = add(executable);

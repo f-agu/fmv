@@ -69,10 +69,19 @@ public class Proxifier<T> {
 	/**
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public T proxify() {
-		return (T)Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {clazz}, (proxy, method, args) -> {
-			for(T toCall : toCallList) {
+		return proxifyVolatile(clazz, toCallList);
+	}
+
+	/**
+	 * @param clazz
+	 * @param list
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <C> C proxifyVolatile(Class<C> clazz, List<C> list) {
+		return (C)Proxy.newProxyInstance(Proxifier.class.getClassLoader(), new Class[] {clazz}, (proxy, method, args) -> {
+			for(C toCall : list) {
 				method.invoke(toCall, args);
 			}
 			return null;
