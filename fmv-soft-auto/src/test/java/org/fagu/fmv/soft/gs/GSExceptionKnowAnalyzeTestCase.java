@@ -23,10 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,11 +31,9 @@ import java.util.StringJoiner;
 import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
+import org.fagu.fmv.soft.Resource;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
-import org.fagu.fmv.soft.SoftTestCase;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.fagu.fmv.soft.exec.exception.NestedException;
 import org.junit.Ignore;
@@ -69,7 +64,7 @@ public class GSExceptionKnowAnalyzeTestCase {
 				Soft gsSoft = GS.search();
 				File viewJpegPSFile = new File(new File(gsSoft.getFile().getParentFile().getParentFile(), "lib"), "viewjpeg.ps");
 
-				File srcFile = extractResource(folder, "cheese.zip");
+				File srcFile = Resource.extract(folder, "cheese.zip");
 				File outFile = new File(srcFile.getPath() + ".pdf");
 
 				List<String> parameters = new ArrayList<>();
@@ -132,7 +127,7 @@ public class GSExceptionKnowAnalyzeTestCase {
 		try {
 			FileUtils.deleteDirectory(folder);
 			folder.mkdirs();
-			File srcFile = srcResource != null ? extractResource(folder, srcResource) : folder;
+			File srcFile = srcResource != null ? Resource.extract(folder, srcResource) : folder;
 			File outFile = new File(srcFile.getPath() + ".jpg");
 			try {
 				Soft gsSoft = GS.search();
@@ -170,18 +165,4 @@ public class GSExceptionKnowAnalyzeTestCase {
 		}
 	}
 
-	/**
-	 * @param tmpFolder
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
-	private File extractResource(File tmpFolder, String resource) throws IOException {
-		File file = File.createTempFile(FilenameUtils.getBaseName(resource), "." + FilenameUtils.getExtension(resource), tmpFolder);
-		try (InputStream inputStream = SoftTestCase.class.getResourceAsStream(resource);
-				OutputStream outputStream = new FileOutputStream(file)) {
-			IOUtils.copy(inputStream, outputStream);
-		}
-		return file;
-	}
 }
