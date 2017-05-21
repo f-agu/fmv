@@ -51,10 +51,11 @@ public class WatermarkTestCase {
 
 	@Test
 	public void testWatermark_InputStream2OutputStream() throws IOException {
-		String text = "\u00E9té ici 4 et là";
+		String text = "\377\376\155\157";
 
 		File destFile = new File(Resource.tmpFolder(), "inputstream-outputstream-watermarked.pdf");
 		System.out.println(destFile);
+		long startTime = System.currentTimeMillis();
 		try (InputStream inputStream = Resource.open_kenwood_Pdf();
 				OutputStream outputStream = new FileOutputStream(destFile)) {
 
@@ -65,9 +66,22 @@ public class WatermarkTestCase {
 					.execute();
 
 		}
+		System.out.println(System.currentTimeMillis() - startTime + " ms");
 	}
 
 	// **********************************************
+
+	/**
+	 * @param s
+	 * @return
+	 */
+	// private String toOctal(String s) {
+	// StringBuilder buf = new StringBuilder();
+	// for(char c : s.toCharArray()) {
+	// buf.append("\\0").append(Integer.toString(c, 8));
+	// }
+	// return buf.toString();
+	// }
 
 	/**
 	 * @param watermarckText
@@ -109,17 +123,19 @@ public class WatermarkTestCase {
 			writer.println(" 2 eq { pop false }");
 			writer.println("  {");
 			writer.println("   gsave");
-			writer.println("   watermarkFont");
-			writer.println("   watermarkColor");
-			writer.println("   pageWidth .5 mul pageHeight .5 mul translate");
-			writer.println("   0 0 moveto");
-			writer.println("   watermarkText false charpath flattenpath pathbbox");
-			writer.println(" 4 2 roll pop pop");
-			writer.println(" 0 0 moveto");
-			writer.println("   watermarkAngle rotate");
-			writer.println("   -.5 mul exch -.5 mul exch");
-			writer.println(" rmoveto");
-			writer.println(" watermarkText show");
+			writer.println(" watermarkFont");
+			writer.println("    watermarkColor");
+			writer.println("    pageWidth .5 mul pageHeight .5 mul translate");
+			writer.println("    0 0 moveto");
+			writer.println("    watermarkText false charpath flattenpath pathbbox");
+			writer.println("    4 2 roll pop pop");
+			writer.println("    0 0 moveto");
+			writer.println("    watermarkAngle rotate");
+			writer.println("    -.5 mul exch -.5 mul exch");
+			writer.println("    rmoveto");
+			// https://ghostscript.com/doc/current/Language.htm#Transparency
+			writer.println("    0.5 .setopacityalpha");
+			writer.println("    watermarkText show");
 			writer.println("   grestore");
 			writer.println("   true ");
 			writer.println("  } ifelse");
