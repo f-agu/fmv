@@ -16,6 +16,12 @@ import org.apache.commons.io.IOUtils;
  */
 public class Resource {
 
+	private static final String PDF_PDF = "pdf.pdf";
+
+	private static final String PDF_SALUT = "salut.pdf";
+
+	private static final String PDF_KENWOOD = "kenwood.pdf";
+
 	/**
 	 * 
 	 */
@@ -37,7 +43,7 @@ public class Resource {
 	 * @throws IOException
 	 */
 	public static File extract_Pdf_Pdf() throws IOException {
-		return extract("pdf.pdf");
+		return extract(PDF_PDF);
 	}
 
 	/**
@@ -45,7 +51,15 @@ public class Resource {
 	 * @throws IOException
 	 */
 	public static File extract_Salut_Pdf() throws IOException {
-		return extract("salut.pdf");
+		return extract(PDF_SALUT);
+	}
+
+	/**
+	 * @return
+	 * @throws IOException
+	 */
+	public static File extract_kenwood_Pdf() throws IOException {
+		return extract(PDF_KENWOOD);
 	}
 
 	/**
@@ -77,7 +91,15 @@ public class Resource {
 	 * @throws IOException
 	 */
 	public static InputStream open_Salut_Pdf() throws IOException {
-		return open("salut.pdf");
+		return open(PDF_SALUT);
+	}
+
+	/**
+	 * @return
+	 * @throws IOException
+	 */
+	public static InputStream open_kenwood_Pdf() throws IOException {
+		return open(PDF_KENWOOD);
 	}
 
 	/**

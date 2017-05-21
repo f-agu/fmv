@@ -1,7 +1,6 @@
 package org.fagu.fmv.soft.gs;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,8 +55,7 @@ public class WatermarkTestCase {
 
 		File destFile = new File(Resource.tmpFolder(), "inputstream-outputstream-watermarked.pdf");
 		System.out.println(destFile);
-		// try (InputStream inputStream = Resource.open_Salut_Pdf();
-		try (InputStream inputStream = new FileInputStream("D:\\tmp\\nexity\\signed\\a.pdf");
+		try (InputStream inputStream = Resource.open_kenwood_Pdf();
 				OutputStream outputStream = new FileOutputStream(destFile)) {
 
 			GS.search()
