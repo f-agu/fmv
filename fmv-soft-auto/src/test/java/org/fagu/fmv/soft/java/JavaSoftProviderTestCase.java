@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
@@ -70,9 +71,12 @@ public class JavaSoftProviderTestCase {
 
 	@Test
 	public void testFind() {
-		for(SoftFound softFound : Java.search().getFounds()) {
+		Soft java = Java.search();
+		for(SoftFound softFound : java.getFounds()) {
 			System.out.println(softFound);
 		}
+		System.out.println();
+		System.out.println(java);
 	}
 
 	// *******************************************************

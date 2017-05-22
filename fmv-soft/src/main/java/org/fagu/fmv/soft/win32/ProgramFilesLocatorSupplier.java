@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.SystemUtils;
@@ -36,30 +37,30 @@ import org.fagu.fmv.soft.find.SoftLocator;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 25 avr. 2017 13:45:00
  */
 public class ProgramFilesLocatorSupplier {
 
+	// -------------------------------------
+
 	/**
-	 * @author Oodrive
 	 * @author f.agu
 	 * @created 25 avr. 2017 14:06:37
 	 */
 	public static class ProgramFilesLocatorBuilder {
 
-		private final SoftLocator softLocator;
+		private final Consumer<Locator> locatorConsumer;
 
 		private Locators locators;
 
 		private ProgramFilesLocatorBuilder() {
-			this.softLocator = null;
+			this.locatorConsumer = null;
 		}
 
-		private ProgramFilesLocatorBuilder(SoftLocator softLocator) {
-			this.softLocator = Objects.requireNonNull(softLocator);
-			locators = softLocator.createLocators();
+		private ProgramFilesLocatorBuilder(Consumer<Locator> locatorConsumer, Locators locators) {
+			this.locatorConsumer = Objects.requireNonNull(locatorConsumer);
+			this.locators = locators;
 		}
 
 		public ProgramFilesLocatorBuilder withLocators(Locators locators) {
@@ -82,24 +83,26 @@ public class ProgramFilesLocatorSupplier {
 		}
 
 		public ProgramFilesLocatorSupplier find(Function<File, Collection<File>> foldersToAnalyze) {
-			return new ProgramFilesLocatorSupplier(softLocator, locators, foldersToAnalyze);
+			return new ProgramFilesLocatorSupplier(locatorConsumer, locators, foldersToAnalyze);
 		}
 
 	}
 
-	private final SoftLocator softLocator;
+	// -------------------------------------
 
 	private final Locators locators;
+
+	private final Consumer<Locator> locatorConsumer;
 
 	private final Function<File, Collection<File>> foldersToAnalyze;
 
 	/**
-	 * @param softLocator
+	 * @param locatorConsumer
 	 * @param locators
 	 * @param foldersToAnalyze
 	 */
-	private ProgramFilesLocatorSupplier(SoftLocator softLocator, Locators locators, Function<File, Collection<File>> foldersToAnalyze) {
-		this.softLocator = softLocator;
+	private ProgramFilesLocatorSupplier(Consumer<Locator> locatorConsumer, Locators locators, Function<File, Collection<File>> foldersToAnalyze) {
+		this.locatorConsumer = locatorConsumer;
 		this.locators = locators;
 		this.foldersToAnalyze = foldersToAnalyze;
 	}
@@ -110,7 +113,18 @@ public class ProgramFilesLocatorSupplier {
 	 */
 	public static ProgramFilesLocatorBuilder with(SoftLocator softLocator) {
 		if(SystemUtils.IS_OS_WINDOWS) {
-			return new ProgramFilesLocatorBuilder(softLocator);
+			return new ProgramFilesLocatorBuilder(softLocator::addLocator, softLocator.createLocators());
+		}
+		return new ProgramFilesLocatorBuilder();
+	}
+
+	/**
+	 * @param softLocator
+	 * @return
+	 */
+	public static ProgramFilesLocatorBuilder with(Consumer<Locator> locatorConsumer, Locators locators) {
+		if(SystemUtils.IS_OS_WINDOWS) {
+			return new ProgramFilesLocatorBuilder(locatorConsumer, locators);
 		}
 		return new ProgramFilesLocatorBuilder();
 	}
@@ -119,12 +133,12 @@ public class ProgramFilesLocatorSupplier {
 	 * 
 	 */
 	public void supplyIn() {
-		if(softLocator != null && locators != null) {
+		if(locatorConsumer != null && locators != null) {
 			for(File programPath : getProgramPaths()) {
 				for(File folder : foldersToAnalyze.apply(programPath)) {
 					if(folder.exists()) {
 						Locator byPath = locators.byPath(folder.getAbsolutePath());
-						softLocator.addLocator(Locators.named("win[" + programPath.getName() + "]", byPath));
+						locatorConsumer.accept(Locators.named("win[" + programPath.getName() + "]", byPath));
 					}
 				}
 			}

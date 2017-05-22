@@ -1,9 +1,12 @@
 package org.fagu.fmv.soft.java;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.find.Locator;
 import org.fagu.fmv.soft.find.Locators;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
@@ -11,6 +14,7 @@ import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
 
@@ -49,7 +53,7 @@ public class JavaSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftLocator getSoftLocator() {
-		return new SoftLocator(getName()) {
+		SoftLocator softLocator = new SoftLocator(getName()) {
 
 			/**
 			 * @see org.fagu.fmv.soft.find.SoftLocator#getLocators(java.lang.String, org.fagu.fmv.soft.find.Locators,
@@ -58,10 +62,34 @@ public class JavaSoftProvider extends SoftProvider {
 			@Override
 			protected List<Locator> getLocators(Locators loc) {
 				List<Locator> list = super.getLocators(loc);
-				list.add(0, createLocators().byPropertyPath("java.home"));
+				Locators locators = createLocators();
+				list.add(0, locators.byPropertyPath("java.home"));
+				if(SystemUtils.IS_OS_WINDOWS) {
+					ProgramFilesLocatorSupplier.with(list::add, locators)
+							.find(programFile -> {
+								List<File> files = new ArrayList<>();
+								File[] javaFolders = programFile.listFiles(f -> "java".equalsIgnoreCase(f.getName()));
+								if(javaFolders != null) {
+									for(File folder : javaFolders) {
+										File[] subFolders = folder.listFiles();
+										if(subFolders != null) {
+											for(File subFolder : subFolders) {
+												files.add(subFolder);
+												files.add(new File(subFolder, "bin"));
+											}
+										}
+									}
+								}
+								return files;
+							})
+							.supplyIn();
+				}
 				return list;
 			}
 		};
+		softLocator.setSoftPolicy(getSoftPolicy());
+		softLocator.setEnvName("JAVA_HOME");
+		return softLocator;
 	}
 
 	/**
