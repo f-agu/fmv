@@ -99,7 +99,7 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public Soft search() {
-		return searchConfigurable(null);
+		return searchConfigurable(ss -> ss.withPolicy(getSoftPolicy()));
 	}
 
 	/**
@@ -107,7 +107,7 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public Soft searchMinVersion(Version minVersion) {
-		return searchConfigurable(ss -> ss.withPolicy(new VersionPolicy().onAllPlatforms().minVersion(new Version(10))));
+		return searchConfigurable(ss -> ss.withPolicy(new VersionPolicy().onAllPlatforms().minVersion(minVersion)));
 	}
 
 	/**

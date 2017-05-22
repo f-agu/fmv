@@ -68,6 +68,13 @@ public class JavaSoftProviderTestCase {
 		assertInfo(parser, new Version(1, 8, 0, 45));
 	}
 
+	@Test
+	public void testFind() {
+		for(SoftFound softFound : Java.search().getFounds()) {
+			System.out.println(softFound);
+		}
+	}
+
 	// *******************************************************
 
 	/**

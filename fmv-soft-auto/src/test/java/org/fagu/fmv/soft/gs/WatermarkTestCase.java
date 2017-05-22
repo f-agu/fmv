@@ -108,6 +108,8 @@ public class WatermarkTestCase {
 	 * @return
 	 */
 	private String getWatermarkScript(String watermarckText) {
+		// for encoding :
+		// http://www.acumentraining.com/Acumen_Journal/AcumenJournal_Nov2001.zip
 		StringWriter stringWriter = new StringWriter();
 		try (PrintWriter writer = new PrintWriter(stringWriter)) {
 			writer.println("/watermarkText { (" + watermarckText + ") } def");
@@ -123,7 +125,7 @@ public class WatermarkTestCase {
 			writer.println(" 2 eq { pop false }");
 			writer.println("  {");
 			writer.println("   gsave");
-			writer.println(" watermarkFont");
+			writer.println("    watermarkFont");
 			writer.println("    watermarkColor");
 			writer.println("    pageWidth .5 mul pageHeight .5 mul translate");
 			writer.println("    0 0 moveto");
