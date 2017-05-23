@@ -168,9 +168,19 @@ public class ExecHelper<T extends ExecHelper<?>> {
 	 * @param out
 	 * @return
 	 */
-	public T out(OutputStream out) {
+	public T output(OutputStream out) {
 		this.out = out;
 		return getThis();
+	}
+
+	/**
+	 * @param out
+	 * @return
+	 * @deprecated Use {@link #output(OutputStream)}
+	 */
+	@Deprecated
+	public T out(OutputStream out) {
+		return output(out);
 	}
 
 	/**
@@ -201,6 +211,7 @@ public class ExecHelper<T extends ExecHelper<?>> {
 	// *******************************************************
 
 	/**
+	 * @param readLines
 	 * @return
 	 */
 	protected ReadLine getOutReadLine(ReadLine... readLines) {
@@ -213,6 +224,7 @@ public class ExecHelper<T extends ExecHelper<?>> {
 	}
 
 	/**
+	 * @param readLines
 	 * @return
 	 */
 	protected ReadLine getErrReadLine(ReadLine... readLines) {
