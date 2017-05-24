@@ -25,7 +25,6 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
-import org.fagu.fmv.im.DominantColor;
 import org.fagu.fmv.utils.Resources;
 import org.junit.Test;
 

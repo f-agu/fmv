@@ -3,7 +3,6 @@ package org.fagu.fmv.soft.gs;
 import java.io.FileFilter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,14 +39,9 @@ public class GSSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		final Pattern pattern = Pattern.compile("GPL Ghostscript ([0-9\\.\\-]+) \\(([0-9\\-]+)\\)");
-		AtomicBoolean firstPass = new AtomicBoolean(false);
 		return prepareSoftFoundFactory()
 				.withParameters("-version", "-q")
 				.parseVersionDate(line -> {
-					if(firstPass.get()) {
-						return null;
-					}
-					firstPass.set(true);
 					Matcher matcher = pattern.matcher(line);
 					Version version = null;
 					Date date = null;

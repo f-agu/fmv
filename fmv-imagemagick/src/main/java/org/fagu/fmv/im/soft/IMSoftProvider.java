@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,14 +71,9 @@ public abstract class IMSoftProvider extends SoftProvider {
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
 		Pattern pattern = Pattern.compile("Version\\: ImageMagick ([0-9\\.\\-]+) (?:.*)([0-9]{4}-[0-9]{2}-[0-9]{2}) .*");
-		AtomicBoolean firstPass = new AtomicBoolean(false);
 		return prepareSoftFoundFactory()
 				.withParameters("-version")
 				.parseVersionDate(line -> {
-					if(firstPass.get()) {
-						return null;
-					}
-					firstPass.set(true);
 					Matcher matcher = pattern.matcher(line);
 					if(matcher.matches()) {
 						Version version = VersionParserManager.parse(matcher.group(1));
