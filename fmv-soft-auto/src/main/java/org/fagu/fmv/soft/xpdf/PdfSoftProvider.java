@@ -73,10 +73,8 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		return prepareSoftFoundFactory()
 				.withParameters("-v")
 				.parseFactory((file, softPolicy) -> createParser(file))
-				.customizeExecutor(ex -> {
-					ex.setExitValues(exitValues());
-					ex.setTimeOut(10_000);
-				})
+				.exitValues(exitValues())
+				.timeOut(10_000)
 				.build();
 	}
 

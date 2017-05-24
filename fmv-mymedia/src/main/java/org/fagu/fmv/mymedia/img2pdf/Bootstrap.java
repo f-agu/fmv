@@ -186,8 +186,8 @@ public class Bootstrap {
 
 		System.out.println("Generate PDF: " + outputPdf.getName());
 		gsSoft.withParameters(parameters) //
-				.addCommonReadLine(System.out::println) //
-				.customizeExecutor(exec -> exec.setWorkingDirectory(files.get(0).getParentFile())) //
+				.addCommonReadLine(System.out::println)
+				.workingDirectory(files.get(0).getParentFile())
 				.addListener(new ExecListener() {
 
 					@Override

@@ -73,7 +73,7 @@ public class XpdfExceptionKnowAnalyzeTestCase {
 			try {
 				Soft pdfInfoSoft = PdfInfo.search();
 				pdfInfoSoft.withParameters(srcFile.getAbsolutePath())
-						.customizeExecutor(exec -> exec.setWorkingDirectory(srcFile.getParentFile()))
+						.workingDirectory(srcFile.getParentFile())
 						.execute();
 				fail();
 			} catch(FMVExecuteException e) {

@@ -77,7 +77,7 @@ public class GSExceptionKnowAnalyzeTestCase {
 				parameters.add("(" + srcFile.getName() + ") viewJPEG showpage");
 
 				gsSoft.withParameters(parameters)
-						.customizeExecutor(exec -> exec.setWorkingDirectory(srcFile.getParentFile()))
+						.workingDirectory(srcFile.getParentFile())
 						// .logCommandLine(System.out::println)
 						.execute();
 			} catch(FMVExecuteException e) {
@@ -145,7 +145,7 @@ public class GSExceptionKnowAnalyzeTestCase {
 				list.add(srcFile.getAbsolutePath());
 
 				SoftExecutor customizeExecutor = gsSoft.withParameters(list)
-						.customizeExecutor(exec -> exec.setWorkingDirectory(srcFile.getParentFile()));
+						.workingDirectory(srcFile.getParentFile());
 				// .logCommandLine(System.out::println);
 				if(consumer != null) {
 					consumer.accept(customizeExecutor);

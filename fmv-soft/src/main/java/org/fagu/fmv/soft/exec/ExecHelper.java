@@ -202,6 +202,38 @@ public class ExecHelper<T extends ExecHelper<?>> {
 	}
 
 	/**
+	 * @param value
+	 * @return
+	 */
+	public T exitValues(int value) {
+		return customizeExecutor(e -> e.setExitValue(value));
+	}
+
+	/**
+	 * @param value
+	 * @return
+	 */
+	public T exitValues(int[] values) {
+		return customizeExecutor(e -> e.setExitValues(values));
+	}
+
+	/**
+	 * @param timeOutMilliSeconds
+	 * @return
+	 */
+	public T timeOut(long timeOutMilliSeconds) {
+		return customizeExecutor(e -> e.setTimeOut(timeOutMilliSeconds));
+	}
+
+	/**
+	 * @param workingDirectory
+	 * @return
+	 */
+	public T workingDirectory(File workingDirectory) {
+		return customizeExecutor(e -> e.setWorkingDirectory(workingDirectory));
+	}
+
+	/**
 	 * @return
 	 */
 	public Charset getCharset() {
