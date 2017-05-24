@@ -58,11 +58,20 @@ public class ResourceUtils {
 	 */
 	public static File extract(String resource, File tmpFolder) throws IOException {
 		File file = File.createTempFile(FilenameUtils.getBaseName(resource), "." + FilenameUtils.getExtension(resource), tmpFolder);
-		try (InputStream inputStream = FFHelper.class.getResourceAsStream(resource);
+		try (InputStream inputStream = open(resource);
 				OutputStream outputStream = new FileOutputStream(file)) {
 			IOUtils.copy(inputStream, outputStream);
 		}
 		return file;
+	}
+
+	/**
+	 * @param resource
+	 * @return
+	 * @throws IOException
+	 */
+	public static InputStream open(String resource) throws IOException {
+		return FFHelper.class.getResourceAsStream(resource);
 	}
 
 }

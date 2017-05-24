@@ -50,6 +50,7 @@ import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownConsumer;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.fagu.fmv.utils.Proxifier;
+import org.fagu.fmv.utils.io.InputStreamSupplier;
 
 
 /**
@@ -96,6 +97,8 @@ public class FFExecutor<R> {
 	private ExceptionConsumer exceptionConsumer;
 
 	private Consumer<SoftExecutor> customizeSoftExecutor;
+
+	private InputStreamSupplier inputStreamSupplier;
 
 	/**
 	 * @param operation
@@ -226,6 +229,13 @@ public class FFExecutor<R> {
 	 */
 	public BufferedReadLine getOutputReadLine() {
 		return outputReadLine;
+	}
+
+	/**
+	 * @param inputStreamSupplier
+	 */
+	public void input(InputStreamSupplier inputStreamSupplier) {
+		this.inputStreamSupplier = inputStreamSupplier;
 	}
 
 	/**
@@ -405,6 +415,14 @@ public class FFExecutor<R> {
 					.addOutReadLine(getOutReadLine()) //
 					.addErrReadLine(getErrReadLine()) //
 					.customizeExecutor(FFExecutor.this::populateWithListeners);
+
+			if(inputStreamSupplier != null) {
+				try {
+					softExecutor.input(inputStreamSupplier.getInputStream());
+				} catch(IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
 			// don't add exceptionKnowConsumer here
 			if(customizeSoftExecutor != null) {
 				customizeSoftExecutor.accept(softExecutor);
