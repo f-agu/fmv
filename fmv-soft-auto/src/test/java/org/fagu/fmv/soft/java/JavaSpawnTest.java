@@ -1,11 +1,13 @@
 package org.fagu.fmv.soft.java;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.apache.commons.exec.ExecuteException;
 import org.junit.Test;
 
 
@@ -43,13 +45,26 @@ public class JavaSpawnTest {
 	 * @throws IOException
 	 */
 	@Test
+	public void testExitUndefined() throws IOException {
+		try {
+			Java.search()
+					.withParameters("-cp", System.getProperty("java.class.path"), MyMain.class.getName(), "999")
+					.execute();
+		} catch(ExecuteException e) {
+			assertTrue(e.getMessage().startsWith("Process exited with an error: 999 (Exit value: 999)"));
+		}
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	@Test
 	public void testReadLineOutputErr() throws IOException {
 		AtomicReference<String> out = new AtomicReference<>();
 		AtomicReference<String> err = new AtomicReference<>();
 		Java.search()
 				.withParameters("-cp", System.getProperty("java.class.path"), MyMain.class.getName(), "0")
 				// .logCommandLine(System.out::println)
-				.customizeExecutor(e -> e.setExitValues(new int[] {0}))
 				.addOutReadLine(out::set)
 				.addErrReadLine(err::set)
 				.execute();
@@ -66,7 +81,6 @@ public class JavaSpawnTest {
 		Java.search()
 				.withParameters("-cp", System.getProperty("java.class.path"), MyMain.class.getName(), "0")
 				// .logCommandLine(System.out::println)
-				.customizeExecutor(e -> e.setExitValues(new int[] {0}))
 				.output(os)
 				.execute();
 		assertEquals("out" + System.getProperty("line.separator"), os.toString());
@@ -82,7 +96,6 @@ public class JavaSpawnTest {
 		Java.search()
 				.withParameters("-cp", System.getProperty("java.class.path"), MyMain.class.getName(), "0")
 				// .logCommandLine(System.out::println)
-				.customizeExecutor(e -> e.setExitValues(new int[] {0}))
 				.output(out)
 				.addErrReadLine(err::set)
 				.execute();
@@ -100,7 +113,6 @@ public class JavaSpawnTest {
 		Java.search()
 				.withParameters("-cp", System.getProperty("java.class.path"), MyMain.class.getName(), "0")
 				// .logCommandLine(System.out::println)
-				.customizeExecutor(e -> e.setExitValues(new int[] {0}))
 				.addOutReadLine(out::set)
 				.err(err)
 				.execute();
