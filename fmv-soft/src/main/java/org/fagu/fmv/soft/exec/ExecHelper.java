@@ -285,8 +285,8 @@ public class ExecHelper<T extends ExecHelper<?>> {
 
 		// input/out/err
 		if(input != null || out != null || err != null) { // input & whatever
-			ReadLineOutputStream outRL = new ReadLineOutputStream(out, defaultReaDLine);
-			ReadLineOutputStream errRL = new ReadLineOutputStream(err, defaultReaDLine);
+			ReadLineOutputStream outRL = new ReadLineOutputStream(out, getOutReadLine(defaultReaDLine));
+			ReadLineOutputStream errRL = new ReadLineOutputStream(err, getErrReadLine(defaultReaDLine));
 			ExecuteStreamHandler customExecuteStreamHandler = new PumpStreamHandler(outRL, errRL, input);
 			return FMVExecutor.create(workingFolder, customExecuteStreamHandler);
 		}
