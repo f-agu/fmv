@@ -257,7 +257,7 @@ public class FFReducer extends AbstractReducer {
 			return false;
 		}
 		if(Decoders.MJPEG.getName().equals(videoStream.codecName())) {
-			FrameRate frameRate = videoStream.frameRate();
+			FrameRate frameRate = videoStream.frameRate().orElse(null);
 			if(frameRate != null && frameRate.floatValue() < 100) {
 				return true;
 			}
@@ -352,7 +352,8 @@ public class FFReducer extends AbstractReducer {
 		OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
 		if(countEstimateFrames.isPresent()) {
 			ffMpegTextProgressBar = new FFMpegTextProgressBar();
-			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByFrame(countEstimateFrames.getAsInt(), srcFile.length()));
+			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByFrame(countEstimateFrames
+					.getAsInt(), srcFile.length()));
 		}
 
 		executor.execute();
@@ -406,10 +407,11 @@ public class FFReducer extends AbstractReducer {
 
 		FFExecutor<Object> executor = builder.build();
 		executor.addListener(createLogFFExecListener(logger));
-		Duration duration = metadatas.getAudioStream().duration();
+		Duration duration = metadatas.getAudioStream().duration().orElse(null);
 		if(duration != null) {
 			ffMpegTextProgressBar = new FFMpegTextProgressBar();
-			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByDuration(duration, srcFile.length()));
+			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByDuration(duration, srcFile
+					.length()));
 		}
 		executor.execute();
 	}

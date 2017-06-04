@@ -63,6 +63,10 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 			this.softProvider = Objects.requireNonNull(softProvider);
 		}
 
+		public ExecSoftFoundFactoryBuilder withoutParameter() {
+			return withParameters();
+		}
+
 		public ExecSoftFoundFactoryBuilder withParameters(String... parameters) {
 			return new ExecSoftFoundFactoryBuilder(softProvider, Collections.unmodifiableList(new ArrayList<>(Arrays.asList(parameters))));
 		}

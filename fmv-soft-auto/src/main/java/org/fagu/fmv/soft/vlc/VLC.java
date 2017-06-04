@@ -46,5 +46,7 @@ public class VLC {
 	// search().withParameters("--extraintf", "rc")
 	// .execute();
 	// }
+	// "c:\Program Files (x86)\VideoLAN\VLC\vlc.exe" dvdsimple:///e:\ --audio-language=fr --sub-language=en --sout
+	// "#transcode{scodec=dvbs}:file{dst=d:\tmp\dvdout.ts,no-overwrite}" --sout-keep vlc://quit
 
 }

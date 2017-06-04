@@ -21,7 +21,9 @@ package org.fagu.fmv.ffmpeg.metadatas;
  */
 
 import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.StringJoiner;
 
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.AudioSampleFormat;
@@ -59,7 +61,7 @@ public class AudioStream extends Stream {
 	/**
 	 * @return
 	 */
-	public AudioSampleFormat sampleFormat() {
+	public Optional<AudioSampleFormat> sampleFormat() {
 		return get("sample_fmt", s -> AudioSampleFormat.byName(s));
 	}
 
@@ -73,7 +75,7 @@ public class AudioStream extends Stream {
 	/**
 	 * @return
 	 */
-	public ChannelLayout channelLayout() {
+	public Optional<ChannelLayout> channelLayout() {
 		return get("channel_layout", ChannelLayout::byName);
 	}
 
@@ -82,6 +84,19 @@ public class AudioStream extends Stream {
 	 */
 	public OptionalInt bitsPerSample() {
 		return getInt("bits_per_sample");
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.metadatas.Stream#toString()
+	 */
+	@Override
+	public String toString() {
+		StringJoiner joiner = new StringJoiner(",");
+		language().ifPresent(joiner::add);
+		codecName().ifPresent(joiner::add);
+		StringBuilder buf = new StringBuilder(100);
+		buf.append("AudioStream[").append(joiner.toString()).append(']');
+		return buf.toString();
 	}
 
 }

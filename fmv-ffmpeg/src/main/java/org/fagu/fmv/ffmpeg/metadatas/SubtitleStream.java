@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.metadatas;
  * #L%
  */
 
-
 import java.util.NavigableMap;
 
 import org.fagu.fmv.ffmpeg.operation.Type;
@@ -45,5 +44,16 @@ public class SubtitleStream extends Stream {
 	@Override
 	public Type type() {
 		return Type.SUBTITLE;
+	}
+
+	/**
+	 * @see org.fagu.fmv.ffmpeg.metadatas.Stream#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder buf = new StringBuilder(100);
+		String language = language().orElse(null);
+		buf.append("SubtitleStream[").append(language != null ? language : '?').append(']');
+		return buf.toString();
 	}
 }

@@ -22,7 +22,9 @@ package org.fagu.fmv.mymedia.classify.movie;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
@@ -73,7 +75,8 @@ public class Movie implements Media {
 	 */
 	@Override
 	public long getTime() {
-		return videoMetadatas.getVideoStream().creationDate().getTime();
+		Optional<Date> creationDate = videoMetadatas.getVideoStream().creationDate();
+		return creationDate.isPresent() ? creationDate.get().getTime() : 0;
 	}
 
 	/**
@@ -85,7 +88,7 @@ public class Movie implements Media {
 
 		VideoStream videoStream = videoMetadatas.getVideoStream();
 		if(videoStream != null) {
-			String handlerName = videoStream.handlerName();
+			String handlerName = videoStream.handlerName().orElse(null);
 			if(StringUtils.isNotEmpty(handlerName)) {
 				keys.add(handlerName);
 			}
@@ -97,7 +100,7 @@ public class Movie implements Media {
 
 		AudioStream audioStream = videoMetadatas.getAudioStream();
 		if(audioStream != null) {
-			String handlerName = audioStream.handlerName();
+			String handlerName = audioStream.handlerName().orElse(null);
 			if(StringUtils.isNotEmpty(handlerName)) {
 				keys.add(handlerName);
 			}

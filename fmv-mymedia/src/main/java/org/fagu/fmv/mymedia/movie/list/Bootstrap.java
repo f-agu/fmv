@@ -253,9 +253,9 @@ public class Bootstrap implements Closeable {
 			return movieMetadatas;
 		};
 		printStream.println(columns.stream() //
-		.map(c -> c.value(rootPath, file, movieMetadatasSupplier)) //
-		.map(StringUtils::defaultString) //
-		.collect(Collectors.joining("\t")));
+				.map(c -> c.value(rootPath, file, movieMetadatasSupplier)) //
+				.map(StringUtils::defaultString) //
+				.collect(Collectors.joining("\t")));
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class Bootstrap implements Closeable {
 	 * @throws IOException
 	 */
 	public static void listFull() throws IOException {
-		File root = new File("N:\\");
+		File root = new File("i:\\");
 		try (PrintStream printStream = new PrintStream(new File("C:\\tmp\\list-full.out")); //
 				Bootstrap listMovies = new Bootstrap(printStream)) {
 			// listMovies.addColumn(new VideoHDColumn());
@@ -288,21 +288,21 @@ public class Bootstrap implements Closeable {
 	 * @throws IOException
 	 */
 	public static void listName() throws IOException {
-		File root = new File("N:\\");
+		File root = new File("I:\\");
 		try (PrintStream printStream = new PrintStream(new File("C:\\tmp\\list-name.out")); //
 				Bootstrap listMovies = new Bootstrap(printStream)) {
 			listMovies.addColumn(new NameColumn());
 
-			printStream.println("=== Dessins animés ===");
-			listMovies.list(new File(root, "Dessins animés"));
-			printStream.println("=== Dessins animés séries ===");
-			Arrays.asList(new File(root, "Dessins animés série").list()).forEach(printStream::println);
-			printStream.println("=== Films ===");
-			listMovies.list(new File(root, "Films"));
+			// printStream.println("=== Dessins animés ===");
+			// listMovies.list(new File(root, "Dessins animés"));
+			// printStream.println("=== Dessins animés séries ===");
+			// Arrays.asList(new File(root, "Dessins animés série").list()).forEach(printStream::println);
+			// printStream.println("=== Films ===");
+			// listMovies.list(new File(root, "Films"));
 			printStream.println("=== Films HD ===");
 			listMovies.list(new File(root, "Films HD"));
-			printStream.println("=== Séries ===");
-			Arrays.asList(new File(root, "Séries").list()).forEach(printStream::println);
+			// printStream.println("=== Séries ===");
+			// Arrays.asList(new File(root, "Séries").list()).forEach(printStream::println);
 		}
 	}
 

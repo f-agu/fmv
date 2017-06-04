@@ -46,11 +46,11 @@ public class MovieMetadatasUtils {
 	public static Optional<Duration> getDuration(MovieMetadatas movieMetadatas) {
 		VideoStream videoStream = movieMetadatas.getVideoStream();
 		if(videoStream != null) {
-			return Optional.ofNullable(videoStream.duration());
+			return videoStream.duration();
 		}
 		AudioStream audioStream = movieMetadatas.getAudioStream();
 		if(audioStream != null) {
-			return Optional.ofNullable(audioStream.duration());
+			return audioStream.duration();
 		}
 		return Optional.empty();
 	}

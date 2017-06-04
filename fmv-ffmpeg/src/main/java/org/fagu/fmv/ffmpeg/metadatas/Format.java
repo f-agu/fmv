@@ -21,6 +21,7 @@ package org.fagu.fmv.ffmpeg.metadatas;
  */
 
 import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 import org.apache.commons.lang.StringUtils;
@@ -53,21 +54,21 @@ public class Format extends InfoBase {
 	/**
 	 * @return
 	 */
-	public String fileName() {
+	public Optional<String> fileName() {
 		return getString("filename");
 	}
 
 	/**
 	 * @return
 	 */
-	public String formatLongName() {
+	public Optional<String> formatLongName() {
 		return getString("format_long_name");
 	}
 
 	/**
 	 * @return
 	 */
-	public String formatName() {
+	public Optional<String> formatName() {
 		return getString("format_name");
 	}
 
@@ -81,50 +82,50 @@ public class Format extends InfoBase {
 	/**
 	 * @return
 	 */
-	public String compatibleBrands() {
-		return StringUtils.stripToEmpty((String)tag("compatible_brands"));
+	public Optional<String> compatibleBrands() {
+		return tagString("compatible_brands").map(StringUtils::stripToEmpty);
 	}
 
 	/**
 	 * @return
 	 */
-	public String majorBrand() {
-		return StringUtils.stripToEmpty((String)tag("major_brand"));
+	public Optional<String> majorBrand() {
+		return tagString("major_brand").map(StringUtils::stripToEmpty);
 	}
 
 	/**
 	 * @return
 	 */
-	public String album() {
-		return (String)tag("album");
+	public Optional<String> album() {
+		return tagString("album");
 	}
 
 	/**
 	 * @return
 	 */
-	public String year() {
-		return (String)tag("date");
+	public Optional<String> year() {
+		return tagString("date");
 	}
 
 	/**
 	 * @return
 	 */
-	public String comment() {
-		return (String)tag("comment");
+	public Optional<String> comment() {
+		return tagString("comment");
 	}
 
 	/**
 	 * @return
 	 */
-	public String artist() {
-		return (String)tag("artist");
+	public Optional<String> artist() {
+		return tagString("artist");
 	}
 
 	/**
 	 * @return
 	 */
-	public String genre() {
-		return (String)tag("genre");
+	public Optional<String> genre() {
+		return tagString("genre");
 	}
 
 	/**

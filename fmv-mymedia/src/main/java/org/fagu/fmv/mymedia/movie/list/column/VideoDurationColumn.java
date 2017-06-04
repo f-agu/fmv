@@ -55,7 +55,7 @@ public class VideoDurationColumn implements Column {
 	@Override
 	public String value(Path rootPath, File file, Supplier<MovieMetadatas> movieMetadatasSupplier) {
 		Format format = movieMetadatasSupplier.get().getFormat();
-		Duration duration = format.duration();
+		Duration duration = format.duration().orElse(null);
 		if(duration == null) {
 			return null;
 		}

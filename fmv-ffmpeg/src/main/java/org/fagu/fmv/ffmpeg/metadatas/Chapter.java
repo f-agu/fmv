@@ -21,6 +21,8 @@ package org.fagu.fmv.ffmpeg.metadatas;
  */
 
 import java.util.NavigableMap;
+import java.util.Optional;
+import java.util.OptionalLong;
 
 import org.fagu.fmv.ffmpeg.utils.Fraction;
 import org.fagu.fmv.ffmpeg.utils.Time;
@@ -54,35 +56,35 @@ public class Chapter extends InfoBase {
 	/**
 	 * @return
 	 */
-	public Long id() {
+	public OptionalLong id() {
 		return getLong("id");
 	}
 
 	/**
 	 * @return
 	 */
-	public Fraction timeBase() {
+	public Optional<Fraction> timeBase() {
 		return getFraction("time_base");
 	}
 
 	/**
 	 * @return
 	 */
-	public Long start() {
+	public OptionalLong start() {
 		return getLong("start");
 	}
 
 	/**
 	 * @return
 	 */
-	public Long end() {
+	public OptionalLong end() {
 		return getLong("end");
 	}
 
 	/**
 	 * @return
 	 */
-	public Time endTime() {
+	public Optional<Time> endTime() {
 		return getTime("end_time");
 	}
 
@@ -92,19 +94,19 @@ public class Chapter extends InfoBase {
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
-		String title = title();
+		String title = title().orElse(null);
 		if(title != null) {
 			buf.append(title).append('=');
 		}
-		Time startTime = startTime();
-		Time endTime = endTime();
+		Time startTime = startTime().orElse(null);
+		Time endTime = endTime().orElse(null);
 		if(startTime != null && endTime != null) {
 			buf.append(startTime).append('>').append(endTime);
 		} else {
-			Long start = start();
-			Long end = end();
-			if(start != null && end != null) {
-				buf.append(start).append('>').append(end);
+			OptionalLong start = start();
+			OptionalLong end = end();
+			if(start.isPresent() && end.isPresent()) {
+				buf.append(start.getAsLong()).append('>').append(end.getAsLong());
 			}
 		}
 		return buf.toString();

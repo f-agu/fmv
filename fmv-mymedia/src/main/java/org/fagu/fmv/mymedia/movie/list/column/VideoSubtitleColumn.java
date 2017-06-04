@@ -61,13 +61,7 @@ public class VideoSubtitleColumn implements Column {
 		}
 		StringJoiner joiner = new StringJoiner(", ");
 		for(SubtitleStream subtitleStream : subtitleStreams) {
-			String name = subtitleStream.title();
-			if(name == null) {
-				name = subtitleStream.language();
-			}
-			if(name == null) {
-				name = "?";
-			}
+			String name = subtitleStream.title().orElse(subtitleStream.language().orElse("?"));
 			joiner.add(name);
 		}
 		return subtitleStreams.size() + ": " + joiner.toString();

@@ -27,11 +27,14 @@ import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.NavigableSet;
+import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.Function;
 
 import javax.xml.bind.DatatypeConverter;
@@ -125,14 +128,14 @@ public abstract class InfoBase implements MetadataProperties {
 	/**
 	 * @return
 	 */
-	public Time startTime() {
+	public Optional<Time> startTime() {
 		return getTime("start_time");
 	}
 
 	/**
 	 * @return
 	 */
-	public Duration duration() {
+	public Optional<Duration> duration() {
 		return getDuration("duration");
 	}
 
@@ -146,75 +149,75 @@ public abstract class InfoBase implements MetadataProperties {
 	/**
 	 * @return
 	 */
-	public Date creationDate() {
-		String tag = (String)tag("creation_time");
+	public Optional<Date> creationDate() {
+		String tag = tagString("creation_time").orElse(null);
 		if(tag == null) {
-			return null;
+			return Optional.empty();
 		}
 		String[] patterns = {"yyyy-MM-dd HH:mm:SS", "yyyy-MM-dd'T'HH:mm:ss.MMZ"};
 		for(String pattern : patterns) {
 			SimpleDateFormat createDateFormat = new SimpleDateFormat(pattern);
 			try {
-				return createDateFormat.parse(tag);
+				return Optional.of(createDateFormat.parse(tag));
 			} catch(ParseException e) {
 				// ignore
 			}
 		}
 
 		try {
-			return Date.from(LocalDateTime.parse(tag).atZone(ZoneId.systemDefault()).toInstant());
+			return Optional.of(Date.from(LocalDateTime.parse(tag).atZone(ZoneId.systemDefault()).toInstant()));
 		} catch(DateTimeParseException e) {
 			// ignore
 		}
 		try {
-			return DatatypeConverter.parseDateTime(tag).getTime();
+			return Optional.of(DatatypeConverter.parseDateTime(tag).getTime());
 		} catch(IllegalArgumentException e) {
 			// ignore
 		}
-		return null;
+		return Optional.empty();
 
 	}
 
 	/**
 	 * @return
 	 */
-	public String handlerName() {
-		return StringUtils.stripToEmpty((String)tag("handler_name"));
+	public Optional<String> handlerName() {
+		return tagString("handler_name").map(StringUtils::stripToEmpty);
 	}
 
 	/**
 	 * @return
 	 */
-	public String language() {
-		return (String)tag("language");
+	public Optional<String> language() {
+		return tagString("language");
 	}
 
 	/**
 	 * @return
 	 */
-	public String title() {
-		return (String)tag("title");
+	public Optional<String> title() {
+		return tagString("title");
 	}
 
 	/**
 	 * @return
 	 */
-	public Locale locale() {
-		String language = language();
-		if(language == null) {
-			return null;
+	public Optional<Locale> locale() {
+		Optional<String> language = language();
+		if( ! language.isPresent()) {
+			return Optional.empty();
 		}
 		LanguageAlpha3Code languageAlpha3Code;
 		try {
-			languageAlpha3Code = LanguageAlpha3Code.valueOf(language);
+			languageAlpha3Code = LanguageAlpha3Code.valueOf(language.get());
 		} catch(IllegalArgumentException e) {
-			return null; // ignore
+			return Optional.empty(); // ignore
 		}
 		LanguageCode alpha2 = languageAlpha3Code.getAlpha2();
 		if(alpha2 == null) {
-			return null;
+			return Optional.empty();
 		}
-		return alpha2.toLocale();
+		return Optional.of(alpha2.toLocale());
 	}
 
 	/**
@@ -237,8 +240,17 @@ public abstract class InfoBase implements MetadataProperties {
 	 * @param name
 	 * @return
 	 */
-	public Object tag(String name) {
-		return tags().get(name);
+	@SuppressWarnings("unchecked")
+	public <R> Optional<R> tag(String name) {
+		return Optional.ofNullable((R)tags().get(name));
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	public Optional<String> tagString(String name) {
+		return Optional.ofNullable((String)tags().get(name));
 	}
 
 	/**
@@ -280,66 +292,54 @@ public abstract class InfoBase implements MetadataProperties {
 	 * @param name
 	 * @return
 	 */
-	protected Long getLong(String name) {
+	protected OptionalLong getLong(String name) {
 		Object object = map.get(name);
 		if(object instanceof Number) {
-			return ((Number)object).longValue();
+			return OptionalLong.of(((Number)object).longValue());
 		}
 		if(object instanceof String) {
-			return NumberUtils.toLong((String)object);
+			return OptionalLong.of(NumberUtils.toLong((String)object));
 		}
-		return null;
+		return OptionalLong.empty();
 	}
 
 	/**
 	 * @param name
 	 * @return
 	 */
-	protected Double getDouble(String name) {
-		String s = getString(name);
-		if(s == null) {
-			return null;
-		}
-		return Double.parseDouble(s);
+	protected Optional<Double> getDouble(String name) {
+		return getString(name).map(Double::parseDouble);
 	}
 
 	/**
 	 * @param name
 	 * @return
 	 */
-	protected String getString(String name) {
-		return (String)map.get(name);
+	protected Optional<String> getString(String name) {
+		return Optional.ofNullable((String)map.get(name));
 	}
 
 	/**
 	 * @param name
 	 * @return
 	 */
-	protected Time getTime(String name) {
-		Double d = getDouble(name);
-		if(d == null) {
-			return null;
-		}
-		return Time.valueOf(d);
+	protected Optional<Time> getTime(String name) {
+		return getDouble(name).map(Time::valueOf);
 	}
 
 	/**
 	 * @param name
 	 * @return
 	 */
-	protected Duration getDuration(String name) {
-		Double d = getDouble(name);
-		if(d == null) {
-			return null;
-		}
-		return Duration.valueOf(d);
+	protected Optional<Duration> getDuration(String name) {
+		return getDouble(name).map(Duration::valueOf);
 	}
 
 	/**
 	 * @param name
 	 * @return
 	 */
-	protected FrameRate getFrameRate(String name) {
+	protected Optional<FrameRate> getFrameRate(String name) {
 		return get(name, FrameRate::parse);
 	}
 
@@ -347,7 +347,7 @@ public abstract class InfoBase implements MetadataProperties {
 	 * @param name
 	 * @return
 	 */
-	protected Fraction getFraction(String name) {
+	protected Optional<Fraction> getFraction(String name) {
 		return get(name, Fraction::parse);
 	}
 
@@ -355,7 +355,7 @@ public abstract class InfoBase implements MetadataProperties {
 	 * @param name
 	 * @return
 	 */
-	protected Ratio getRatio(String name) {
+	protected Optional<Ratio> getRatio(String name) {
 		return get(name, Ratio::parse);
 	}
 
@@ -363,7 +363,7 @@ public abstract class InfoBase implements MetadataProperties {
 	 * @param name
 	 * @return
 	 */
-	protected PixelFormat getPixelFormat(String name) {
+	protected Optional<PixelFormat> getPixelFormat(String name) {
 		return get(name, PixelFormat::byName);
 	}
 
@@ -371,17 +371,17 @@ public abstract class InfoBase implements MetadataProperties {
 	 * @param name
 	 * @return
 	 */
-	protected <R> R get(String name, Function<String, R> function) {
-		String s = getString(name);
+	protected <R> Optional<R> get(String name, Function<String, R> function) {
+		String s = getString(name).orElse(null);
 		if(StringUtils.isBlank(s)) {
 			return null;
 		}
 		try {
-			return function.apply(s);
+			return Optional.ofNullable(function.apply(s));
 		} catch(IllegalArgumentException e) {
 			// ignore
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	/**
@@ -391,6 +391,15 @@ public abstract class InfoBase implements MetadataProperties {
 	@SuppressWarnings("unchecked")
 	protected NavigableMap<String, Object> getMap(String name) {
 		return (NavigableMap<String, Object>)map.get(name);
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected <E> List<E> getList(String name) {
+		return (List<E>)map.get(name);
 	}
 
 }

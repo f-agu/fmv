@@ -198,9 +198,9 @@ public class ConcatFadeExecutable extends GenericExecutable {
 		VideoStream videoStream1 = video1InputProcessor.getMovieMetadatas().getVideoStream();
 		VideoStream videoStream2 = video2InputProcessor.getMovieMetadatas().getVideoStream();
 
-		Time startTime_T1 = Time.valueOf(videoStream1.duration().toSeconds() - duration.toSeconds());
+		Time startTime_T1 = Time.valueOf(videoStream1.duration().get().toSeconds() - duration.toSeconds());
 		Duration duration_0_T1 = Duration.valueOf(startTime_T1.toSeconds());
-		Time startTime_T2 = Time.valueOf(videoStream2.duration().toSeconds() - duration.toSeconds());
+		Time startTime_T2 = Time.valueOf(videoStream2.duration().get().toSeconds() - duration.toSeconds());
 		Duration duration_T2_END = Duration.valueOf(startTime_T2.toSeconds());
 
 		// source 1: video

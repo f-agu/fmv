@@ -23,6 +23,7 @@ package org.fagu.fmv.ffmpeg.metadatas;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -94,63 +95,63 @@ public abstract class Stream extends InfoBase {
 	/**
 	 * @return
 	 */
-	public String codecName() {
+	public Optional<String> codecName() {
 		return getString("codec_name");
 	}
 
 	/**
 	 * @return
 	 */
-	public String codecLongName() {
+	public Optional<String> codecLongName() {
 		return getString("codec_long_name");
 	}
 
 	/**
 	 * @return
 	 */
-	public String codecType() {
+	public Optional<String> codecType() {
 		return getString("codec_type");
 	}
 
 	/**
 	 * @return
 	 */
-	public Fraction codecTimeBase() {
+	public Optional<Fraction> codecTimeBase() {
 		return getFraction("codec_time_base");
 	}
 
 	/**
 	 * @return
 	 */
-	public String codecTag() {
+	public Optional<String> codecTag() {
 		return getString("codec_tag");
 	}
 
 	/**
 	 * @return
 	 */
-	public String codecTagString() {
-		return getString("codec_tag_string");
+	public Object codecTagString() {
+		return get("codec_tag_string");
 	}
 
 	/**
 	 * @return
 	 */
-	public FrameRate frameRate() {
+	public Optional<FrameRate> frameRate() {
 		return getFrameRate("r_frame_rate");
 	}
 
 	/**
 	 * @return
 	 */
-	public FrameRate averageFrameRate() {
+	public Optional<FrameRate> averageFrameRate() {
 		return getFrameRate("avg_frame_rate");
 	}
 
 	/**
 	 * @return
 	 */
-	public Fraction timeBase() {
+	public Optional<Fraction> timeBase() {
 		return getFraction("time_base");
 	}
 
@@ -169,14 +170,14 @@ public abstract class Stream extends InfoBase {
 		if(count.isPresent()) {
 			return count;
 		}
-		FrameRate frameRate = frameRate();
+		FrameRate frameRate = frameRate().orElse(null);
 		if(frameRate == null) {
-			frameRate = averageFrameRate();
+			frameRate = averageFrameRate().orElse(null);
 		}
 		if(frameRate == null) {
 			return OptionalInt.empty();
 		}
-		Duration duration = duration();
+		Duration duration = duration().orElse(null);
 		if(duration == null) {
 			Object totDurObj = movieMetadatas.getFormat().tag("totalduration");
 			if(totDurObj != null) {
@@ -187,7 +188,7 @@ public abstract class Stream extends InfoBase {
 			}
 		}
 		if(duration == null) {
-			duration = movieMetadatas.getFormat().duration();
+			duration = movieMetadatas.getFormat().duration().orElse(null);
 		}
 
 		if(duration == null) {
@@ -195,7 +196,7 @@ public abstract class Stream extends InfoBase {
 			if( ! dts.isPresent()) {
 				return OptionalInt.empty();
 			}
-			Fraction timeBase = timeBase();
+			Fraction timeBase = timeBase().orElse(null);
 			if(timeBase == null) {
 				return OptionalInt.empty();
 			}
@@ -250,7 +251,7 @@ public abstract class Stream extends InfoBase {
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder(100);
-		buf.append("Stream[").append(codecType()).append(',').append(']');
+		buf.append("Stream[").append(codecType()).append(']');
 		return buf.toString();
 	}
 

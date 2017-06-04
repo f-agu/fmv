@@ -66,9 +66,9 @@ public class Test {
 		VideoStream videoStream1 = video1InputProcessor.getMovieMetadatas().getVideoStream();
 		VideoStream videoStream2 = video2InputProcessor.getMovieMetadatas().getVideoStream();
 
-		Time startTime_T1 = Time.valueOf(videoStream1.duration().toSeconds() - fadeDuration.toSeconds());
+		Time startTime_T1 = Time.valueOf(videoStream1.duration().get().toSeconds() - fadeDuration.toSeconds());
 		Duration duration_0_T1 = Duration.valueOf(startTime_T1.toSeconds());
-		Time startTime_T2 = Time.valueOf(videoStream2.duration().toSeconds() - fadeDuration.toSeconds());
+		Time startTime_T2 = Time.valueOf(videoStream2.duration().get().toSeconds() - fadeDuration.toSeconds());
 		Duration duration_T2_END = Duration.valueOf(startTime_T2.toSeconds());
 
 		// source 1
@@ -117,25 +117,37 @@ public class Test {
 		VideoStream videoStream1 = video1InputProcessor.getMovieMetadatas().getVideoStream();
 		VideoStream videoStream2 = video2InputProcessor.getMovieMetadatas().getVideoStream();
 
-		Time startTime_T1 = Time.valueOf(videoStream1.duration().toSeconds() - fadeDuration.toSeconds());
+		Time startTime_T1 = Time.valueOf(videoStream1.duration().get().toSeconds() - fadeDuration.toSeconds());
 		Duration duration_0_T1 = Duration.valueOf(startTime_T1.toSeconds());
-		Time startTime_T2 = Time.valueOf(videoStream2.duration().toSeconds() - fadeDuration.toSeconds());
+		Time startTime_T2 = Time.valueOf(videoStream2.duration().get().toSeconds() - fadeDuration.toSeconds());
 		Duration duration_T2_END = Duration.valueOf(startTime_T2.toSeconds());
 
 		// source 1: video
 		NullSourceVideo nullSourceVideo1 = NullSourceVideo.build().size(videoStream1.size()).duration(duration_T2_END);
-		Concat concat1V = Concat.create(builder, video1InputProcessor, FilterComplex.create(nullSourceVideo1)).countVideo(1).countAudio(0).countInputs(2);
+		Concat concat1V = Concat.create(builder, video1InputProcessor, FilterComplex.create(nullSourceVideo1))
+				.countVideo(1)
+				.countAudio(0)
+				.countInputs(2);
 		// source 1: audio
 		AudioGenerator audioGenerator1 = AudioGenerator.build().silence().duration(duration_T2_END);
-		Concat concat1A = Concat.create(builder, video1InputProcessor, FilterComplex.create(audioGenerator1)).countVideo(0).countAudio(1).countInputs(2);
+		Concat concat1A = Concat.create(builder, video1InputProcessor, FilterComplex.create(audioGenerator1))
+				.countVideo(0)
+				.countAudio(1)
+				.countInputs(2);
 		FilterComplex fadeAudio1 = FilterComplex.create(FadeAudio.out().startTime(startTime_T1).duration(fadeDuration)).addInput(concat1A);
 
 		// source 2: video
 		NullSourceVideo nullSourceVideo2 = NullSourceVideo.build().size(videoStream2.size()).duration(duration_0_T1);
-		Concat concat2V = Concat.create(builder, FilterComplex.create(nullSourceVideo2), video2InputProcessor).countVideo(1).countAudio(0).countInputs(2);
+		Concat concat2V = Concat.create(builder, FilterComplex.create(nullSourceVideo2), video2InputProcessor)
+				.countVideo(1)
+				.countAudio(0)
+				.countInputs(2);
 		// source 2: audio
 		AudioGenerator audioGenerator2 = AudioGenerator.build().silence().duration(duration_0_T1);
-		Concat concat2A = Concat.create(builder, FilterComplex.create(audioGenerator2), video2InputProcessor).countVideo(0).countAudio(1).countInputs(2);
+		Concat concat2A = Concat.create(builder, FilterComplex.create(audioGenerator2), video2InputProcessor)
+				.countVideo(0)
+				.countAudio(1)
+				.countInputs(2);
 		FilterComplex fadeAudio2 = FilterComplex.create(FadeAudio.in().startTime(startTime_T1).duration(fadeDuration)).addInput(concat2A);
 
 		// blend / merge video

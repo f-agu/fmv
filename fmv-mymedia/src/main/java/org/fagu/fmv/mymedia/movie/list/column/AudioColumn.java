@@ -61,10 +61,7 @@ public class AudioColumn implements Column {
 		}
 		StringJoiner joiner = new StringJoiner(", ");
 		for(AudioStream audioStream : audioStreams) {
-			String name = audioStream.title();
-			if(name == null) {
-				name = audioStream.language();
-			}
+			String name = audioStream.title().orElse(audioStream.language().orElse(null));
 			if(name == null || "und".equals(name)) {
 				name = "?";
 			}

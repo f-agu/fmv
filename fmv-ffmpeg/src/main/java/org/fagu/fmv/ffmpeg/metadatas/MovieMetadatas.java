@@ -416,6 +416,10 @@ public class MovieMetadatas implements Metadatas, Serializable {
 				NavigableMap<String, Object> createMap = createMap((JSONObject)object);
 				map.put(name, createMap);
 				map.put(nameLC, createMap);
+			} else if(object instanceof List) {
+				@SuppressWarnings("unchecked")
+				List<Object> jsonArray = (List<Object>)object;
+				map.put(name, jsonArray);
 			} else {
 				map.put(name, object);
 				map.put(nameLC, object);

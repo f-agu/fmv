@@ -21,6 +21,7 @@ package org.fagu.fmv.ffmpeg.metadatas;
  */
 
 import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 import org.fagu.fmv.ffmpeg.operation.Type;
@@ -62,7 +63,7 @@ public class VideoStream extends Stream {
 	 * 
 	 * @return
 	 */
-	public Ratio sampleAspectRatio() {
+	public Optional<Ratio> sampleAspectRatio() {
 		return getRatio("sample_aspect_ratio");
 	}
 
@@ -71,14 +72,14 @@ public class VideoStream extends Stream {
 	 * 
 	 * @return
 	 */
-	public Ratio displayAspectRatio() {
+	public Optional<Ratio> displayAspectRatio() {
 		return getRatio("sample_aspect_ratio");
 	}
 
 	/**
 	 * @return
 	 */
-	public PixelFormat pixelFormat() {
+	public Optional<PixelFormat> pixelFormat() {
 		return getPixelFormat("pix_fmt");
 	}
 

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.io.FilenameUtils;
@@ -803,9 +804,11 @@ public class FFHelper {
 		VideoStream videoStream1 = video1InputProcessor.getMovieMetadatas().getVideoStream();
 		VideoStream videoStream2 = video2InputProcessor.getMovieMetadatas().getVideoStream();
 
-		Time startTime_T1 = Time.valueOf(videoStream1.duration().toSeconds() - fadeDuration.toSeconds());
+		Optional<Duration> duration1 = videoStream1.duration();
+		Time startTime_T1 = Time.valueOf(duration1.get().toSeconds() - fadeDuration.toSeconds());
 		Duration duration_0_T1 = Duration.valueOf(startTime_T1.toSeconds());
-		Time startTime_T2 = Time.valueOf(videoStream2.duration().toSeconds() - fadeDuration.toSeconds());
+		Optional<Duration> duration2 = videoStream2.duration();
+		Time startTime_T2 = Time.valueOf(duration2.get().toSeconds() - fadeDuration.toSeconds());
 		Duration duration_T2_END = Duration.valueOf(startTime_T2.toSeconds());
 
 		// source 1: video

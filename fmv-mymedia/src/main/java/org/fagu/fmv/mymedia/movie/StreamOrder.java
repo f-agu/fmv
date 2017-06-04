@@ -42,9 +42,14 @@ public class StreamOrder {
 	 * @return
 	 */
 	public static <T extends Stream> Collection<T> sort(Collection<T> streams) {
-		T fr = streams.stream().filter(s -> s.language() != null && s.language().toLowerCase().startsWith("fr")).findFirst().orElse(null);
-		T en = streams.stream().filter(s -> s.language() != null
-				&& (s.language().toLowerCase().startsWith("ang") || s.language().toLowerCase().startsWith("en"))).findFirst().orElse(null);
+		T fr = streams.stream().filter(s -> s.language().isPresent() && s.language().get().toLowerCase().startsWith("fr")).findFirst().orElse(null);
+		T en = streams.stream()
+				.filter(s -> s.language().isPresent() && (s.language().get().toLowerCase().startsWith("ang") || s.language()
+						.get()
+						.toLowerCase()
+						.startsWith("en")))
+				.findFirst()
+				.orElse(null);
 		List<T> newStreams = new ArrayList<>();
 		if(fr != null) {
 			newStreams.add(fr);
