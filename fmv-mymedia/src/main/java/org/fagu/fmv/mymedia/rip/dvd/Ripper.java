@@ -3,6 +3,7 @@ package org.fagu.fmv.mymedia.rip.dvd;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -27,10 +28,12 @@ import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.mymedia.utils.TextProgressBar;
 import org.fagu.fmv.mymedia.utils.TextProgressBar.TextProgressBarBuilder;
+import org.fagu.fmv.soft.mplayer.DefaultSelectTitlesPolicy;
 import org.fagu.fmv.soft.mplayer.MPlayer;
 import org.fagu.fmv.soft.mplayer.MPlayerDump;
 import org.fagu.fmv.soft.mplayer.MPlayerTitle;
 import org.fagu.fmv.soft.mplayer.MPlayerTitles;
+import org.fagu.fmv.soft.mplayer.SelectTitlesPolicy;
 
 
 /**
@@ -51,12 +54,19 @@ public class Ripper {
 
 		private File tmpDirectory = new File("d:\\tmp\\dvd-rip");
 
+		private SelectTitlesPolicy selectTitlesPolicy = new DefaultSelectTitlesPolicy();
+
 		private RipperBuilder(File dvdDrive) {
 			this.dvdDrive = Objects.requireNonNull(dvdDrive);
 		}
 
 		public RipperBuilder tmpDirectory(File tmpDirectory) {
 			this.tmpDirectory = Objects.requireNonNull(tmpDirectory);
+			return this;
+		}
+
+		public RipperBuilder selectTitlesPolicy(SelectTitlesPolicy selectTitlesPolicy) {
+			this.selectTitlesPolicy = Objects.requireNonNull(selectTitlesPolicy);
 			return this;
 		}
 
@@ -73,6 +83,8 @@ public class Ripper {
 
 	private final ExecutorService ffmpegService;
 
+	private final SelectTitlesPolicy selectTitlesPolicy;
+
 	private TextProgressBar textProgressBar;
 
 	/**
@@ -81,6 +93,7 @@ public class Ripper {
 	private Ripper(RipperBuilder builder) {
 		this.dvdDrive = builder.dvdDrive;
 		this.tmpDirectory = builder.tmpDirectory;
+		this.selectTitlesPolicy = builder.selectTitlesPolicy;
 		ffmpegService = Executors.newSingleThreadExecutor();
 	}
 
@@ -102,7 +115,7 @@ public class Ripper {
 
 		System.out.println("Scanning titles...");
 		MPlayerTitles mPlayerTitles = MPlayerTitles.fromDVDDrive(dvdDrive).find();
-		List<MPlayerTitle> titles = mPlayerTitles.getTitlesLongest();
+		Collection<MPlayerTitle> titles = selectTitlesPolicy.select(mPlayerTitles.getTitles());
 		System.out.println("Found " + titles.size() + " titles");
 		titles.forEach(t -> System.out.println("   " + t.getNum() + "/" + t.getLength()));
 

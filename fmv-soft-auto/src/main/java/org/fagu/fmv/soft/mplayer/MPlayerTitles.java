@@ -3,6 +3,7 @@ package org.fagu.fmv.soft.mplayer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +23,6 @@ import org.apache.commons.lang3.StringUtils;
  * @author f.agu
  */
 public class MPlayerTitles {
-
-	private static final int MIN_LENGTH_PERCENT = 10;
 
 	// --------------------------------------
 
@@ -122,26 +121,15 @@ public class MPlayerTitles {
 	/**
 	 * @return
 	 */
-	public NavigableMap<Integer, MPlayerTitle> getTitlesMap() {
-		return mPlayerTitlesMap;
+	public Collection<MPlayerTitle> getTitles() {
+		return mPlayerTitlesMap.values();
 	}
 
 	/**
 	 * @return
 	 */
-	public List<MPlayerTitle> getTitlesLongest() {
-		double totalDuration = mPlayerTitlesMap.values().stream()
-				.map(t -> t.getLength())
-				.reduce((t1, t2) -> t1.add(t2))
-				.get()
-				.toSeconds();
-
-		List<MPlayerTitle> list = new ArrayList<>();
-		mPlayerTitlesMap.values().stream()
-				.filter(t -> (100D * t.getLength().toSeconds() / totalDuration) > MIN_LENGTH_PERCENT)
-				.forEach(list::add);
-
-		return list;
+	public NavigableMap<Integer, MPlayerTitle> getTitlesMap() {
+		return mPlayerTitlesMap;
 	}
 
 }
