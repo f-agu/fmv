@@ -64,11 +64,11 @@ public class FFMpegTextProgressBar {
 			return;
 		}
 		final int PREFIX_WIDTH = 60;
-		textProgressBar = TextProgressBarBuilder.width(25) //
-		.consolePrefixMessage(StringUtils.rightPad(StringUtils.abbreviate(consolePrefixMessage, PREFIX_WIDTH), PREFIX_WIDTH) + "  ") //
-		.progressChars(Chars.done('=').inside('#')) //
-		.finishChars(Chars.done('#').head('#').remain('=')) //
-		.build();
+		textProgressBar = TextProgressBarBuilder.width(25)
+				.consolePrefixMessage(StringUtils.rightPad(StringUtils.abbreviate(consolePrefixMessage, PREFIX_WIDTH), PREFIX_WIDTH) + "  ")
+				.progressChars(Chars.done('=').inside('#'))
+				.finishChars(Chars.done('#').head('#').remain('='))
+				.build();
 		consumer.accept(progress);
 	}
 

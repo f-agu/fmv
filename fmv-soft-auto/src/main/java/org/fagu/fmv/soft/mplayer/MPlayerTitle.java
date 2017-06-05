@@ -5,6 +5,7 @@ import java.util.NavigableSet;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
+import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.Time;
 
 
@@ -15,7 +16,7 @@ public class MPlayerTitle {
 
 	private final int num;
 
-	private Time length;
+	private Duration length;
 
 	private NavigableSet<Time> chapters;
 
@@ -36,7 +37,7 @@ public class MPlayerTitle {
 	/**
 	 * @return
 	 */
-	public Time getLength() {
+	public Duration getLength() {
 		return length;
 	}
 
@@ -61,7 +62,7 @@ public class MPlayerTitle {
 	 * @param s
 	 */
 	void setLength(String s) {
-		this.length = Time.valueOf(Double.parseDouble(s));
+		this.length = Duration.valueOf(Double.parseDouble(s));
 	}
 
 	/**

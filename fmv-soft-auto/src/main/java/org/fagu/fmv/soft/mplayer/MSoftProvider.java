@@ -20,6 +20,11 @@ import org.fagu.version.VersionParserManager;
 /**
  * @author f.agu
  */
+/**
+ * @author Oodrive
+ * @author f.agu
+ * @created 5 juin 2017 09:57:00
+ */
 public abstract class MSoftProvider extends SoftProvider {
 
 	/**
@@ -34,11 +39,11 @@ public abstract class MSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory() {
-		final Pattern pattern = Pattern.compile(getName() + " .*-([\\d\\.]+) \\(C\\).*", Pattern.CASE_INSENSITIVE);
+		Pattern winPattern = Pattern.compile(getName() + " sherpya-r(\\d+)+.*-[\\d\\.]+ \\(C\\).*", Pattern.CASE_INSENSITIVE);
 		return prepareSoftFoundFactory()
 				.withoutParameter()
 				.parseVersion(line -> {
-					Matcher matcher = pattern.matcher(line);
+					Matcher matcher = winPattern.matcher(line);
 					return matcher.matches() ? VersionParserManager.parse(matcher.group(1)) : null;
 				})
 				.exitValue(MEncoderSoftProvider.NAME.equals(getName()) ? 1 : 0)
@@ -76,12 +81,13 @@ public abstract class MSoftProvider extends SoftProvider {
 	}
 
 	/**
-	 * @return
+	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftPolicy()
 	 */
 	@Override
 	public SoftPolicy<?, ?, ?> getSoftPolicy() {
 		return new VersionPolicy()
-				.onAllPlatforms().minVersion(new Version(6, 2));
+				.onWindows().minVersion(new Version(37905))
+				.onLinux().minVersion(new Version(1, 3));
 	}
 
 }

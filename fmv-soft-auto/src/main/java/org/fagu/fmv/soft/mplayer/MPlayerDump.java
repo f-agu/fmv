@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.fagu.fmv.soft.SoftExecutor;
 
@@ -57,33 +58,19 @@ public class MPlayerDump {
 			params.add("-dumpfile");
 			params.add(outFile.getAbsolutePath());
 
-			// audio stream: 0 format: ac3 (5.1) language: en aid: 128.
-			// audio stream: 1 format: ac3 (5.1) language: fr aid: 129.
-			// audio stream: 2 format: ac3 (5.1) language: nl aid: 130.
-			// audio stream: 3 format: ac3 (stereo) language: nl aid: 131.
-			// audio stream: 4 format: ac3 (stereo) language: en aid: 132.
-			// number of audio channels on disk: 5.
-			// subtitle ( sid ): 0 language: en
-			// subtitle ( sid ): 1 language: fr
-			// subtitle ( sid ): 2 language: nl
-			// subtitle ( sid ): 3 language: en
-			// subtitle ( sid ): 4 language: fr
-			// subtitle ( sid ): 5 language: nl
-
-			// dump: 35966976 bytes written (~0.8%)
-
+			List<Stream> streams = new ArrayList<>();
 			SoftExecutor softExecutor = MPlayer.search()
 					.withParameters(params)
 					// .logCommandLine(System.out::println)
 					.addOutReadLine(l -> {
 						if(l.startsWith("audio stream:")) {
 							Map<String, String> parse = parse(l.substring(0, l.length() - 1));
+							streams.add(new AudioStream(Integer.parseInt(parse.get("audio stream")), parse));
 						}
 						if(l.startsWith("subtitle (")) {
 							Map<String, String> parse = parse(l);
-							//
+							streams.add(new Subtitle(Integer.parseInt(parse.get("subtitle ( sid )")), parse));
 						}
-						System.out.println("OUT: " + l);
 					});
 
 			if(progress != null) {
@@ -105,7 +92,7 @@ public class MPlayerDump {
 
 			softExecutor.execute();
 
-			return new MPlayerDump();
+			return new MPlayerDump(streams);
 		}
 
 		// --------------------------------------------
@@ -139,10 +126,14 @@ public class MPlayerDump {
 
 	// ------------------------------------------
 
+	private final List<Stream> streams;
+
 	/**
-	 * 
+	 * @param streams
 	 */
-	private MPlayerDump() {}
+	public MPlayerDump(List<Stream> streams) {
+		this.streams = streams;
+	}
 
 	/**
 	 * @param dvdDrive
@@ -150,6 +141,26 @@ public class MPlayerDump {
 	 */
 	public static MPlayerDumpBuilder fromDVDDrive(File dvdDrive) {
 		return new MPlayerDumpBuilder(dvdDrive);
+	}
+
+	/**
+	 * @return
+	 */
+	public List<AudioStream> getAudioStreams() {
+		return streams.stream()
+				.filter(s -> s instanceof AudioStream)
+				.map(s -> (AudioStream)s)
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * @return
+	 */
+	public List<Subtitle> getSubtitles() {
+		return streams.stream()
+				.filter(s -> s instanceof Subtitle)
+				.map(s -> (Subtitle)s)
+				.collect(Collectors.toList());
 	}
 
 }
