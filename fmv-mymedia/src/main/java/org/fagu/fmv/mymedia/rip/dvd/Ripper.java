@@ -3,14 +3,12 @@ package org.fagu.fmv.mymedia.rip.dvd;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +27,6 @@ import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.mymedia.utils.TextProgressBar;
 import org.fagu.fmv.mymedia.utils.TextProgressBar.TextProgressBarBuilder;
-import org.fagu.fmv.soft.mplayer.AudioStream;
 import org.fagu.fmv.soft.mplayer.MPlayer;
 import org.fagu.fmv.soft.mplayer.MPlayerDump;
 import org.fagu.fmv.soft.mplayer.MPlayerTitle;
@@ -157,18 +154,20 @@ public class Ripper {
 				.progress(progressDump::set)
 				.dump(title.getNum(), vobFile);
 
-		encode(vobFile, mp4File, mPlayerDump);
+		encode(vobFile, mp4File, mPlayerDump, progressEncode);
 	}
 
 	/**
 	 * @param vobFile
 	 * @param mp4File
 	 * @param mPlayerDump
+	 * @param progressEncode
 	 * @throws IOException
 	 */
-	private void encode(File vobFile, File mp4File, MPlayerDump mPlayerDump) throws IOException {
+	private void encode(File vobFile, File mp4File, MPlayerDump mPlayerDump, AtomicInteger progressEncode) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
-		builder.hideBanner();
+		builder.hideBanner()
+				.noStats();
 
 		InputProcessor inputProcessor = builder.addMediaInputFile(vobFile);
 		MovieMetadatas movieMetadatas = inputProcessor.getMovieMetadatas();
@@ -192,8 +191,18 @@ public class Ripper {
 		FFExecutor<Object> executor = builder.build();
 		ffmpegService.submit(() -> {
 			try {
-				System.out.println("FFMPEG : " + mp4File);
-				System.out.println(executor.getCommandLine());
+				int nbFrames = 0;
+				OptionalInt countEstimateFrames = movieMetadatas.getVideoStream().countEstimateFrames();
+				if(countEstimateFrames.isPresent()) {
+					nbFrames = countEstimateFrames.getAsInt();
+				} else {
+					// TODO
+				}
+
+				FFMpegProgress ffMpegProgress = new FFMpegProgress(progressEncode, nbFrames);
+				executor.addReadLineOnErr(ffMpegProgress);
+				// System.out.println("FFMPEG : " + mp4File);
+				// System.out.println(executor.getCommandLine());
 				executor.execute();
 				vobFile.delete();
 			} catch(Exception e) {
@@ -258,20 +267,20 @@ public class Ripper {
 		return volumeId.getValue();
 	}
 
-	public static void main(String[] args) throws IOException {
-		Ripper ripper = Ripper.fromDVDDrive(new File("e:")).build();
-		File vobFile = new File("D:\\tmp\\dvd-rip\\dvd-123_DVD01_SAISON_IV-1-6694961849075169155.vob");
-		File mp4File = new File("D:\\tmp\\dvd-rip\\dvd-123_DVD01_SAISON_IV-1-6694961849075169155.mp4");
-
-		Map<String, String> map = new HashMap<>();
-		map.put("audio stream", "0");
-		map.put("format", "ac3 (stereo)");
-		map.put("language", "fr");
-		map.put("aid", "128");
-
-		List<org.fagu.fmv.soft.mplayer.Stream> asList = Arrays.asList(new AudioStream(0, map));
-		MPlayerDump mPlayerDump = new MPlayerDump(asList);
-		ripper.encode(vobFile, mp4File, mPlayerDump);
-	}
+	// public static void main(String[] args) throws IOException {
+	// Ripper ripper = Ripper.fromDVDDrive(new File("e:")).build();
+	// File vobFile = new File("D:\\tmp\\dvd-rip\\dvd-123_DVD01_SAISON_IV-1-6694961849075169155.vob");
+	// File mp4File = new File("D:\\tmp\\dvd-rip\\dvd-123_DVD01_SAISON_IV-1-6694961849075169155.mp4");
+	//
+	// Map<String, String> map = new HashMap<>();
+	// map.put("audio stream", "0");
+	// map.put("format", "ac3 (stereo)");
+	// map.put("language", "fr");
+	// map.put("aid", "128");
+	//
+	// List<org.fagu.fmv.soft.mplayer.Stream> asList = Arrays.asList(new AudioStream(0, map));
+	// MPlayerDump mPlayerDump = new MPlayerDump(asList);
+	// ripper.encode(vobFile, mp4File, mPlayerDump);
+	// }
 
 }
