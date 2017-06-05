@@ -21,12 +21,15 @@ package org.fagu.fmv.soft.exec;
  */
 
 import java.io.File;
+import java.io.FilterOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.OptionalLong;
 import java.util.concurrent.ExecutorService;
 import java.util.function.IntConsumer;
+import java.util.function.UnaryOperator;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -36,6 +39,7 @@ import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.ProcessDestroyer;
 import org.apache.commons.exec.ShutdownHookProcessDestroyer;
+import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.utils.Proxifier;
 
 
@@ -51,6 +55,8 @@ public class FMVExecutor extends DefaultExecutor {
 	private final Proxifier<FMVExecListener> listenerProxifier;
 
 	private final FMVExecListener proxyFMVExecListener;
+
+	private UnaryOperator<Process> processOperator = getDefaultProcessOperator();
 
 	// --------------
 
@@ -139,6 +145,20 @@ public class FMVExecutor extends DefaultExecutor {
 		timeOutMilliSeconds = null;
 		executeWatchdog = null;
 		setWatchdog(null);
+	}
+
+	/**
+	 * @param processOperator
+	 */
+	public void setProcessOperator(UnaryOperator<Process> processOperator) {
+		this.processOperator = processOperator;
+	}
+
+	/**
+	 * 
+	 */
+	public void removeProcessOperator() {
+		setProcessOperator(null);
 	}
 
 	/**
@@ -255,7 +275,57 @@ public class FMVExecutor extends DefaultExecutor {
 	 */
 	public interface IOExceptionConsumer {
 
+		/**
+		 * @param exception
+		 * @throws IOException
+		 */
 		void accept(IOException exception) throws IOException;
 	}
 
+	// ****************************************
+
+	/**
+	 * @see org.apache.commons.exec.DefaultExecutor#launch(org.apache.commons.exec.CommandLine, java.util.Map,
+	 *      java.io.File)
+	 */
+	@Override
+	protected Process launch(CommandLine command, Map<String, String> env, File dir) throws IOException {
+		Process superProcess = super.launch(command, env, dir);
+		return processOperator != null ? processOperator.apply(superProcess) : superProcess;
+	}
+
+	/**
+	 * @return
+	 */
+	private static UnaryOperator<Process> getDefaultProcessOperator() {
+		if( ! SystemUtils.IS_OS_UNIX) {
+			return null;
+		}
+		return process -> new WrapProcess(process) {
+
+			@Override
+			public OutputStream getOutputStream() {
+				return new FilterOutputStream(super.getOutputStream()) {
+
+					@Override
+					public void flush() throws IOException {
+						try {
+							super.flush();
+						} catch(Exception e) {
+							// ignore
+						}
+					}
+
+					@Override
+					public void close() throws IOException {
+						try {
+							super.close();
+						} catch(Exception e) {
+							// ignore
+						}
+					}
+				};
+			}
+		};
+	}
 }
