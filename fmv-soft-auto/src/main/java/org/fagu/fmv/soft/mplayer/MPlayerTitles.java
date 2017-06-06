@@ -98,7 +98,7 @@ public class MPlayerTitles {
 	 * @param properties
 	 * @param mPlayerTitleMap
 	 */
-	private MPlayerTitles(Map<String, String> properties, NavigableMap<Integer, MPlayerTitle> mPlayerTitleMap) {
+	public MPlayerTitles(Map<String, String> properties, NavigableMap<Integer, MPlayerTitle> mPlayerTitleMap) {
 		this.properties = Collections.unmodifiableMap(properties);
 		this.mPlayerTitlesMap = Collections.unmodifiableNavigableMap(mPlayerTitleMap);
 	}

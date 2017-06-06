@@ -27,6 +27,17 @@ public class MPlayerTitle {
 	}
 
 	/**
+	 * @param num
+	 * @param length
+	 * @param chapters
+	 */
+	public MPlayerTitle(int num, Duration length, NavigableSet<Duration> chapters) {
+		this(num);
+		this.length = length;
+		this.chapters = chapters;
+	}
+
+	/**
 	 * @return
 	 */
 	public int getNum() {
