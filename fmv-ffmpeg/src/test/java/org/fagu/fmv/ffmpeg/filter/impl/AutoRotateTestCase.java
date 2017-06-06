@@ -20,9 +20,10 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+
+import java.util.Optional;
 
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
@@ -47,7 +48,7 @@ public class AutoRotateTestCase {
 		VideoStream videoStream = mock(VideoStream.class);
 
 		doReturn(videoStream).when(movieMetadatas).getVideoStream();
-		doReturn("90").when(videoStream).tag("rotate");
+		doReturn(Optional.of("90")).when(videoStream).tag("rotate");
 
 		AutoRotate.create(movieMetadatas);
 	}

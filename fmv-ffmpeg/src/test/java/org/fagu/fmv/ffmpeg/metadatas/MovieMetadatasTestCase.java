@@ -55,17 +55,17 @@ public class MovieMetadatasTestCase {
 			// video
 			VideoStream videoStream = movieMetadatas.getVideoStream();
 			assertEquals(533148, videoStream.bitRate().getAsInt());
-			assertEquals("h264", videoStream.codecName());
-			assertEquals("video", videoStream.codecType());
-			assertEquals(Duration.valueOf(1.335000F), videoStream.duration());
+			assertEquals("h264", videoStream.codecName().get());
+			assertEquals("video", videoStream.codecType().get());
+			assertEquals(Duration.valueOf(1.335000F), videoStream.duration().get());
 			assertEquals(40, videoStream.countEstimateFrames().getAsInt());
 
 			// audio
 			AudioStream audioStream = movieMetadatas.getAudioStream();
 			assertEquals(128920, audioStream.bitRate().getAsInt());
-			assertEquals(ChannelLayout.MONO, audioStream.channelLayout());
-			assertEquals("aac", audioStream.codecName());
-			assertEquals(Duration.parse("00:00:01.335"), videoStream.duration());
+			assertEquals(ChannelLayout.MONO, audioStream.channelLayout().get());
+			assertEquals("aac", audioStream.codecName().get());
+			assertEquals(Duration.parse("00:00:01.335"), videoStream.duration().get());
 
 			// System.out.println(movieMetadatas);
 		} finally {
