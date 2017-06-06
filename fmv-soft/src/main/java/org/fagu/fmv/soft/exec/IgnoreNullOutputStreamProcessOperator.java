@@ -84,6 +84,7 @@ public class IgnoreNullOutputStreamProcessOperator implements ProcessOperator {
 						if("java.lang.ProcessBuilder$NullOutputStream".equals(e.getStackTrace()[0].getClassName())
 								&& "Stream closed".equals(e.getMessage())) {
 							// ignore
+							return;
 						}
 						throw e;
 					}
