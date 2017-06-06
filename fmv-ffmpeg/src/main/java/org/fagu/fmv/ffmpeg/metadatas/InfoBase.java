@@ -41,13 +41,13 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.Fraction;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
-import org.fagu.fmv.ffmpeg.utils.Time;
 import org.fagu.fmv.media.MetadataProperties;
 import org.fagu.fmv.utils.media.Ratio;
+import org.fagu.fmv.utils.time.Duration;
+import org.fagu.fmv.utils.time.Time;
 
 import com.neovisionaries.i18n.LanguageAlpha3Code;
 import com.neovisionaries.i18n.LanguageCode;

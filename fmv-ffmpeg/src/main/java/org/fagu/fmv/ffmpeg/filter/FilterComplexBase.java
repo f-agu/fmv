@@ -34,7 +34,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.Type;
-import org.fagu.fmv.ffmpeg.utils.Duration;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

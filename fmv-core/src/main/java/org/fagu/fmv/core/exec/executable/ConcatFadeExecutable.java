@@ -52,9 +52,9 @@ import org.fagu.fmv.ffmpeg.filter.impl.NullSourceVideo;
 import org.fagu.fmv.ffmpeg.filter.impl.SetSAR;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
-import org.fagu.fmv.ffmpeg.utils.Time;
+import org.fagu.fmv.utils.time.Duration;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

@@ -26,7 +26,7 @@ import static org.junit.Assert.assertNull;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import org.fagu.fmv.ffmpeg.utils.Time;
+import org.fagu.fmv.utils.time.Time;
 import org.junit.Test;
 
 

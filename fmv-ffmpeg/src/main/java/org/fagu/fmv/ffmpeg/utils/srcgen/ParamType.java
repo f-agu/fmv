@@ -26,11 +26,11 @@ import org.fagu.fmv.ffmpeg.utils.AudioSampleFormat;
 import org.fagu.fmv.ffmpeg.utils.Binary;
 import org.fagu.fmv.ffmpeg.utils.ChannelLayout;
 import org.fagu.fmv.ffmpeg.utils.Color;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.Fraction;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
 import org.fagu.fmv.utils.media.Size;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

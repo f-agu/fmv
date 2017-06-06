@@ -37,9 +37,9 @@ import org.fagu.fmv.core.exec.executable.GenericExecutable;
 import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.LoadUtils;
 import org.fagu.fmv.core.project.Project;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.utils.collection.MapMap;
 import org.fagu.fmv.utils.collection.MultiValueMaps;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

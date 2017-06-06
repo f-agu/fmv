@@ -26,8 +26,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
-import org.fagu.fmv.ffmpeg.utils.Duration;
-import org.fagu.fmv.ffmpeg.utils.Time;
+import org.fagu.fmv.utils.time.Duration;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

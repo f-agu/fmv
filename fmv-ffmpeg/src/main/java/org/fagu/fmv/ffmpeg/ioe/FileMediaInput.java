@@ -28,7 +28,7 @@ import java.util.Optional;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatasUtils;
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
-import org.fagu.fmv.ffmpeg.utils.Duration;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

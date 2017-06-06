@@ -90,14 +90,14 @@ import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.ChannelLayout;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.FPS;
 import org.fagu.fmv.ffmpeg.utils.LogLevel;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
-import org.fagu.fmv.ffmpeg.utils.Time;
 import org.fagu.fmv.ffmpeg.utils.VSync;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.utils.media.Size;
+import org.fagu.fmv.utils.time.Duration;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

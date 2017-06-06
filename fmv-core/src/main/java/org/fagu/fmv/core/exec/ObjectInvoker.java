@@ -29,10 +29,10 @@ import java.util.stream.Collectors;
 
 import org.fagu.fmv.ffmpeg.filter.impl.AudioMix.MixAudioDuration;
 import org.fagu.fmv.ffmpeg.utils.Color;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
-import org.fagu.fmv.ffmpeg.utils.Time;
 import org.fagu.fmv.utils.media.Size;
+import org.fagu.fmv.utils.time.Duration;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

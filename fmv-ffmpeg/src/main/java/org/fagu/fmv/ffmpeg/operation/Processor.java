@@ -32,13 +32,13 @@ import org.apache.commons.lang.StringUtils;
 import org.fagu.fmv.ffmpeg.coder.Coder;
 import org.fagu.fmv.ffmpeg.operation.Parameter.Way;
 import org.fagu.fmv.ffmpeg.require.Require;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
-import org.fagu.fmv.ffmpeg.utils.Time;
 import org.fagu.fmv.utils.collection.MapMap;
 import org.fagu.fmv.utils.collection.MultiValueMaps;
 import org.fagu.fmv.utils.media.Size;
+import org.fagu.fmv.utils.time.Duration;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

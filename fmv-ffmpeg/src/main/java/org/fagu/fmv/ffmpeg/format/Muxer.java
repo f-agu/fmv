@@ -24,7 +24,7 @@ import java.util.Objects;
 
 import org.fagu.fmv.ffmpeg.flags.AvoidNegativeTs;
 import org.fagu.fmv.ffmpeg.operation.MediaOutput;
-import org.fagu.fmv.ffmpeg.utils.Duration;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

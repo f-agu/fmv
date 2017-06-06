@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.OptionalLong;
 
 import org.fagu.fmv.ffmpeg.utils.Fraction;
-import org.fagu.fmv.ffmpeg.utils.Time;
+import org.fagu.fmv.utils.time.Time;
 
 import net.sf.json.JSONObject;
 

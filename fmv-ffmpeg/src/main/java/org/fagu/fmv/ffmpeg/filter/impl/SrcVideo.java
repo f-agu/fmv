@@ -29,8 +29,8 @@ import org.fagu.fmv.ffmpeg.operation.IOEntity;
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.Processor;
 import org.fagu.fmv.ffmpeg.utils.Color;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.utils.media.Size;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

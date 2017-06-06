@@ -35,9 +35,9 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.Stream;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.ffmpeg.operation.Type;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.utils.media.Rotation;
 import org.fagu.fmv.utils.media.Size;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

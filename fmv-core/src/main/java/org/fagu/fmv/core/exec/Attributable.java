@@ -34,7 +34,7 @@ import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.LoadUtils;
 import org.fagu.fmv.core.project.Project;
 import org.fagu.fmv.ffmpeg.operation.Type;
-import org.fagu.fmv.ffmpeg.utils.Duration;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

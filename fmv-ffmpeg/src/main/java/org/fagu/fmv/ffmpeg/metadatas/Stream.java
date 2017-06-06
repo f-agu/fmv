@@ -28,9 +28,9 @@ import java.util.OptionalInt;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.fagu.fmv.ffmpeg.operation.Type;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.ffmpeg.utils.Fraction;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
+import org.fagu.fmv.utils.time.Duration;
 
 import net.sf.json.JSONObject;
 

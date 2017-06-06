@@ -46,9 +46,9 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Map;
 import org.fagu.fmv.ffmpeg.operation.Map.On;
+import org.fagu.fmv.utils.time.Time;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Type;
-import org.fagu.fmv.ffmpeg.utils.Time;
 
 
 /**

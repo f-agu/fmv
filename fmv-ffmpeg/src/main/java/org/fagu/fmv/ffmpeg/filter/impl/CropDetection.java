@@ -33,9 +33,9 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.fagu.fmv.ffmpeg.utils.Duration;
-import org.fagu.fmv.ffmpeg.utils.Time;
 import org.fagu.fmv.utils.media.Size;
+import org.fagu.fmv.utils.time.Duration;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

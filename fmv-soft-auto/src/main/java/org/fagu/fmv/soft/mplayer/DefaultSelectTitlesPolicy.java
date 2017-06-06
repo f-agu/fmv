@@ -25,7 +25,7 @@ public class DefaultSelectTitlesPolicy implements SelectTitlesPolicy {
 	public Collection<MPlayerTitle> select(Collection<MPlayerTitle> titles) {
 		SortedSet<MPlayerTitle> set = new TreeSet<>((t1, t2) -> t2.getLength().compareTo(t1.getLength())); // reverse
 		set.addAll(titles);
-		if(set.first().getLength().compareTo(org.fagu.fmv.ffmpeg.utils.Duration.valueOf(MIN_LENTGH_UNATARY.getSeconds())) > 0) {
+		if(set.first().getLength().compareTo(org.fagu.fmv.utils.time.Duration.valueOf(MIN_LENTGH_UNATARY.getSeconds())) > 0) {
 			return Collections.singletonList(set.first());
 		}
 

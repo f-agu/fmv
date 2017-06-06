@@ -39,8 +39,8 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatasUtils;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Type;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.media.FileType;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

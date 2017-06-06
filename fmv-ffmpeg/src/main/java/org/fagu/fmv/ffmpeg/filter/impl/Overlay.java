@@ -26,7 +26,7 @@ import org.fagu.fmv.ffmpeg.filter.FilterComplex;
 import org.fagu.fmv.ffmpeg.filter.FilterInput;
 import org.fagu.fmv.ffmpeg.filter.impl.AudioMix.MixAudioDuration;
 import org.fagu.fmv.ffmpeg.operation.Type;
-import org.fagu.fmv.ffmpeg.utils.Duration;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

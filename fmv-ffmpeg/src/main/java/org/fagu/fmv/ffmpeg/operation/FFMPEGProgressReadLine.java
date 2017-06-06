@@ -24,8 +24,8 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.ffmpeg.utils.Time;
 import org.fagu.fmv.soft.exec.ReadLine;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

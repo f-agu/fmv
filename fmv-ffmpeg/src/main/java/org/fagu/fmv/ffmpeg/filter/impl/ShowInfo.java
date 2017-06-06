@@ -32,9 +32,9 @@ import org.fagu.fmv.ffmpeg.filter.AbstractFilter;
 import org.fagu.fmv.ffmpeg.operation.LibLog;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
-import org.fagu.fmv.ffmpeg.utils.Time;
 import org.fagu.fmv.utils.media.Ratio;
 import org.fagu.fmv.utils.media.Size;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

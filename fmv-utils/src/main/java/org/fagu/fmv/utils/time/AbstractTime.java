@@ -1,4 +1,4 @@
-package org.fagu.fmv.ffmpeg.utils;
+package org.fagu.fmv.utils.time;
 
 /*
  * #%L

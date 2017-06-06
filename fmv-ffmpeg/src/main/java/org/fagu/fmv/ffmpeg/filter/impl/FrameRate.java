@@ -27,7 +27,7 @@ import java.util.Set;
 import org.fagu.fmv.ffmpeg.filter.AbstractFilter;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.FPS;
-import org.fagu.fmv.ffmpeg.utils.Time;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

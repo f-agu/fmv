@@ -1,4 +1,4 @@
-package org.fagu.fmv.ffmpeg.utils;
+package org.fagu.fmv.utils.time;
 
 /*
  * #%L
@@ -22,7 +22,7 @@ package org.fagu.fmv.ffmpeg.utils;
 
 import java.util.regex.Matcher;
 
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 
 /**

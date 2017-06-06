@@ -34,8 +34,8 @@ import org.fagu.fmv.ffmpeg.filter.Label;
 import org.fagu.fmv.ffmpeg.filter.OutputKey;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.require.Require;
-import org.fagu.fmv.ffmpeg.utils.Duration;
-import org.fagu.fmv.ffmpeg.utils.Time;
+import org.fagu.fmv.utils.time.Duration;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

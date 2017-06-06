@@ -1,4 +1,4 @@
-package org.fagu.fmv.ffmpeg.utils;
+package org.fagu.fmv.utils.time;
 
 /*
  * #%L
@@ -23,6 +23,7 @@ package org.fagu.fmv.ffmpeg.utils;
 
 import static org.junit.Assert.assertEquals;
 
+import org.fagu.fmv.utils.time.Time;
 import org.junit.Test;
 
 

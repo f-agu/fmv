@@ -25,10 +25,10 @@ import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.operation.Progress;
-import org.fagu.fmv.ffmpeg.utils.Duration;
-import org.fagu.fmv.ffmpeg.utils.Time;
 import org.fagu.fmv.mymedia.utils.TextProgressBar.Chars;
 import org.fagu.fmv.mymedia.utils.TextProgressBar.TextProgressBarBuilder;
+import org.fagu.fmv.utils.time.Duration;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

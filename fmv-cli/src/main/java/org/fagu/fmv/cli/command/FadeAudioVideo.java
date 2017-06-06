@@ -27,8 +27,8 @@ import org.fagu.fmv.core.exec.BaseIdentifiable;
 import org.fagu.fmv.core.exec.Identifiable;
 import org.fagu.fmv.core.exec.filter.FadeAudioVideoFilterExec;
 import org.fagu.fmv.ffmpeg.filter.impl.FadeType;
-import org.fagu.fmv.ffmpeg.utils.Duration;
-import org.fagu.fmv.ffmpeg.utils.Time;
+import org.fagu.fmv.utils.time.Duration;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

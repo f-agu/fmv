@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.fagu.fmv.ffmpeg.operation.Type;
-import org.fagu.fmv.ffmpeg.utils.Duration;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

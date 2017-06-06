@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.fagu.fmv.ffmpeg.filter.impl.CropDetection.CropSize;
 import org.fagu.fmv.ffmpeg.operation.LibLogReadLine;
-import org.fagu.fmv.ffmpeg.utils.Duration;
+import org.fagu.fmv.utils.time.Duration;
 import org.junit.Test;
 
 

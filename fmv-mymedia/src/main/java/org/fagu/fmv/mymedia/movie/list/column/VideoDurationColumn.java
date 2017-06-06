@@ -27,8 +27,8 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.metadatas.Format;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.fagu.fmv.ffmpeg.utils.Duration;
 import org.fagu.fmv.mymedia.movie.list.Column;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**

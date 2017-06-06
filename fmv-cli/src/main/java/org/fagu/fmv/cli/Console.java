@@ -36,8 +36,8 @@ import org.fagu.fmv.core.project.FileSource;
 import org.fagu.fmv.core.project.Project;
 import org.fagu.fmv.core.project.ProjectListener;
 import org.fagu.fmv.ffmpeg.filter.impl.FadeType;
-import org.fagu.fmv.ffmpeg.utils.Duration;
-import org.fagu.fmv.ffmpeg.utils.Time;
+import org.fagu.fmv.utils.time.Duration;
+import org.fagu.fmv.utils.time.Time;
 
 import jline.console.ConsoleReader;
 

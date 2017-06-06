@@ -33,7 +33,7 @@ import org.fagu.fmv.ffmpeg.filter.FilterComplexBase;
 import org.fagu.fmv.ffmpeg.filter.FilterInput;
 import org.fagu.fmv.ffmpeg.filter.impl.AudioMix;
 import org.fagu.fmv.ffmpeg.operation.Type;
-import org.fagu.fmv.ffmpeg.utils.Time;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**

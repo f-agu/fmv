@@ -26,7 +26,7 @@ import java.io.IOException;
 
 import org.fagu.fmv.ffmpeg.ResourceUtils;
 import org.fagu.fmv.ffmpeg.utils.ChannelLayout;
-import org.fagu.fmv.ffmpeg.utils.Duration;
+import org.fagu.fmv.utils.time.Duration;
 import org.junit.Test;
 
 

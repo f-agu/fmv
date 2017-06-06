@@ -5,8 +5,7 @@ import java.util.NavigableSet;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
-import org.fagu.fmv.ffmpeg.utils.Duration;
-import org.fagu.fmv.ffmpeg.utils.Time;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**
@@ -18,7 +17,7 @@ public class MPlayerTitle {
 
 	private Duration length;
 
-	private NavigableSet<Time> chapters;
+	private NavigableSet<Duration> chapters;
 
 	/**
 	 * @param num
@@ -44,7 +43,7 @@ public class MPlayerTitle {
 	/**
 	 * @return
 	 */
-	public NavigableSet<Time> getChapters() {
+	public NavigableSet<Duration> getChapters() {
 		return Collections.unmodifiableNavigableSet(chapters);
 	}
 
@@ -70,14 +69,14 @@ public class MPlayerTitle {
 	 */
 	void setChapters(String s) {
 		StringTokenizer tokenizer = new StringTokenizer(s, ",");
-		NavigableSet<Time> times = new TreeSet<>();
+		NavigableSet<Duration> times = new TreeSet<>();
 		String token;
 		while(tokenizer.hasMoreTokens()) {
 			token = tokenizer.nextToken().trim();
 			if("".equals(token)) {
 				continue;
 			}
-			times.add(Time.parse(token));
+			times.add(Duration.parse(token));
 		}
 		chapters = times;
 	}
