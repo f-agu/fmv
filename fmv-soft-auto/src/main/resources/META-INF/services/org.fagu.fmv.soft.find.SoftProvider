@@ -1,6 +1,6 @@
 org.fagu.fmv.soft.gs.GSSoftProvider
 org.fagu.fmv.soft.mplayer.MEncoderSoftProvider
-org.fagu.fmv.soft.mplayer.MPlayerProvider
+org.fagu.fmv.soft.mplayer.MPlayerSoftProvider
 org.fagu.fmv.soft.vlc.VLCSoftProvider
 org.fagu.fmv.soft.xpdf.PdfDetachSoftProvider
 org.fagu.fmv.soft.xpdf.PdfFontsSoftProvider
