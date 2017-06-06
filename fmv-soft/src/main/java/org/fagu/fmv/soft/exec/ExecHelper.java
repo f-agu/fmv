@@ -213,7 +213,7 @@ public class ExecHelper<T extends ExecHelper<?>> {
 	 * @param value
 	 * @return
 	 */
-	public T exitValues(int[] values) {
+	public T exitValues(int... values) {
 		return customizeExecutor(e -> e.setExitValues(values));
 	}
 
