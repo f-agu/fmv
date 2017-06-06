@@ -27,18 +27,14 @@ public class IgnoreNullOutputStreamProcessOperator implements ProcessOperator {
 
 			@Override
 			public OutputStream getOutputStream() {
-				OutputStream outputStream = super.getOutputStream();
-				if( ! "java.lang.ProcessBuilder$NullOutputStream".equals(outputStream.getClass().getName())) {
-					return outputStream;
-				}
-				return new FilterOutputStream(outputStream) {
+				return new FilterOutputStream(super.getOutputStream()) {
 
 					@Override
 					public void write(int b) throws IOException {
 						try {
 							super.write(b);
 						} catch(IOException e) {
-							// ignore
+							manageIOException(e);
 						}
 					}
 
@@ -47,7 +43,7 @@ public class IgnoreNullOutputStreamProcessOperator implements ProcessOperator {
 						try {
 							super.write(b);
 						} catch(IOException e) {
-							// ignore
+							manageIOException(e);
 						}
 					}
 
@@ -56,7 +52,7 @@ public class IgnoreNullOutputStreamProcessOperator implements ProcessOperator {
 						try {
 							super.write(b, off, len);
 						} catch(IOException e) {
-							// ignore
+							manageIOException(e);
 						}
 					}
 
@@ -65,7 +61,7 @@ public class IgnoreNullOutputStreamProcessOperator implements ProcessOperator {
 						try {
 							super.flush();
 						} catch(IOException e) {
-							// ignore
+							manageIOException(e);
 						}
 					}
 
@@ -74,8 +70,22 @@ public class IgnoreNullOutputStreamProcessOperator implements ProcessOperator {
 						try {
 							super.close();
 						} catch(IOException e) {
+							manageIOException(e);
+						}
+					}
+
+					// **********************************
+
+					/**
+					 * @param e
+					 * @throws IOException
+					 */
+					private void manageIOException(IOException e) throws IOException {
+						if("java.lang.ProcessBuilder$NullOutputStream".equals(e.getStackTrace()[0].getClassName())
+								&& "Stream closed".equals(e.getMessage())) {
 							// ignore
 						}
+						throw e;
 					}
 				};
 			}
