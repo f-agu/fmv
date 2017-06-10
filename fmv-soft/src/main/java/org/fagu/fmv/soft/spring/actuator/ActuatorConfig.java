@@ -35,8 +35,8 @@ public class ActuatorConfig {
 	}
 
 	@Bean
-	public SoftHealthIndicator softHealthIndicator() {
-		return new SoftHealthIndicator();
+	public SoftFoundHealthIndicator softHealthIndicator() {
+		return new SoftFoundHealthIndicator();
 	}
 
 	@Bean

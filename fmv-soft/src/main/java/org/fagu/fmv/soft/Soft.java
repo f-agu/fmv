@@ -36,6 +36,7 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.SoftExecutor.Executed;
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.Locator;
@@ -290,6 +291,13 @@ public class Soft {
 		StringBuilder buf = new StringBuilder();
 		buf.append(getName());
 		if(getFounds().isFound()) {
+			SoftInfo softInfo = getFirstInfo();
+			if(softInfo != null) {
+				String info = softInfo.getInfo();
+				if(StringUtils.isNotBlank(info)) {
+					buf.append(' ').append(info);
+				}
+			}
 			buf.append(" (").append(getFile().getAbsolutePath()).append(')');
 		} else {
 			buf.append(" <not found>");

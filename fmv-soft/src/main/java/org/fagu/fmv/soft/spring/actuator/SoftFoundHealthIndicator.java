@@ -30,7 +30,7 @@ import org.springframework.boot.actuate.health.Health.Builder;
 /**
  * @author f.agu
  */
-public class SoftHealthIndicator extends AbstractHealthIndicator {
+public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 
 	/**
 	 * @see org.springframework.boot.actuate.health.AbstractHealthIndicator#doHealthCheck(org.springframework.boot.actuate.health.Health.Builder)
