@@ -81,14 +81,20 @@ public class IMReducer extends AbstractReducer {
 		return destFile;
 	}
 
+	@Override
+	public void close() throws IOException {
+		// nothing
+	}
+
 	public static void main(String[] args) throws IOException {
 		File f1 = new File("D:\\tmp\\u1.jpg");
 		File f2 = new File("D:\\tmp\\u2.jpg");
 		f2.delete();
 		FileUtils.copyFile(f1, f2);
 
-		IMReducer reducer = new IMReducer();
-		reducer.reduceMedia(f2, "toto", Loggers.systemOut());
+		try (IMReducer reducer = new IMReducer()) {
+			reducer.reduceMedia(f2, "toto", Loggers.systemOut());
+		}
 	}
 
 }

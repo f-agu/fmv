@@ -1,5 +1,6 @@
 package org.fagu.fmv.mymedia.rip.dvd;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.mymedia.utils.TextProgressBar;
-import org.fagu.fmv.mymedia.utils.TextProgressBar.TextProgressBarBuilder;
 import org.fagu.fmv.soft.mplayer.DefaultSelectTitlesPolicy;
 import org.fagu.fmv.soft.mplayer.MPlayer;
 import org.fagu.fmv.soft.mplayer.MPlayerDump;
@@ -44,7 +44,7 @@ import org.fagu.fmv.soft.mplayer.SelectTitlesPolicy;
  * @author f.agu
  * @created 5 juin 2017 13:08:48
  */
-public class Ripper {
+public class Ripper implements Closeable {
 
 	private static final String PROPERTY_LOG_FILE = "fmv.dvdrip.log.file";
 
@@ -222,15 +222,11 @@ public class Ripper {
 		MPlayerTitles mPlayerTitles = titlesExtractor.extract(dvdDrive, logger);
 		Collection<MPlayerTitle> titles = selectTitlesPolicy.select(mPlayerTitles.getTitles());
 		displayAndLog("Found " + titles.size() + " titles");
-		titles.forEach(t -> System.out.println("   " + t.getNum() + "/" + t.getLength()));
+		titles.forEach(t -> displayAndLog("   " + t.getNum() + "/" + t.getLength()));
 
 		AtomicInteger currentTitle = new AtomicInteger();
-		final int prefixWidth = 40;
-		textProgressBar = TextProgressBarBuilder.width(40)
-				.consolePrefixMessage(() -> StringUtils.rightPad(StringUtils.abbreviate(name, prefixWidth), prefixWidth) + " " + currentTitle.get()
-						+ "/" + titles.size() + "  ")
-				.build();
-
+		AtomicInteger currentEncoding = new AtomicInteger();
+		final int prefixWidth = 30;
 		int nbProgresses = titles.size() * 2;
 		List<AtomicInteger> progressList = new ArrayList<>(nbProgresses);
 		titles.forEach(t -> {
@@ -238,22 +234,49 @@ public class Ripper {
 			progressList.add(new AtomicInteger());
 		});
 
-		textProgressBar.schedule(() -> {
-			return progressList.stream()
-					.mapToInt(AtomicInteger::get)
-					.sum() / nbProgresses;
-		}, null);
+		textProgressBar = TextProgressBar.width(40)
+				.consolePrefixMessage(() -> {
+					StringBuilder buf = new StringBuilder();
+					buf.append(StringUtils.rightPad(StringUtils.abbreviate(name, prefixWidth), prefixWidth)).append(' ');
+					buf.append("read DVD: ").append(currentTitle.get()).append('/').append(titles.size()).append("   ");
+					buf.append("encode:").append(currentTitle.get()).append('/').append(titles.size()).append("  ");
+					return buf.toString();
+
+				})
+				.buildForScheduling(() -> progressList.stream().mapToInt(AtomicInteger::get).sum() / nbProgresses)
+				.schedule();
 
 		if( ! tmpDirectory.exists() && ! tmpDirectory.mkdirs()) {
 			throw new IOException("Unable to make directory: " + tmpDirectory);
 		}
 		Iterator<AtomicInteger> progressIterator = progressList.iterator();
 		for(MPlayerTitle title : titles) {
-			currentTitle.incrementAndGet();
 			AtomicInteger dumpProgress = progressIterator.next();
 			AtomicInteger encodeProgress = progressIterator.next();
-			dumpTitle(title, name, dumpProgress, encodeProgress);
+
+			currentTitle.incrementAndGet();
+			String baseName = dvdName + "-" + title.getNum();
+			File vobFile = File.createTempFile(baseName + '-', ".vob", tmpDirectory);
+			logger.log("Dumping title " + currentTitle + "/" + titles.size() + ": " + vobFile.getAbsolutePath());
+
+			MPlayerDump mPlayerDump = mPlayerDumperBuilder.prepare(dvdDrive, logger)
+					.progress(dumpProgress::set)
+					.dump(title.getNum(), vobFile);
+
+			currentEncoding.incrementAndGet();
+			File mp4File = new File(tmpDirectory, baseName + ".mp4");
+			logger.log("Encoding title " + currentTitle + "/" + titles.size() + ": " + mp4File.getAbsolutePath());
+			encode(vobFile, mp4File, mPlayerDump, encodeProgress);
 		}
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	@Override
+	public void close() throws IOException {
+		textProgressBar.close();
+		ffmpegService.shutdown();
 	}
 
 	// ******************************************
@@ -264,25 +287,6 @@ public class Ripper {
 	private void displayAndLog(String msg) {
 		logger.log(msg);
 		System.out.println(msg);
-	}
-
-	/**
-	 * @param title
-	 * @param dvdName
-	 * @param progressDump
-	 * @param progressEncode
-	 * @throws IOException
-	 */
-	private void dumpTitle(MPlayerTitle title, String dvdName, AtomicInteger progressDump, AtomicInteger progressEncode) throws IOException {
-		String baseName = "dvd-" + dvdName + "-" + title.getNum() + "-";
-		File vobFile = File.createTempFile(baseName, ".vob", tmpDirectory);
-
-		MPlayerDump mPlayerDump = mPlayerDumperBuilder.prepare(dvdDrive, logger)
-				.progress(progressDump::set)
-				.dump(title.getNum(), vobFile);
-
-		File mp4File = File.createTempFile(baseName, ".mp4", tmpDirectory);
-		encode(vobFile, mp4File, mPlayerDump, progressEncode);
 	}
 
 	/**
@@ -330,8 +334,6 @@ public class Ripper {
 
 				FFMpegProgress ffMpegProgress = new FFMpegProgress(progressEncode, nbFrames);
 				executor.addReadLineOnErr(ffMpegProgress);
-				// System.out.println("FFMPEG : " + mp4File);
-				// System.out.println(executor.getCommandLine());
 				executor.execute();
 				vobFile.delete();
 			} catch(Exception e) {

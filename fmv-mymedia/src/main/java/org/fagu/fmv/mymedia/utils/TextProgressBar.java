@@ -1,5 +1,7 @@
 package org.fagu.fmv.mymedia.utils;
 
+import java.io.Closeable;
+
 /*
  * #%L
  * fmv-mymedia
@@ -32,25 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * @author f.agu
  */
-public class TextProgressBar {
-
-	private final Supplier<String> consolePrefixMessage;
-
-	private final int progressWidth;
-
-	private char leftBound = '[';
-
-	private char rightBound = ']';
-
-	private final Chars progressChars, finishChars;
-
-	private Timer timer;
-
-	private TimerTask timerTask;
-
-	private final boolean autoPrintFull;
-
-	private long startTime;
+public class TextProgressBar implements Closeable {
 
 	// --------------------------------------------------------
 
@@ -121,11 +105,17 @@ public class TextProgressBar {
 
 		private int progressWidth;
 
-		private Supplier<String> consolePrefixMessage = () -> "";
+		private Supplier<String> consolePrefixMessage = () -> StringUtils.EMPTY;
 
 		private boolean autoPrintFull = true;
 
-		private Chars progressChars, finishChars;
+		private Chars progressChars = Chars.done('=');
+
+		private Chars finishChars = progressChars;
+
+		private char leftBound = '[';
+
+		private char rightBound = ']';
 
 		/**
 		 * @param progressWidth
@@ -135,11 +125,21 @@ public class TextProgressBar {
 		}
 
 		/**
-		 * @param progressWidth
+		 * @param leftBound
 		 * @return
 		 */
-		public static TextProgressBarBuilder width(int progressWidth) {
-			return new TextProgressBarBuilder(progressWidth);
+		public TextProgressBarBuilder leftBound(char leftBound) {
+			this.leftBound = leftBound;
+			return this;
+		}
+
+		/**
+		 * @param rightBound
+		 * @return
+		 */
+		public TextProgressBarBuilder rightBound(char rightBound) {
+			this.rightBound = rightBound;
+			return this;
 		}
 
 		/**
@@ -165,7 +165,7 @@ public class TextProgressBar {
 		 * @return
 		 */
 		public TextProgressBarBuilder autoPrintFull(boolean autoPrintFull) {
-			this.consolePrefixMessage = Objects.requireNonNull(consolePrefixMessage);
+			this.autoPrintFull = autoPrintFull;
 			return this;
 		}
 
@@ -193,7 +193,9 @@ public class TextProgressBar {
 		 * @return
 		 */
 		public TextProgressBarBuilder progressChars(Chars chars) {
-			progressChars = Objects.requireNonNull(chars);
+			if(chars != null) {
+				progressChars = Objects.requireNonNull(chars);
+			}
 			return this;
 		}
 
@@ -221,85 +223,117 @@ public class TextProgressBar {
 		 * @return
 		 */
 		public TextProgressBarBuilder finishChars(Chars chars) {
-			finishChars = Objects.requireNonNull(chars);
+			if(chars != null) {
+				finishChars = Objects.requireNonNull(chars);
+			}
 			return this;
+		}
+
+		/**
+		 * @param percent
+		 * @return
+		 */
+		public ScheduleBuilder buildForScheduling(IntSupplier percent) {
+			return new ScheduleBuilder(this, percent);
 		}
 
 		/**
 		 * @return
 		 */
-		public TextProgressBar build() {
-			if(progressChars == null) {
-				progressChars = Chars.done('=');
-			}
-			if(finishChars == null) {
-				finishChars = Chars.done('=');
-			}
-			return new TextProgressBar(progressWidth, consolePrefixMessage, autoPrintFull, progressChars, finishChars);
+		public TextProgressBar buildForPrinting() {
+			return new TextProgressBar(this);
 		}
+
 	}
 
 	// --------------------------------------------------------
 
 	/**
-	 * @param progressWidth
-	 * @param consolePrefixMessage
-	 * @param autoPrintFull
-	 * @param progressChars
-	 * @param finishChars
+	 * @author f.agu
 	 */
-	private TextProgressBar(int progressWidth, Supplier<String> consolePrefixMessage, boolean autoPrintFull, Chars progressChars, Chars finishChars) {
-		this.progressWidth = progressWidth;
-		this.consolePrefixMessage = consolePrefixMessage;
-		this.autoPrintFull = autoPrintFull;
-		this.progressChars = progressChars;
-		this.finishChars = finishChars;
-	}
+	public static class ScheduleBuilder {
 
-	/**
-	 * @param percent
-	 * @param etaInSeconds
-	 */
-	public void schedule(IntSupplier percent, Supplier<Integer> etaInSeconds) {
-		schedule(percent, null, etaInSeconds, 500);
-	}
+		private final TextProgressBarBuilder textProgressBarBuilder;
 
-	/**
-	 * @param percent
-	 * @param etaInSeconds
-	 * @param periodMilliseconds
-	 */
-	public void schedule(IntSupplier percent, Supplier<Integer> etaInSeconds, long periodMilliseconds) {
-		schedule(percent, null, etaInSeconds, periodMilliseconds);
-	}
+		private final IntSupplier percent;
 
-	/**
-	 * @param percent
-	 * @param percentInside
-	 * @param etaInSeconds
-	 * @param periodMilliseconds
-	 */
-	public void schedule(IntSupplier percent, IntSupplier percentInside, Supplier<Integer> etaInSeconds, long periodMilliseconds) {
-		if(timerTask != null) {
-			throw new IllegalStateException("Already called !");
+		private Supplier<Integer> etaInSeconds;
+
+		private long periodMilliseconds = 500;
+
+		private IntSupplier percentInside;
+
+		private ScheduleBuilder(TextProgressBarBuilder textProgressBarBuilder, IntSupplier percent) {
+			this.textProgressBarBuilder = textProgressBarBuilder;
+			this.percent = Objects.requireNonNull(percent);
 		}
-		timerTask = new TimerTask() {
 
-			/**
-			 * @see java.util.TimerTask#run()
-			 */
-			@Override
-			public void run() {
-				Integer etaS = null;
-				if(etaInSeconds != null) {
-					etaS = etaInSeconds.get();
-				}
-				print(percent.getAsInt(), percentInside != null ? percentInside.getAsInt() : null, etaS);
+		public ScheduleBuilder estimatedTimeOfArrival(Supplier<Integer> etaInSeconds) {
+			this.etaInSeconds = etaInSeconds;
+			return this;
+		}
+
+		public ScheduleBuilder refresh(long periodMilliseconds) {
+			if(periodMilliseconds < 1) {
+				throw new IllegalArgumentException("refresh must be positive: " + periodMilliseconds);
 			}
-		};
-		timer = new Timer();
-		timer.scheduleAtFixedRate(timerTask, 0, periodMilliseconds);
-		startTime = System.currentTimeMillis();
+			this.periodMilliseconds = periodMilliseconds;
+			return this;
+		}
+
+		public ScheduleBuilder percentInside(IntSupplier percentInside) {
+			this.percentInside = percentInside;
+			return this;
+		}
+
+		@SuppressWarnings("resource")
+		public TextProgressBar schedule() {
+			return new TextProgressBar(textProgressBarBuilder).schedule(this);
+		}
+
+	}
+
+	// --------------------------------------------------------
+
+	private final Supplier<String> consolePrefixMessage;
+
+	private final int progressWidth;
+
+	private final char leftBound;
+
+	private final char rightBound;
+
+	private final Chars progressChars;
+
+	private final Chars finishChars;
+
+	private Timer timer;
+
+	private TimerTask timerTask;
+
+	private final boolean autoPrintFull;
+
+	private long startTime;
+
+	/**
+	 * @param textProgressBarBuilder
+	 */
+	private TextProgressBar(TextProgressBarBuilder textProgressBarBuilder) {
+		this.progressWidth = textProgressBarBuilder.progressWidth;
+		this.consolePrefixMessage = textProgressBarBuilder.consolePrefixMessage;
+		this.autoPrintFull = textProgressBarBuilder.autoPrintFull;
+		this.progressChars = textProgressBarBuilder.progressChars;
+		this.finishChars = textProgressBarBuilder.finishChars;
+		this.leftBound = textProgressBarBuilder.leftBound;
+		this.rightBound = textProgressBarBuilder.rightBound;
+	}
+
+	/**
+	 * @param progressWidth
+	 * @return
+	 */
+	public static TextProgressBarBuilder width(int progressWidth) {
+		return new TextProgressBarBuilder(progressWidth);
 	}
 
 	/**
@@ -315,45 +349,39 @@ public class TextProgressBar {
 	 * @param percentInside
 	 * @param etaInSeconds
 	 */
-	public void print(int percent, Integer percentInside, Integer etaInSeconds) {
-		print(false, percent, percentInside, etaInSeconds, progressChars);
+	public TextProgressBar print(int percent, Integer percentInside, Integer etaInSeconds) {
+		return print(false, percent, percentInside, etaInSeconds, progressChars);
 	}
 
 	/**
 	 *
 	 */
-	public void printFull() {
-		printFull(100);
+	public TextProgressBar printFull() {
+		return printFull(100);
 	}
 
 	/**
 	 * @param percent
 	 * @param percentInside
 	 */
-	public void printFull(int percent, Integer percentInside) {
-		print(true, percent, percentInside, null, finishChars);
+	public TextProgressBar printFull(int percent, Integer percentInside) {
+		return print(true, percent, percentInside, null, finishChars);
 	}
 
 	/**
 	 * @param percent
 	 */
-	public void printFull(int percent) {
-		print(true, percent, null, null, finishChars);
+	public TextProgressBar printFull(int percent) {
+		return print(true, percent, null, null, finishChars);
 	}
 
 	/**
 	 *
 	 */
+	@Override
 	public void close() {
-		close(100);
-	}
-
-	/**
-	 * @param percent
-	 */
-	public void close(int percent) {
 		if(autoPrintFull) {
-			printFull(percent);
+			printFull();
 		}
 		if(timerTask != null) {
 			timerTask.cancel();
@@ -367,13 +395,44 @@ public class TextProgressBar {
 	// ************************************************
 
 	/**
+	 * @param scheduleBuilder
+	 * @return
+	 */
+	private TextProgressBar schedule(ScheduleBuilder scheduleBuilder) {
+		if(timerTask != null) {
+			throw new IllegalStateException("Already called !");
+		}
+		Supplier<Integer> etaInSeconds = scheduleBuilder.etaInSeconds;
+		IntSupplier percent = scheduleBuilder.percent;
+		IntSupplier percentInside = scheduleBuilder.percentInside;
+		timerTask = new TimerTask() {
+
+			/**
+			 * @see java.util.TimerTask#run()
+			 */
+			@Override
+			public void run() {
+				Integer etaS = null;
+				if(etaInSeconds != null) {
+					etaS = etaInSeconds.get();
+				}
+				print(percent.getAsInt(), percentInside != null ? percentInside.getAsInt() : null, etaS);
+			}
+		};
+		timer = new Timer();
+		timer.scheduleAtFixedRate(timerTask, 0, scheduleBuilder.periodMilliseconds);
+		startTime = System.currentTimeMillis();
+		return this;
+	}
+
+	/**
 	 * @param finish
 	 * @param percent
 	 * @param percentInside
 	 * @param etaInSeconds
 	 * @param chars
 	 */
-	private void print(boolean finish, int percent, Integer percentInside, Integer etaInSeconds, Chars chars) {
+	private TextProgressBar print(boolean finish, int percent, Integer percentInside, Integer etaInSeconds, Chars chars) {
 		String eta = null;
 		if(etaInSeconds != null && etaInSeconds != 0) {
 			int seconds = etaInSeconds;
@@ -414,5 +473,6 @@ public class TextProgressBar {
 			bar.append(eta).append(" ETA  ");
 		}
 		System.out.print(bar.toString());
+		return this;
 	}
 }

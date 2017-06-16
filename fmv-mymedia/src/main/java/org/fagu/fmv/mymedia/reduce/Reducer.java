@@ -1,5 +1,7 @@
 package org.fagu.fmv.mymedia.reduce;
 
+import java.io.Closeable;
+
 /*
  * #%L
  * fmv-mymedia
@@ -29,7 +31,7 @@ import org.fagu.fmv.mymedia.logger.Logger;
 /**
  * @author f.agu
  */
-public interface Reducer {
+public interface Reducer extends Closeable {
 
 	/**
 	 * @return

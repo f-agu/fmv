@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.mutable.MutableLong;
@@ -57,22 +58,22 @@ public class Bootstrap {
 
 	private Set<String> movieSet = new HashSet<>(Arrays.asList("avi", "mov", "mp4", "wmv", "mpg", "3gp", "flv", "ts", "mkv"));
 
-	private Map<String, Reducer> reducerMap = new HashMap<>(4);
+	private Map<String, Supplier<Reducer>> reducerMap = new HashMap<>(4);
 
 	/**
 	 *
 	 */
 	public Bootstrap() {
-		addReducer(new IMReducer(), imageSet);
-		addReducer(new FFReducer(), soundSet);
-		addReducer(new FFReducer(), movieSet);
+		addReducer(IMReducer::new, imageSet);
+		addReducer(FFReducer::new, soundSet);
+		addReducer(FFReducer::new, movieSet);
 	}
 
 	/**
 	 * @param reducer
 	 * @param extensions
 	 */
-	public void addReducer(Reducer reducer, Collection<String> extensions) {
+	public void addReducer(Supplier<Reducer> reducer, Collection<String> extensions) {
 		extensions.forEach(s -> reducerMap.put(s.toLowerCase(), reducer));
 	}
 
@@ -92,48 +93,52 @@ public class Bootstrap {
 				.filter(p -> p.toFile().isFile()) //
 				.forEach(p -> {
 					logger.log("Reduce " + p);
-					Reducer reducer = reducerMap.get(FilenameUtils.getExtension(p.getName(p.getNameCount() - 1).toString()).toLowerCase());
-					if(reducer != null) {
-						logger.log("Reducer found: " + reducer.getName());
-						File srcFile = p.toFile();
-						try {
-							String msg = LocalDateTime.now().format(DATE_TIME_FORMATTER) + ' ' + srcFile.getPath() + "...";
-							System.out.print(msg);
-							File destFile = reducer.reduceMedia(srcFile, msg, logger);
-							if(destFile != null && destFile.exists()) {
-								boolean extensionChanged = ! FilenameUtils.getExtension(srcFile.getName()).equalsIgnoreCase(FilenameUtils
-										.getExtension(destFile.getName()));
-								if(destFile.length() > 100 && (srcFile.length() > destFile.length() || extensionChanged)) {
-									String stringDiffSize = toStringDiffSize(srcFile.length(), destFile.length());
-									logger.log("Replace source by reduced: " + stringDiffSize);
-									System.out.print(" OK : " + stringDiffSize);
-									previousSize.add(srcFile.length());
-									newSize.add(destFile.length());
+					Supplier<Reducer> supplier = reducerMap.get(FilenameUtils.getExtension(p.getName(p.getNameCount() - 1).toString()).toLowerCase());
+					if(supplier != null) {
+						try (Reducer reducer = supplier.get()) {
+							logger.log("Reducer found: " + reducer.getName());
+							File srcFile = p.toFile();
+							try {
+								String msg = LocalDateTime.now().format(DATE_TIME_FORMATTER) + ' ' + srcFile.getPath() + "...";
+								System.out.print(msg);
+								File destFile = reducer.reduceMedia(srcFile, msg, logger);
+								if(destFile != null && destFile.exists()) {
+									boolean extensionChanged = ! FilenameUtils.getExtension(srcFile.getName()).equalsIgnoreCase(FilenameUtils
+											.getExtension(destFile.getName()));
+									if(destFile.length() > 100 && (srcFile.length() > destFile.length() || extensionChanged)) {
+										String stringDiffSize = toStringDiffSize(srcFile.length(), destFile.length());
+										logger.log("Replace source by reduced: " + stringDiffSize);
+										System.out.print(" OK : " + stringDiffSize);
+										previousSize.add(srcFile.length());
+										newSize.add(destFile.length());
 
-									srcFile.delete();
-									String srcName = srcFile.getName();
-									String destExt = FilenameUtils.getExtension(destFile.getName());
-									if( ! FilenameUtils.getExtension(srcName).equalsIgnoreCase(destExt)) {
-										srcFile = new File(srcFile.getParentFile(), FilenameUtils.getBaseName(srcName) + "." + destExt);
-									}
+										srcFile.delete();
+										String srcName = srcFile.getName();
+										String destExt = FilenameUtils.getExtension(destFile.getName());
+										if( ! FilenameUtils.getExtension(srcName).equalsIgnoreCase(destExt)) {
+											srcFile = new File(srcFile.getParentFile(), FilenameUtils.getBaseName(srcName) + "." + destExt);
+										}
 
-									if( ! destFile.renameTo(srcFile)) {
-										System.err.print(" Rename failed: " + destFile);
-										logger.log("Rename failed: " + srcFile + " -> " + destFile);
-									}
-								} else {
-									logger.log("Revert");
-									System.out.print(" Revert");
-									if( ! destFile.delete()) {
-										logger.log("Delete failed: " + destFile);
-										System.err.print(" Delete failed: " + destFile);
+										if( ! destFile.renameTo(srcFile)) {
+											System.err.print(" Rename failed: " + destFile);
+											logger.log("Rename failed: " + srcFile + " -> " + destFile);
+										}
+									} else {
+										logger.log("Revert");
+										System.out.print(" Revert");
+										if( ! destFile.delete()) {
+											logger.log("Delete failed: " + destFile);
+											System.err.print(" Delete failed: " + destFile);
+										}
 									}
 								}
+								System.out.println();
+							} catch(Exception e) {
+								System.out.println();
+								e.printStackTrace();
 							}
-							System.out.println();
-						} catch(Exception e) {
-							System.out.println();
-							e.printStackTrace();
+						} catch(IOException e) {
+							throw new RuntimeException(e);
 						}
 					} else {
 						logger.log("Reducer not found");

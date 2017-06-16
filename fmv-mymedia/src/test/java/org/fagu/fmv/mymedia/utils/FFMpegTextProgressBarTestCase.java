@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.fagu.fmv.ffmpeg.operation.Progress;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -45,7 +44,7 @@ public class FFMpegTextProgressBarTestCase {
 	 * @throws IOException
 	 */
 	@Test
-	@Ignore
+	// @Ignore
 	public void test0() throws Exception {
 		final int MAX_FRAMES = 270000;
 		final int STEP_FRAMES = 10000;
@@ -60,14 +59,11 @@ public class FFMpegTextProgressBarTestCase {
 
 		doAnswer(invocation -> sizekb.get()).when(progress).getSizeKb();
 
-		FFMpegTextProgressBar ffMpegTextProgressBar = new FFMpegTextProgressBar();
-		try {
-			ffMpegTextProgressBar.prepareProgressBar(progress, "consolePrefixMessage", ffMpegTextProgressBar.progressByFrame(MAX_FRAMES, 50L * 1024L));
+		try (FFMpegTextProgressBar ffMpegTextProgressBar = FFMpegTextProgressBar.with(progress, "consolePrefixMessage")
+				.progressByFrame(MAX_FRAMES, 50L * 1024L)) {
 			while(MAX_FRAMES > frame.get()) {
 				Thread.sleep(200);
 			}
-		} finally {
-			ffMpegTextProgressBar.close(50);
 		}
 	}
 

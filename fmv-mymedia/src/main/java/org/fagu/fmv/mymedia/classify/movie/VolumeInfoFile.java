@@ -84,12 +84,9 @@ public class VolumeInfoFile implements InfoFile {
 		if(metadatas != null) {
 			OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
 			if(countEstimateFrames.isPresent()) {
-				FFMpegTextProgressBar ffMpegTextProgressBar = new FFMpegTextProgressBar();
-				try {
-					ffMpegTextProgressBar.prepareProgressBar(executor, "Detect volume", ffMpegTextProgressBar.progressByFrame(countEstimateFrames.getAsInt()));
+				try (FFMpegTextProgressBar ffMpegTextProgressBar = FFMpegTextProgressBar.with(executor, "Detect volume")
+						.progressByFrame(countEstimateFrames.getAsInt())) {
 					executor.execute();
-				} finally {
-					ffMpegTextProgressBar.close();
 				}
 				System.out.println();
 			}

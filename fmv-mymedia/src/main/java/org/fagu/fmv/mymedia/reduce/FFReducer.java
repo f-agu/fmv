@@ -102,8 +102,7 @@ public class FFReducer extends AbstractReducer {
 	private FFMpegTextProgressBar ffMpegTextProgressBar;
 
 	public static void main(String[] args) throws IOException {
-		FFReducer ffReducer = new FFReducer();
-		try {
+		try (FFReducer ffReducer = new FFReducer()) {
 			ffReducer.reduceMedia(new File("D:\\Personnel\\TODO\\ENCORE3\\12\\fmv-reduce.log"), "toto", Loggers.systemOut());
 		} catch(FMVExecuteException e) {
 			e.printStackTrace();
@@ -170,12 +169,20 @@ public class FFReducer extends AbstractReducer {
 			}
 			return destFile;
 		} finally {
-			if(destFile == null) {
-				closeTimer();
-			} else {
+			if(destFile != null && ffMpegTextProgressBar != null) {
 				int max = Math.min(100, Math.max(0, (int)(100L * destFile.length() / srcFile.length())));
-				closeTimer(max);
+				ffMpegTextProgressBar.setPercent(max);
 			}
+		}
+	}
+
+	/**
+	 * @see java.io.Closeable#close()
+	 */
+	@Override
+	public void close() {
+		if(ffMpegTextProgressBar != null) {
+			ffMpegTextProgressBar.close();
 		}
 	}
 
@@ -353,9 +360,8 @@ public class FFReducer extends AbstractReducer {
 
 		OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
 		if(countEstimateFrames.isPresent()) {
-			ffMpegTextProgressBar = new FFMpegTextProgressBar();
-			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByFrame(countEstimateFrames
-					.getAsInt(), srcFile.length()));
+			ffMpegTextProgressBar = FFMpegTextProgressBar.with(executor, consolePrefixMessage)
+					.progressByFrame(countEstimateFrames.getAsInt(), srcFile.length());
 		}
 
 		executor.execute();
@@ -411,29 +417,10 @@ public class FFReducer extends AbstractReducer {
 		executor.addListener(createLogFFExecListener(logger));
 		Duration duration = metadatas.getAudioStream().duration().orElse(null);
 		if(duration != null) {
-			ffMpegTextProgressBar = new FFMpegTextProgressBar();
-			ffMpegTextProgressBar.prepareProgressBar(executor, consolePrefixMessage, ffMpegTextProgressBar.progressByDuration(duration, srcFile
-					.length()));
+			ffMpegTextProgressBar = FFMpegTextProgressBar.with(executor, consolePrefixMessage)
+					.progressByDuration(duration, srcFile.length());
 		}
 		executor.execute();
-	}
-
-	/**
-	 *
-	 */
-	private void closeTimer() {
-		if(ffMpegTextProgressBar != null) {
-			ffMpegTextProgressBar.close();
-		}
-	}
-
-	/**
-	 * @param percent
-	 */
-	private void closeTimer(int percent) {
-		if(ffMpegTextProgressBar != null) {
-			ffMpegTextProgressBar.close(percent);
-		}
 	}
 
 	/**

@@ -110,8 +110,7 @@ public class PreparedImages implements Closeable {
 		FFExecutor<Object> executor = builder.build();
 		System.out.println(executor.getCommandLine());
 		int countEstimateFrames = (int)(files.size() * videoFrameRate.countFrameBySeconds() * imageFrameRate.invert().doubleValue());
-		ffMpegTextProgressBar = new FFMpegTextProgressBar();
-		ffMpegTextProgressBar.prepareProgressBar(executor, "", ffMpegTextProgressBar.progressByFrame(countEstimateFrames));
+		ffMpegTextProgressBar = FFMpegTextProgressBar.with(executor, "").progressByFrame(countEstimateFrames);
 		executor.execute();
 	}
 

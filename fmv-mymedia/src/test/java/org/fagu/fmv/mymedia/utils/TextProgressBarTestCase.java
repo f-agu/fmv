@@ -22,15 +22,13 @@ package org.fagu.fmv.mymedia.utils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.fagu.fmv.mymedia.utils.TextProgressBar.TextProgressBarBuilder;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
 /**
  * @author f.agu
  */
-@Ignore
+// @Ignore
 public class TextProgressBarTestCase {
 
 	/**
@@ -40,12 +38,12 @@ public class TextProgressBarTestCase {
 
 	@Test
 	public void test() throws Exception {
-		TextProgressBar textProgressBar = TextProgressBarBuilder.width(100).build();
-
 		AtomicInteger prg = new AtomicInteger();
-
-		textProgressBar.schedule(() -> prg.addAndGet(5), null);
-		Thread.sleep(100000);
+		try (TextProgressBar textProgressBar = TextProgressBar.width(100)
+				.buildForScheduling(() -> prg.addAndGet(5))
+				.schedule()) {
+			Thread.sleep(100000);
+		}
 	}
 
 }

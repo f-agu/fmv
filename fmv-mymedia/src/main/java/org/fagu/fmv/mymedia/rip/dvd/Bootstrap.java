@@ -24,9 +24,9 @@ public class Bootstrap {
 			return;
 		}
 		File dvdDrive = dvdDriveOpt.get();
-		Ripper.fromDVDDrive(dvdDrive)
-				.build()
-				.rip();
+		try (Ripper ripper = Ripper.fromDVDDrive(dvdDrive).build()) {
+			ripper.rip();
+		}
 	}
 
 	// ***************************
