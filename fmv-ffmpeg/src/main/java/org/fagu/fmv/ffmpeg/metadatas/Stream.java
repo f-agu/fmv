@@ -179,9 +179,9 @@ public abstract class Stream extends InfoBase {
 		}
 		Duration duration = duration().orElse(null);
 		if(duration == null) {
-			Object totDurObj = movieMetadatas.getFormat().tag("totalduration");
-			if(totDurObj != null) {
-				int totDur = NumberUtils.toInt(String.valueOf(totDurObj));
+			Optional<Object> totDurObj = movieMetadatas.getFormat().tag("totalduration");
+			if(totDurObj.isPresent()) {
+				int totDur = NumberUtils.toInt(String.valueOf(totDurObj.get()));
 				if(totDur > 0) {
 					duration = Duration.valueOf(totDur);
 				}

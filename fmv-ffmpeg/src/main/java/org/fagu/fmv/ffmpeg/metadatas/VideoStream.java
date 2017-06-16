@@ -116,8 +116,8 @@ public class VideoStream extends Stream {
 	 * @return
 	 */
 	public Rotation rotate() {
-		Object tag = tag("rotate");
-		return tag == null ? Rotation.R_0 : Rotation.valueOf("R_" + tag);
+		Optional<Object> tag = tag("rotate");
+		return tag.isPresent() ? Rotation.valueOf("R_" + tag.get()) : Rotation.R_0;
 	}
 
 	/**

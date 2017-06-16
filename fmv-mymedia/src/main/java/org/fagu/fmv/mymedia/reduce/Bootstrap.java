@@ -39,6 +39,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.mutable.MutableLong;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
+import org.fagu.fmv.mymedia.utils.AppVersion;
 
 
 /**
@@ -56,7 +57,7 @@ public class Bootstrap {
 
 	private Set<String> soundSet = new HashSet<>(Arrays.asList("mp3", "wma", "ogg", "m4a", "flac", "wav", "aac"));
 
-	private Set<String> movieSet = new HashSet<>(Arrays.asList("avi", "mov", "mp4", "wmv", "mpg", "3gp", "flv", "ts", "mkv"));
+	private Set<String> movieSet = new HashSet<>(Arrays.asList("avi", "mov", "mp4", "wmv", "mpg", "3gp", "flv", "ts", "mkv", "vob"));
 
 	private Map<String, Supplier<Reducer>> reducerMap = new HashMap<>(4);
 
@@ -84,6 +85,7 @@ public class Bootstrap {
 	public void reduce(File rootFile) throws IOException {
 		Logger logger = LoggerFactory.openLogger(LoggerFactory.getLogFile(rootFile, PROPERTY_LOG_FILE, PROPERTY_LOG_FILE_DEFAULT_NAME));
 
+		AppVersion.logMyVersion(logger::log);
 		logger.log("#################### Root: " + rootFile.getAbsolutePath());
 
 		MutableLong previousSize = new MutableLong();

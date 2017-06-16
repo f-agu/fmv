@@ -22,13 +22,14 @@ package org.fagu.fmv.mymedia.utils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 
 /**
  * @author f.agu
  */
-// @Ignore
+@Ignore
 public class TextProgressBarTestCase {
 
 	/**

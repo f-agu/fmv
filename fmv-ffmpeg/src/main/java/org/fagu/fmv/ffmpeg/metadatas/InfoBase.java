@@ -224,8 +224,8 @@ public abstract class InfoBase implements MetadataProperties {
 	 * @return
 	 */
 	public boolean isTreatedByFMV() {
-		Object comObj = tag("comment");
-		return comObj == null ? false : String.valueOf(comObj).startsWith("fmv");
+		Optional<Object> comObj = tag("comment");
+		return comObj.isPresent() ? String.valueOf(comObj.get()).startsWith("fmv") : false;
 	}
 
 	/**

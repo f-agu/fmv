@@ -30,6 +30,7 @@ import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
+import org.fagu.fmv.mymedia.utils.AppVersion;
 import org.fagu.fmv.mymedia.utils.TextProgressBar;
 import org.fagu.fmv.soft.mplayer.DefaultSelectTitlesPolicy;
 import org.fagu.fmv.soft.mplayer.MPlayer;
@@ -213,6 +214,7 @@ public class Ripper implements Closeable {
 	 * @throws IOException
 	 */
 	public void rip() throws IOException {
+		AppVersion.logMyVersion(logger::log);
 		logger.log("===========================================================");
 		displayAndLog("Analyzing DVD on " + dvdDrive + "...");
 		String name = dvdName.nameOf(dvdDrive, logger);

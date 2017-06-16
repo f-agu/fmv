@@ -330,10 +330,7 @@ public class MovieMetadatas implements Metadatas, Serializable {
 	public Map<InfoBase, Object> searchTags(String name) {
 		Map<InfoBase, Object> map = new HashMap<>();
 		for(InfoBase infoBase : infoBaseList) {
-			Object value = infoBase.tag(name);
-			if(value != null) {
-				map.put(infoBase, value);
-			}
+			infoBase.tag(name).ifPresent(value -> map.put(infoBase, value));
 		}
 		return map;
 	}
