@@ -34,7 +34,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class TextProgressBar {
 
-	private final String consolePrefixMessage;
+	private final Supplier<String> consolePrefixMessage;
 
 	private final int progressWidth;
 
@@ -121,7 +121,7 @@ public class TextProgressBar {
 
 		private int progressWidth;
 
-		private String consolePrefixMessage = "";
+		private Supplier<String> consolePrefixMessage = () -> "";
 
 		private boolean autoPrintFull = true;
 
@@ -147,6 +147,15 @@ public class TextProgressBar {
 		 * @return
 		 */
 		public TextProgressBarBuilder consolePrefixMessage(String consolePrefixMessage) {
+			Objects.requireNonNull(consolePrefixMessage);
+			return consolePrefixMessage(() -> consolePrefixMessage);
+		}
+
+		/**
+		 * @param consolePrefixMessage
+		 * @return
+		 */
+		public TextProgressBarBuilder consolePrefixMessage(Supplier<String> consolePrefixMessage) {
 			this.consolePrefixMessage = Objects.requireNonNull(consolePrefixMessage);
 			return this;
 		}
@@ -239,7 +248,7 @@ public class TextProgressBar {
 	 * @param progressChars
 	 * @param finishChars
 	 */
-	private TextProgressBar(int progressWidth, String consolePrefixMessage, boolean autoPrintFull, Chars progressChars, Chars finishChars) {
+	private TextProgressBar(int progressWidth, Supplier<String> consolePrefixMessage, boolean autoPrintFull, Chars progressChars, Chars finishChars) {
 		this.progressWidth = progressWidth;
 		this.consolePrefixMessage = consolePrefixMessage;
 		this.autoPrintFull = autoPrintFull;
@@ -372,7 +381,7 @@ public class TextProgressBar {
 		}
 
 		StringBuilder bar = new StringBuilder(140);
-		bar.append('\r').append(consolePrefixMessage).append(leftBound);
+		bar.append('\r').append(consolePrefixMessage.get()).append(leftBound);
 		int junction1 = percent * progressWidth / 100;
 		int junction2 = 0;
 		if(percentInside != null) {

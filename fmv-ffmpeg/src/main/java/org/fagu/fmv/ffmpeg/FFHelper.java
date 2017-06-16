@@ -963,7 +963,7 @@ public class FFHelper {
 		builder.filter(ResampleAudio.build().frequency(audioFrequency));
 
 		// output
-		builder.mux(MP4Muxer.to(outFile).movflags(Movflags.FASTSTART))
+		builder.mux(MP4Muxer.to(outFile).movflags(Movflags.FASTSTART)) // , Movflags.FRAG_KEYFRAME, Movflags.EMPTY_MOOV
 				.codec(Libx264.build().mostCompatible())
 				.pixelFormat(PixelFormat.YUV420P) // pour quicktime/safari
 				.codecAutoSelectAAC()

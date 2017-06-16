@@ -27,6 +27,8 @@ import org.fagu.fmv.ffmpeg.metadatas.Stream;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
+import org.fagu.fmv.mymedia.logger.Logger;
+import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.mymedia.utils.TextProgressBar;
 import org.fagu.fmv.mymedia.utils.TextProgressBar.TextProgressBarBuilder;
 import org.fagu.fmv.soft.mplayer.DefaultSelectTitlesPolicy;
@@ -44,6 +46,10 @@ import org.fagu.fmv.soft.mplayer.SelectTitlesPolicy;
  */
 public class Ripper {
 
+	private static final String PROPERTY_LOG_FILE = "fmv.dvdrip.log.file";
+
+	private static final String PROPERTY_LOG_FILE_DEFAULT_NAME = "fmv-dvdrip.log";
+
 	// ---------------------------------------------
 
 	/**
@@ -58,11 +64,13 @@ public class Ripper {
 
 		private SelectTitlesPolicy selectTitlesPolicy = new DefaultSelectTitlesPolicy();
 
-		private TitlesExtractor titlesExtractor = dvdDrive -> MPlayerTitles.fromDVDDrive(dvdDrive).find();
+		private TitlesExtractor titlesExtractor = (dvdDrive, logger) -> MPlayerTitles.fromDVDDrive(dvdDrive)
+				.logger(logger::log)
+				.find();
 
 		private DVDName dvdName = Ripper::getDVDName;
 
-		private MPlayerDumperBuilder mPlayerDumperBuilder = MPlayerDump::fromDVDDrive;
+		private MPlayerDumperBuilder mPlayerDumperBuilder = (dvdDrive, logger) -> MPlayerDump.fromDVDDrive(dvdDrive).logger(logger::log);
 
 		private Supplier<FFMPEGExecutorBuilder> ffMPEGExecutorBuilderSupplier = FFMPEGExecutorBuilder::create;
 
@@ -114,10 +122,11 @@ public class Ripper {
 
 		/**
 		 * @param dvdDrive
+		 * @param logger
 		 * @return
 		 * @throws IOException
 		 */
-		MPlayerTitles extract(File dvdDrive) throws IOException;
+		MPlayerTitles extract(File dvdDrive, Logger logger) throws IOException;
 	}
 	// ---------------------------------------------
 
@@ -128,10 +137,11 @@ public class Ripper {
 
 		/**
 		 * @param dvdDrive
+		 * @param logger
 		 * @return
 		 * @throws IOException
 		 */
-		String nameOf(File dvdDrive) throws IOException;
+		String nameOf(File dvdDrive, Logger logger) throws IOException;
 	}
 
 	// ---------------------------------------------
@@ -143,10 +153,11 @@ public class Ripper {
 
 		/**
 		 * @param dvdDrive
+		 * @param logger
 		 * @return
 		 * @throws IOException
 		 */
-		MPlayerDumpBuilder prepare(File dvdDrive) throws IOException;
+		MPlayerDumpBuilder prepare(File dvdDrive, Logger logger) throws IOException;
 	}
 
 	// ---------------------------------------------
@@ -167,6 +178,8 @@ public class Ripper {
 
 	private final Supplier<FFMPEGExecutorBuilder> ffMPEGExecutorBuilderSupplier;
 
+	private final Logger logger;
+
 	private TextProgressBar textProgressBar;
 
 	/**
@@ -180,6 +193,11 @@ public class Ripper {
 		this.dvdName = builder.dvdName;
 		this.mPlayerDumperBuilder = builder.mPlayerDumperBuilder;
 		this.ffMPEGExecutorBuilderSupplier = builder.ffMPEGExecutorBuilderSupplier;
+		try {
+			this.logger = LoggerFactory.openLogger(LoggerFactory.getLogFile(tmpDirectory, PROPERTY_LOG_FILE, PROPERTY_LOG_FILE_DEFAULT_NAME));
+		} catch(IOException e) {
+			throw new RuntimeException(e);
+		}
 		ffmpegService = Executors.newSingleThreadExecutor();
 	}
 
@@ -195,19 +213,22 @@ public class Ripper {
 	 * @throws IOException
 	 */
 	public void rip() throws IOException {
-		System.out.println("Analyzing DVD on " + dvdDrive + "...");
-		String name = dvdName.nameOf(dvdDrive);
-		System.out.println("Name: " + name);
+		logger.log("===========================================================");
+		displayAndLog("Analyzing DVD on " + dvdDrive + "...");
+		String name = dvdName.nameOf(dvdDrive, logger);
+		displayAndLog("Name: " + name);
 
-		System.out.println("Scanning titles...");
-		MPlayerTitles mPlayerTitles = titlesExtractor.extract(dvdDrive);
+		displayAndLog("Scanning titles...");
+		MPlayerTitles mPlayerTitles = titlesExtractor.extract(dvdDrive, logger);
 		Collection<MPlayerTitle> titles = selectTitlesPolicy.select(mPlayerTitles.getTitles());
-		System.out.println("Found " + titles.size() + " titles");
+		displayAndLog("Found " + titles.size() + " titles");
 		titles.forEach(t -> System.out.println("   " + t.getNum() + "/" + t.getLength()));
 
+		AtomicInteger currentTitle = new AtomicInteger();
 		final int prefixWidth = 40;
 		textProgressBar = TextProgressBarBuilder.width(40)
-				.consolePrefixMessage(StringUtils.rightPad(StringUtils.abbreviate(name, prefixWidth), prefixWidth) + "  ")
+				.consolePrefixMessage(() -> StringUtils.rightPad(StringUtils.abbreviate(name, prefixWidth), prefixWidth) + " " + currentTitle.get()
+						+ "/" + titles.size() + "  ")
 				.build();
 
 		int nbProgresses = titles.size() * 2;
@@ -228,6 +249,7 @@ public class Ripper {
 		}
 		Iterator<AtomicInteger> progressIterator = progressList.iterator();
 		for(MPlayerTitle title : titles) {
+			currentTitle.incrementAndGet();
 			AtomicInteger dumpProgress = progressIterator.next();
 			AtomicInteger encodeProgress = progressIterator.next();
 			dumpTitle(title, name, dumpProgress, encodeProgress);
@@ -237,6 +259,14 @@ public class Ripper {
 	// ******************************************
 
 	/**
+	 * @param msg
+	 */
+	private void displayAndLog(String msg) {
+		logger.log(msg);
+		System.out.println(msg);
+	}
+
+	/**
 	 * @param title
 	 * @param dvdName
 	 * @param progressDump
@@ -244,15 +274,14 @@ public class Ripper {
 	 * @throws IOException
 	 */
 	private void dumpTitle(MPlayerTitle title, String dvdName, AtomicInteger progressDump, AtomicInteger progressEncode) throws IOException {
-		// System.out.println("DVD : " + title);
 		String baseName = "dvd-" + dvdName + "-" + title.getNum() + "-";
 		File vobFile = File.createTempFile(baseName, ".vob", tmpDirectory);
-		File mp4File = File.createTempFile(baseName, ".mp4", tmpDirectory);
 
-		MPlayerDump mPlayerDump = mPlayerDumperBuilder.prepare(dvdDrive)
+		MPlayerDump mPlayerDump = mPlayerDumperBuilder.prepare(dvdDrive, logger)
 				.progress(progressDump::set)
 				.dump(title.getNum(), vobFile);
 
+		File mp4File = File.createTempFile(baseName, ".mp4", tmpDirectory);
 		encode(vobFile, mp4File, mPlayerDump, progressEncode);
 	}
 
@@ -288,6 +317,7 @@ public class Ripper {
 				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
+		logger.log(executor.getCommandLine());
 		ffmpegService.submit(() -> {
 			try {
 				int nbFrames = 0;
@@ -340,10 +370,11 @@ public class Ripper {
 
 	/**
 	 * @param dvdDrive
+	 * @param logger
 	 * @return
 	 * @throws IOException
 	 */
-	private static String getDVDName(File dvdDrive) throws IOException {
+	private static String getDVDName(File dvdDrive, Logger logger) throws IOException {
 		List<String> params = new ArrayList<>();
 		params.add("-noquiet");
 		params.add("-slave");
@@ -357,7 +388,7 @@ public class Ripper {
 		MutableObject<String> volumeId = new MutableObject<>();
 		MPlayer.search()
 				.withParameters(params)
-				// .logCommandLine(System.out::println)
+				.logCommandLine(logger::log)
 				.addOutReadLine(l -> {
 					if(l.startsWith("ID_DVD_VOLUME_ID=")) {
 						volumeId.setValue(StringUtils.substringAfter(l, "="));

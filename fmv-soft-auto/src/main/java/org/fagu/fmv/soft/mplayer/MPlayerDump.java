@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +31,8 @@ public class MPlayerDump {
 
 		private IntConsumer progress;
 
+		private Consumer<String> logger = l -> {};
+
 		private MPlayerDumpBuilder(File dvdDrive) {
 			this.dvdDrive = Objects.requireNonNull(dvdDrive);
 		}
@@ -40,6 +43,17 @@ public class MPlayerDump {
 		 */
 		public MPlayerDumpBuilder progress(IntConsumer progress) {
 			this.progress = progress;
+			return this;
+		}
+
+		/**
+		 * @param logger
+		 * @return
+		 */
+		public MPlayerDumpBuilder logger(Consumer<String> logger) {
+			if(logger != null) {
+				this.logger = logger;
+			}
 			return this;
 		}
 
@@ -61,15 +75,17 @@ public class MPlayerDump {
 			List<Stream> streams = new ArrayList<>();
 			SoftExecutor softExecutor = MPlayer.search()
 					.withParameters(params)
-					// .logCommandLine(System.out::println)
+					.logCommandLine(logger)
 					.addOutReadLine(l -> {
 						if(l.startsWith("audio stream:")) {
 							Map<String, String> parse = parse(l.substring(0, l.length() - 1));
 							streams.add(new AudioStream(Integer.parseInt(parse.get("audio stream")), parse));
+							logger.accept("Add " + l);
 						}
 						if(l.startsWith("subtitle (")) {
 							Map<String, String> parse = parse(l);
 							streams.add(new Subtitle(Integer.parseInt(parse.get("subtitle ( sid )")), parse));
+							logger.accept("Add " + l);
 						}
 					});
 

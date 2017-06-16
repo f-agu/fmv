@@ -23,6 +23,8 @@ package org.fagu.fmv.mymedia.reduce;
 import java.io.File;
 import java.io.IOException;
 
+import org.fagu.fmv.mymedia.logger.Logger;
+
 
 /**
  * @author f.agu

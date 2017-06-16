@@ -68,7 +68,9 @@ public abstract class StreamMuxer<M> extends Muxer<M> {
 	 * @return
 	 */
 	public M movflags(Collection<Movflags> movflagss) {
-		movflagss.stream().filter(f -> getIO().accept(f.io())).forEach(f -> this.movflagss.add(f));
+		movflagss.stream()
+				.filter(f -> getIO().accept(f.io()))
+				.forEach(f -> this.movflagss.add(f));
 		return getMThis();
 	}
 

@@ -27,8 +27,9 @@ public class Bootstrap {
 		Ripper.fromDVDDrive(dvdDrive)
 				.build()
 				.rip();
-
 	}
+
+	// ***************************
 
 	/**
 	 * @return

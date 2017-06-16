@@ -30,8 +30,17 @@ public class MPlayerTitles {
 
 		private final File dvdDrive;
 
+		private Consumer<String> logger = m -> {};
+
 		private MPlayerTitlesBuilder(File dvdDrive) {
 			this.dvdDrive = Objects.requireNonNull(dvdDrive);
+		}
+
+		public MPlayerTitlesBuilder logger(Consumer<String> logger) {
+			if(logger != null) {
+				this.logger = logger;
+			}
+			return this;
 		}
 
 		public MPlayerTitles find() throws IOException {
@@ -60,7 +69,7 @@ public class MPlayerTitles {
 
 			MPlayer.search()
 					.withParameters(params)
-					// .logCommandLine(System.out::println)
+					.logCommandLine(logger)
 					.addOutReadLine(l -> {
 						if(l.contains("=")) {
 							String key = StringUtils.substringBefore(l, "=");
@@ -86,6 +95,15 @@ public class MPlayerTitles {
 						}
 					})
 					.execute();
+
+			logger.accept("Properties:");
+			properties.entrySet().stream()
+					.filter(e -> StringUtils.isNotEmpty(e.getKey()))
+					.forEach(e -> logger.accept("   " + e.getKey() + ": " + e.getValue()));
+
+			logger.accept("Titles:");
+			mPlayerTitlesMap.values().forEach(t -> logger.accept("   " + t));
+
 			return new MPlayerTitles(properties, mPlayerTitlesMap);
 		}
 	}

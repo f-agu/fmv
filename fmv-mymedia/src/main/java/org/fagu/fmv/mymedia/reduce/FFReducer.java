@@ -62,6 +62,8 @@ import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
+import org.fagu.fmv.mymedia.logger.Logger;
+import org.fagu.fmv.mymedia.logger.Loggers;
 import org.fagu.fmv.mymedia.movie.StreamOrder;
 import org.fagu.fmv.mymedia.utils.FFMpegTextProgressBar;
 import org.fagu.fmv.soft.exec.CommandLineUtils;

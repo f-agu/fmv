@@ -63,7 +63,7 @@ public class MPlayerTitle {
 	 */
 	@Override
 	public String toString() {
-		return "Title(" + num + "," + length + "," + (chapters != null ? chapters.size() : 0) + " chapters)";
+		return "Title(" + num + "," + length + (chapters != null ? ", " + chapters.size() + " chapter" + (chapters.size() > 1 ? "s" : "") : "") + ")";
 	}
 
 	// ************************

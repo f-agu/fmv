@@ -411,9 +411,9 @@ public class FFExecutor<R> {
 		 * @return
 		 */
 		public SoftExecutor getSoftExecutor() {
-			SoftExecutor softExecutor = soft.withParameters(operation.toArguments()) //
-					.addOutReadLine(getOutReadLine()) //
-					.addErrReadLine(getErrReadLine()) //
+			SoftExecutor softExecutor = soft.withParameters(operation.toArguments())
+					.addOutReadLine(getOutReadLine())
+					.addErrReadLine(getErrReadLine())
 					.customizeExecutor(FFExecutor.this::populateWithListeners);
 
 			if(inputStreamSupplier != null) {

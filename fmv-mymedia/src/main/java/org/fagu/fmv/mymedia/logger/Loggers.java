@@ -1,4 +1,4 @@
-package org.fagu.fmv.mymedia.reduce;
+package org.fagu.fmv.mymedia.logger;
 
 /*
  * #%L
@@ -19,7 +19,6 @@ package org.fagu.fmv.mymedia.reduce;
  * limitations under the License.
  * #L%
  */
-
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -69,7 +68,7 @@ public class Loggers {
 			}
 
 			/**
-			 * @see org.fagu.fmv.mymedia.reduce.Logger#log(java.lang.Throwable)
+			 * @see org.fagu.fmv.mymedia.logger.Logger#log(java.lang.Throwable)
 			 */
 			@Override
 			public void log(Throwable throwable) {
@@ -77,7 +76,7 @@ public class Loggers {
 			}
 
 			/**
-			 * @see org.fagu.fmv.mymedia.reduce.Logger#log(java.lang.String)
+			 * @see org.fagu.fmv.mymedia.logger.Logger#log(java.lang.String)
 			 */
 			@Override
 			public void log(String message) {
@@ -102,7 +101,7 @@ public class Loggers {
 	 * @throws IOException
 	 */
 	public static Logger timstamp(Logger logger, DateTimeFormatter dateTimeFormatter) throws IOException {
-		final DateTimeFormatter DTF = dateTimeFormatter == null ? DEFAULT_DATE_TIME_FORMATTER : dateTimeFormatter;
+		final DateTimeFormatter dateFormatter = dateTimeFormatter == null ? DEFAULT_DATE_TIME_FORMATTER : dateTimeFormatter;
 		return new Logger() {
 
 			/**
@@ -119,8 +118,8 @@ public class Loggers {
 			@Override
 			public void log(String message) {
 				StringBuilder buf = new StringBuilder(20 + message.length());
-				buf.append(LocalDateTime.now().format(DTF)).append(' ').append(message);
-				logger.log(message);
+				buf.append(LocalDateTime.now().format(dateFormatter)).append(' ').append(message);
+				logger.log(buf.toString());
 			}
 
 			/**

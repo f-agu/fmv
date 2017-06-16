@@ -1,4 +1,4 @@
-package org.fagu.fmv.mymedia.reduce;
+package org.fagu.fmv.mymedia.logger;
 
 /*
  * #%L

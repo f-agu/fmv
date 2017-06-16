@@ -113,7 +113,9 @@ public class ExecHelper<T extends ExecHelper<?>> {
 	 * @return
 	 */
 	public T addCommonReadLine(ReadLine readLine) {
-		commonReadLines.add(Objects.requireNonNull(readLine));
+		if(readLine != null) {
+			commonReadLines.add(readLine);
+		}
 		return getThis();
 	}
 
@@ -122,7 +124,9 @@ public class ExecHelper<T extends ExecHelper<?>> {
 	 * @return
 	 */
 	public T addOutReadLine(ReadLine readLine) {
-		outReadLines.add(Objects.requireNonNull(readLine));
+		if(readLine != null) {
+			outReadLines.add(readLine);
+		}
 		return getThis();
 	}
 
@@ -131,7 +135,9 @@ public class ExecHelper<T extends ExecHelper<?>> {
 	 * @return
 	 */
 	public T addErrReadLine(ReadLine readLine) {
-		errReadLines.add(Objects.requireNonNull(readLine));
+		if(readLine != null) {
+			errReadLines.add(readLine);
+		}
 		return getThis();
 	}
 
