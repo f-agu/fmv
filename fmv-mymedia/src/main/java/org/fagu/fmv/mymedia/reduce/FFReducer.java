@@ -103,7 +103,7 @@ public class FFReducer extends AbstractReducer {
 
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
-			ffReducer.reduceMedia(new File("D:\\Personnel\\TODO\\ENCORE3\\12\\fmv-reduce.log"), "toto", Loggers.systemOut());
+			ffReducer.reduceMedia(new File("D:\\tmp\\b.mp3"), "toto", Loggers.systemOut());
 		} catch(FMVExecuteException e) {
 			e.printStackTrace();
 			// if( ! e.isKnown()) {
@@ -265,7 +265,7 @@ public class FFReducer extends AbstractReducer {
 			logger.log("Is audio: number of frames unavailable: " + numberOfFrames);
 			return false;
 		}
-		if(Decoders.MJPEG.getName().equals(videoStream.codecName())) {
+		if(Decoders.MJPEG.getName().equals(videoStream.codecName().get())) {
 			FrameRate frameRate = videoStream.frameRate().orElse(null);
 			if(frameRate != null && frameRate.floatValue() < 100) {
 				return true;
@@ -379,7 +379,7 @@ public class FFReducer extends AbstractReducer {
 			return true;
 		}
 		VideoStream videoStream = metadatas.getVideoStream();
-		if(videoStream != null && Decoders.MJPEG.getName().equals(videoStream.codecName())) {
+		if(videoStream != null && Decoders.MJPEG.getName().equals(videoStream.codecName().get())) {
 			return true; // has cover
 		}
 		return false;

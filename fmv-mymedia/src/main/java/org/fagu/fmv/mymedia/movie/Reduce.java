@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.movie;
  * #L%
  */
 
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -65,25 +64,26 @@ public class Reduce {
 
 		AtomicLong totalSize = new AtomicLong();
 		Files.walk(folder.toPath()) //
-		.filter(p -> p.toFile().isFile()) //
-		.filter(p -> MOVIE_SET.contains(FilenameUtils.getExtension(p.getName(p.getNameCount() - 1).toString()))).forEach(p -> {
-			try {
-				long fileSize = Files.size(p);
-				// if(fileSize < LIMIT_SIZE) {
-				// return;
-				// }
-				// if(Files.getLastModifiedTime(p).toMillis() > BEFORE_TIME) {
-				// return;
-				// }
+				.filter(p -> p.toFile().isFile()) //
+				.filter(p -> MOVIE_SET.contains(FilenameUtils.getExtension(p.getName(p.getNameCount() - 1).toString())))
+				.forEach(p -> {
+					try {
+						long fileSize = Files.size(p);
+						// if(fileSize < LIMIT_SIZE) {
+						// return;
+						// }
+						// if(Files.getLastModifiedTime(p).toMillis() > BEFORE_TIME) {
+						// return;
+						// }
 
-				System.out.println("rem " + fileSize);
-				totalSize.addAndGet(fileSize);
+						System.out.println("rem " + fileSize);
+						totalSize.addAndGet(fileSize);
 
-				doIt(p.toFile());
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		});
+						doIt(p.toFile());
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+				});
 
 		System.out.println(totalSize);
 	}
@@ -109,11 +109,11 @@ public class Reduce {
 		Collection<AudioStream> audioStreams = StreamOrder.sort(videoMetadatas.getAudioStreams());
 
 		for(AudioStream audioStream : audioStreams) {
-			if("vorbis".equals(audioStream.codecName())) {
+			if("vorbis".equals(audioStream.codecName().get())) {
 				doAudio |= true;
 				break;
 			}
-			if("aac".equals(audioStream.codecName())) {
+			if("aac".equals(audioStream.codecName().get())) {
 				doAudio = false;
 				break;
 			}

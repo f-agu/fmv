@@ -134,7 +134,7 @@ public class Format extends InfoBase {
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder(100);
-		buf.append("Format[").append(formatName()).append(']');
+		buf.append("Format[").append(formatName().orElse("?")).append(']');
 		return buf.toString();
 	}
 

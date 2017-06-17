@@ -251,7 +251,7 @@ public abstract class Stream extends InfoBase {
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder(100);
-		buf.append("Stream[").append(codecType()).append(']');
+		buf.append("Stream[").append(codecType().orElse("?")).append(']');
 		return buf.toString();
 	}
 

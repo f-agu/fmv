@@ -369,7 +369,7 @@ public class MovieMetadatas implements Metadatas, Serializable {
 			}
 		}
 		for(Stream stream : filterBy(Stream.class)) {
-			buf.append("Stream: ").append(stream.index()).append(" / ").append(stream.codecType()).append(ls);
+			buf.append("Stream: ").append(stream.index()).append(" / ").append(stream.codecType().orElse("?")).append(ls);
 			for(String name : new TreeSet<String>(stream.getNames())) {
 				buf.append("  ").append(name).append(": ").append(stream.get(name)).append(ls);
 			}

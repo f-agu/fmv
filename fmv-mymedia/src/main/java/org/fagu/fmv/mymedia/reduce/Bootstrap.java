@@ -175,13 +175,17 @@ public class Bootstrap {
 			return;
 		}
 		Bootstrap reduceBootstrap = new Bootstrap();
-		Arrays.asList(args).stream().map(File::new).filter(f -> f.exists()).forEach(f -> {
-			try {
-				reduceBootstrap.reduce(f);
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
-		});
+		Arrays.asList(args)
+				.stream()
+				.map(File::new)
+				.filter(File::exists)
+				.forEach(f -> {
+					try {
+						reduceBootstrap.reduce(f);
+					} catch(IOException e) {
+						e.printStackTrace();
+					}
+				});
 	}
 
 }

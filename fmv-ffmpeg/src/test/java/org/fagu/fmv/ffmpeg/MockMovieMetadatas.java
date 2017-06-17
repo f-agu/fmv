@@ -28,6 +28,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 import org.fagu.fmv.ffmpeg.metadatas.AudioStream;
@@ -138,7 +139,7 @@ public class MockMovieMetadatas {
 		}
 
 		public MockVideoStream duration(Duration duration) {
-			doReturn(duration).when(videoStream).duration();
+			doReturn(Optional.ofNullable(duration)).when(videoStream).duration();
 			return this;
 		}
 
