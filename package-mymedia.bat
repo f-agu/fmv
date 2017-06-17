@@ -2,7 +2,6 @@
 
 cd %~dp0
 echo %~dp0
-pause
 call mvn -U clean install
 cd fmv-mymedia
 call mvn dependency:copy-dependencies
