@@ -28,7 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.commons.lang3.StringUtils;
+import org.fagu.fmv.mymedia.utils.TextProgressBar;
+import org.fagu.fmv.utils.ByteSize;
 import org.fagu.fmv.utils.IniFile;
 
 
@@ -151,7 +155,8 @@ public class Sync {
 					} else if(curSrcItem.isFile()) {
 						curDestItem = synchronizer.createFile(destItem, curSrcItem.getName());
 						if(curDestItem != null) {
-							synchronizer.copyForNew(curSrcItem, curDestItem);
+							final Item finalCurDestItem = curDestItem;
+							progressBar(progress -> synchronizer.copyForNew(curSrcItem, finalCurDestItem, progress), curSrcItem);
 						}
 					} else {
 						synchronizer.unknown(srcItem.toString());
@@ -163,7 +168,8 @@ public class Sync {
 					// sync(curSrcItem, Collections.singletonList(curDestItem));
 				} else if(curDestItem.size() != curSrcItem.size()) {
 					// to update
-					synchronizer.copyForUpdate(curSrcItem, curDestItem);
+					final Item finalCurDestItem = curDestItem;
+					progressBar(progress -> synchronizer.copyForUpdate(curSrcItem, finalCurDestItem, progress), curSrcItem);
 				}
 				if(curSrcItem.isFile()) {
 					synchronizer.doNothingOnFile(curDestItem);
@@ -185,6 +191,56 @@ public class Sync {
 				synchronizer.delete(value);
 			}
 		}
+	}
+
+	// ------------------------------------
+
+	/**
+	 * @author fagu
+	 *
+	 * @param <T>
+	 */
+	@FunctionalInterface
+	private static interface ProgressConsumer {
+
+		/**
+		 * @param t
+		 * @throws IOException
+		 */
+		void progress(AtomicLong progress) throws IOException;
+
+	}
+
+	// ------------------------------------
+
+	/**
+	 * @param progressConsumer
+	 * @param srcItem
+	 * @throws IOException
+	 */
+	private void progressBar(ProgressConsumer progressConsumer, Item srcItem) throws IOException {
+		AtomicLong progress = new AtomicLong();
+		long startTime = System.currentTimeMillis();
+		final int width = 30;
+		try (TextProgressBar progressBar = TextProgressBar.width(40)
+				.consolePrefixMessage(() -> {
+					StringBuilder buf = new StringBuilder();
+					buf.append(StringUtils.rightPad(StringUtils.abbreviate(srcItem.getName(), width), width)).append("   ");
+					long diffTime = System.currentTimeMillis() - startTime;
+					String speedText = "";
+					if(diffTime > 0) {
+						long speed = (1000L * progress.get()) / diffTime;
+						speedText = ByteSize.formatSize(speed) + "/s";
+					}
+					buf.append(StringUtils.rightPad(speedText, 10));
+					return buf.toString();
+				})
+				.buildForScheduling(() -> (int)((100L * progress.get()) / srcItem.size()))
+				// .estimatedTimeOfArrival(etaInSeconds) TODO
+				.schedule()) {
+			progressConsumer.progress(progress);
+		}
+		System.out.println();
 	}
 
 	/**

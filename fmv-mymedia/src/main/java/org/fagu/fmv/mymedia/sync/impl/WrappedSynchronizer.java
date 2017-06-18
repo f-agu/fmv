@@ -23,6 +23,7 @@ package org.fagu.fmv.mymedia.sync.impl;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.fagu.fmv.mymedia.sync.Item;
 import org.fagu.fmv.mymedia.sync.Storage;
@@ -94,20 +95,20 @@ public class WrappedSynchronizer implements Synchronizer {
 
 	/**
 	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#copyForNew(org.fagu.fmv.mymedia.sync.Item,
-	 *      org.fagu.fmv.mymedia.sync.Item)
+	 *      org.fagu.fmv.mymedia.sync.Item, AtomicLong)
 	 */
 	@Override
-	public void copyForNew(Item srcItem, Item destItem) throws IOException {
-		synchronizer.copyForNew(srcItem, destItem);
+	public void copyForNew(Item srcItem, Item destItem, AtomicLong progress) throws IOException {
+		synchronizer.copyForNew(srcItem, destItem, progress);
 	}
 
 	/**
 	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#copyForUpdate(org.fagu.fmv.mymedia.sync.Item,
-	 *      org.fagu.fmv.mymedia.sync.Item)
+	 *      org.fagu.fmv.mymedia.sync.Item, AtomicLong)
 	 */
 	@Override
-	public void copyForUpdate(Item srcItem, Item destItem) throws IOException {
-		synchronizer.copyForUpdate(srcItem, destItem);
+	public void copyForUpdate(Item srcItem, Item destItem, AtomicLong progress) throws IOException {
+		synchronizer.copyForUpdate(srcItem, destItem, progress);
 	}
 
 	/**

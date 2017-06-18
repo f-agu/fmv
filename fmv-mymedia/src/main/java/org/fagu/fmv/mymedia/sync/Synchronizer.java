@@ -24,6 +24,7 @@ import java.io.Closeable;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
@@ -66,16 +67,18 @@ public interface Synchronizer extends Closeable {
 	/**
 	 * @param srcItem
 	 * @param destItem
+	 * @param progress
 	 * @throws IOException
 	 */
-	default void copyForNew(Item srcItem, Item destItem) throws IOException {}
+	default void copyForNew(Item srcItem, Item destItem, AtomicLong progress) throws IOException {}
 
 	/**
 	 * @param srcItem
 	 * @param destItem
+	 * @param progress
 	 * @throws IOException
 	 */
-	default void copyForUpdate(Item srcItem, Item destItem) throws IOException {}
+	default void copyForUpdate(Item srcItem, Item destItem, AtomicLong progress) throws IOException {}
 
 	/**
 	 * @param item

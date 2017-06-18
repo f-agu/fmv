@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.fagu.fmv.mymedia.sync.FileCount;
 import org.fagu.fmv.mymedia.sync.Item;
@@ -121,23 +122,23 @@ public class LogSynchronizer extends WrappedSynchronizer {
 
 	/**
 	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#copyForNew(org.fagu.fmv.mymedia.sync.Item,
-	 *      org.fagu.fmv.mymedia.sync.Item)
+	 *      org.fagu.fmv.mymedia.sync.Item, AtomicLong)
 	 */
 	@Override
-	public void copyForNew(Item srcItem, Item destItem) throws IOException {
+	public void copyForNew(Item srcItem, Item destItem, AtomicLong progress) throws IOException {
 		copy("NEW_F", srcItem, destItem);
-		super.copyForNew(srcItem, destItem);
+		super.copyForNew(srcItem, destItem, progress);
 		syncFileCount.addFile(srcItem.size());
 	}
 
 	/**
 	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#copyForUpdate(org.fagu.fmv.mymedia.sync.Item,
-	 *      org.fagu.fmv.mymedia.sync.Item)
+	 *      org.fagu.fmv.mymedia.sync.Item, AtomicLong)
 	 */
 	@Override
-	public void copyForUpdate(Item srcItem, Item destItem) throws IOException {
+	public void copyForUpdate(Item srcItem, Item destItem, AtomicLong progress) throws IOException {
 		copy("SIZE src[" + srcItem.size() + "] != dest[" + destItem.size() + "])", srcItem, destItem);
-		super.copyForUpdate(srcItem, destItem);
+		super.copyForUpdate(srcItem, destItem, progress);
 		syncFileCount.addFile(srcItem.size());
 	}
 

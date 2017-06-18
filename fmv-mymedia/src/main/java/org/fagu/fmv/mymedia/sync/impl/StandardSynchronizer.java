@@ -24,11 +24,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.commons.io.IOUtils;
 import org.fagu.fmv.mymedia.sync.Item;
 import org.fagu.fmv.mymedia.sync.Storage;
 import org.fagu.fmv.mymedia.sync.Synchronizer;
+import org.fagu.fmv.mymedia.utils.IOUtils;
 
 
 /**
@@ -83,22 +84,23 @@ public class StandardSynchronizer implements Synchronizer {
 
 	/**
 	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#copyForNew(org.fagu.fmv.mymedia.sync.Item,
-	 *      org.fagu.fmv.mymedia.sync.Item)
+	 *      org.fagu.fmv.mymedia.sync.Item, AtomicLong)
 	 */
 	@Override
-	public void copyForNew(Item srcItem, Item destItem) throws IOException {
-		try (InputStream inputStream = srcItem.openInputStream(); OutputStream outputStream = destItem.openOutputStream()) {
-			IOUtils.copyLarge(inputStream, outputStream);
+	public void copyForNew(Item srcItem, Item destItem, AtomicLong progress) throws IOException {
+		try (InputStream inputStream = srcItem.openInputStream();
+				OutputStream outputStream = destItem.openOutputStream()) {
+			IOUtils.copy(inputStream, outputStream, progress);
 		}
 	}
 
 	/**
 	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#copyForUpdate(org.fagu.fmv.mymedia.sync.Item,
-	 *      org.fagu.fmv.mymedia.sync.Item)
+	 *      org.fagu.fmv.mymedia.sync.Item, AtomicLong)
 	 */
 	@Override
-	public void copyForUpdate(Item srcItem, Item destItem) throws IOException {
-		copyForNew(srcItem, destItem);
+	public void copyForUpdate(Item srcItem, Item destItem, AtomicLong progress) throws IOException {
+		copyForNew(srcItem, destItem, progress);
 	}
 
 	/**
