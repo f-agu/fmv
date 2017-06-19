@@ -241,7 +241,7 @@ public class Ripper implements Closeable {
 					StringBuilder buf = new StringBuilder();
 					buf.append(StringUtils.rightPad(StringUtils.abbreviate(name, prefixWidth), prefixWidth)).append(' ');
 					buf.append("read DVD: ").append(currentTitle.get()).append('/').append(titles.size()).append("   ");
-					buf.append("encode:").append(currentTitle.get()).append('/').append(titles.size()).append("  ");
+					buf.append("encode:").append(currentEncoding.get()).append('/').append(titles.size()).append("  ");
 					return buf.toString();
 
 				})
@@ -257,7 +257,7 @@ public class Ripper implements Closeable {
 			AtomicInteger encodeProgress = progressIterator.next();
 
 			currentTitle.incrementAndGet();
-			String baseName = dvdName + "-" + title.getNum();
+			String baseName = name + "-" + title.getNum();
 			File vobFile = File.createTempFile(baseName + '-', ".vob", tmpDirectory);
 			logger.log("Dumping title " + currentTitle + "/" + titles.size() + ": " + vobFile.getAbsolutePath());
 
