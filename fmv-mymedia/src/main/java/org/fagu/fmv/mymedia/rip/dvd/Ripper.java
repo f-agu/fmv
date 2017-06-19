@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -223,8 +224,9 @@ public class Ripper implements Closeable {
 		displayAndLog("Scanning titles...");
 		MPlayerTitles mPlayerTitles = titlesExtractor.extract(dvdDrive, logger);
 		Collection<MPlayerTitle> titles = selectTitlesPolicy.select(mPlayerTitles.getTitles());
-		displayAndLog("Found " + titles.size() + " titles");
+		displayAndLog("Found " + titles.size() + " titles:");
 		titles.forEach(t -> displayAndLog("   " + t.getNum() + "/" + t.getLength()));
+		displayAndLog("Write to " + tmpDirectory);
 
 		AtomicInteger currentTitle = new AtomicInteger();
 		AtomicInteger currentEncoding = new AtomicInteger();
@@ -232,16 +234,23 @@ public class Ripper implements Closeable {
 		int nbProgresses = titles.size() * 2;
 		List<AtomicInteger> progressList = new ArrayList<>(nbProgresses);
 		titles.forEach(t -> {
-			progressList.add(new AtomicInteger());
-			progressList.add(new AtomicInteger());
+			progressList.add(new AtomicInteger()); // dump
+			progressList.add(new AtomicInteger()); // encode
 		});
 
 		textProgressBar = TextProgressBar.width(40)
 				.consolePrefixMessage(() -> {
 					StringBuilder buf = new StringBuilder();
 					buf.append(StringUtils.rightPad(StringUtils.abbreviate(name, prefixWidth), prefixWidth)).append(' ');
-					buf.append("read DVD: ").append(currentTitle.get()).append('/').append(titles.size()).append("   ");
-					buf.append("encode:").append(currentEncoding.get()).append('/').append(titles.size()).append("  ");
+					if(titles.size() == 1) {
+						String m = currentTitle.get() == 1 ? "reading DVD..." : currentEncoding.get() == 1 ? "encoding..." : "";
+						buf.append(StringUtils.rightPad(m, 20));
+					} else {
+						buf.append(StringUtils.rightPad(currentTitle.get() > 0 ? "reading DVD: " + currentTitle.get() + "/" + titles.size()
+								: "", 19));
+						buf.append(StringUtils.rightPad(currentEncoding.get() > 0 ? "encoding: " + currentEncoding.get() + "/" + titles.size()
+								: "", 15));
+					}
 					return buf.toString();
 
 				})
@@ -251,8 +260,20 @@ public class Ripper implements Closeable {
 		if( ! tmpDirectory.exists() && ! tmpDirectory.mkdirs()) {
 			throw new IOException("Unable to make directory: " + tmpDirectory);
 		}
+		CountDownLatch encodingLatch = new CountDownLatch(titles.size());
 		Iterator<AtomicInteger> progressIterator = progressList.iterator();
 		for(MPlayerTitle title : titles) {
+
+			// debug
+			int c = 0;
+			Iterator<AtomicInteger> it = progressList.iterator();
+			while(it.hasNext()) {
+				logger.log("dump " + c + ": " + it.next().get());
+				logger.log("enco " + c + ": " + it.next().get());
+				++c;
+			}
+			// end debug
+
 			AtomicInteger dumpProgress = progressIterator.next();
 			AtomicInteger encodeProgress = progressIterator.next();
 
@@ -265,11 +286,16 @@ public class Ripper implements Closeable {
 					.progress(dumpProgress::set)
 					.dump(title.getNum(), vobFile);
 
-			currentEncoding.incrementAndGet();
 			File mp4File = new File(tmpDirectory, baseName + ".mp4");
 			logger.log("Encoding title " + currentTitle + "/" + titles.size() + ": " + mp4File.getAbsolutePath());
-			encode(vobFile, mp4File, mPlayerDump, encodeProgress);
+			encode(vobFile, mp4File, mPlayerDump, encodeProgress, currentEncoding, encodingLatch);
 		}
+		try {
+			encodingLatch.await();
+		} catch(InterruptedException e) {
+			throw new IOException(e);
+		}
+		logger.log("End");
 	}
 
 	/**
@@ -298,7 +324,9 @@ public class Ripper implements Closeable {
 	 * @param progressEncode
 	 * @throws IOException
 	 */
-	private void encode(File vobFile, File mp4File, MPlayerDump mPlayerDump, AtomicInteger progressEncode) throws IOException {
+	private void encode(File vobFile, File mp4File, MPlayerDump mPlayerDump, AtomicInteger progressEncode, AtomicInteger currentEncoding,
+			CountDownLatch encodingLatch)
+			throws IOException {
 		FFMPEGExecutorBuilder builder = ffMPEGExecutorBuilderSupplier.get();
 		builder.hideBanner()
 				.noStats();
@@ -336,10 +364,14 @@ public class Ripper implements Closeable {
 
 				FFMpegProgress ffMpegProgress = new FFMpegProgress(progressEncode, nbFrames);
 				executor.addReadLineOnErr(ffMpegProgress);
+				currentEncoding.incrementAndGet();
 				executor.execute();
 				vobFile.delete();
 			} catch(Exception e) {
 				e.printStackTrace();
+			} finally {
+				encodingLatch.countDown();
+				vobFile.delete();
 			}
 		});
 	}
