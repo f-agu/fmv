@@ -16,4 +16,9 @@ copy "fmv-mymedia\target\%newest%" target\pkg-mymedia
 
 echo.
 echo Copied in %~dp0fmv-mymedia\target
+
+
+
+%SystemRoot%\explorer.exe "%~dp0fmv-mymedia\target"
+
 pause
