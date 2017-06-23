@@ -328,8 +328,7 @@ public class Ripper implements Closeable {
 			CountDownLatch encodingLatch)
 			throws IOException {
 		FFMPEGExecutorBuilder builder = ffMPEGExecutorBuilderSupplier.get();
-		builder.hideBanner()
-				.noStats();
+		builder.hideBanner();
 
 		InputProcessor inputProcessor = builder.addMediaInputFile(vobFile);
 		MovieMetadatas movieMetadatas = inputProcessor.getMovieMetadatas();
@@ -350,25 +349,23 @@ public class Ripper implements Closeable {
 		outputProcessor.codec(Libx264.build().strict(Strict.EXPERIMENTAL).crf(21))
 				.overwrite();
 
+		int nbFrames = 0;
+		OptionalInt countEstimateFrames = movieMetadatas.getVideoStream().countEstimateFrames();
+		if(countEstimateFrames.isPresent()) {
+			nbFrames = countEstimateFrames.getAsInt();
+		} else {
+			// TODO
+		}
+		builder.progressReadLine(new FFMpegProgress(progressEncode, nbFrames));
+
 		FFExecutor<Object> executor = builder.build();
 		logger.log(executor.getCommandLine());
 		ffmpegService.submit(() -> {
 			try {
-				int nbFrames = 0;
-				OptionalInt countEstimateFrames = movieMetadatas.getVideoStream().countEstimateFrames();
-				if(countEstimateFrames.isPresent()) {
-					nbFrames = countEstimateFrames.getAsInt();
-				} else {
-					// TODO
-				}
-
-				FFMpegProgress ffMpegProgress = new FFMpegProgress(progressEncode, nbFrames);
-				executor.addReadLineOnErr(ffMpegProgress);
 				currentEncoding.incrementAndGet();
 				executor.execute();
-				vobFile.delete();
 			} catch(Exception e) {
-				e.printStackTrace();
+				logger.log(e);
 			} finally {
 				encodingLatch.countDown();
 				vobFile.delete();
@@ -448,6 +445,16 @@ public class Ripper implements Closeable {
 	// List<org.fagu.fmv.soft.mplayer.Stream> asList = Arrays.asList(new AudioStream(0, map));
 	// MPlayerDump mPlayerDump = new MPlayerDump(asList);
 	// ripper.encode(vobFile, mp4File, mPlayerDump);
+	// }
+
+	// public static void main(String[] args) throws Exception {
+	// File vobFile = new File("D:\\tmp\\dvd-rip\\shak\\dvd-Shark_Tale-50-7679807258330259065.vob");
+	// File mp4File = new File("D:\\tmp\\dvd-rip\\shak\\dvd-Shark_Tale-50-7679807258330259065.mp4");
+	// Ripper ripper = Ripper.fromDVDDrive(new File(".")).build();
+	// AtomicInteger progressEncode = new AtomicInteger();
+	// AtomicInteger currentEncoding = new AtomicInteger();
+	// CountDownLatch encodingLatch = new CountDownLatch(1);
+	// ripper.encode(vobFile, mp4File, null, progressEncode, currentEncoding, encodingLatch);
 	// }
 
 }

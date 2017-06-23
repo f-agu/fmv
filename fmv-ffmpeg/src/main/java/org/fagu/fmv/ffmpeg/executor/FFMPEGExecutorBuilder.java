@@ -41,6 +41,7 @@ import org.fagu.fmv.ffmpeg.operation.OperationListener;
 import org.fagu.fmv.ffmpeg.operation.OutputParameters;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Processor;
+import org.fagu.fmv.ffmpeg.operation.ProgressReadLine;
 import org.fagu.fmv.ffmpeg.require.Require;
 import org.fagu.fmv.ffmpeg.utils.Devices;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
@@ -272,6 +273,15 @@ public class FFMPEGExecutorBuilder {
 	 */
 	public FFMPEGExecutorBuilder parameter(String name, String value) {
 		defaultFFMPEGOperation.addParameter(name, value);
+		return this;
+	}
+
+	/**
+	 * @param progressReadLine
+	 * @return
+	 */
+	public FFMPEGExecutorBuilder progressReadLine(ProgressReadLine progressReadLine) {
+		defaultFFMPEGOperation.setProgressReadLine(progressReadLine);
 		return this;
 	}
 

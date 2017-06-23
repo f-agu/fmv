@@ -36,6 +36,7 @@ import org.fagu.fmv.ffmpeg.operation.LibLogReadLine;
 import org.fagu.fmv.ffmpeg.operation.Operation;
 import org.fagu.fmv.ffmpeg.operation.OperationListener;
 import org.fagu.fmv.ffmpeg.operation.Progress;
+import org.fagu.fmv.ffmpeg.operation.ProgressReadLine;
 import org.fagu.fmv.ffmpeg.soft.FFMpegSoftProvider;
 import org.fagu.fmv.ffmpeg.soft.FFSoft;
 import org.fagu.fmv.soft.Soft;
@@ -60,7 +61,7 @@ public class FFExecutor<R> {
 
 	private final Operation<R, ?> operation;
 
-	private FFMPEGProgressReadLine ffmpegProgressReadLine;
+	private ProgressReadLine progressReadLine;
 
 	private final List<String> outputs;
 
@@ -115,7 +116,11 @@ public class FFExecutor<R> {
 		this.operation = Objects.requireNonNull(operation);
 		this.ffmpegExecutorBuilder = ffmpegExecutorBuilder;
 		if(operation.getFFName().equals(FFMpegSoftProvider.NAME) && ! operation.containsGlobalParameter("nostats")) {
-			ffmpegProgressReadLine = new FFMPEGProgressReadLine();
+			if(ffmpegExecutorBuilder != null) {
+				progressReadLine = ffmpegExecutorBuilder.getFFMPEGOperation().getProgressReadLine();
+			} else {
+				progressReadLine = new FFMPEGProgressReadLine();
+			}
 		}
 		outputs = new ArrayList<>();
 		outputReadLine = new BufferedReadLine(outputs);
@@ -153,7 +158,7 @@ public class FFExecutor<R> {
 	 * @return
 	 */
 	public Progress getProgress() {
-		return ffmpegProgressReadLine;
+		return progressReadLine;
 	}
 
 	/**
@@ -335,8 +340,8 @@ public class FFExecutor<R> {
 	 */
 	protected ReadLine getErrReadLine() {
 		List<ReadLine> lines = new ArrayList<>();
-		if(ffmpegProgressReadLine != null) {
-			lines.add(ffmpegProgressReadLine);
+		if(progressReadLine != null) {
+			lines.add(progressReadLine);
 		}
 		ReadLine readLine = operation.getErrReadLine();
 		if(readLine != null) {

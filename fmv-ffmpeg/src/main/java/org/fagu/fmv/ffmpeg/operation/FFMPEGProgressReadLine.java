@@ -24,14 +24,13 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.soft.exec.ReadLine;
 import org.fagu.fmv.utils.time.Time;
 
 
 /**
  * @author f.agu
  */
-public class FFMPEGProgressReadLine implements ReadLine, Progress {
+public class FFMPEGProgressReadLine implements ProgressReadLine {
 
 	private int frame;
 

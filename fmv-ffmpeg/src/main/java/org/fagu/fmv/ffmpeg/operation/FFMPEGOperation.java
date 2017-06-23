@@ -40,6 +40,8 @@ public abstract class FFMPEGOperation<R> extends AbstractIOOperation<R, FFMPEGOp
 
 	private List<String> outAndErr;
 
+	private ProgressReadLine progressReadLine;
+
 	/**
 	 *
 	 */
@@ -110,6 +112,20 @@ public abstract class FFMPEGOperation<R> extends AbstractIOOperation<R, FFMPEGOp
 			filter.upgrade(this);
 		}
 		return super.toArguments();
+	}
+
+	/**
+	 * @return
+	 */
+	public ProgressReadLine getProgressReadLine() {
+		return progressReadLine;
+	}
+
+	/**
+	 * @param progressReadLine
+	 */
+	public void setProgressReadLine(ProgressReadLine progressReadLine) {
+		this.progressReadLine = progressReadLine;
 	}
 
 	// *********************************************
