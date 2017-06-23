@@ -23,6 +23,7 @@ limitations under the License.
 import java.util.Collection;
 
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.find.SoftFound;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health.Builder;
 
@@ -48,7 +49,14 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 			builder.up();
 		}
 		for(Soft soft : softs) {
-			builder.withDetail(soft.getName(), soft.toString());
+			String msg = soft.toString();
+			if( ! soft.isFound()) {
+				SoftFound firstFound = soft.getFirstFound();
+				if(firstFound != null) {
+					msg += ": " + firstFound.getReason();
+				}
+			}
+			builder.withDetail(soft.getName(), msg);
 		}
 	}
 
