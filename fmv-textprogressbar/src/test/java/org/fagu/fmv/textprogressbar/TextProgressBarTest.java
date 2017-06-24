@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 
 import org.fagu.fmv.textprogressbar.part.ProgressPart;
 import org.fagu.fmv.textprogressbar.part.ProgressPart.InsideProgressChar;
-import org.fagu.fmv.textprogressbar.part.SpinnerPart;
 import org.junit.Test;
 
 
@@ -75,27 +74,6 @@ public class TextProgressBarTest {
 				assertEquals('[', s.charAt(0));
 				assertEquals(']', s.charAt(s.length() - 1));
 			}
-		}
-		assertEquals("[#############===============]", line.get());
-	}
-
-	@Test
-	public void testSpinner() throws Exception {
-		final int width = 30;
-		AtomicInteger value = new AtomicInteger();
-		AtomicInteger inside = new AtomicInteger( - 1);
-		IntSupplier progressInPercent = value::get;
-		Supplier<Integer> percentInsideSupplier = () -> inside.get() < 0 ? null : inside.get();
-
-		AtomicReference<String> line = new AtomicReference<String>();
-		try (TextProgressBar bar = TextProgressBar.newBar()
-				// .displayTo(l -> line.set(l.replace("\r", "")))
-				.appendText("running...  ")
-				.append(new SpinnerPart())
-				.buildAndSchedule()) {
-
-			Thread.sleep(5000);
-
 		}
 		assertEquals("[#############===============]", line.get());
 	}
