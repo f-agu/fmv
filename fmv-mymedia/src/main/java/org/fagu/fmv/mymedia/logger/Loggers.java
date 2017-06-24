@@ -41,6 +41,23 @@ public class Loggers {
 	/**
 	 * @return
 	 */
+	public static Logger noOperation() {
+		return new Logger() {
+
+			@Override
+			public void close() throws IOException {}
+
+			@Override
+			public void log(Throwable throwable) {}
+
+			@Override
+			public void log(String message) {}
+		};
+	}
+
+	/**
+	 * @return
+	 */
 	public static Logger systemOut() {
 		return printStream(System.out);
 	}

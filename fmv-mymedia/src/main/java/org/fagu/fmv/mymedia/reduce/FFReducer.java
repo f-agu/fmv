@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
 import java.util.SortedSet;
+import java.util.StringJoiner;
 import java.util.StringTokenizer;
 
 import org.apache.commons.exec.CommandLine;
@@ -60,15 +61,17 @@ import org.fagu.fmv.ffmpeg.metadatas.SubtitleStream;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
+import org.fagu.fmv.ffmpeg.operation.Progress;
 import org.fagu.fmv.ffmpeg.operation.Type;
+import org.fagu.fmv.ffmpeg.progressbar.FFMpegProgressBar;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.Loggers;
 import org.fagu.fmv.mymedia.movie.StreamOrder;
-import org.fagu.fmv.mymedia.utils.FFMpegTextProgressBar;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
+import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.utils.media.Rotation;
 import org.fagu.fmv.utils.media.Size;
 import org.fagu.fmv.utils.time.Duration;
@@ -99,11 +102,11 @@ public class FFReducer extends AbstractReducer {
 
 	private List<String> audioFormatUnchanges, videoFormatUnchanges;
 
-	private FFMpegTextProgressBar ffMpegTextProgressBar;
+	private TextProgressBar textProgressBar;
 
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
-			ffReducer.reduceMedia(new File("D:\\tmp\\b.mp3"), "toto", Loggers.systemOut());
+			ffReducer.reduceMedia(new File("D:\\tmp\\dvd-rip\\test\\a\\a.vob"), "toto", Loggers.noOperation());
 		} catch(FMVExecuteException e) {
 			e.printStackTrace();
 			// if( ! e.isKnown()) {
@@ -148,41 +151,34 @@ public class FFReducer extends AbstractReducer {
 	public File reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException {
 		File destFile = null;
 		MovieMetadatas metadatas = MovieMetadatas.with(srcFile).extract();
-		try {
-			if(isVideo(metadatas, logger)) {
-				logger.log("is video");
-				if(needToReduceVideo(metadatas)) {
-					destFile = getTempFile(srcFile, getVideoFormat(srcFile));
-					reduceVideo(metadatas, srcFile, metadatas, destFile, consolePrefixMessage, logger);
-				} else {
-					logger.log("Video already reduced by FMV");
-				}
-
-			} else if(metadatas.contains(Type.AUDIO)) {
-				logger.log("is audio");
-				if(needToReduceAudio(metadatas, srcFile)) {
-					destFile = getTempFile(srcFile, getAudioFormat(srcFile));
-					reduceAudio(metadatas, srcFile, destFile, "128k", consolePrefixMessage, logger);
-				} else {
-					logger.log("Audio already reduced by FMV");
-				}
+		if(isVideo(metadatas, logger)) {
+			logger.log("is video");
+			if(needToReduceVideo(metadatas)) {
+				destFile = getTempFile(srcFile, getVideoFormat(srcFile));
+				reduceVideo(metadatas, srcFile, metadatas, destFile, consolePrefixMessage, logger);
+			} else {
+				logger.log("Video already reduced by FMV");
 			}
-			return destFile;
-		} finally {
-			if(destFile != null && ffMpegTextProgressBar != null) {
-				int max = Math.min(100, Math.max(0, (int)(100L * destFile.length() / srcFile.length())));
-				ffMpegTextProgressBar.setPercent(max);
+
+		} else if(metadatas.contains(Type.AUDIO)) {
+			logger.log("is audio");
+			if(needToReduceAudio(metadatas, srcFile)) {
+				destFile = getTempFile(srcFile, getAudioFormat(srcFile));
+				reduceAudio(metadatas, srcFile, destFile, "128k", consolePrefixMessage, logger);
+			} else {
+				logger.log("Audio already reduced by FMV");
 			}
 		}
+		return destFile;
 	}
 
 	/**
 	 * @see java.io.Closeable#close()
 	 */
 	@Override
-	public void close() {
-		if(ffMpegTextProgressBar != null) {
-			ffMpegTextProgressBar.close();
+	public void close() throws IOException {
+		if(textProgressBar != null) {
+			textProgressBar.close();
 		}
 	}
 
@@ -359,9 +355,22 @@ public class FFReducer extends AbstractReducer {
 		executor.addListener(createVolumeDetectFFExecListener(logger, volumeDetect));
 
 		OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
-		if(countEstimateFrames.isPresent()) {
-			ffMpegTextProgressBar = FFMpegTextProgressBar.with(executor, consolePrefixMessage)
-					.progressByFrame(countEstimateFrames.getAsInt(), srcFile.length());
+		Progress progress = executor.getProgress();
+		if(countEstimateFrames.isPresent() && progress != null) {
+			textProgressBar = FFMpegProgressBar.with(progress)
+					.byFrame(countEstimateFrames.getAsInt())
+					.fileSize(srcFile.length())
+					.build()
+					.makeBar(consolePrefixMessage);
+		} else {
+			StringJoiner joiner = new StringJoiner(", ");
+			if(progress == null) {
+				joiner.add("progress not found");
+			}
+			if( ! countEstimateFrames.isPresent()) {
+				joiner.add("nb frames nout found");
+			}
+			logger.log("No progress bar: " + joiner.toString());
 		}
 
 		executor.execute();
@@ -416,9 +425,13 @@ public class FFReducer extends AbstractReducer {
 		FFExecutor<Object> executor = builder.build();
 		executor.addListener(createLogFFExecListener(logger));
 		Duration duration = metadatas.getAudioStream().duration().orElse(null);
-		if(duration != null) {
-			ffMpegTextProgressBar = FFMpegTextProgressBar.with(executor, consolePrefixMessage)
-					.progressByDuration(duration, srcFile.length());
+		Progress progress = executor.getProgress();
+		if(duration != null && progress != null) {
+			textProgressBar = FFMpegProgressBar.with(progress)
+					.byDuration(duration)
+					.fileSize(srcFile.length())
+					.build()
+					.makeBar(consolePrefixMessage);
 		}
 		executor.execute();
 	}

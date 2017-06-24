@@ -1,11 +1,8 @@
-/**
- * 
- */
 package org.fagu.fmv.textprogressbar.part;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.textprogressbar.Part;
 import org.fagu.fmv.textprogressbar.ProgressStatus;
 
@@ -17,95 +14,28 @@ public class ProgressPart implements Part {
 
 	// --------------------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
-	public static class Chars {
-
-		private char inside;
-
-		private char done;
-
-		private char head;
-
-		private char remain;
-
-		/**
-		 * @param done
-		 */
-		private Chars(char done) {
-			this.done = done;
-			this.inside = done;
-			head = '>';
-			remain = ' ';
-		}
-
-		/**
-		 * @param done
-		 * @return
-		 */
-		public static Chars done(char done) {
-			return new Chars(done);
-		}
-
-		/**
-		 * @return
-		 */
-		public Chars inside(char inside) {
-			this.inside = inside;
-			return this;
-		}
-
-		/**
-		 * @param head
-		 * @return
-		 */
-		public Chars head(char head) {
-			this.head = head;
-			return this;
-		}
-
-		/**
-		 * @param remain
-		 * @return
-		 */
-		public Chars remain(char remain) {
-			this.remain = remain;
-			return this;
-		}
-	}
-
-	// --------------------------------------------------------
-
-	/**
-	 * @author fagu
-	 */
 	public static class ProgressPartBuilder {
 
-		private int width;
+		private final int width;
 
-		private Chars progressChars = Chars.done('=');
+		private String leftBound = "[";
 
-		private Chars finishChars = progressChars;
+		private String rightBound = "]";
 
-		private char leftBound = '[';
-
-		private char rightBound = ']';
-
-		private Supplier<Integer> percentInsideSupplier;
+		private ProgressChar progressChar = new BasicProgressChar();
 
 		/**
-		 * @param progressWidth
+		 * @param width
 		 */
-		private ProgressPartBuilder(int progressWidth) {
-			this.width = progressWidth;
+		private ProgressPartBuilder(int width) {
+			this.width = width;
 		}
 
 		/**
 		 * @param leftBound
 		 * @return
 		 */
-		public ProgressPartBuilder leftBound(char leftBound) {
+		public ProgressPartBuilder leftBound(String leftBound) {
 			this.leftBound = leftBound;
 			return this;
 		}
@@ -114,77 +44,19 @@ public class ProgressPart implements Part {
 		 * @param rightBound
 		 * @return
 		 */
-		public ProgressPartBuilder rightBound(char rightBound) {
+		public ProgressPartBuilder rightBound(String rightBound) {
 			this.rightBound = rightBound;
 			return this;
 		}
 
 		/**
-		 * @param done
-		 * @param remain
+		 * @param progressChar
 		 * @return
 		 */
-		public ProgressPartBuilder progressChars(char done, char remain) {
-			return progressChars(Chars.done(done).remain(remain));
-		}
-
-		/**
-		 * @param done
-		 * @param head
-		 * @param remain
-		 * @return
-		 */
-		public ProgressPartBuilder progressChars(char done, char head, char remain) {
-			return progressChars(Chars.done(done).head(head).remain(remain));
-		}
-
-		/**
-		 * @param chars
-		 * @return
-		 */
-		public ProgressPartBuilder progressChars(Chars chars) {
-			if(chars != null) {
-				progressChars = Objects.requireNonNull(chars);
+		public ProgressPartBuilder progressChars(ProgressChar progressChar) {
+			if(progressChar != null) {
+				this.progressChar = progressChar;
 			}
-			return this;
-		}
-
-		/**
-		 * @param done
-		 * @param remain
-		 * @return
-		 */
-		public ProgressPartBuilder finishChars(char done, char remain) {
-			return finishChars(Chars.done(done).remain(remain));
-		}
-
-		/**
-		 * @param done
-		 * @param head
-		 * @param remain
-		 * @return
-		 */
-		public ProgressPartBuilder finishChars(char done, char head, char remain) {
-			return finishChars(Chars.done(done).head(head).remain(remain));
-		}
-
-		/**
-		 * @param chars
-		 * @return
-		 */
-		public ProgressPartBuilder finishChars(Chars chars) {
-			if(chars != null) {
-				finishChars = Objects.requireNonNull(chars);
-			}
-			return this;
-		}
-
-		/**
-		 * @param percentInside
-		 * @return
-		 */
-		public ProgressPartBuilder percentInside(Supplier<Integer> percentInside) {
-			this.percentInsideSupplier = percentInside;
 			return this;
 		}
 
@@ -192,6 +64,12 @@ public class ProgressPart implements Part {
 		 * @return
 		 */
 		public ProgressPart build() {
+			leftBound = StringUtils.defaultString(leftBound);
+			rightBound = StringUtils.defaultString(rightBound);
+			if(width <= leftBound.length() + rightBound.length()) {
+				throw new IllegalArgumentException("Width is too short: " + width);
+			}
+
 			return new ProgressPart(this);
 		}
 
@@ -199,33 +77,109 @@ public class ProgressPart implements Part {
 
 	// --------------------------------------------------------
 
+	public enum CharType {
+		DONE, HEAD, REMAIN
+	}
+
+	// --------------------------------------------------------
+
+	public static interface ProgressChar {
+
+		char getAt(int position, int headJunction, int width, CharType charType);
+	}
+
+	// --------------------------------------------------------
+
+	public static class BasicProgressChar implements ProgressChar {
+
+		private final char done;
+
+		private final char head;
+
+		private final char remain;
+
+		public BasicProgressChar() {
+			this('=', '>', ' ');
+		}
+
+		public BasicProgressChar(char done, char head, char remain) {
+			this.done = done;
+			this.head = head;
+			this.remain = remain;
+		}
+
+		@Override
+		public char getAt(int position, int headJunction, int width, CharType charType) {
+			if(charType == CharType.DONE) {
+				return done; // =
+			}
+			if(charType == CharType.HEAD) {
+				return head; // >
+			}
+			return remain; // ' '
+		}
+	}
+
+	// --------------------------------------------------------
+
+	public static class InsideProgressChar extends BasicProgressChar {
+
+		private final Supplier<Integer> percentInsideSupplier;
+
+		private final char inside;
+
+		public InsideProgressChar(Supplier<Integer> percentInsideSupplier) {
+			super();
+			this.percentInsideSupplier = percentInsideSupplier;
+			this.inside = '#';
+		}
+
+		public InsideProgressChar(Supplier<Integer> percentInsideSupplier, char done, char head, char remain, char inside) {
+			super(done, head, remain);
+			this.percentInsideSupplier = percentInsideSupplier;
+			this.inside = inside;
+		}
+
+		@Override
+		public char getAt(int position, int headJunction, int width, CharType charType) {
+			if(charType == CharType.DONE) {
+				Integer percentInside = percentInsideSupplier.get();
+				int insideJunction = 0;
+				if(percentInside != null) {
+					insideJunction = percentInside.intValue() * width / 100;
+					insideJunction = Math.min(insideJunction, headJunction);
+				}
+				if(position < insideJunction) {
+					return inside; // #
+				}
+			}
+			return super.getAt(position, headJunction, width, charType);
+		}
+	}
+
+	// --------------------------------------------------------
+
 	private final int width;
 
-	private final Chars progressChars;
+	private final String leftBound;
 
-	private final Chars finishChars;
+	private final String rightBound;
 
-	private final char leftBound;
-
-	private final char rightBound;
-
-	private final Supplier<Integer> percentInsideSupplier;
+	private final ProgressChar progressChar;
 
 	private ProgressPart(ProgressPartBuilder builder) {
 		this.width = builder.width;
-		this.progressChars = builder.progressChars;
-		this.finishChars = builder.finishChars;
 		this.leftBound = builder.leftBound;
 		this.rightBound = builder.rightBound;
-		this.percentInsideSupplier = builder.percentInsideSupplier;
+		this.progressChar = builder.progressChar;
 	}
 
 	/**
-	 * @param progressWidth
+	 * @param width
 	 * @return
 	 */
-	public static ProgressPartBuilder width(int progressWidth) {
-		return new ProgressPartBuilder(progressWidth);
+	public static ProgressPartBuilder width(int width) {
+		return new ProgressPartBuilder(width);
 	}
 
 	/**
@@ -233,27 +187,20 @@ public class ProgressPart implements Part {
 	 */
 	@Override
 	public String getWith(ProgressStatus status) {
-		Chars chars = status.isFinished() ? finishChars : progressChars;
-
 		StringBuilder buf = new StringBuilder(width);
 		buf.append(leftBound);
-		int junction1 = status.getPercent() * width / 100;
-		int junction2 = 0;
-		Integer percentInside = percentInsideSupplier.get();
-		if(percentInside != null) {
-			junction2 = percentInside.intValue() * width / 100;
-			junction2 = Math.min(junction2, junction1);
-		}
-		for(int i = 0; i < width; ++i) {
-			if(i < junction2) {
-				buf.append(chars.inside); // #
-			} else if(i < junction1) {
-				buf.append(chars.done); // =
-			} else if(i == junction1) {
-				buf.append(chars.head); // >
+		int w = width - leftBound.length() - rightBound.length();
+		int headJunction = status.getPercent() * w / 100;
+		CharType type = null;
+		for(int i = 0; i < w; ++i) {
+			if(i < headJunction) {
+				type = CharType.DONE;
+			} else if(i == headJunction) {
+				type = CharType.HEAD;
 			} else {
-				buf.append(chars.remain); // ' '
+				type = CharType.REMAIN;
 			}
+			buf.append(progressChar.getAt(i, headJunction, w, type));
 		}
 		buf.append(rightBound);
 		return buf.toString();

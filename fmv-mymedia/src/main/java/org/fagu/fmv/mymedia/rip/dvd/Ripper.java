@@ -32,7 +32,6 @@ import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.mymedia.utils.AppVersion;
-import org.fagu.fmv.mymedia.utils.TextProgressBar;
 import org.fagu.fmv.soft.mplayer.DefaultSelectTitlesPolicy;
 import org.fagu.fmv.soft.mplayer.MPlayer;
 import org.fagu.fmv.soft.mplayer.MPlayerDump;
@@ -40,6 +39,10 @@ import org.fagu.fmv.soft.mplayer.MPlayerDump.MPlayerDumpBuilder;
 import org.fagu.fmv.soft.mplayer.MPlayerTitle;
 import org.fagu.fmv.soft.mplayer.MPlayerTitles;
 import org.fagu.fmv.soft.mplayer.SelectTitlesPolicy;
+import org.fagu.fmv.textprogressbar.Part;
+import org.fagu.fmv.textprogressbar.TextProgressBar;
+import org.fagu.fmv.textprogressbar.part.ProgressPart;
+import org.fagu.fmv.textprogressbar.part.SpinnerPart;
 
 
 /**
@@ -217,12 +220,26 @@ public class Ripper implements Closeable {
 	public void rip() throws IOException {
 		AppVersion.logMyVersion(logger::log);
 		logger.log("===========================================================");
-		displayAndLog("Analyzing DVD on " + dvdDrive + "...");
-		String name = dvdName.nameOf(dvdDrive, logger);
+		String msg = "Analyzing DVD on " + dvdDrive + "...";
+		logger.log(msg);
+		String name = null;
+		try (TextProgressBar bar = TextProgressBar.newBar()
+				.appendText(msg + "   ")
+				.append(new SpinnerPart())
+				.buildAndSchedule()) {
+			name = dvdName.nameOf(dvdDrive, logger);
+		}
 		displayAndLog("Name: " + name);
 
-		displayAndLog("Scanning titles...");
-		MPlayerTitles mPlayerTitles = titlesExtractor.extract(dvdDrive, logger);
+		msg = "Scanning titles...";
+		logger.log(msg);
+		MPlayerTitles mPlayerTitles = null;
+		try (TextProgressBar bar = TextProgressBar.newBar()
+				.appendText(msg + "   ")
+				.append(new SpinnerPart())
+				.buildAndSchedule()) {
+			mPlayerTitles = titlesExtractor.extract(dvdDrive, logger);
+		}
 		Collection<MPlayerTitle> titles = selectTitlesPolicy.select(mPlayerTitles.getTitles());
 		displayAndLog("Found " + titles.size() + " titles:");
 		titles.forEach(t -> displayAndLog("   " + t.getNum() + "/" + t.getLength()));
@@ -238,24 +255,26 @@ public class Ripper implements Closeable {
 			progressList.add(new AtomicInteger()); // encode
 		});
 
-		textProgressBar = TextProgressBar.width(40)
-				.consolePrefixMessage(() -> {
-					StringBuilder buf = new StringBuilder();
-					buf.append(StringUtils.rightPad(StringUtils.abbreviate(name, prefixWidth), prefixWidth)).append(' ');
-					if(titles.size() == 1) {
-						String m = currentTitle.get() == 1 ? "reading DVD..." : currentEncoding.get() == 1 ? "encoding..." : "";
-						buf.append(StringUtils.rightPad(m, 20));
-					} else {
-						buf.append(StringUtils.rightPad(currentTitle.get() > 0 ? "reading DVD: " + currentTitle.get() + "/" + titles.size()
-								: "", 19));
-						buf.append(StringUtils.rightPad(currentEncoding.get() > 0 ? "encoding: " + currentEncoding.get() + "/" + titles.size()
-								: "", 15));
-					}
-					return buf.toString();
+		final String finalName = name;
+		Part textPart = s -> {
+			StringBuilder buf = new StringBuilder();
+			buf.append(StringUtils.rightPad(StringUtils.abbreviate(finalName, prefixWidth), prefixWidth)).append(' ');
+			if(titles.size() == 1) {
+				String m = currentTitle.get() == 1 ? "reading DVD..." : currentEncoding.get() == 1 ? "encoding..." : "";
+				buf.append(StringUtils.rightPad(m, 20));
+			} else {
+				buf.append(StringUtils.rightPad(currentTitle.get() > 0 ? "reading DVD: " + currentTitle.get() + "/" + titles.size()
+						: "", 19));
+				buf.append(StringUtils.rightPad(currentEncoding.get() > 0 ? "encoding: " + currentEncoding.get() + "/" + titles.size()
+						: "", 15));
+			}
+			return buf.toString();
+		};
 
-				})
-				.buildForScheduling(() -> progressList.stream().mapToInt(AtomicInteger::get).sum() / nbProgresses)
-				.schedule();
+		textProgressBar = TextProgressBar.newBar()
+				.append(textPart)
+				.append(ProgressPart.width(42).build())
+				.buildAndSchedule(() -> progressList.stream().mapToInt(AtomicInteger::get).sum() / nbProgresses);
 
 		if( ! tmpDirectory.exists() && ! tmpDirectory.mkdirs()) {
 			throw new IOException("Unable to make directory: " + tmpDirectory);

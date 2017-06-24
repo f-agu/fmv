@@ -30,9 +30,11 @@ import org.fagu.fmv.ffmpeg.filter.impl.VolumeDetect;
 import org.fagu.fmv.ffmpeg.filter.impl.VolumeDetected;
 import org.fagu.fmv.ffmpeg.format.NullMuxer;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.ffmpeg.operation.Progress;
+import org.fagu.fmv.ffmpeg.progressbar.FFMpegProgressBar;
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.mymedia.file.InfoFile;
-import org.fagu.fmv.mymedia.utils.FFMpegTextProgressBar;
+import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.utils.file.FileFinder;
 import org.fagu.fmv.utils.file.FileFinder.FileFound;
 
@@ -83,9 +85,12 @@ public class VolumeInfoFile implements InfoFile {
 		FFExecutor<Object> executor = builder.build();
 		if(metadatas != null) {
 			OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
-			if(countEstimateFrames.isPresent()) {
-				try (FFMpegTextProgressBar ffMpegTextProgressBar = FFMpegTextProgressBar.with(executor, "Detect volume")
-						.progressByFrame(countEstimateFrames.getAsInt())) {
+			Progress progress = executor.getProgress();
+			if(countEstimateFrames.isPresent() && progress != null) {
+				try (TextProgressBar bar = FFMpegProgressBar.with(progress)
+						.byFrame(countEstimateFrames.getAsInt())
+						.build()
+						.makeBar("Detect volume")) {
 					executor.execute();
 				}
 				System.out.println();

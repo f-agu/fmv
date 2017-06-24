@@ -31,7 +31,8 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.mymedia.utils.TextProgressBar;
+import org.fagu.fmv.textprogressbar.TextProgressBar;
+import org.fagu.fmv.textprogressbar.part.ProgressPart;
 import org.fagu.fmv.utils.ByteSize;
 import org.fagu.fmv.utils.IniFile;
 
@@ -222,8 +223,8 @@ public class Sync {
 		AtomicLong progress = new AtomicLong();
 		long startTime = System.currentTimeMillis();
 		final int width = 30;
-		try (TextProgressBar progressBar = TextProgressBar.width(40)
-				.consolePrefixMessage(() -> {
+		try (TextProgressBar progressBar = TextProgressBar.newBar()
+				.append(s -> {
 					StringBuilder buf = new StringBuilder();
 					buf.append(StringUtils.rightPad(StringUtils.abbreviate(srcItem.getName(), width), width)).append("   ");
 					long diffTime = System.currentTimeMillis() - startTime;
@@ -235,12 +236,14 @@ public class Sync {
 					buf.append(StringUtils.rightPad(speedText, 10));
 					return buf.toString();
 				})
-				.buildForScheduling(() -> (int)((100L * progress.get()) / srcItem.size()))
-				// .estimatedTimeOfArrival(etaInSeconds) TODO
-				.schedule()) {
+				.append(ProgressPart.width(42).build())
+				// .appendETA(etaInSecondsSupplier) TODO
+				.buildAndSchedule(() -> (int)((100L * progress.get()) / srcItem.size()))) {
+
 			progressConsumer.progress(progress);
 		}
 		System.out.println();
+
 	}
 
 	/**

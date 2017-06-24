@@ -118,7 +118,8 @@ public class FFExecutor<R> {
 		if(operation.getFFName().equals(FFMpegSoftProvider.NAME) && ! operation.containsGlobalParameter("nostats")) {
 			if(ffmpegExecutorBuilder != null) {
 				progressReadLine = ffmpegExecutorBuilder.getFFMPEGOperation().getProgressReadLine();
-			} else {
+			}
+			if(progressReadLine == null) {
 				progressReadLine = new FFMPEGProgressReadLine();
 			}
 		}

@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntSupplier;
 
@@ -28,6 +30,8 @@ public class TextProgressBar implements Closeable {
 		private boolean autoPrintFull = true;
 
 		private final List<Part> parts = new ArrayList<>();
+
+		private Consumer<String> display = System.out::print;
 
 		private TextProgressBarBuilder() {}
 
@@ -50,7 +54,7 @@ public class TextProgressBar implements Closeable {
 			return append(new ETAPart(etaInSecondsSupplier));
 		}
 
-		public WidthFor width(int width) {
+		public WidthFor fixWidth(int width) {
 			return new WidthFor(this, width);
 		}
 
@@ -59,16 +63,37 @@ public class TextProgressBar implements Closeable {
 			return this;
 		}
 
-		public TextProgressBar scheduling(IntSupplier progressInPercent) {
-			return scheduling(progressInPercent, 500);
+		public TextProgressBarBuilder displayTo(Consumer<String> display) {
+			if(display != null) {
+				this.display = display;
+			}
+			return this;
 		}
 
-		public TextProgressBar scheduling(IntSupplier progressInPercent, long refreshPeriodMilliseconds) {
-			return new TextProgressBar(this, progressInPercent, refreshPeriodMilliseconds);
+		public TextProgressBar buildAndSchedule() {
+			return buildAndSchedule(null);
+		}
+
+		public TextProgressBar buildAndSchedule(IntSupplier progressInPercent) {
+			if(parts.isEmpty()) {
+				throw new IllegalStateException("No part defined !");
+			}
+			AtomicLong refresh = new AtomicLong(Long.MAX_VALUE);
+			for(Part part : parts) {
+				part.getRefreshInMilliseconds().ifPresent(d -> refresh.updateAndGet(l -> Math.min(l, d)));
+			}
+			long delay = refresh.get() == Long.MAX_VALUE ? 500 : refresh.get();
+			return buildAndSchedule(progressInPercent, delay);
+		}
+
+		public TextProgressBar buildAndSchedule(IntSupplier progressInPercent, long refreshPeriodMilliseconds) {
+			TextProgressBar bar = new TextProgressBar(this);
+			bar.schedule(progressInPercent, refreshPeriodMilliseconds);
+			return bar;
 		}
 
 		public TextProgressBar buildForPrinting() {
-			return new TextProgressBar(this, null, - 1);
+			return new TextProgressBar(this);
 		}
 
 	}
@@ -81,7 +106,7 @@ public class TextProgressBar implements Closeable {
 
 		private final int width;
 
-		private BiFunction<String, Integer, String> pad = FixWidthPart.LEFT_PAD;
+		private BiFunction<String, Integer, String> pad = FixWidthPart.RIGHT_PAD;
 
 		private WidthFor(TextProgressBarBuilder builder, int width) {
 			this.builder = builder;
@@ -127,22 +152,19 @@ public class TextProgressBar implements Closeable {
 
 	private final List<Part> parts;
 
+	private final Consumer<String> display;
+
 	private TimerTask timerTask;
 
 	private Timer timer;
 
 	/**
 	 * @param builder
-	 * @param progressInPercent
-	 * @param refreshPeriodMilliseconds
 	 */
-	private TextProgressBar(TextProgressBarBuilder builder, IntSupplier progressInPercent, long refreshPeriodMilliseconds) {
+	private TextProgressBar(TextProgressBarBuilder builder) {
 		this.autoPrintFull = builder.autoPrintFull;
+		this.display = builder.display;
 		this.parts = Collections.unmodifiableList(new ArrayList<>(builder.parts));
-
-		if(progressInPercent != null && refreshPeriodMilliseconds > 0) {
-			schedule(progressInPercent, refreshPeriodMilliseconds);
-		}
 	}
 
 	/**
@@ -197,6 +219,7 @@ public class TextProgressBar implements Closeable {
 	 * @param refreshPeriodMilliseconds
 	 */
 	private void schedule(IntSupplier progressInPercent, long refreshPeriodMilliseconds) {
+		IntSupplier supplier = progressInPercent != null ? progressInPercent : () -> 0;
 		timerTask = new TimerTask() {
 
 			/**
@@ -204,7 +227,7 @@ public class TextProgressBar implements Closeable {
 			 */
 			@Override
 			public void run() {
-				print(progressInPercent.getAsInt());
+				print(supplier.getAsInt());
 			}
 		};
 		timer = new Timer();
@@ -222,8 +245,7 @@ public class TextProgressBar implements Closeable {
 		StringBuilder bar = new StringBuilder(140);
 		bar.append('\r');
 		parts.stream().forEach(p -> bar.append(p.getWith(status)));
-		System.out.println(bar);
-
+		display.accept(bar.toString());
 		return this;
 	}
 

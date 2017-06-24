@@ -27,7 +27,7 @@ import java.util.Arrays;
 import org.fagu.fmv.im.Image;
 import org.fagu.fmv.mymedia.classify.Organizer;
 import org.fagu.fmv.mymedia.file.ImageFinder;
-import org.fagu.fmv.mymedia.utils.TextProgressBar;
+import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.utils.file.FindProgress;
 
 
@@ -69,8 +69,9 @@ public class Bootstrap {
 
 		FindProgress findProgress = new FindProgress() {
 
-			private TextProgressBar textProgressBar = TextProgressBar.width(40)
-					.consolePrefixMessage("Finding images  ")
+			private TextProgressBar textProgressBar = TextProgressBar.newBar()
+					.fixWidth(40)
+					.withText("Finding images")
 					.buildForPrinting();
 
 			/**
@@ -78,7 +79,7 @@ public class Bootstrap {
 			 */
 			@Override
 			public void progress(int done, int total) {
-				textProgressBar.print((100 * done) / total, null);
+				textProgressBar.print((100 * done) / total);
 			}
 		};
 

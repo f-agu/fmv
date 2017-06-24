@@ -38,10 +38,12 @@ import org.fagu.fmv.ffmpeg.filter.FilterComplex;
 import org.fagu.fmv.ffmpeg.filter.impl.Format;
 import org.fagu.fmv.ffmpeg.format.Image2Demuxer;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
+import org.fagu.fmv.ffmpeg.operation.Progress;
+import org.fagu.fmv.ffmpeg.progressbar.FFMpegProgressBar;
 import org.fagu.fmv.ffmpeg.utils.FPS;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
-import org.fagu.fmv.mymedia.utils.FFMpegTextProgressBar;
+import org.fagu.fmv.textprogressbar.TextProgressBar;
 
 
 /**
@@ -55,7 +57,7 @@ public class PreparedImages implements Closeable {
 
 	private SortedSet<File> files;
 
-	private FFMpegTextProgressBar ffMpegTextProgressBar;
+	private TextProgressBar textProgressBar;
 
 	/**
 	 * @param files
@@ -110,7 +112,13 @@ public class PreparedImages implements Closeable {
 		FFExecutor<Object> executor = builder.build();
 		System.out.println(executor.getCommandLine());
 		int countEstimateFrames = (int)(files.size() * videoFrameRate.countFrameBySeconds() * imageFrameRate.invert().doubleValue());
-		ffMpegTextProgressBar = FFMpegTextProgressBar.with(executor, "").progressByFrame(countEstimateFrames);
+		Progress progress = executor.getProgress();
+		if(progress != null) {
+			textProgressBar = FFMpegProgressBar.with(progress)
+					.byFrame(countEstimateFrames)
+					.build()
+					.makeBar("");
+		}
 		executor.execute();
 	}
 
@@ -119,8 +127,8 @@ public class PreparedImages implements Closeable {
 	 */
 	@Override
 	public void close() throws IOException {
-		if(ffMpegTextProgressBar != null) {
-			ffMpegTextProgressBar.close();
+		if(textProgressBar != null) {
+			textProgressBar.close();
 		}
 	}
 
