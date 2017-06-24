@@ -39,8 +39,8 @@ import org.fagu.fmv.soft.mplayer.MPlayerDump.MPlayerDumpBuilder;
 import org.fagu.fmv.soft.mplayer.MPlayerTitle;
 import org.fagu.fmv.soft.mplayer.MPlayerTitles;
 import org.fagu.fmv.soft.mplayer.SelectTitlesPolicy;
-import org.fagu.fmv.textprogressbar.Part;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
+import org.fagu.fmv.textprogressbar.TextProgressBar.TextProgressBarBuilder;
 import org.fagu.fmv.textprogressbar.part.PercentPart;
 import org.fagu.fmv.textprogressbar.part.ProgressPart;
 import org.fagu.fmv.textprogressbar.part.SpinnerPart;
@@ -257,24 +257,20 @@ public class Ripper implements Closeable {
 		});
 
 		final String finalName = name;
-		Part textPart = s -> {
-			StringBuilder buf = new StringBuilder();
-			buf.append(StringUtils.rightPad(StringUtils.abbreviate(finalName, prefixWidth), prefixWidth)).append(' ');
-			if(titles.size() == 1) {
-				String m = currentTitle.get() == 1 ? "reading DVD..." : currentEncoding.get() == 1 ? "encoding..." : "";
-				buf.append(StringUtils.rightPad(m, 20));
-			} else {
-				buf.append(StringUtils.rightPad(currentTitle.get() > 0 ? "reading DVD: " + currentTitle.get() + "/" + titles.size()
-						: "", 19));
-				buf.append(StringUtils.rightPad(currentEncoding.get() > 0 ? "encoding: " + currentEncoding.get() + "/" + titles.size()
-						: "", 15));
-			}
-			return buf.toString();
-		};
+		TextProgressBarBuilder builder = TextProgressBar.newBar()
+				.fixWidth(32)
+				.withText(StringUtils.abbreviate(finalName, prefixWidth) + " ");
 
-		textProgressBar = TextProgressBar.newBar()
-				.append(textPart)
-				.append(ProgressPart.width(42).build())
+		if(titles.size() == 1) {
+			builder.fixWidth(20).with(s -> currentTitle.get() == 1 ? "reading DVD..." : currentEncoding.get() == 1 ? "encoding..." : "");
+		} else {
+			builder.fixWidth(19).with(s -> currentTitle.get() > 0 ? "reading DVD: " + currentTitle.get() + "/" + titles.size()
+					: "");
+			builder.fixWidth(15).with(s -> currentEncoding.get() > 0 ? "encoding: " + currentEncoding.get() + "/" + titles.size()
+					: "");
+		}
+		textProgressBar = builder
+				.append(ProgressPart.width(31).build())
 				.fixWidth(6)
 				.leftPad()
 				.with(new PercentPart())
@@ -302,12 +298,14 @@ public class Ripper implements Closeable {
 			logger.log("Encoding title " + currentTitle + "/" + titles.size() + ": " + mp4File.getAbsolutePath());
 			encode(vobFile, mp4File, mPlayerDump, encodeProgress, currentEncoding, encodingLatch);
 		}
+		currentTitle.set( - 1);
 		try {
 			encodingLatch.await();
 		} catch(InterruptedException e) {
 			throw new IOException(e);
 		}
 		logger.log("End");
+		System.out.println();
 	}
 
 	/**
