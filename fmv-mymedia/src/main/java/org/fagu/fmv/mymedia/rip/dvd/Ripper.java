@@ -286,17 +286,6 @@ public class Ripper implements Closeable {
 		CountDownLatch encodingLatch = new CountDownLatch(titles.size());
 		Iterator<AtomicInteger> progressIterator = progressList.iterator();
 		for(MPlayerTitle title : titles) {
-
-			// debug
-			int c = 0;
-			Iterator<AtomicInteger> it = progressList.iterator();
-			while(it.hasNext()) {
-				logger.log("dump " + c + ": " + it.next().get());
-				logger.log("enco " + c + ": " + it.next().get());
-				++c;
-			}
-			// end debug
-
 			AtomicInteger dumpProgress = progressIterator.next();
 			AtomicInteger encodeProgress = progressIterator.next();
 

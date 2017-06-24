@@ -32,7 +32,6 @@ public class FFMpegProgress extends FFMPEGProgressReadLine {
 	@Override
 	public void read(String line) {
 		super.read(line);
-		System.out.println(line);
 		progressEncode.set(100 * getFrame() / numberOfFrames);
 	}
 
