@@ -16,9 +16,9 @@ public class PercentPartTest {
 	public void testOK() {
 		Part part = new PercentPart();
 		assertPart(part, - 1, "-1%");
-		assertPart(part, 0, " 0%");
-		assertPart(part, 3, " 3%");
-		assertPart(part, 9, " 9%");
+		assertPart(part, 0, "0%");
+		assertPart(part, 3, "3%");
+		assertPart(part, 9, "9%");
 		assertPart(part, 10, "10%");
 		assertPart(part, 50, "50%");
 		assertPart(part, 99, "99%");

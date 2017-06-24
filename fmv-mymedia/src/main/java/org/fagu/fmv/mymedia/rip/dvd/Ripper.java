@@ -41,6 +41,7 @@ import org.fagu.fmv.soft.mplayer.MPlayerTitles;
 import org.fagu.fmv.soft.mplayer.SelectTitlesPolicy;
 import org.fagu.fmv.textprogressbar.Part;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
+import org.fagu.fmv.textprogressbar.part.PercentPart;
 import org.fagu.fmv.textprogressbar.part.ProgressPart;
 import org.fagu.fmv.textprogressbar.part.SpinnerPart;
 
@@ -274,6 +275,9 @@ public class Ripper implements Closeable {
 		textProgressBar = TextProgressBar.newBar()
 				.append(textPart)
 				.append(ProgressPart.width(42).build())
+				.fixWidth(6)
+				.leftPad()
+				.with(new PercentPart())
 				.buildAndSchedule(() -> progressList.stream().mapToInt(AtomicInteger::get).sum() / nbProgresses);
 
 		if( ! tmpDirectory.exists() && ! tmpDirectory.mkdirs()) {
