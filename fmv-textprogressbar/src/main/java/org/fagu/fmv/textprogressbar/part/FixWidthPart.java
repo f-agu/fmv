@@ -72,7 +72,7 @@ public class FixWidthPart implements Part {
 	@Override
 	public String getWith(ProgressStatus status) {
 		String str = StringUtils.defaultString(part.getWith(status));
-		return padding.apply(str, width);
+		return StringUtils.substring(padding.apply(str, width), 0, width);
 	}
 
 }

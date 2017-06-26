@@ -73,6 +73,7 @@ public abstract class By {
 		TextProgressBarBuilder builder = TextProgressBar.newBar();
 		return builder.fixWidth(60)
 				.withText(text)
+				.appendText("  ")
 				.append(progressPart())
 				.fixWidth(11)
 				.with(new FinishedOrNotPart(etaPart(), new SpendTimePart()))

@@ -49,7 +49,7 @@ public class FixWidthPartTest {
 	@Test
 	public void testText_middle_aabbcc() {
 		FixWidthPart part = FixWidthPart.centerPad(s -> "aabbcc", 4);
-		assertEquals("aabbcc", part.getWith(null));
+		assertEquals("aabb", part.getWith(null));
 	}
 
 }

@@ -106,7 +106,9 @@ public class FFReducer extends AbstractReducer {
 
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
-			ffReducer.reduceMedia(new File("D:\\tmp\\dvd-rip\\test\\a\\a.vob"), "toto", Loggers.noOperation());
+			ffReducer.reduceMedia(new File(
+					"D:\\tmp\\dvd-rip\\test\\a\\a.vob"), "totogsdlfjhsdkfjhqsdfiohqsdohqsjhbqsdjhbqsdgjhqbsdgoqbrgioqdbgqdfjkgbgqdfjgbgbqdfjkgbqdfjgbqdf", Loggers
+							.noOperation());
 		} catch(FMVExecuteException e) {
 			e.printStackTrace();
 			// if( ! e.isKnown()) {

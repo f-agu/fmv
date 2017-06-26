@@ -1,11 +1,14 @@
 package org.fagu.fmv.textprogressbar.demo;
 
+import java.awt.Color;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntSupplier;
 
 import org.fagu.fmv.textprogressbar.TextProgressBar;
+import org.fagu.fmv.textprogressbar.part.ColorPart;
 import org.fagu.fmv.textprogressbar.part.ProgressPart;
 import org.fagu.fmv.textprogressbar.part.SpinnerPart;
+import org.fagu.fmv.textprogressbar.part.TextPart;
 
 
 /**
@@ -17,11 +20,25 @@ public class Bootstrap {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		basicProgress();
-		spinner();
+		color();
+		// basicProgress();
+		// spinner();
 	}
 
 	// *********************************************
+
+	/**
+	 * @throws Exception
+	 */
+	private static void color() throws Exception {
+		try (TextProgressBar bar = TextProgressBar.newBar()
+				.append(ColorPart.foreground(Color.RED, new TextPart("red")))
+				.appendText("  ")
+				.append(ColorPart.foreground(Color.BLUE, ColorPart.background(Color.YELLOW, new TextPart("blue on yellow"))))
+				.buildForPrinting()) {
+			bar.print(0);
+		}
+	}
 
 	/**
 	 * @throws Exception
