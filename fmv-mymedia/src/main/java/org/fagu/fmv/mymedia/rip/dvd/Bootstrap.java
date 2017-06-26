@@ -27,6 +27,7 @@ public class Bootstrap {
 		try (Ripper ripper = Ripper.fromDVDDrive(dvdDrive).build()) {
 			ripper.rip();
 		}
+		System.out.println();
 	}
 
 	// ***************************

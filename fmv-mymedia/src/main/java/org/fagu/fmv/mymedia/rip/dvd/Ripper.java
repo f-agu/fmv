@@ -305,7 +305,6 @@ public class Ripper implements Closeable {
 			throw new IOException(e);
 		}
 		logger.log("End");
-		System.out.println();
 	}
 
 	/**
