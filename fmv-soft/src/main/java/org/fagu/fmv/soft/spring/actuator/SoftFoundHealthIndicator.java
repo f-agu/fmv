@@ -21,9 +21,10 @@ limitations under the License.
  */
 
 import java.util.Collection;
+import java.util.StringJoiner;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.find.SoftFound;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health.Builder;
 
@@ -51,9 +52,15 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 		for(Soft soft : softs) {
 			String msg = soft.toString();
 			if( ! soft.isFound()) {
-				SoftFound firstFound = soft.getFirstFound();
-				if(firstFound != null) {
-					msg += ": " + firstFound.getReason();
+				StringJoiner joiner = new StringJoiner(", ");
+				soft.getFounds().forEach(f -> {
+					String reason = f.getReason();
+					if(StringUtils.isNotBlank(reason)) {
+						joiner.add(reason);
+					}
+				});
+				if(joiner.length() > 0) {
+					msg += ": " + joiner.toString();
 				}
 			}
 			builder.withDetail(soft.getName(), msg);

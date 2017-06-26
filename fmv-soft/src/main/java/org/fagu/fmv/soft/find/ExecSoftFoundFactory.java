@@ -387,7 +387,7 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 		try {
 			int exitValue = executor.execute(commandLine);
 			SoftFound softFound = parser.closeAndParse(cmdLineStr, exitValue);
-			if(locator != null) {
+			if(locator != null && softFound != null) {
 				softFound.setLocalizedBy(locator.toString());
 			}
 			return softFound;

@@ -20,11 +20,11 @@ limitations under the License.
  * #L%
  */
 import java.text.SimpleDateFormat;
+import java.util.StringJoiner;
 
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.FoundReason;
 import org.fagu.fmv.soft.find.FoundReasons;
-import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftInfo;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
@@ -44,8 +44,9 @@ public class SoftInfoContributor implements InfoContributor {
 	@Override
 	public void contribute(Builder builder) {
 		for(Soft soft : Softs.getInfoContributors()) {
-			StringBuilder buf = new StringBuilder(100);
+			String msg = null;
 			if(soft.isFound()) {
+				StringBuilder buf = new StringBuilder(100);
 				SoftInfo softInfo = soft.getFirstInfo();
 				if(softInfo instanceof VersionSoftInfo) {
 					((VersionSoftInfo)softInfo).getVersion().ifPresent(v -> buf.append(v).append(", "));
@@ -57,18 +58,23 @@ public class SoftInfoContributor implements InfoContributor {
 					});
 				}
 				buf.append(soft.getFile().getAbsolutePath());
+				msg = buf.toString();
 			} else {
-				Founds founds = soft.getFounds();
-				SoftFound softFound = founds.getFirstFound();
-				FoundReason foundReason = softFound != null ? softFound.getFoundReason() : FoundReasons.NOT_FOUND;
-				buf.append(foundReason.name());
-				String reason = softFound.getReason();
-				if(reason != null) {
-					buf.append(": ").append(reason);
+				StringJoiner joiner = new StringJoiner(" ; ");
+				for(SoftFound softFound : soft.getFounds()) {
+					StringBuilder buf = new StringBuilder();
+					FoundReason foundReason = softFound != null ? softFound.getFoundReason() : FoundReasons.NOT_FOUND;
+					buf.append(foundReason.name());
+					String reason = softFound.getReason();
+					if(reason != null) {
+						buf.append(": ").append(reason);
+					}
+					joiner.add(buf.toString());
 				}
+				msg = joiner.toString();
 			}
 
-			builder.withDetail("soft." + soft.getName(), buf.toString());
+			builder.withDetail("soft." + soft.getName(), msg);
 		}
 	}
 
