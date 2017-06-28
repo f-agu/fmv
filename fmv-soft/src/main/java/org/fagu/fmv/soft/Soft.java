@@ -108,7 +108,7 @@ public class Soft {
 		SoftProvider softProvider = new SoftProvider(file.getName()) {
 
 			@Override
-			public SoftPolicy<?, ?, ?> getSoftPolicy() {
+			public SoftPolicy getSoftPolicy() {
 				return null;
 			}
 
@@ -278,8 +278,8 @@ public class Soft {
 	/**
 	 * @return
 	 */
-	public SoftPolicy<?, ?, ?> getSoftPolicy() {
-		SoftPolicy<?, ?, ?> softPolicy = founds.getSoftPolicy();
+	public SoftPolicy getSoftPolicy() {
+		SoftPolicy softPolicy = founds.getSoftPolicy();
 		return softPolicy != null ? softPolicy : softProvider.getSoftPolicy();
 	}
 

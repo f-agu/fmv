@@ -65,7 +65,7 @@ public class SoftLocator {
 
 	private Function<Founds, List<Locator>> cachePopulator;
 
-	private SoftPolicy<?, ?, ?> softPolicy;
+	private SoftPolicy softPolicy;
 
 	private final List<Locator> definedLocators;
 
@@ -105,14 +105,14 @@ public class SoftLocator {
 	/**
 	 * @return
 	 */
-	public SoftPolicy<?, ?, ?> getSoftPolicy() {
+	public SoftPolicy getSoftPolicy() {
 		return softPolicy;
 	}
 
 	/**
 	 * @param softPolicy
 	 */
-	public void setSoftPolicy(SoftPolicy<?, ?, ?> softPolicy) {
+	public void setSoftPolicy(SoftPolicy softPolicy) {
 		this.softPolicy = softPolicy;
 	}
 

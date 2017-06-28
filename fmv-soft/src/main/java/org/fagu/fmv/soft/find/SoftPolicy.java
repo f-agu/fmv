@@ -29,16 +29,14 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.fagu.fmv.soft.find.SoftPolicy.OnPlatform;
 
 
 /**
  * @author f.agu
  */
-@SuppressWarnings("rawtypes")
-public abstract class SoftPolicy<S extends SoftInfo, P extends OnPlatform, T extends SoftPolicy<S, P, ?>> {
+public abstract class SoftPolicy {
 
-	protected final List<Pair<P, Predicate<S>>> list;
+	protected final List<Pair<OnPlatform, Predicate<SoftInfo>>> list;
 
 	private Sorter sorter;
 
@@ -47,23 +45,23 @@ public abstract class SoftPolicy<S extends SoftInfo, P extends OnPlatform, T ext
 	/**
 	 * @author f.agu
 	 */
-	public abstract class OnPlatform {
+	public class OnPlatform {
 
 		protected final String name;
 
-		protected final Predicate<S> condition;
+		protected final Predicate<SoftInfo> require;
 
-		public OnPlatform(String name, Predicate<S> condition) {
+		public OnPlatform(String name, Predicate<SoftInfo> require) {
 			this.name = Objects.requireNonNull(name);
-			this.condition = Objects.requireNonNull(condition);
+			this.require = Objects.requireNonNull(require);
 		}
 
 		public String getName() {
 			return name;
 		}
 
-		public Predicate<S> getCondition() {
-			return condition;
+		public Predicate<SoftInfo> getRequire() {
+			return require;
 		}
 
 		@Override
@@ -87,56 +85,59 @@ public abstract class SoftPolicy<S extends SoftInfo, P extends OnPlatform, T ext
 	 * @param validate
 	 * @return
 	 */
-	public T with(P platform, Predicate<S> validate) {
+	public SoftPolicy with(OnPlatform platform, Predicate<SoftInfo> validate) {
 		Objects.requireNonNull(platform);
 		Objects.requireNonNull(validate);
 		list.add(Pair.of(platform, validate));
-		return getThis();
+		return this;
+	}
+
+	/**
+	 * @param platformName
+	 * @param platformPredicate
+	 * @param subPredicate
+	 * @return
+	 */
+	public SoftPolicy on(String platformName, Predicate<SoftInfo> platformPredicate, Predicate<SoftInfo> subPredicate) {
+		return with(new OnPlatform(platformName, platformPredicate), subPredicate);
 	}
 
 	/**
 	 * @param sorter
 	 * @return
 	 */
-	public T withSorter(Sorter sorter) {
+	public SoftPolicy withSorter(Sorter sorter) {
 		this.sorter = sorter;
-		return getThis();
+		return this;
 	}
 
 	/**
 	 * @return
 	 */
-	public P onAllPlatforms() {
-		return on("All platforms", s -> true);
+	public SoftPolicy onAllPlatforms(Predicate<SoftInfo> subPredicate) {
+		return on("All platforms", s -> true, subPredicate);
 	}
 
 	/**
 	 * @return
 	 */
-	public P onWindows() {
-		return on("Windows", s -> SystemUtils.IS_OS_WINDOWS);
+	public SoftPolicy onWindows(Predicate<SoftInfo> subPredicate) {
+		return on("Windows", s -> SystemUtils.IS_OS_WINDOWS, subPredicate);
 	}
 
 	/**
 	 * @return
 	 */
-	public P onLinux() {
-		return on("Linux", s -> SystemUtils.IS_OS_LINUX);
+	public SoftPolicy onLinux(Predicate<SoftInfo> subPredicate) {
+		return on("Linux", s -> SystemUtils.IS_OS_LINUX, subPredicate);
 	}
 
 	/**
 	 * @return
 	 */
-	public P onMac() {
-		return on("Mac", s -> SystemUtils.IS_OS_MAC);
+	public SoftPolicy onMac(Predicate<SoftInfo> subPredicate) {
+		return on("Mac", s -> SystemUtils.IS_OS_MAC, subPredicate);
 	}
-
-	/**
-	 * @param name
-	 * @param condition
-	 * @return
-	 */
-	public abstract P on(String name, Predicate<S> condition);
 
 	/**
 	 * @param softInfo
@@ -157,21 +158,13 @@ public abstract class SoftPolicy<S extends SoftInfo, P extends OnPlatform, T ext
 	@Override
 	public String toString() {
 		StringJoiner joiner = new StringJoiner(" ; ");
-		for(Pair<P, Predicate<S>> pair : list) {
+		for(Pair<OnPlatform, Predicate<SoftInfo>> pair : list) {
 			joiner.add(pair.getKey().toString() + '[' + pair.getValue() + ']');
 		}
 		return joiner.toString();
 	}
 
 	// **********************************************************
-
-	/**
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	protected T getThis() {
-		return (T)this;
-	}
 
 	/**
 	 * @return

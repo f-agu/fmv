@@ -193,7 +193,7 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 		 * @param softPolicy
 		 * @return
 		 */
-		Parser create(File file, SoftPolicy<?, ?, ?> softPolicy);
+		Parser create(File file, SoftPolicy softPolicy);
 	}
 
 	// ------------------------------------------------------------
@@ -374,7 +374,7 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 	 * @see org.fagu.fmv.soft.find.SoftFoundFactory#create(java.io.File, Locator, SoftPolicy)
 	 */
 	@Override
-	public final SoftFound create(File file, Locator locator, SoftPolicy<?, ?, ?> softPolicy) throws IOException {
+	public final SoftFound create(File file, Locator locator, SoftPolicy softPolicy) throws IOException {
 		Parser parser = parserFactory.create(file, softPolicy);
 		CommandLine commandLine = FMVCommandLine.create(file, parameters);
 		String cmdLineStr = CommandLineUtils.toLine(commandLine);

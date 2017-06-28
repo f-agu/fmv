@@ -1,4 +1,7 @@
-package org.fagu.fmv.soft.find;
+package org.fagu.fmv.soft.find.policy;
+
+import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.allVersion;
+import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 
 /*-
  * #%L
@@ -26,8 +29,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.fagu.fmv.soft.find.FoundReasons;
+import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
-import org.fagu.fmv.soft.find.policy.VersionPolicy;
 import org.fagu.version.Version;
 import org.junit.Test;
 
@@ -47,7 +51,7 @@ public class VersionPolicyTestCase {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testEmpty_versionNull() {
-		new VersionPolicy().toSoftFound(versionSoftInfo(null));
+		new VersionSoftPolicy().toSoftFound(versionSoftInfo(null));
 	}
 
 	/**
@@ -55,7 +59,7 @@ public class VersionPolicyTestCase {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testEmpty_versionV1() {
-		new VersionPolicy().toSoftFound(versionSoftInfo(Version.V1));
+		new VersionSoftPolicy().toSoftFound(versionSoftInfo(Version.V1));
 	}
 
 	/**
@@ -65,7 +69,7 @@ public class VersionPolicyTestCase {
 	public void testEmpty_properties() {
 		System.setProperty("test.minversion", "2");
 		try {
-			new VersionPolicy().toSoftFound(versionSoftInfo(Version.V1));
+			new VersionSoftPolicy().toSoftFound(versionSoftInfo(Version.V1));
 		} finally {
 			System.getProperties().remove("test.minversion");
 		}
@@ -76,9 +80,8 @@ public class VersionPolicyTestCase {
 	 */
 	@Test
 	public void testAllOS_versionNull() {
-		SoftFound softFound = new VersionPolicy()
-				.onAllPlatforms()
-				.allVersion()
+		SoftFound softFound = new VersionSoftPolicy()
+				.onAllPlatforms(allVersion())
 				.toSoftFound(versionSoftInfo(null));
 		assertFalse(softFound.isFound());
 		assertEquals(FoundReasons.BAD_SOFT, softFound.getFoundReason());
@@ -90,9 +93,8 @@ public class VersionPolicyTestCase {
 	 */
 	@Test
 	public void testAllOSAllVersion_versionV3() {
-		SoftFound softFound = new VersionPolicy()
-				.onAllPlatforms()
-				.allVersion()
+		SoftFound softFound = new VersionSoftPolicy()
+				.onAllPlatforms(allVersion())
 				.toSoftFound(versionSoftInfo(Version.V3));
 		assertTrue(softFound.isFound());
 	}
@@ -102,9 +104,8 @@ public class VersionPolicyTestCase {
 	 */
 	@Test
 	public void testAllOS_VersionV2_versionV3() {
-		SoftFound softFound = new VersionPolicy()
-				.onAllPlatforms()
-				.minVersion(Version.V2)
+		SoftFound softFound = new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(Version.V2))
 				.toSoftFound(versionSoftInfo(Version.V3));
 		assertTrue(softFound.isFound());
 	}
@@ -114,9 +115,8 @@ public class VersionPolicyTestCase {
 	 */
 	@Test
 	public void testAllOS_VersionV2_versionV1() {
-		SoftFound softFound = new VersionPolicy()
-				.onAllPlatforms()
-				.minVersion(Version.V2)
+		SoftFound softFound = new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(Version.V2))
 				.toSoftFound(versionSoftInfo(Version.V1));
 		assertFalse(softFound.isFound());
 		assertEquals(FoundReasons.BAD_VERSION, softFound.getFoundReason());

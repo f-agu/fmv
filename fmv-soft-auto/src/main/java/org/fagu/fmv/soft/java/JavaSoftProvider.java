@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.java;
 
+import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
-import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
@@ -104,9 +106,9 @@ public class JavaSoftProvider extends SoftProvider {
 	 * @return
 	 */
 	@Override
-	public SoftPolicy<?, ?, ?> getSoftPolicy() {
-		return new VersionPolicy()
-				.onAllPlatforms().minVersion(new Version(1, 1));
+	public SoftPolicy getSoftPolicy() {
+		return new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(new Version(1, 1)));
 	}
 
 }

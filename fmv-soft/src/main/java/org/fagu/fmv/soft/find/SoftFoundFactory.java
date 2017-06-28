@@ -36,5 +36,5 @@ public interface SoftFoundFactory {
 	 * @return
 	 * @throws IOException
 	 */
-	SoftFound create(File file, Locator locator, SoftPolicy<?, ?, ?> softPolicy) throws IOException;
+	SoftFound create(File file, Locator locator, SoftPolicy softPolicy) throws IOException;
 }

@@ -27,7 +27,7 @@ public class SoftSearch {
 
 	private final SoftLocator softLocator;
 
-	private SoftPolicy<?, ?, ?> softPolicy;
+	private SoftPolicy softPolicy;
 
 	private List<SoftFindListener> softFindListeners;
 
@@ -52,7 +52,7 @@ public class SoftSearch {
 	 * @param softPolicy
 	 * @return
 	 */
-	public SoftSearch withPolicy(SoftPolicy<?, ?, ?> softPolicy) {
+	public SoftSearch withPolicy(SoftPolicy softPolicy) {
 		this.softPolicy = softPolicy;
 		return this;
 	}

@@ -77,6 +77,7 @@ class AnotherBinarySoftProvider extends SoftProvider {
 	
 	// Used to extract the version of the binary
 	// Command line executed: another-binary --version
+	// Output is: another-binary version 4.8.6-a
 	public SoftFoundFactory createSoftFoundFactory() {
 		final Pattern pattern = Pattern.compile(".* version \"(.*)\"");
 		return prepareSoftFoundFactory()
@@ -89,8 +90,8 @@ class AnotherBinarySoftProvider extends SoftProvider {
 	}
 	
 	// minimal version
-	public SoftPolicy<?, ?, ?> getSoftPolicy() {
-		return new VersionPolicy().onAllPlatforms().minVersion(new Version(4, 7));
+	public SoftPolicy getSoftPolicy() {
+		return new VersionSoftPolicy().onAllPlatforms(VersionSoftPolicy.minVersion(new Version(4, 7)));
 	}
 	
 }

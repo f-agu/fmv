@@ -1,13 +1,16 @@
 package org.fagu.fmv.soft;
 
+import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.maxVersion;
+
 import java.util.Collections;
 
 import org.fagu.fmv.soft.find.SoftFindListener;
 import org.fagu.fmv.soft.find.SoftLocator;
-import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.gs.GSSoftProvider;
 import org.fagu.version.Version;
 import org.junit.Ignore;
+import org.junit.Test;
 /*-
  * #%L
  * fmv-soft-auto
@@ -27,7 +30,6 @@ import org.junit.Ignore;
  * limitations under the License.
  * #L%
  */
-import org.junit.Test;
 
 
 /**
@@ -41,7 +43,7 @@ public class SoftTestCase {
 	public SoftTestCase() {}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testFindAll() throws Exception {
 		Soft.searchAll(ss -> ss.withListener(new SoftFindListener() {
 
@@ -60,7 +62,7 @@ public class SoftTestCase {
 	public void testGS() throws Exception {
 		GSSoftProvider gsSoftProvider = new GSSoftProvider();
 		Soft soft = gsSoftProvider.searchConfigurable(ss -> {
-			ss.withPolicy(new VersionPolicy().onAllPlatforms().maxVersion(new Version(8)));
+			ss.withPolicy(new VersionSoftPolicy().onAllPlatforms(maxVersion(new Version(8))));
 		});
 		soft.getFounds().forEach(sf -> {
 			System.out.println(sf.getFoundReason() + "  " + sf.getFile() + "  " + sf.getReason());

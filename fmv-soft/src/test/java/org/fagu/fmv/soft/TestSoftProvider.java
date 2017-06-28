@@ -52,7 +52,7 @@ public class TestSoftProvider extends SoftProvider {
 	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftPolicy()
 	 */
 	@Override
-	public SoftPolicy<?, ?, ?> getSoftPolicy() {
+	public SoftPolicy getSoftPolicy() {
 		return null;
 	}
 

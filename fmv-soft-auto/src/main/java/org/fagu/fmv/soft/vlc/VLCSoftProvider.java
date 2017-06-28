@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.vlc;
 
+import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
+
 /*-
  * #%L
  * fmv-soft-auto
@@ -27,7 +29,7 @@ import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
-import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.fmv.soft.win32.SoftOnWindows;
 import org.fagu.version.Version;
@@ -85,9 +87,9 @@ public class VLCSoftProvider extends SoftProvider {
 	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftPolicy()
 	 */
 	@Override
-	public SoftPolicy<?, ?, ?> getSoftPolicy() {
-		return new VersionPolicy()
-				.onAllPlatforms().minVersion(new Version(2, 2));
+	public SoftPolicy getSoftPolicy() {
+		return new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(new Version(2, 2)));
 	}
 
 }

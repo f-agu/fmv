@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.gs;
 
+import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
+
 import java.io.FileFilter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +15,7 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
-import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.gs.exception.GSExceptionKnownAnalyzer;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
@@ -87,9 +89,9 @@ public class GSSoftProvider extends SoftProvider {
 	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftPolicy()
 	 */
 	@Override
-	public SoftPolicy<?, ?, ?> getSoftPolicy() {
-		return new VersionPolicy()
-				.onAllPlatforms().minVersion(new Version(9, 15));
+	public SoftPolicy getSoftPolicy() {
+		return new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(new Version(9, 15)));
 	}
 
 	/**

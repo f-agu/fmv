@@ -36,7 +36,7 @@ import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.soft.SoftSearch;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryPrepare;
-import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.version.Version;
 
 
@@ -83,7 +83,7 @@ public abstract class SoftProvider {
 	/**
 	 * @return
 	 */
-	public SoftPolicy<?, ?, ?> getSoftPolicy() {
+	public SoftPolicy getSoftPolicy() {
 		return null;
 	}
 
@@ -107,7 +107,7 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public Soft searchMinVersion(Version minVersion) {
-		return searchConfigurable(ss -> ss.withPolicy(new VersionPolicy().onAllPlatforms().minVersion(minVersion)));
+		return searchConfigurable(ss -> ss.withPolicy(new VersionSoftPolicy().onAllPlatforms(VersionSoftPolicy.minVersion(minVersion))));
 	}
 
 	/**
@@ -133,7 +133,7 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public String getMinVersion() {
-		SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
+		SoftPolicy softPolicy = getSoftPolicy();
 		return softPolicy != null ? softPolicy.toString() : "";
 	}
 
@@ -141,7 +141,7 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public SoftLocator getSoftLocator() {
-		SoftPolicy<?, ?, ?> softPolicy = getSoftPolicy();
+		SoftPolicy softPolicy = getSoftPolicy();
 		Sorter sorter = softPolicy != null ? softPolicy.getSorter() : null;
 		SoftLocator softLocator = new SoftLocator(getName(), sorter, getFileFilter());
 		softLocator.setSoftPolicy(softPolicy);

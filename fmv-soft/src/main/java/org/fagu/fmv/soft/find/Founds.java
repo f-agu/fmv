@@ -34,14 +34,14 @@ public class Founds implements Iterable<SoftFound> {
 
 	private final NavigableSet<SoftFound> founds;
 
-	private final SoftPolicy<?, ?, ?> softPolicy;
+	private final SoftPolicy softPolicy;
 
 	/**
 	 * @param softName
 	 * @param founds
 	 * @param softPolicy
 	 */
-	public Founds(String softName, NavigableSet<SoftFound> founds, SoftPolicy<?, ?, ?> softPolicy) {
+	public Founds(String softName, NavigableSet<SoftFound> founds, SoftPolicy softPolicy) {
 		this.softName = Objects.requireNonNull(softName);
 		this.founds = Objects.requireNonNull(founds);
 		this.softPolicy = softPolicy;
@@ -94,7 +94,7 @@ public class Founds implements Iterable<SoftFound> {
 	/**
 	 * @return
 	 */
-	public SoftPolicy<?, ?, ?> getSoftPolicy() {
+	public SoftPolicy getSoftPolicy() {
 		return softPolicy;
 	}
 

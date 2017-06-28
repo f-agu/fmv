@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.xpdf;
 
+import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
+
 /*-
  * #%L
  * fmv-soft-auto
@@ -36,10 +38,10 @@ import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
+import org.fagu.fmv.soft.find.SoftInfo;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
-import org.fagu.fmv.soft.find.info.VersionSoftInfo;
-import org.fagu.fmv.soft.find.policy.VersionPolicy;
+import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.xpdf.exception.XpdfExceptionKnownAnalyzer;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
@@ -125,16 +127,13 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	 * @see org.fagu.fmv.soft.xpdf.PdfSoftProvider#getSoftPolicy()
 	 */
 	@Override
-	public SoftPolicy<?, ?, ?> getSoftPolicy() {
+	public SoftPolicy getSoftPolicy() {
 		Version v012 = new Version(0, 12);
-		BiPredicate<VersionSoftInfo, Provider> isProvider = (s, p) -> s instanceof XPdfVersionSoftInfo && ((XPdfVersionSoftInfo)s).getProvider() == p;
-		return new VersionPolicy()
-				.on("xpdf", s -> isProvider.test(s, Provider.XPDF))
-				.minVersion(Version.V3)
-				.on("poppler", s -> isProvider.test(s, Provider.POPPLER))
-				.minVersion(v012)
-				.onAllPlatforms()
-				.minVersion(v012);
+		BiPredicate<SoftInfo, Provider> isProvider = (s, p) -> s instanceof XPdfVersionSoftInfo && ((XPdfVersionSoftInfo)s).getProvider() == p;
+		return new VersionSoftPolicy()
+				.on("xpdf", s -> isProvider.test(s, Provider.XPDF), minVersion(Version.V3))
+				.on("poppler", s -> isProvider.test(s, Provider.POPPLER), minVersion(v012))
+				.onAllPlatforms(minVersion(v012));
 	}
 
 	/**
@@ -168,7 +167,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	 * @param provider
 	 * @return
 	 */
-	protected VersionPolicy getVersionPolicy(Provider provider) {
+	protected SoftPolicy getVersionPolicy(Provider provider) {
 		Version minVer = null;
 		if(Provider.POPPLER.equals(provider)) {
 			minVer = new Version(0, 12);
@@ -177,7 +176,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		} else {
 			throw new RuntimeException("Undefined provider: " + provider);
 		}
-		return new VersionPolicy().onAllPlatforms().minVersion(minVer);
+		return new VersionSoftPolicy().onAllPlatforms(minVersion(minVer));
 	}
 
 	// ***********************************************************************
