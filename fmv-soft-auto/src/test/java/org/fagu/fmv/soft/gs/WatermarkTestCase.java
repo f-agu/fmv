@@ -25,7 +25,6 @@ public class WatermarkTestCase {
 		File srcFile = Resource.extract_Pdf_Pdf();
 		String name = srcFile.getName();
 		File destFile = new File(srcFile.getParentFile(), FilenameUtils.getBaseName(name) + "-watermarked.pdf");
-		System.out.println(destFile);
 		try {
 			GS.search()
 					.withParameters(getParameters("été ici et là", srcFile.getPath(), destFile.getPath()))
@@ -38,7 +37,6 @@ public class WatermarkTestCase {
 	@Test
 	public void testWatermark_InputStream2File() throws IOException {
 		File destFile = new File(Resource.tmpFolder(), "inputstream-watermarked.pdf");
-		System.out.println(destFile);
 		try (InputStream inputStream = Resource.open_Salut_Pdf()) {
 
 			GS.search()
@@ -54,7 +52,6 @@ public class WatermarkTestCase {
 		String text = "\377\376\155\157";
 
 		File destFile = new File(Resource.tmpFolder(), "inputstream-outputstream-watermarked.pdf");
-		System.out.println(destFile);
 		long startTime = System.currentTimeMillis();
 		try (InputStream inputStream = Resource.open_kenwood_Pdf();
 				OutputStream outputStream = new FileOutputStream(destFile)) {

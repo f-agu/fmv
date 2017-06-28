@@ -41,7 +41,7 @@ public class SoftTestCase {
 	public SoftTestCase() {}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testFindAll() throws Exception {
 		Soft.searchAll(ss -> ss.withListener(new SoftFindListener() {
 

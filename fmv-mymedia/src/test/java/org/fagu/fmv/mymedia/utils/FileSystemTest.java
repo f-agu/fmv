@@ -7,6 +7,7 @@ import java.nio.file.Files;
 
 import javax.swing.filechooser.FileSystemView;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -16,6 +17,7 @@ import org.junit.Test;
 public class FileSystemTest {
 
 	@Test
+	@Ignore
 	public void test() throws IOException {
 		FileSystemView fileSystemView = FileSystemView.getFileSystemView();
 		for(File f : File.listRoots()) {

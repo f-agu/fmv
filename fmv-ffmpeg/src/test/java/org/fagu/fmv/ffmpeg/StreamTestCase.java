@@ -10,6 +10,7 @@ import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.BitStreamFilter;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
 import org.fagu.fmv.utils.media.Rotation;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -20,7 +21,7 @@ import org.junit.Test;
 public class StreamTestCase {
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testInputToFile() throws Exception {
 		File outFile = new File("d:\\tmp\\out.ts");
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();

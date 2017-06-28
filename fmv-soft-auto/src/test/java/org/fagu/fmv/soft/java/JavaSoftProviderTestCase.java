@@ -32,6 +32,7 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.version.Version;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -69,7 +70,11 @@ public class JavaSoftProviderTestCase {
 		assertInfo(parser, new Version(1, 8, 0, 45));
 	}
 
+	/**
+	 * 
+	 */
 	@Test
+	@Ignore
 	public void testFind() {
 		Soft java = Java.search();
 		for(SoftFound softFound : java.getFounds()) {

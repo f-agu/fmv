@@ -50,7 +50,7 @@ public class DominantColorTestCase {
 		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), ImageMetadatasTestCase.class
 				.getSimpleName(), ".jpg");
 		try {
-			Color dominantColor = DominantColor.getInstance().getDominantColor(file, System.out::println);
+			Color dominantColor = DominantColor.getInstance().getDominantColor(file, s -> {});
 			assertEquals(new Color(85, 70, 70), dominantColor);
 		} finally {
 			if(file != null) {

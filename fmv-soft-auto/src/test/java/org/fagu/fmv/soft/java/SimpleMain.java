@@ -4,7 +4,7 @@ package org.fagu.fmv.soft.java;
  * @author f.agu
  * @created 24 mai 2017 12:56:27
  */
-public class MyMain {
+public class SimpleMain {
 
 	/**
 	 * @param args

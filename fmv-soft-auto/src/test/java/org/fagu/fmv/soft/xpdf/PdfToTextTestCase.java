@@ -58,12 +58,12 @@ public class PdfToTextTestCase {
 			List<String> output = new ArrayList<>();
 			PdfToText.search()
 					.withParameters(getParameters(srcFile.getPath(), "-"))
-					.logCommandLine(System.out::println)
+					// .logCommandLine(System.out::println)
 					.addCommonReadLine(output::add)
 					.addCommonReadLine(System.out::println)
 					.execute();
 			assertEquals(1, output.size());
-			System.out.println(output.get(0));
+			// System.out.println(output.get(0));
 			assertEquals("Salut, E\u00E9\u00E9\u00E9 de test", output.get(0));
 		} finally {
 			FileUtils.deleteDirectory(folder);

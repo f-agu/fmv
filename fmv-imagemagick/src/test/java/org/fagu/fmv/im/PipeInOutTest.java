@@ -63,7 +63,7 @@ public class PipeInOutTest {
 					.quality(60D)
 					.image(destFile);
 			convertSoft.withParameters(op.toList())
-					.logCommandLine(System.out::println)
+					// .logCommandLine(System.out::println)
 					.execute();
 			assertEquals(EXPECTED_SHA1, sha1Of(destFile));
 		} finally {
@@ -90,9 +90,9 @@ public class PipeInOutTest {
 			try (InputStream inputStream = new FileInputStream(srcFile);
 					OutputStream outputStream = new FileOutputStream(destFile)) {
 				convertSoft.withParameters(op.toList())
-						.logCommandLine(System.out::println)
+						// .logCommandLine(System.out::println)
 						.input(inputStream) // <--------- in
-						.out(outputStream) // <--------- out
+						.output(outputStream) // <--------- out
 						.execute();
 			}
 			assertEquals(EXPECTED_SHA1, sha1Of(destFile));
@@ -119,7 +119,7 @@ public class PipeInOutTest {
 					.image(destFile);
 			try (InputStream inputStream = new FileInputStream(srcFile)) {
 				convertSoft.withParameters(op.toList())
-						.logCommandLine(System.out::println)
+						// .logCommandLine(System.out::println)
 						.input(inputStream) // <--------- in
 						.execute();
 			}
@@ -147,8 +147,8 @@ public class PipeInOutTest {
 					.image("jpg:-"); // <-------- means standard output
 			try (OutputStream outputStream = new FileOutputStream(destFile)) {
 				convertSoft.withParameters(op.toList())
-						.logCommandLine(System.out::println)
-						.out(outputStream) // <--------- out
+						// .logCommandLine(System.out::println)
+						.output(outputStream) // <--------- out
 						.execute();
 			}
 			assertEquals(EXPECTED_SHA1, sha1Of(destFile));

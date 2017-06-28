@@ -1,13 +1,14 @@
 package org.fagu.fmv.soft.mplayer;
 
 import org.fagu.fmv.soft.find.SoftFound;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
 /**
  * @author fagu
  */
-// @Ignore
+@Ignore
 public class MPlayerTest {
 
 	@Test
