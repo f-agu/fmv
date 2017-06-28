@@ -105,7 +105,7 @@ Example:
 org.test.AnotherBinarySoftProvider
 ```
 
-#### 3. Shortcut your soft
+#### 3. Shortcut your soft (optional)
 
 Create a simple class like:
 ```java

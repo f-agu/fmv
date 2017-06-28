@@ -21,16 +21,26 @@ package org.fagu.fmv.soft.exec;
  */
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
+
+import org.fagu.fmv.utils.collection.LimitedFirstQueue;
+import org.fagu.fmv.utils.collection.LimitedLastQueue;
 
 
 /**
+ * To limit the buffer size, you can use {@link LimitedFirstQueue} or {@link LimitedLastQueue}. Example:
+ * 
+ * <pre>
+ * 
+ * ReadLine readLine = new BufferedReadLine(new LimitedLastQueue(10));
+ * </pre>
+ * 
  * @author f.agu
  */
 public class BufferedReadLine implements ReadLine {
 
-	private final List<String> collection;
+	private final Collection<String> collection;
 
 	/**
 	 * 
@@ -42,7 +52,7 @@ public class BufferedReadLine implements ReadLine {
 	/**
 	 * @param collection
 	 */
-	public BufferedReadLine(List<String> collection) {
+	public BufferedReadLine(Collection<String> collection) {
 		this.collection = Objects.requireNonNull(collection);
 	}
 
@@ -57,7 +67,7 @@ public class BufferedReadLine implements ReadLine {
 	/**
 	 * @return
 	 */
-	public List<String> getLines() {
+	public Collection<String> getLines() {
 		return collection;
 	}
 
