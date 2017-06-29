@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.OptionalLong;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
@@ -19,6 +20,7 @@ import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.ExecHelper;
 import org.fagu.fmv.soft.exec.FMVCommandLine;
 import org.fagu.fmv.soft.exec.FMVExecutor;
+import org.fagu.fmv.soft.exec.PIDProcessOperator;
 import org.fagu.fmv.soft.exec.ReadLine;
 import org.fagu.fmv.soft.exec.WrapFuture;
 import org.fagu.fmv.soft.exec.exception.ExceptionConsumer;
@@ -120,6 +122,8 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 			long startTime = System.currentTimeMillis();
 			long time = 0;
 			int exitValue = 0;
+			PIDProcessOperator pidProcessOperator = new PIDProcessOperator();
+			fmvExecutor.addProcessOperator(pidProcessOperator);
 			try {
 				execListener.eventExecuting(cmdLineStr);
 				exitValue = fmvExecutor.execute(commandLine);
@@ -132,7 +136,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 				ExceptionKnownAnalyzers.doOrThrows(softProvider
 						.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer, exceptionConsumer);
 			}
-			return new Executed(exitValue, time);
+			return new Executed(pidProcessOperator.getPID(), exitValue, time);
 		});
 	}
 
@@ -146,6 +150,8 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 			final String cmdLineStr = CommandLineUtils.toLine(commandLine);
 			final AtomicLong startTime = new AtomicLong();
 			final AtomicLong time = new AtomicLong();
+			final PIDProcessOperator pidProcessOperator = new PIDProcessOperator();
+			fmvExecutor.addProcessOperator(pidProcessOperator);
 			return new WrapFuture<>(fmvExecutor.executeAsynchronous(commandLine, executorService,
 					// before
 					() -> {
@@ -168,7 +174,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 									.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer, exceptionConsumer);
 						}
 					}),
-					exitValue -> new Executed(exitValue, time.get()));
+					exitValue -> new Executed(pidProcessOperator.getPID(), exitValue, time.get()));
 		});
 	}
 
@@ -179,13 +185,20 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 	 */
 	public static class Executed {
 
+		private final OptionalLong pid;
+
 		private final int exitValue;
 
 		private final long executeTime;
 
-		private Executed(int exitValue, long executeTime) {
+		private Executed(OptionalLong pid, int exitValue, long executeTime) {
+			this.pid = pid;
 			this.exitValue = exitValue;
 			this.executeTime = executeTime;
+		}
+
+		public OptionalLong getPID() {
+			return pid;
 		}
 
 		public int getExitValue() {
@@ -199,7 +212,11 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		@Override
 		public String toString() {
 			Duration duration = Duration.ofMillis(executeTime);
-			return "Executed[exit: " + exitValue + " ; time: " + duration.toString() + ']';
+			StringBuilder buf = new StringBuilder();
+			buf.append("Executed[");
+			pid.ifPresent(id -> buf.append("pid:").append(id).append(" ; "));
+			buf.append("exit: ").append(exitValue).append(" ; time: ").append(duration.toString()).append(']');
+			return buf.toString();
 		}
 
 	}
