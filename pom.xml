@@ -40,6 +40,7 @@
 		<module>fmv-soft</module>
 		<module>fmv-soft-auto</module>
 		<module>fmv-textprogressbar</module>
+		<module>fmv-ui-web</module>
 		<module>fmv-utils</module>
 		<module>fmv-version</module>
     </modules>
