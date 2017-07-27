@@ -26,8 +26,6 @@ import java.util.StringJoiner;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.SoftFound;
-import org.fagu.fmv.soft.find.SoftFoundFactory;
-import org.fagu.fmv.soft.find.SoftProvider;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health.Builder;
 
@@ -55,9 +53,7 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 			SoftFound softFound = soft.getFounds().getFirstFound();
 			if(soft.isFound()) {
 				// recheck soft
-				SoftProvider softProvider = soft.getSoftProvider();
-				SoftFoundFactory softFoundFactory = softProvider.createSoftFoundFactory();
-				softFound = softFoundFactory.create(soft.getFile(), null, softProvider.getSoftPolicy());
+				softFound = soft.reFind();
 			}
 			if(softFound != null && ! softFound.isFound()) {
 				builder.down();

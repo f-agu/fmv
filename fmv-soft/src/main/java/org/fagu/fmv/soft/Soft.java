@@ -235,6 +235,15 @@ public class Soft {
 
 	/**
 	 * @return
+	 * @throws IOException
+	 */
+	public SoftFound reFind() throws IOException {
+		SoftFoundFactory softFoundFactory = getSoftProvider().createSoftFoundFactory();
+		return softFoundFactory.create(getFile(), null, getSoftPolicy());
+	}
+
+	/**
+	 * @return
 	 */
 	public SoftExecutor withoutParameter() {
 		return withParameters(Collections.emptyList());
