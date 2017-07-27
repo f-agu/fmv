@@ -20,6 +20,8 @@ limitations under the License.
  * #L%
  */
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringJoiner;
 
 import org.fagu.fmv.soft.Soft;
@@ -43,6 +45,16 @@ public class SoftInfoContributor implements InfoContributor {
 	 */
 	@Override
 	public void contribute(Builder builder) {
+		builder.withDetail("soft", content());
+	}
+
+	// *********************************************
+
+	/**
+	 * @return
+	 */
+	private Map<String, String> content() {
+		Map<String, String> map = new HashMap<>();
 		for(Soft soft : Softs.getInfoContributors()) {
 			String msg = null;
 			if(soft.isFound()) {
@@ -74,8 +86,9 @@ public class SoftInfoContributor implements InfoContributor {
 				msg = joiner.toString();
 			}
 
-			builder.withDetail("soft." + soft.getName(), msg);
+			map.put(soft.getName(), msg);
 		}
+		return map;
 	}
 
 }

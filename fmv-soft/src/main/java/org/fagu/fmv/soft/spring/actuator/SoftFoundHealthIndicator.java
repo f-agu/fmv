@@ -25,6 +25,9 @@ import java.util.StringJoiner;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.find.SoftFound;
+import org.fagu.fmv.soft.find.SoftFoundFactory;
+import org.fagu.fmv.soft.find.SoftProvider;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health.Builder;
 
@@ -44,14 +47,21 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 			builder.unknown();
 			return;
 		}
-		if(softs.stream().anyMatch(s -> ! s.isFound())) {
-			builder.down();
-		} else {
-			builder.up();
-		}
+
+		builder.up();
 		for(Soft soft : softs) {
 			String msg = soft.toString();
-			if( ! soft.isFound()) {
+
+			SoftFound softFound = soft.getFounds().getFirstFound();
+			if(soft.isFound()) {
+				// recheck soft
+				SoftProvider softProvider = soft.getSoftProvider();
+				SoftFoundFactory softFoundFactory = softProvider.createSoftFoundFactory();
+				softFound = softFoundFactory.create(soft.getFile(), null, softProvider.getSoftPolicy());
+			}
+			if(softFound != null && ! softFound.isFound()) {
+				builder.down();
+
 				StringJoiner joiner = new StringJoiner(", ");
 				soft.getFounds().forEach(f -> {
 					String reason = f.getReason();
@@ -62,6 +72,8 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 				if(joiner.length() > 0) {
 					msg += ": " + joiner.toString();
 				}
+			} else if(softFound == null) {
+				builder.down();
 			}
 			builder.withDetail(soft.getName(), msg);
 		}
