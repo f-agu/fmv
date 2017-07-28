@@ -68,7 +68,9 @@ public abstract class SoftProvider {
 		Class<? extends SoftProvider> cls = getClass();
 		Class<?> superclass = cls.getSuperclass();
 		String grpName = superclass != SoftProvider.class ? superclass.getSimpleName() : cls.getSimpleName();
-		return StringUtils.substringBefore(grpName, "SoftProvider").toLowerCase();
+		String name = StringUtils.substringBefore(grpName, "SoftProvider");
+		name = StringUtils.substringBefore(name, "Provider");
+		return name.toLowerCase();
 	}
 
 	// --------------------------------------
