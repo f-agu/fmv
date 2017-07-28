@@ -1,13 +1,43 @@
-rem https://nexus.oodrive.net/nexus/index.html#welcome
 @echo off
 
-set VERSION=0.7.1
+set PWD=%~dp0
+rem set PWD=D:\tmp\fmv\fmv\
+set VERSION=0.7.6
 
-echo "mvn -X -e deploy:deploy-file -DpomFile=%USERPROFILE%\.m2\repository\org\fagu\fmv-soft\%VERSION%\fmv-soft-%VERSION%.pom -Dfile=%USERPROFILE%\.m2\repository\org\fagu\fmv-soft\%VERSION%\fmv-soft-%VERSION%.jar -DrepositoryId=Nexus -Durl=https://nexus.oodrive.net/nexus/content/groups/public"
+set REPO_URL=https://nexus.oodrive.net/nexus/
+set REPO_LOCAL=%HOME%\.m2\repository\org\fagu\
 
-rem mvn -X -e deploy:deploy-file -DpomFile=%USERPROFILE%\.m2\repository\org\fagu\fmv-soft\%VERSION%\fmv-soft-%VERSION%.pom -Dfile=%USERPROFILE%\.m2\repository\org\fagu\fmv-soft\%VERSION%\fmv-soft-%VERSION%.jar -DrepositoryId=Nexus -Durl=https://nexus.oodrive.net/nexus/content/groups/public > out
+
+call:artefact fmv-ffmpeg
+call:artefact fmv-imagemagick
+call:artefact fmv-media
+call:artefact fmv-parent
+call:artefact fmv-soft
+call:artefact fmv-soft-auto
+call:artefact fmv-utils
+call:artefact fmv-version
+
+goto end
 
 
-mvn -X -e deploy:deploy-file -DpomFile=%USERPROFILE%\.m2\repository\org\fagu\fmv-soft\%VERSION%\fmv-soft-%VERSION%.pom -Dfile=%USERPROFILE%\.m2\repository\org\fagu\fmv-soft\%VERSION%\fmv-soft-%VERSION%.jar -DrepositoryId=Nexus -Durl=file://%USERPROFILE%/.m2/repository/org/fagu/fmv-soft/%VERSION%/fmv-soft-%VERSION%.jar  > out
+rem ---------------------
+:artefact
+echo.%1...
+call:push_artefact "%REPO_LOCAL%%1\%VERSION%\%1-%VERSION%.pom" %1
+call:push_artefact "%REPO_LOCAL%%1\%VERSION%\%1-%VERSION%.jar" %1
+call:push_artefact "%REPO_LOCAL%%1\%VERSION%\%1-%VERSION%-sources.jar" %1
+call:push_artefact "%REPO_LOCAL%%1\%VERSION%\%1-%VERSION%-tests.jar" %1
+goto:eof
 
-pause    
+rem ---------------------
+
+:push_artefact
+if exist %1 (
+  curl --upload-file %1 %REPO_URL%content/repositories/releases/org/fagu/%2/%VERSION%/%~nx1
+) 
+goto:eof
+
+rem ---------------------
+
+:end
+pause 
