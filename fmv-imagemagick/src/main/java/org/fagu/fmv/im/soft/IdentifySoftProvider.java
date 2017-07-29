@@ -1,5 +1,7 @@
 package org.fagu.fmv.im.soft;
 
+import org.fagu.fmv.soft.find.SoftPolicy;
+
 /*-
  * #%L
  * fmv-soft-auto
@@ -33,6 +35,13 @@ public class IdentifySoftProvider extends IMSoftProvider {
 	 */
 	public IdentifySoftProvider() {
 		super(NAME);
+	}
+
+	/**
+	 * @param softPolicy
+	 */
+	public IdentifySoftProvider(SoftPolicy softPolicy) {
+		super(NAME, softPolicy);
 	}
 
 }

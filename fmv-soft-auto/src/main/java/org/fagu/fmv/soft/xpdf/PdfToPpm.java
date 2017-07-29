@@ -21,6 +21,7 @@ package org.fagu.fmv.soft.xpdf;
  */
 
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.find.SoftPolicy;
 
 
 /**
@@ -40,6 +41,14 @@ public class PdfToPpm {
 	 */
 	public static Soft search() {
 		return Soft.search(new PdfToPpmSoftProvider());
+	}
+
+	/**
+	 * @param softPolicy
+	 * @return
+	 */
+	public static Soft search(SoftPolicy softPolicy) {
+		return Soft.search(new PdfToPpmSoftProvider(softPolicy));
 	}
 
 }

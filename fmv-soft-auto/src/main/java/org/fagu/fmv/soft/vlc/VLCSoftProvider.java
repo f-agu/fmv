@@ -32,7 +32,6 @@ import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.fmv.soft.win32.SoftOnWindows;
-import org.fagu.version.Version;
 
 
 /**
@@ -46,7 +45,15 @@ public class VLCSoftProvider extends SoftProvider {
 	 * 
 	 */
 	public VLCSoftProvider() {
-		super(NAME);
+		this(new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(2, 2)));
+	}
+
+	/**
+	 * @param softPolicy
+	 */
+	public VLCSoftProvider(SoftPolicy softPolicy) {
+		super(NAME, softPolicy);
 	}
 
 	/**
@@ -81,15 +88,6 @@ public class VLCSoftProvider extends SoftProvider {
 			softLocator.addDefaultLocator();
 		}
 		return softLocator;
-	}
-
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftPolicy()
-	 */
-	@Override
-	public SoftPolicy getSoftPolicy() {
-		return new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(new Version(2, 2)));
 	}
 
 }

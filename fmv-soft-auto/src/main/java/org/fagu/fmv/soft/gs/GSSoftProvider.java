@@ -32,7 +32,15 @@ public class GSSoftProvider extends SoftProvider {
 	 * 
 	 */
 	public GSSoftProvider() {
-		super(NAME);
+		this(new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(9, 15)));
+	}
+
+	/**
+	 * @param softPolicy
+	 */
+	public GSSoftProvider(SoftPolicy softPolicy) {
+		super(NAME, softPolicy);
 	}
 
 	/**
@@ -83,15 +91,6 @@ public class GSSoftProvider extends SoftProvider {
 	@Override
 	public String getDownloadURL() {
 		return "http://ghostscript.com/download/";
-	}
-
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftPolicy()
-	 */
-	@Override
-	public SoftPolicy getSoftPolicy() {
-		return new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(new Version(9, 15)));
 	}
 
 	/**

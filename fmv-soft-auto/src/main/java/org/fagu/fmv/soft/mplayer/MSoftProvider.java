@@ -15,7 +15,6 @@ import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
-import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
 
 
@@ -33,7 +32,17 @@ public abstract class MSoftProvider extends SoftProvider {
 	 * @param name
 	 */
 	public MSoftProvider(String name) {
-		super(name);
+		this(name, new VersionSoftPolicy()
+				.onWindows(minVersion(37905))
+				.onLinux(minVersion(1, 3)));
+	}
+
+	/**
+	 * @param name
+	 * @param softPolicy
+	 */
+	public MSoftProvider(String name, SoftPolicy softPolicy) {
+		super(name, softPolicy);
 	}
 
 	/**
@@ -80,16 +89,6 @@ public abstract class MSoftProvider extends SoftProvider {
 			return "http://oss.netfarm.it/mplayer/";
 		}
 		return "http://www.mplayerhq.hu/design7/dload.html";
-	}
-
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftPolicy()
-	 */
-	@Override
-	public SoftPolicy getSoftPolicy() {
-		return new VersionSoftPolicy()
-				.onWindows(minVersion(new Version(37905)))
-				.onLinux(minVersion(new Version(1, 3)));
 	}
 
 }

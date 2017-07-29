@@ -64,7 +64,16 @@ public abstract class IMSoftProvider extends SoftProvider {
 	 * @param name
 	 */
 	public IMSoftProvider(String name) {
-		super(name);
+		this(name, new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(6, 6)));
+	}
+
+	/**
+	 * @param name
+	 * @param softPolicy
+	 */
+	public IMSoftProvider(String name, SoftPolicy softPolicy) {
+		super(name, softPolicy);
 	}
 
 	/**
@@ -127,15 +136,6 @@ public abstract class IMSoftProvider extends SoftProvider {
 	@Override
 	public String getDownloadURL() {
 		return "http://www.imagemagick.org/script/download.php";
-	}
-
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftPolicy()
-	 */
-	@Override
-	public SoftPolicy getSoftPolicy() {
-		return new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(new Version(6, 6)));
 	}
 
 	/**

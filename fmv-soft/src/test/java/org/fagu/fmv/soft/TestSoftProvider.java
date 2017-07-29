@@ -37,7 +37,7 @@ public class TestSoftProvider extends SoftProvider {
 	 * @param name
 	 */
 	public TestSoftProvider(String name) {
-		super(name);
+		super(name, null);
 	}
 
 	/**

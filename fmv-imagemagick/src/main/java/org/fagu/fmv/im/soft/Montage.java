@@ -21,6 +21,7 @@ package org.fagu.fmv.im.soft;
  */
 
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.find.SoftPolicy;
 
 
 /**
@@ -44,6 +45,14 @@ public class Montage {
 	 */
 	public static Soft search() {
 		return Soft.search(new MontageSoftProvider());
+	}
+
+	/**
+	 * @param softPolicy
+	 * @return
+	 */
+	public static Soft search(SoftPolicy softPolicy) {
+		return Soft.search(new MontageSoftProvider(softPolicy));
 	}
 
 }

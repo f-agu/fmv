@@ -21,6 +21,7 @@ package org.fagu.fmv.soft.gs;
  */
 
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.find.SoftPolicy;
 
 
 /**
@@ -40,6 +41,14 @@ public class GS {
 	 */
 	public static Soft search() {
 		return Soft.search(new GSSoftProvider());
+	}
+
+	/**
+	 * @param softPolicy
+	 * @return
+	 */
+	public static Soft search(SoftPolicy softPolicy) {
+		return Soft.search(new GSSoftProvider(softPolicy));
 	}
 
 }

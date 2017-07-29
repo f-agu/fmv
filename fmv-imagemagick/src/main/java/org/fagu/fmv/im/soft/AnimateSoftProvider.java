@@ -1,5 +1,8 @@
 package org.fagu.fmv.im.soft;
 
+import org.fagu.fmv.soft.find.SoftPolicy;
+
+
 /*-
  * #%L
  * fmv-soft-auto
@@ -32,6 +35,13 @@ public class AnimateSoftProvider extends IMSoftProvider {
 	 */
 	public AnimateSoftProvider() {
 		super(NAME);
+	}
+
+	/**
+	 * @param softPolicy
+	 */
+	public AnimateSoftProvider(SoftPolicy softPolicy) {
+		super(NAME, softPolicy);
 	}
 
 }

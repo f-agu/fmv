@@ -12,7 +12,6 @@ import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
-import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
 
 
@@ -27,7 +26,15 @@ public class _7zSoftProvider extends SoftProvider {
 	 * 
 	 */
 	public _7zSoftProvider() {
-		super(NAME);
+		this(new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(16)));
+	}
+
+	/**
+	 * @param softPolicy
+	 */
+	public _7zSoftProvider(SoftPolicy softPolicy) {
+		super(NAME, softPolicy);
 	}
 
 	/**
@@ -70,15 +77,6 @@ public class _7zSoftProvider extends SoftProvider {
 	@Override
 	public String getDownloadURL() {
 		return "http://www.7-zip.org/download.html";
-	}
-
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftPolicy()
-	 */
-	@Override
-	public SoftPolicy getSoftPolicy() {
-		return new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(new Version(16)));
 	}
 
 }

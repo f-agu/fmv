@@ -105,12 +105,7 @@ public class Soft {
 		if( ! Files.isExecutable(path)) {
 			throw new IOException("Cannot execute: " + file.getAbsolutePath());
 		}
-		SoftProvider softProvider = new SoftProvider(file.getName()) {
-
-			@Override
-			public SoftPolicy getSoftPolicy() {
-				return null;
-			}
+		SoftProvider softProvider = new SoftProvider(file.getName(), null) {
 
 			@Override
 			public SoftFoundFactory createSoftFoundFactory() {

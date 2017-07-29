@@ -79,6 +79,14 @@ public class VersionSoftPolicy extends SoftPolicy {
 	}
 
 	/**
+	 * @param values
+	 * @return
+	 */
+	public static Predicate<SoftInfo> minVersion(int... values) {
+		return minVersion(new Version(values));
+	}
+
+	/**
 	 * @param maxVersion
 	 * @return
 	 */
@@ -96,6 +104,14 @@ public class VersionSoftPolicy extends SoftPolicy {
 				return "< v" + maxVersion;
 			}
 		};
+	}
+
+	/**
+	 * @param values
+	 * @return
+	 */
+	public static Predicate<SoftInfo> maxVersion(int... values) {
+		return maxVersion(new Version(values));
 	}
 
 	/**

@@ -17,7 +17,6 @@ import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
-import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
 
 
@@ -32,7 +31,15 @@ public class JavaSoftProvider extends SoftProvider {
 	 * 
 	 */
 	public JavaSoftProvider() {
-		super(NAME);
+		this(new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(1, 1)));
+	}
+
+	/**
+	 * @param softPolicy
+	 */
+	public JavaSoftProvider(SoftPolicy softPolicy) {
+		super(NAME, softPolicy);
 	}
 
 	/**
@@ -100,15 +107,6 @@ public class JavaSoftProvider extends SoftProvider {
 	@Override
 	public String getDownloadURL() {
 		return "https://www.java.com/download/";
-	}
-
-	/**
-	 * @return
-	 */
-	@Override
-	public SoftPolicy getSoftPolicy() {
-		return new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(new Version(1, 1)));
 	}
 
 }

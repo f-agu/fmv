@@ -56,7 +56,15 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	 * @param name
 	 */
 	public PdfSoftProvider(String name) {
-		super(name);
+		this(name, getDefaultSoftPolicy());
+	}
+
+	/**
+	 * @param name
+	 * @param softPolicy
+	 */
+	public PdfSoftProvider(String name, SoftPolicy softPolicy) {
+		super(name, softPolicy);
 	}
 
 	/**
@@ -121,19 +129,6 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		}
 
 		return super.createSoftExecutor(soft, execFile, parameters);
-	}
-
-	/**
-	 * @see org.fagu.fmv.soft.xpdf.PdfSoftProvider#getSoftPolicy()
-	 */
-	@Override
-	public SoftPolicy getSoftPolicy() {
-		Version v012 = new Version(0, 12);
-		BiPredicate<SoftInfo, Provider> isProvider = (s, p) -> s instanceof XPdfVersionSoftInfo && ((XPdfVersionSoftInfo)s).getProvider() == p;
-		return new VersionSoftPolicy()
-				.on("xpdf", s -> isProvider.test(s, Provider.XPDF), minVersion(Version.V3))
-				.on("poppler", s -> isProvider.test(s, Provider.POPPLER), minVersion(v012))
-				.onAllPlatforms(minVersion(v012));
 	}
 
 	/**
@@ -212,4 +207,17 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		};
 	}
 
+	// ***********************************************************************
+
+	/**
+	 * @return
+	 */
+	private static SoftPolicy getDefaultSoftPolicy() {
+		Version v012 = new Version(0, 12);
+		BiPredicate<SoftInfo, Provider> isProvider = (s, p) -> s instanceof XPdfVersionSoftInfo && ((XPdfVersionSoftInfo)s).getProvider() == p;
+		return new VersionSoftPolicy()
+				.on("xpdf", s -> isProvider.test(s, Provider.XPDF), minVersion(Version.V3))
+				.on("poppler", s -> isProvider.test(s, Provider.POPPLER), minVersion(v012))
+				.onAllPlatforms(minVersion(v012));
+	}
 }

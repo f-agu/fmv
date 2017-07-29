@@ -68,7 +68,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 	 * @param name
 	 */
 	public FFSoftProvider(String name) {
-		super(name);
+		super(name, null);
 	}
 
 	/**

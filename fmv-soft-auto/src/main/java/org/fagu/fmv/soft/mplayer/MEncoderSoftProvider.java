@@ -1,5 +1,8 @@
 package org.fagu.fmv.soft.mplayer;
 
+import org.fagu.fmv.soft.find.SoftPolicy;
+
+
 /**
  * @author fagu
  */
@@ -12,6 +15,13 @@ public class MEncoderSoftProvider extends MSoftProvider {
 	 */
 	public MEncoderSoftProvider() {
 		super(NAME);
+	}
+
+	/**
+	 * @param softPolicy
+	 */
+	public MEncoderSoftProvider(SoftPolicy softPolicy) {
+		super(NAME, softPolicy);
 	}
 
 }

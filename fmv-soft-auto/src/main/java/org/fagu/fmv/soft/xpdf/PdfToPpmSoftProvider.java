@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.xpdf;
 
+import org.fagu.fmv.soft.find.SoftPolicy;
+
 /*-
  * #%L
  * fmv-soft-auto
@@ -33,6 +35,13 @@ public class PdfToPpmSoftProvider extends PdfSoftProvider {
 	 */
 	public PdfToPpmSoftProvider() {
 		super(NAME);
+	}
+
+	/**
+	 * @param softPolicy
+	 */
+	public PdfToPpmSoftProvider(SoftPolicy softPolicy) {
+		super(NAME, softPolicy);
 	}
 
 }

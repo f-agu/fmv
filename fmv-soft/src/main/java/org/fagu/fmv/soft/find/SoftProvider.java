@@ -47,11 +47,15 @@ public abstract class SoftProvider {
 
 	private final String name;
 
+	private final SoftPolicy softPolicy;
+
 	/**
 	 * @param name
+	 * @param softPolicy
 	 */
-	public SoftProvider(String name) {
+	public SoftProvider(String name, SoftPolicy softPolicy) {
 		this.name = Objects.requireNonNull(name);
+		this.softPolicy = softPolicy;
 	}
 
 	/**
@@ -86,7 +90,7 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public SoftPolicy getSoftPolicy() {
-		return null;
+		return softPolicy;
 	}
 
 	/**
