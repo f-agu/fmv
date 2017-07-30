@@ -31,6 +31,7 @@ import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
@@ -56,7 +57,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	 * @param name
 	 */
 	public PdfSoftProvider(String name) {
-		this(name, getDefaultSoftPolicy());
+		this(name, null);
 	}
 
 	/**
@@ -64,7 +65,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	 * @param softPolicy
 	 */
 	public PdfSoftProvider(String name, SoftPolicy softPolicy) {
-		super(name, softPolicy);
+		super(name, ObjectUtils.firstNonNull(softPolicy, getDefaultSoftPolicy()));
 	}
 
 	/**

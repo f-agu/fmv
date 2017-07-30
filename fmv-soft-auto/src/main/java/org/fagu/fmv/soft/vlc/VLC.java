@@ -21,7 +21,7 @@ package org.fagu.fmv.soft.vlc;
  */
 
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.find.SoftPolicy;
+import org.fagu.fmv.soft.SoftSearch;
 
 
 /**
@@ -44,11 +44,10 @@ public class VLC {
 	}
 
 	/**
-	 * @param softPolicy
 	 * @return
 	 */
-	public static Soft search(SoftPolicy softPolicy) {
-		return Soft.search(new VLCSoftProvider(softPolicy));
+	public static SoftSearch searchWith() {
+		return Soft.with(VLCSoftProvider::new);
 	}
 
 	// public static void main(String[] args) throws Exception {

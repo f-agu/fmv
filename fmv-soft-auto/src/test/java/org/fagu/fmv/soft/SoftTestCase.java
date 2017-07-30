@@ -4,8 +4,6 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.maxVersion;
 
 import java.util.Collections;
 
-import org.fagu.fmv.soft.find.SoftFindListener;
-import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.gs.GSSoftProvider;
 import org.fagu.version.Version;
@@ -45,15 +43,8 @@ public class SoftTestCase {
 	@Test
 	// @Ignore
 	public void testFindAll() throws Exception {
-		Soft.searchAll(ss -> ss.withListener(new SoftFindListener() {
-
-			@Override
-			public void eventFound(SoftLocator softLocator, Soft soft) {
-				// soft.getFounds().forEach(System.out::println);
-			}
-		})).forEach(s -> {
-			// String url = s.isFound() ? "" : " ; " + s.getSoftProvider().getDownloadURL();
-			System.out.println("[" + s.getSoftProvider().getGroupName() + "] " + s.getName() + ": " + s.getFirstInfo());
+		Soft.searchAll().forEach(s -> {
+			System.out.println("[" + s.getSoftProvider().getGroupName() + "] " + s.getFirstInfo());
 		});
 	}
 

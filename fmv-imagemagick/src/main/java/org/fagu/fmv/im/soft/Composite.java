@@ -21,7 +21,7 @@ package org.fagu.fmv.im.soft;
  */
 
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.find.SoftPolicy;
+import org.fagu.fmv.soft.SoftSearch;
 
 
 /**
@@ -47,11 +47,10 @@ public class Composite {
 	}
 
 	/**
-	 * @param softPolicy
 	 * @return
 	 */
-	public static Soft search(SoftPolicy softPolicy) {
-		return Soft.search(new CompositeSoftProvider(softPolicy));
+	public static SoftSearch searchWith() {
+		return Soft.with(CompositeSoftProvider::new);
 	}
 
 }

@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeSet;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +46,6 @@ import org.fagu.fmv.soft.find.PlateformFileFilter;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftInfo;
-import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.utils.order.OrderComparator;
@@ -173,12 +173,11 @@ public class Soft {
 	}
 
 	/**
-	 * @param softProvider
-	 * @param softLocator
+	 * @param softProviderSupplier
 	 * @return
 	 */
-	public static SoftSearch with(SoftProvider softProvider, SoftLocator softLocator) {
-		return new SoftSearch(softProvider, softLocator);
+	public static SoftSearch with(Function<SoftPolicy, SoftProvider> softProviderSupplier) {
+		return new SoftSearch(softProviderSupplier);
 	}
 
 	// =============

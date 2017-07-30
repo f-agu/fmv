@@ -1,7 +1,7 @@
 package org.fagu.fmv.soft.mplayer;
 
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.find.SoftPolicy;
+import org.fagu.fmv.soft.SoftSearch;
 
 
 /**
@@ -24,11 +24,10 @@ public class MPlayer {
 	}
 
 	/**
-	 * @param softPolicy
 	 * @return
 	 */
-	public static Soft search(SoftPolicy softPolicy) {
-		return Soft.search(new MPlayerSoftProvider(softPolicy));
+	public static SoftSearch searchWith() {
+		return Soft.with(MPlayerSoftProvider::new);
 	}
 
 }

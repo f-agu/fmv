@@ -26,7 +26,7 @@ import org.apache.commons.io.FileUtils;
  */
 
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.find.SoftPolicy;
+import org.fagu.fmv.soft.SoftSearch;
 
 
 /**
@@ -49,11 +49,10 @@ public class _7z {
 	}
 
 	/**
-	 * @param softPolicy
 	 * @return
 	 */
-	public static Soft search(SoftPolicy softPolicy) {
-		return Soft.search(new _7zSoftProvider(softPolicy));
+	public static SoftSearch searchWith() {
+		return Soft.with(_7zSoftProvider::new);
 	}
 
 	/**

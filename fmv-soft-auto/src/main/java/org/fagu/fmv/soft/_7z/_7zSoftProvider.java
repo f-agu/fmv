@@ -5,6 +5,7 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
@@ -26,15 +27,15 @@ public class _7zSoftProvider extends SoftProvider {
 	 * 
 	 */
 	public _7zSoftProvider() {
-		this(new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(16)));
+		this(null);
 	}
 
 	/**
 	 * @param softPolicy
 	 */
 	public _7zSoftProvider(SoftPolicy softPolicy) {
-		super(NAME, softPolicy);
+		super(NAME, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(16))));
 	}
 
 	/**

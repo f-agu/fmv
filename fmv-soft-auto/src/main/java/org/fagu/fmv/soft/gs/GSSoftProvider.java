@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
@@ -32,15 +33,15 @@ public class GSSoftProvider extends SoftProvider {
 	 * 
 	 */
 	public GSSoftProvider() {
-		this(new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(9, 15)));
+		this(null);
 	}
 
 	/**
 	 * @param softPolicy
 	 */
 	public GSSoftProvider(SoftPolicy softPolicy) {
-		super(NAME, softPolicy);
+		super(NAME, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(9, 15))));
 	}
 
 	/**

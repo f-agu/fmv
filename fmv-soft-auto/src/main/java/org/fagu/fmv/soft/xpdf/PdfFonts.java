@@ -21,7 +21,7 @@ package org.fagu.fmv.soft.xpdf;
  */
 
 import org.fagu.fmv.soft.Soft;
-import org.fagu.fmv.soft.find.SoftPolicy;
+import org.fagu.fmv.soft.SoftSearch;
 
 
 /**
@@ -44,11 +44,10 @@ public class PdfFonts {
 	}
 
 	/**
-	 * @param softPolicy
 	 * @return
 	 */
-	public static Soft search(SoftPolicy softPolicy) {
-		return Soft.search(new PdfFontsSoftProvider(softPolicy));
+	public static SoftSearch searchWith() {
+		return Soft.with(PdfFontsSoftProvider::new);
 	}
 
 }

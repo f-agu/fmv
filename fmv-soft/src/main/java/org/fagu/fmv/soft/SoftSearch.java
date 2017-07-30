@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.ServiceLoader;
+import java.util.function.Function;
 
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFindListener;
@@ -23,28 +24,28 @@ import org.fagu.fmv.soft.utils.Proxifier;
  */
 public class SoftSearch {
 
-	private final SoftProvider softProvider;
+	private final Function<SoftPolicy, SoftProvider> softProviderSupplier;
 
-	private final SoftLocator softLocator;
+	private SoftLocator softLocator;
 
 	private SoftPolicy softPolicy;
 
 	private List<SoftFindListener> softFindListeners;
 
+	private SoftProvider softProvider;
+
 	/**
 	 * @param softProvider
 	 */
 	SoftSearch(SoftProvider softProvider) {
-		this(softProvider, null);
+		this(sp -> softProvider);
 	}
 
 	/**
 	 * @param softProvider
-	 * @param softLocator
 	 */
-	SoftSearch(SoftProvider softProvider, SoftLocator softLocator) {
-		this.softProvider = Objects.requireNonNull(softProvider);
-		this.softLocator = softLocator;
+	SoftSearch(Function<SoftPolicy, SoftProvider> softProviderSupplier) {
+		this.softProviderSupplier = Objects.requireNonNull(softProviderSupplier);
 		softFindListeners = new ArrayList<>();
 	}
 
@@ -54,6 +55,15 @@ public class SoftSearch {
 	 */
 	public SoftSearch withPolicy(SoftPolicy softPolicy) {
 		this.softPolicy = softPolicy;
+		return this;
+	}
+
+	/**
+	 * @param softLocator
+	 * @return
+	 */
+	public SoftSearch withLocator(SoftLocator softLocator) {
+		this.softLocator = softLocator;
 		return this;
 	}
 
@@ -95,6 +105,7 @@ public class SoftSearch {
 	 * @return
 	 */
 	public Soft search(SoftTester softTester) {
+		checkUsed();
 		SoftLocator locator = getLocator();
 		Founds founds = locator.find(softTester);
 		return createAndfireEventFound(founds, locator);
@@ -105,6 +116,7 @@ public class SoftSearch {
 	 * @return
 	 */
 	public Soft search(SoftFoundFactory softFoundFactory) {
+		checkUsed();
 		SoftLocator locator = getLocator();
 		Founds founds = locator.find((file, loc, softPolicy) -> {
 			try {
@@ -125,13 +137,34 @@ public class SoftSearch {
 	/**
 	 * 
 	 */
+	private void checkUsed() {
+		if(softProvider != null) {
+			throw new IllegalStateException("Already used");
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	private SoftProvider getProvider() {
+		if(softProvider == null) {
+			softProvider = softProviderSupplier.apply(softPolicy);
+		}
+		return softProvider;
+	}
+
+	/**
+	 * 
+	 */
 	private SoftLocator getLocator() {
 		SoftLocator myLoc = softLocator;
 		if(myLoc == null) {
-			myLoc = softProvider.getSoftLocator();
+			myLoc = getProvider().getSoftLocator();
 		}
 		if(softPolicy != null) {
 			myLoc.setSoftPolicy(softPolicy);
+		} else {
+			myLoc.setSoftPolicy(getProvider().getSoftPolicy());
 		}
 		return myLoc;
 	}
@@ -142,7 +175,7 @@ public class SoftSearch {
 	 * @return
 	 */
 	private Soft createAndfireEventFound(Founds founds, SoftLocator softLocator) {
-		Soft soft = softProvider.createSoft(founds);
+		Soft soft = getProvider().createSoft(founds);
 
 		Proxifier<SoftFindListener> proxifier = new Proxifier<>(SoftFindListener.class);
 		proxifier.addAll(softFindListeners);

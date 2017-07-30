@@ -33,6 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.im.exception.IMExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.Soft;
@@ -64,8 +65,7 @@ public abstract class IMSoftProvider extends SoftProvider {
 	 * @param name
 	 */
 	public IMSoftProvider(String name) {
-		this(name, new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(6, 6)));
+		this(name, null);
 	}
 
 	/**
@@ -73,7 +73,8 @@ public abstract class IMSoftProvider extends SoftProvider {
 	 * @param softPolicy
 	 */
 	public IMSoftProvider(String name, SoftPolicy softPolicy) {
-		super(name, softPolicy);
+		super(name, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(6, 6))));
 	}
 
 	/**

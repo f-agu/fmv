@@ -24,6 +24,7 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 
 import java.io.File;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
@@ -45,15 +46,15 @@ public class VLCSoftProvider extends SoftProvider {
 	 * 
 	 */
 	public VLCSoftProvider() {
-		this(new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(2, 2)));
+		this(null);
 	}
 
 	/**
 	 * @param softPolicy
 	 */
 	public VLCSoftProvider(SoftPolicy softPolicy) {
-		super(NAME, softPolicy);
+		super(NAME, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(2, 2))));
 	}
 
 	/**

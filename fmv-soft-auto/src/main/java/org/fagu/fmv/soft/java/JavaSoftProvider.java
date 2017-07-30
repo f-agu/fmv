@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.find.Locator;
 import org.fagu.fmv.soft.find.Locators;
@@ -31,15 +32,15 @@ public class JavaSoftProvider extends SoftProvider {
 	 * 
 	 */
 	public JavaSoftProvider() {
-		this(new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(1, 1)));
+		this(null);
 	}
 
 	/**
 	 * @param softPolicy
 	 */
 	public JavaSoftProvider(SoftPolicy softPolicy) {
-		super(NAME, softPolicy);
+		super(NAME, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(1, 1))));
 	}
 
 	/**
