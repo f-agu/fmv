@@ -1,6 +1,6 @@
 @echo off
 
-set PWD=%~dp0
+rem set PWD=%~dp0
 rem set PWD=D:\tmp\fmv\fmv\
 set VERSION=0.7.6
 

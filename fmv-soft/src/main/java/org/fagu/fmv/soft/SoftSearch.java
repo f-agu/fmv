@@ -16,7 +16,9 @@ import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.SoftTester;
+import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.utils.Proxifier;
+import org.fagu.version.Version;
 
 
 /**
@@ -56,6 +58,22 @@ public class SoftSearch {
 	public SoftSearch withPolicy(SoftPolicy softPolicy) {
 		this.softPolicy = softPolicy;
 		return this;
+	}
+
+	/**
+	 * @param version
+	 * @return
+	 */
+	public SoftSearch withMinVersion(Version version) {
+		return withPolicy(new VersionSoftPolicy().onAllPlatforms(VersionSoftPolicy.minVersion(version)));
+	}
+
+	/**
+	 * @param values
+	 * @return
+	 */
+	public SoftSearch withMinVersion(int... values) {
+		return withPolicy(new VersionSoftPolicy().onAllPlatforms(VersionSoftPolicy.minVersion(values)));
 	}
 
 	/**
