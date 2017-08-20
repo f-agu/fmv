@@ -121,7 +121,7 @@ public class MovieScriptConverter extends Converter<Movie> {
 		} else {
 			builder.filter(AutoRotate.create(infos));
 		}
-		Size newSize = FFReducer.applyScaleIfNecessary(builder, infos, getMaxSize(), getScaleLogger());
+		Size newSize = FFReducer.applyScaleIfNecessary(builder, infos, getMaxSize(), getScaleLogger(), rotation);
 		writeLabel();
 		script.println("rem " + (newSize.isLandscape() ? "landscape" : newSize.isPortrait() ? "portrait" : "square"));
 

@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.classify.image;
  * #L%
  */
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,7 +27,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.fagu.fmv.mymedia.file.ImageFinder;
 
 
@@ -48,12 +46,8 @@ public class Sources {
 	 * @throws IOException
 	 */
 	public static void save(ImageFinder sourceFinder, File file) throws IOException {
-		ObjectOutputStream outputStream = null;
-		try {
-			outputStream = new ObjectOutputStream(new FileOutputStream(file));
+		try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
 			outputStream.writeObject(sourceFinder);
-		} finally {
-			IOUtils.closeQuietly(outputStream);
 		}
 	}
 
@@ -63,14 +57,10 @@ public class Sources {
 	 * @throws IOException
 	 */
 	public static ImageFinder load(File file) throws IOException {
-		ObjectInputStream inputStream = null;
-		try {
-			inputStream = new ObjectInputStream(new FileInputStream(file));
+		try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
 			return (ImageFinder)inputStream.readObject();
 		} catch(ClassNotFoundException e) {
 			throw new RuntimeException(e);
-		} finally {
-			IOUtils.closeQuietly(inputStream);
 		}
 	}
 }

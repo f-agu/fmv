@@ -20,8 +20,8 @@ package org.fagu.fmv.cli;
  * #L%
  */
 
-
 import java.io.File;
+import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
 import org.fagu.fmv.core.project.FileSource;
@@ -30,6 +30,7 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.im.ImageMetadatas;
 import org.fagu.fmv.media.FileType;
+import org.fagu.fmv.utils.time.Duration;
 
 
 /**
@@ -75,9 +76,12 @@ public class ConsoleOutput {
 				AudioStream audioStream = videoMetadatas.getAudioStream();
 				VideoStream videoStream = videoMetadatas.getVideoStream();
 				if(videoStream != null) {
-					meta = videoStream.size().toString() + " " + videoStream.duration();
+					Optional<Duration> duration = videoStream.duration();
+					String sd = duration.isPresent() ? duration.get().toString() : "";
+					meta = videoStream.size().toString() + " " + sd;
 				} else if(audioStream != null) {
-					meta = audioStream.duration().toString();
+					Optional<Duration> duration = audioStream.duration();
+					meta = duration.isPresent() ? duration.get().toString() : "";
 				}
 			}
 		}

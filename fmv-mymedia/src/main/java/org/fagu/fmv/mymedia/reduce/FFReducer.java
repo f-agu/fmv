@@ -189,11 +189,28 @@ public class FFReducer extends AbstractReducer {
 	 * @param movieMetadatas
 	 * @param maxSize
 	 * @param logger
+	 * @return
 	 */
 	public static Size applyScaleIfNecessary(FFMPEGExecutorBuilder builder, MovieMetadatas movieMetadatas, Size maxSize, Logger logger) {
+		return applyScaleIfNecessary(builder, movieMetadatas, maxSize, logger, null);
+	}
+
+	/**
+	 * @param builder
+	 * @param movieMetadatas
+	 * @param maxSize
+	 * @param logger
+	 * @param rotation
+	 * @return
+	 */
+	public static Size applyScaleIfNecessary(FFMPEGExecutorBuilder builder, MovieMetadatas movieMetadatas, Size maxSize, Logger logger,
+			Rotation inRotation) {
 		VideoStream videoStream = movieMetadatas.getVideoStream();
 		Size size = videoStream.size();
-		Rotation rotation = videoStream.rotate();
+		Rotation rotation = inRotation;
+		if(rotation == null) {
+			rotation = videoStream.rotate();
+		}
 		if(rotation != null) {
 			size = rotation.resize(size);
 		}

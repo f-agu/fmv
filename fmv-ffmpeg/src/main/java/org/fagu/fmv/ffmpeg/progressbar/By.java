@@ -2,7 +2,6 @@ package org.fagu.fmv.ffmpeg.progressbar;
 
 import java.util.Objects;
 import java.util.function.IntSupplier;
-import java.util.function.Supplier;
 
 import org.fagu.fmv.ffmpeg.operation.Progress;
 import org.fagu.fmv.textprogressbar.Part;
@@ -11,6 +10,7 @@ import org.fagu.fmv.textprogressbar.TextProgressBar.TextProgressBarBuilder;
 import org.fagu.fmv.textprogressbar.part.FinishedOrNotPart;
 import org.fagu.fmv.textprogressbar.part.ProgressPart;
 import org.fagu.fmv.textprogressbar.part.ProgressPart.InsideProgressChar;
+import org.fagu.fmv.textprogressbar.part.ProgressPart.ProgressPartBuilder;
 import org.fagu.fmv.textprogressbar.part.SpendTimePart;
 
 
@@ -48,11 +48,11 @@ public abstract class By {
 	 * @return
 	 */
 	public Part progressPart() {
-		Supplier<Integer> percentInsideSupplier = fileSize == null || fileSize.longValue() == 0 ? null
-				: () -> (int)(progress.getSizeKb() * 102400L / fileSize);
-		return ProgressPart.width(32)
-				.progressChars(new InsideProgressChar(percentInsideSupplier))
-				.build();
+		ProgressPartBuilder builder = ProgressPart.width(32);
+		if(fileSize != null && fileSize.longValue() > 0) {
+			builder.progressChars(new InsideProgressChar(() -> (int)(progress.getSizeKb() * 102400L / fileSize)));
+		}
+		return builder.build();
 	}
 
 	/**
