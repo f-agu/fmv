@@ -93,8 +93,7 @@ public class Bootstrap {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		// File source = new File("D:\\tmp\\fmv-test\\in");
-		File source = new File("D:\\tmp\\Auvergne");
+		File source = new File(args[0]);
 
 		File saveFile = new File(source, "image.save");
 		File destFolder = new File(source.getParentFile(), source.getName() + "-out");

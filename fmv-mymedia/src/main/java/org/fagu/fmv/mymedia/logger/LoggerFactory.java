@@ -24,15 +24,19 @@ public class LoggerFactory {
 	 * @return
 	 */
 	public static File getLogFile(File sourceFile, String propertyLogFile, String propertyLogFileDefaultName) {
+		File sourceFolder = sourceFile;
+		if(sourceFolder.isFile()) {
+			sourceFolder = sourceFolder.getParentFile();
+		}
 		String property = System.getProperty(propertyLogFile);
 		File logFile = null;
 		if(property != null) {
 			logFile = new File(property);
 			if( ! logFile.isAbsolute()) {
-				logFile = new File(sourceFile, property);
+				logFile = new File(sourceFolder, property);
 			}
 		} else {
-			logFile = new File(sourceFile, propertyLogFileDefaultName);
+			logFile = new File(sourceFolder, propertyLogFileDefaultName);
 		}
 		logFile.getParentFile().mkdirs();
 		return logFile;

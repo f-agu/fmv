@@ -46,6 +46,8 @@ import org.fagu.fmv.utils.ByteSize;
  */
 public class Bootstrap {
 
+	private static final int DEFAULT_RESIZE_PERCENT = 60;
+
 	private static final Set<String> EXTENSIONS = new HashSet<>(Arrays.asList("jpg", "jpeg", "tif", "tiff", "png", "bmp", "psd", "tga"));
 
 	private final Soft convertSoft;
@@ -83,14 +85,13 @@ public class Bootstrap {
 	 * @return
 	 */
 	private int getResizePercent() {
-		int defaultValue = 60;
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		while(true) {
-			System.out.print("Resize in % [60%]? ");
+			System.out.print("Resize in % [" + DEFAULT_RESIZE_PERCENT + "%]? ");
 			String line = scanner.nextLine().trim();
 			if("".equals(line)) {
-				return defaultValue;
+				return DEFAULT_RESIZE_PERCENT;
 			}
 			if(line.matches("\\d+")) {
 				return Integer.parseInt(line);
@@ -101,6 +102,7 @@ public class Bootstrap {
 	/**
 	 * @param parentFile
 	 * @return
+	 * @throws IOException
 	 */
 	private File getOutputFile(File parentFile) throws IOException {
 		File pdfFile = new File(parentFile, parentFile.getName() + ".pdf");
@@ -194,7 +196,8 @@ public class Bootstrap {
 					public void eventPrepare(String cmdLineStr) {
 						System.out.println(cmdLineStr);
 					}
-				}).execute();
+				})
+				.execute();
 	}
 
 	/**
