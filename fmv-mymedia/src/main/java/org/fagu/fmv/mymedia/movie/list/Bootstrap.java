@@ -61,6 +61,7 @@ import org.fagu.fmv.mymedia.movie.list.column.VideoSizeHeightColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoSizeNameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoSizeWidthColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoSubtitleColumn;
+import org.fagu.fmv.mymedia.utils.FileUtils;
 import org.fagu.fmv.utils.IniFile;
 
 
@@ -166,7 +167,7 @@ public class Bootstrap implements Closeable {
 		if(headerWritten) {
 			return;
 		}
-		printStream.println(columns.stream().map(c -> c.title()).collect(Collectors.joining("\t")));
+		printStream.println(columns.stream().map(Column::title).collect(Collectors.joining("\t")));
 		headerWritten = true;
 	}
 
@@ -252,9 +253,9 @@ public class Bootstrap implements Closeable {
 			}
 			return movieMetadatas;
 		};
-		printStream.println(columns.stream() //
-				.map(c -> c.value(rootPath, file, movieMetadatasSupplier)) //
-				.map(StringUtils::defaultString) //
+		printStream.println(columns.stream()
+				.map(c -> c.value(rootPath, file, movieMetadatasSupplier))
+				.map(StringUtils::defaultString)
 				.collect(Collectors.joining("\t")));
 	}
 
@@ -273,8 +274,9 @@ public class Bootstrap implements Closeable {
 	 * @throws IOException
 	 */
 	public static void listFull() throws IOException {
-		File root = new File("i:\\");
-		try (PrintStream printStream = new PrintStream(new File("C:\\tmp\\list-full.out")); //
+		File root = FileUtils.findFirstHarddriveFaguVv()
+				.orElseThrow(() -> new RuntimeException("Harddrive not found"));
+		try (PrintStream printStream = new PrintStream(new File("D:\\tmp\\list-full.out")); //
 				Bootstrap listMovies = new Bootstrap(printStream)) {
 			// listMovies.addColumn(new VideoHDColumn());
 			// listMovies.addColumn(new NameColumn());
@@ -288,8 +290,9 @@ public class Bootstrap implements Closeable {
 	 * @throws IOException
 	 */
 	public static void listName() throws IOException {
-		File root = new File("I:\\");
-		try (PrintStream printStream = new PrintStream(new File("C:\\tmp\\list-name.out")); //
+		File root = FileUtils.findFirstHarddriveFaguVv()
+				.orElseThrow(() -> new RuntimeException("Harddrive not found"));
+		try (PrintStream printStream = new PrintStream(new File("D:\\tmp\\list-name.out")); //
 				Bootstrap listMovies = new Bootstrap(printStream)) {
 			listMovies.addColumn(new NameColumn());
 

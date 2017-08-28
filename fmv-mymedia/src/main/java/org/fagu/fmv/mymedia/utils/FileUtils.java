@@ -1,9 +1,13 @@
-package org.fagu.fmv.mymedia.sync.file;
+package org.fagu.fmv.mymedia.utils;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +38,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author f.agu
- *
  */
 public class FileUtils {
 
@@ -46,8 +49,8 @@ public class FileUtils {
 	 * @param name
 	 * @return
 	 */
-	public static File getRootByName(String name) {
-		return ROOT_BY_NAME_MAP.get(name.toLowerCase());
+	public static Optional<File> getRootByName(String name) {
+		return Optional.ofNullable(ROOT_BY_NAME_MAP.get(name.toLowerCase()));
 	}
 
 	/**
@@ -57,11 +60,39 @@ public class FileUtils {
 		return ROOT_BY_NAME_MAP;
 	}
 
-	// ****************************************************
+	/**
+	 * @return
+	 */
+	public static Optional<File> findFirstHarddriveFaguVv() {
+		return findFirstRootByName("fagu_Vv_1", "fagu_Vv_2");
+	}
 
 	/**
-	 * 
+	 * @param names
+	 * @return
 	 */
+	public static Optional<File> findFirstRootByName(String... names) {
+		return findFirstRootByName(Arrays.asList(names));
+	}
+
+	/**
+	 * @param names
+	 * @return
+	 */
+	public static Optional<File> findFirstRootByName(Collection<String> names) {
+		return FileUtils.getRootByNameMap()
+				.entrySet()
+				.stream()
+				.filter(e -> {
+					String name = e.getKey();
+					return names.stream().map(String::toLowerCase).anyMatch(name::equalsIgnoreCase);
+				})
+				.map(Entry::getValue)
+				.findFirst();
+	}
+
+	// ****************************************************
+
 	private static Map<String, File> findRootsByNameMap() {
 		Map<String, File> map = new HashMap<>();
 		final Pattern pattern = Pattern.compile("(.*) \\([a-zA-Z]+:\\)");

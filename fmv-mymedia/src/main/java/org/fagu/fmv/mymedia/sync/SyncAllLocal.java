@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.fagu.fmv.mymedia.sync.file.FileStorage;
-import org.fagu.fmv.mymedia.sync.file.FileUtils;
 import org.fagu.fmv.mymedia.sync.impl.Synchronizers;
+import org.fagu.fmv.mymedia.utils.FileUtils;
 
 
 /*
@@ -50,8 +50,8 @@ public class SyncAllLocal {
 	public static void main(String[] args) throws IOException {
 		File localPhotos = new File("D:\\Photos fagu & Vv");
 		File localVideos = new File("D:\\Video_fagu&Vv");
-		File faguVv1 = FileUtils.getRootByName("fagu_Vv_1");
-		File faguVv2 = FileUtils.getRootByName("fagu_Vv_2");
+		File faguVv1 = FileUtils.getRootByName("fagu_Vv_1").orElse(null);
+		File faguVv2 = FileUtils.getRootByName("fagu_Vv_2").orElse(null);
 		if(faguVv1 != null) {
 			System.out.println("Found fagu_Vv_1 (tv): " + faguVv1);
 		}
