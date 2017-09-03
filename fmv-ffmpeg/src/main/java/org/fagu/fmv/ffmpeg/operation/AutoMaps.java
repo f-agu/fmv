@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.operation;
 
+import java.util.Collections;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -46,48 +48,74 @@ public class AutoMaps {
 	private AutoMaps() {}
 
 	/**
+	 * @return
+	 */
+	public static AutoMap disable() {
+		return new AutoMap() {
+
+			@Override
+			public boolean useLabels() {
+				return false;
+			}
+
+			@Override
+			public Set<Label> find(Operation<?, ?> operation) {
+				return Collections.emptySet();
+			}
+		};
+	}
+
+	/**
 	 * @param types
 	 * @return
 	 */
 	public static AutoMap oneStreamByType(Set<Type> types, FilterNaming filterNaming) {
-		return operation -> {
+		return new AutoMap() {
 
-			FilterGraph filterGraph = FilterGraph.of(operation);
-			// filterGraph.discover(() -> Visitors.checkSameTypes());
-
-			MapSet<Label, Type> mapSet = MultiValueMaps.hashMapHashSet();
-			filterGraph.discover(() -> Visitors.lastLabelWithType(mapSet));
-
-			Map<Type, Label> chdirMap = new HashMap<>(4);
-			for(Entry<Label, Set<Type>> entry : mapSet.entrySet()) {
-				for(Type type : entry.getValue()) {
-					if(chdirMap.putIfAbsent(type, entry.getKey()) != null) {
-						throw new RuntimeException("Type " + type + " already defined in an other output filter: " + mapSet);
-					}
-				}
+			@Override
+			public boolean useLabels() {
+				return true;
 			}
 
-			for(Type type : types) { // missing some types ?
-				if( ! chdirMap.containsKey(type)) {
-					InputParameters inputParameters = operation.getInputParameters();
-					for(IOEntity ioEntity : inputParameters.getIOEntities()) {
-						Processor<?> processor = inputParameters.getProcessor(ioEntity);
-						if(processor instanceof InputProcessor) {
-							try {
-								MovieMetadatas movieMetadatas = ((InputProcessor)processor).getMovieMetadatas();
-								if(movieMetadatas.contains(type)) {
-									chdirMap.put(type, Label.input(processor.getIndex(), type));
-									break;
+			@Override
+			public Set<Label> find(Operation<?, ?> operation) {
+				FilterGraph filterGraph = FilterGraph.of(operation);
+				// filterGraph.discover(() -> Visitors.checkSameTypes());
+
+				MapSet<Label, Type> mapSet = MultiValueMaps.hashMapHashSet();
+				filterGraph.discover(() -> Visitors.lastLabelWithType(mapSet));
+
+				Map<Type, Label> chdirMap = new HashMap<>(4);
+				for(Entry<Label, Set<Type>> entry : mapSet.entrySet()) {
+					for(Type type : entry.getValue()) {
+						if(chdirMap.putIfAbsent(type, entry.getKey()) != null) {
+							throw new RuntimeException("Type " + type + " already defined in an other output filter: " + mapSet);
+						}
+					}
+				}
+
+				for(Type type : types) { // missing some types ?
+					if( ! chdirMap.containsKey(type)) {
+						InputParameters inputParameters = operation.getInputParameters();
+						for(IOEntity ioEntity : inputParameters.getIOEntities()) {
+							Processor<?> processor = inputParameters.getProcessor(ioEntity);
+							if(processor instanceof InputProcessor) {
+								try {
+									MovieMetadatas movieMetadatas = ((InputProcessor)processor).getMovieMetadatas();
+									if(movieMetadatas.contains(type)) {
+										chdirMap.put(type, Label.input(processor.getIndex(), type));
+										break;
+									}
+								} catch(Exception e) {
+									throw new RuntimeException(e);
 								}
-							} catch(Exception e) {
-								throw new RuntimeException(e);
 							}
 						}
 					}
 				}
-			}
 
-			return new HashSet<>(chdirMap.values());
+				return new HashSet<>(chdirMap.values());
+			}
 		};
 	}
 

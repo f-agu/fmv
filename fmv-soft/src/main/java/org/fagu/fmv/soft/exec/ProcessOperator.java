@@ -4,6 +4,7 @@ package org.fagu.fmv.soft.exec;
  * @author f.agu
  * @created 6 juin 2017 09:29:50
  */
+@FunctionalInterface
 public interface ProcessOperator {
 
 	/**

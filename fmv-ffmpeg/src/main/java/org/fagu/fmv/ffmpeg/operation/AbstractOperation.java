@@ -231,8 +231,13 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 
 			StringBuilder fbuf = new StringBuilder();
 			Iterator<FilterComplex> it = filterComplexs.iterator();
+			boolean useLabels = autoMap.useLabels();
 			for(;;) {
 				FilterComplex f = it.next();
+				if( ! useLabels) {
+					f.clearInput();
+					f.clearOutput();
+				}
 				fbuf.append(f.toString());
 				if( ! it.hasNext()) {
 					break;
@@ -316,7 +321,7 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 	 */
 	@Override
 	public void setAutoMap(AutoMap autoMap) {
-		this.autoMap = autoMap;
+		this.autoMap = Objects.requireNonNull(autoMap);
 	}
 
 	/**
@@ -357,7 +362,8 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends Processor<?>> Stream<T> getProcessorStream(Class<T> cls) {
-		return processorMap.values().stream()
+		return processorMap.values()
+				.stream()
 				.filter(p -> p != null && cls.isAssignableFrom(p.getClass()))
 				.map(p -> (T)p);
 	}

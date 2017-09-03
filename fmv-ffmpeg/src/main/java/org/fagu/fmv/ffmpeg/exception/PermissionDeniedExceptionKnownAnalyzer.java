@@ -22,7 +22,7 @@ limitations under the License.
 /**
  * @author f.agu
  */
-public class PermissionDeniedExceptionKnownAnalyzer extends FFExceptionKnownAnalyzer {
+public class PermissionDeniedExceptionKnownAnalyzer extends FFSimpleExceptionKnownAnalyzer {
 
 	/**
 	 * 

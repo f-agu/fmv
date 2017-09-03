@@ -60,6 +60,8 @@ public class ExecHelper<T extends ExecHelper<?>> {
 
 	protected ExecuteStreamHandler executeStreamHandler;
 
+	protected LookReader lookReader;
+
 	protected List<Consumer<FMVExecutor>> customizeExecutors;
 
 	protected Charset charset;
@@ -158,6 +160,15 @@ public class ExecHelper<T extends ExecHelper<?>> {
 	 */
 	public T streamHandler(ExecuteStreamHandler executeStreamHandler) {
 		this.executeStreamHandler = executeStreamHandler;
+		return getThis();
+	}
+
+	/**
+	 * @param lookReader
+	 * @return
+	 */
+	public T lookReader(LookReader lookReader) {
+		this.lookReader = lookReader;
 		return getThis();
 	}
 
@@ -318,7 +329,9 @@ public class ExecHelper<T extends ExecHelper<?>> {
 
 		// executeStreamHandler
 		if(executeStreamHandler != null) {
-			return FMVExecutor.create(workingFolder, executeStreamHandler);
+			return FMVExecutor.with(workingFolder)
+					.executeStreamHandler(executeStreamHandler)
+					.build();
 		}
 
 		// input/out/err
@@ -326,11 +339,19 @@ public class ExecHelper<T extends ExecHelper<?>> {
 			ReadLineOutputStream outRL = new ReadLineOutputStream(out, getOutReadLine(defaultReaDLine));
 			ReadLineOutputStream errRL = new ReadLineOutputStream(err, getErrReadLine(defaultReaDLine));
 			ExecuteStreamHandler customExecuteStreamHandler = new PumpStreamHandler(outRL, errRL, input);
-			return FMVExecutor.create(workingFolder, customExecuteStreamHandler);
+
+			return FMVExecutor.with(workingFolder)
+					.executeStreamHandler(customExecuteStreamHandler)
+					.build();
 		}
 
 		// ReadLine
-		return FMVExecutor.create(workingFolder, getOutReadLine(defaultReaDLine), getErrReadLine(defaultReaDLine), charset);
+		return FMVExecutor.with(workingFolder)
+				.out(getOutReadLine(defaultReaDLine))
+				.err(getErrReadLine(defaultReaDLine))
+				.charset(charset)
+				.lookReader(lookReader)
+				.build();
 	}
 
 	// *******************************************************

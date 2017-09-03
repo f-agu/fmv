@@ -49,6 +49,71 @@ import org.fagu.fmv.utils.order.OrderComparator;
  */
 public class FMVExecutor extends DefaultExecutor {
 
+	public static class FMVExecutorBuilder {
+
+		private final File workingFolder;
+
+		private ReadLine outReadLine;
+
+		private ReadLine errReadLine;
+
+		private Charset charset;
+
+		private LookReader lookReader;
+
+		private ExecuteStreamHandler executeStreamHandler;
+
+		private FMVExecutorBuilder(File workingFolder) {
+			this.workingFolder = Objects.requireNonNull(workingFolder);
+		}
+
+		public FMVExecutorBuilder out(ReadLine outReadLine) {
+			this.outReadLine = outReadLine;
+			return this;
+		}
+
+		public FMVExecutorBuilder err(ReadLine errReadLine) {
+			this.errReadLine = errReadLine;
+			return this;
+		}
+
+		public FMVExecutorBuilder outAndErr(ReadLine outAndErrReadLine) {
+			return out(outAndErrReadLine).err(outAndErrReadLine);
+		}
+
+		public FMVExecutorBuilder charset(Charset charset) {
+			this.charset = charset;
+			return this;
+		}
+
+		public FMVExecutorBuilder lookReader(LookReader lookReader) {
+			this.lookReader = lookReader;
+			return this;
+		}
+
+		public FMVExecutorBuilder executeStreamHandler(ExecuteStreamHandler executeStreamHandler) {
+			this.executeStreamHandler = executeStreamHandler;
+			return this;
+		}
+
+		public FMVExecutor build() {
+			if(executeStreamHandler == null && (outReadLine != null || errReadLine != null)) {
+				executeStreamHandler = new ReadLinePumpStreamHandler(outReadLine, errReadLine, charset, lookReader);
+			}
+			if(executeStreamHandler == null) {
+				executeStreamHandler = new WritablePumpStreamHandler();
+			}
+			if(lookReader instanceof WritablePumpStreamNeed && executeStreamHandler instanceof WritablePumpStreamHandler) {
+				((WritablePumpStreamNeed)lookReader).apply((WritablePumpStreamHandler)executeStreamHandler);
+			}
+			return new FMVExecutor(this);
+		}
+	}
+
+	// ---------------------------------------------
+
+	// ---------------------------------------------
+
 	private Long timeOutMilliSeconds;
 
 	private ExecuteWatchdog executeWatchdog;
@@ -62,50 +127,14 @@ public class FMVExecutor extends DefaultExecutor {
 	// --------------
 
 	/**
-	 * @param workingFolder
-	 * @param outAndErrReadLine
-	 * @param charset
-	 * @return
+	 * @param builder
 	 */
-	public static FMVExecutor create(File workingFolder, ReadLine outAndErrReadLine, Charset charset) {
-		return create(workingFolder, new ReadLinePumpStreamHandler(outAndErrReadLine, charset));
-	}
-
-	/**
-	 * @param workingFolder
-	 * @param outReadLine
-	 * @param errReadLine
-	 * @param charset
-	 * @return
-	 */
-	public static FMVExecutor create(File workingFolder, ReadLine outReadLine, ReadLine errReadLine, Charset charset) {
-		return create(workingFolder, new ReadLinePumpStreamHandler(outReadLine, errReadLine, charset));
-	}
-
-	/**
-	 * @param workingFolder
-	 * @param executeStreamHandler
-	 * @return
-	 */
-	public static FMVExecutor create(File workingFolder, ExecuteStreamHandler executeStreamHandler) {
-		FMVExecutor executor = new FMVExecutor();
-		if(workingFolder != null) {
-			executor.setWorkingDirectory(workingFolder);
+	private FMVExecutor(FMVExecutorBuilder builder) {
+		if(builder.workingFolder != null) {
+			setWorkingDirectory(builder.workingFolder);
 		}
-		if(executeStreamHandler != null) {
-			executor.setStreamHandler(executeStreamHandler);
-		} else {
-			executor.setStreamHandler(new WritablePumpStreamHandler());
-		}
-		return executor;
-	}
+		setStreamHandler(builder.executeStreamHandler);
 
-	// --------------
-
-	/**
-	 * 
-	 */
-	public FMVExecutor() {
 		listenerProxifier = new Proxifier<>(FMVExecListener.class);
 		proxyFMVExecListener = listenerProxifier.proxify();
 
@@ -113,6 +142,14 @@ public class FMVExecutor extends DefaultExecutor {
 		addListener(ExecStats.getInstance().getExecListener());
 
 		addProcessOperator(new IgnoreNullOutputStreamProcessOperator());
+	}
+
+	/**
+	 * @param workingFolder
+	 * @return
+	 */
+	public static FMVExecutorBuilder with(File workingFolder) {
+		return new FMVExecutorBuilder(workingFolder);
 	}
 
 	/**
@@ -263,7 +300,7 @@ public class FMVExecutor extends DefaultExecutor {
 				}
 				return - 1; // TODO
 			}
-		}), wpsh);
+		}), wpsh.getProcessInputStream());
 	}
 
 	/**

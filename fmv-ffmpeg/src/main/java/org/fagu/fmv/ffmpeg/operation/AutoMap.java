@@ -28,8 +28,12 @@ import org.fagu.fmv.ffmpeg.filter.Label;
 /**
  * @author f.agu
  */
-@FunctionalInterface
 public interface AutoMap {
+
+	/**
+	 * @return
+	 */
+	boolean useLabels();
 
 	/**
 	 * @param operation

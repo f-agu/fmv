@@ -42,6 +42,7 @@ import org.fagu.fmv.ffmpeg.filter.impl.AudioGenerator;
 import org.fagu.fmv.ffmpeg.filter.impl.AudioMix;
 import org.fagu.fmv.ffmpeg.filter.impl.AudioMix.MixAudioDuration;
 import org.fagu.fmv.ffmpeg.filter.impl.AudioModifier;
+import org.fagu.fmv.ffmpeg.filter.impl.AudioToPictureShowWaves;
 import org.fagu.fmv.ffmpeg.filter.impl.AutoRotate;
 import org.fagu.fmv.ffmpeg.filter.impl.Blend;
 import org.fagu.fmv.ffmpeg.filter.impl.Blend.Mode;
@@ -83,6 +84,7 @@ import org.fagu.fmv.ffmpeg.ioe.FileMediaInput;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.Stream;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
+import org.fagu.fmv.ffmpeg.operation.AutoMaps;
 import org.fagu.fmv.ffmpeg.operation.ExtractThumbnail;
 import org.fagu.fmv.ffmpeg.operation.InfoOperation;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
@@ -1008,11 +1010,54 @@ public class FFHelper {
 		// executor.execute();
 	}
 
+	/**
+	 * @param inFile
+	 * @param outFile
+	 * @throws IOException
+	 */
+	public static void audioToGraph(File inAudio, File outImage) throws IOException {
+		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
+		builder.hideBanner();
+		builder.getFFMPEGOperation().setAutoMap(AutoMaps.disable());
+		builder.addMediaInputFile(inAudio);
+
+		FilterComplex filter = FilterComplex.create(AudioToPictureShowWaves.build().size(Size.valueOf(1024, 200)));
+		builder.filter(filter);
+
+		builder.addMediaOutputFile(outImage)
+				.numberOfVideoFrameToRecord(1);
+		FFExecutor<Object> executor = builder.build();
+		System.out.println(executor.getCommandLine());
+		executor.execute();
+	}
+
+	/**
+	 * @param inFile
+	 * @param outFile
+	 * @throws IOException
+	 */
+	public static void videoToGraph(File inAudio, File outImage) throws IOException {
+		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
+		builder.hideBanner();
+		builder.getFFMPEGOperation().setAutoMap(AutoMaps.disable());
+		builder.addMediaInputFile(inAudio);
+
+		FilterComplex filter = FilterComplex.create(AudioToPictureShowWaves.build().size(Size.valueOf(1024, 200)));
+		builder.filter(filter);
+
+		builder.addMediaOutputFile(outImage)
+				.numberOfVideoFrameToRecord(1);
+		FFExecutor<Object> executor = builder.build();
+		System.out.println(executor.getCommandLine());
+		executor.execute();
+	}
+
 	public static void main0(String[] args) throws Exception {
 		captureWebCam(new File("D:\\tmp\\capture.mp4"), Duration.valueOf(10));
 	}
 
 	public static void main(String[] args) throws Exception {
-		audioGenerator(new File("D:\\tmp\\test.mp3"));
+		// audioGenerator(new File("D:\\tmp\\test.mp3"));
+		audioToGraph(new File("D:\\tmp\\test.mp3"), new File("D:\\tmp\\test.mp3.png"));
 	}
 }

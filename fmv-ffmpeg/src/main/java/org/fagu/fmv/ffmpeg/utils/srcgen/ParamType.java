@@ -21,6 +21,7 @@ package org.fagu.fmv.ffmpeg.utils.srcgen;
  */
 
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 
 import org.fagu.fmv.ffmpeg.utils.AudioSampleFormat;
 import org.fagu.fmv.ffmpeg.utils.Binary;
@@ -119,6 +120,24 @@ public class ParamType<P> {
 		@Override
 		public boolean isMin(Long p) {
 			return p == Long.MIN_VALUE;
+		}
+	};
+
+	public static final ParamType<BigInteger> UINT64 = new ParamType<BigInteger>(BigInteger.class) {
+
+		@Override
+		public BigInteger parse(String s) {
+			return new BigInteger(s, 10);
+		}
+
+		@Override
+		public boolean isMax(BigInteger p) {
+			return false; // p == Long.MAX_VALUE;
+		}
+
+		@Override
+		public boolean isMin(BigInteger p) {
+			return false; // return p == Long.MIN_VALUE;
 		}
 	};
 

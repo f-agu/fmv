@@ -21,6 +21,7 @@ package org.fagu.fmv.soft.exec;
  */
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.Objects;
 import java.util.Scanner;
@@ -37,16 +38,32 @@ public class ReadLineStreamPumper implements Runnable {
 
 	private final Charset charset;
 
+	private BufferLineReader bufferLineReader;
+
 	private boolean finished;
+
+	private final LookReader lookReader;
 
 	/**
 	 * @param inputStream
 	 * @param readLine
+	 * @param charset
 	 */
 	public ReadLineStreamPumper(InputStream inputStream, ReadLine readLine, Charset charset) {
+		this(inputStream, readLine, charset, null);
+	}
+
+	/**
+	 * @param inputStream
+	 * @param readLine
+	 * @param charset
+	 * @param lookReader
+	 */
+	public ReadLineStreamPumper(InputStream inputStream, ReadLine readLine, Charset charset, LookReader lookReader) {
 		this.inputStream = Objects.requireNonNull(inputStream);
 		this.readLine = Objects.requireNonNull(readLine);
 		this.charset = charset;
+		this.lookReader = lookReader;
 	}
 
 	/**
@@ -62,6 +79,7 @@ public class ReadLineStreamPumper implements Runnable {
 		try (Scanner scanner = openScanner()) {
 			while(scanner.hasNext()) {
 				readLine.read(scanner.nextLine());
+				bufferLineReader.startNewLine();
 			}
 		} catch(final Exception e) {
 			// nothing to do - happens quite often with watchdog
@@ -101,10 +119,9 @@ public class ReadLineStreamPumper implements Runnable {
 	 * @return
 	 */
 	private Scanner openScanner() {
-		if(charset != null) {
-			return new Scanner(inputStream, charset.name());
-		}
-		return new Scanner(inputStream);
+		InputStreamReader inputStreamReader = charset != null ? new InputStreamReader(inputStream, charset) : new InputStreamReader(inputStream);
+		bufferLineReader = new BufferLineReader(inputStreamReader, lookReader);
+		return new Scanner(bufferLineReader);
 	}
 
 }

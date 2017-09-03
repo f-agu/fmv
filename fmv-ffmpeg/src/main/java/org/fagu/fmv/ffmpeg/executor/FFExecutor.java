@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 
 import org.apache.commons.exec.CommandLine;
 import org.fagu.fmv.ffmpeg.exception.FFExceptionKnownAnalyzer;
+import org.fagu.fmv.ffmpeg.exception.FFSimpleExceptionKnownAnalyzer;
 import org.fagu.fmv.ffmpeg.operation.FFMPEGProgressReadLine;
 import org.fagu.fmv.ffmpeg.operation.LibLogReadLine;
 import org.fagu.fmv.ffmpeg.operation.Operation;
@@ -417,10 +418,14 @@ public class FFExecutor<R> {
 		 * @return
 		 */
 		public SoftExecutor getSoftExecutor() {
+			NoOverwriteDeblock noOverwriteDeblock = new NoOverwriteDeblock();
 			SoftExecutor softExecutor = soft.withParameters(operation.toArguments())
 					.addOutReadLine(getOutReadLine())
 					.addErrReadLine(getErrReadLine())
-					.customizeExecutor(FFExecutor.this::populateWithListeners);
+					.customizeExecutor(FFExecutor.this::populateWithListeners)
+					.customizeExecutor(e -> e.addProcessOperator(noOverwriteDeblock))
+					.lookReader(noOverwriteDeblock)
+					.ifExceptionIsKnownDo(noOverwriteDeblock);
 
 			if(inputStreamSupplier != null) {
 				try {
@@ -499,7 +504,8 @@ public class FFExecutor<R> {
 						ffs.add(fallback);
 					}
 				} catch(IOException fbe) {
-					throw new FMVExecuteException(FFExceptionKnownAnalyzer.class, 0, originalException, CommandLineUtils.toLine(getCommandLine()),
+					throw new FMVExecuteException(FFExceptionKnownAnalyzer.class, 0, originalException, CommandLineUtils
+							.toLine(getCommandLine()),
 							outputs);
 				}
 			}
@@ -508,7 +514,8 @@ public class FFExecutor<R> {
 					ffExecListener.eventPreExecFallbacks(getCommandLine(), ffs);
 					return _execute();
 				} catch(IOException fbe) {
-					throw new FMVExecuteException(FFExceptionKnownAnalyzer.class, 0, originalException, CommandLineUtils.toLine(getCommandLine()),
+					throw new FMVExecuteException(FFSimpleExceptionKnownAnalyzer.class, 0, originalException, CommandLineUtils
+							.toLine(getCommandLine()),
 							outputs);
 				}
 			}

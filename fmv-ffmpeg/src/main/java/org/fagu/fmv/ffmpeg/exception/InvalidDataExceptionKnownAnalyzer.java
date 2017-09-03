@@ -22,7 +22,7 @@ limitations under the License.
 /**
  * @author f.agu
  */
-public class InvalidDataExceptionKnownAnalyzer extends FFExceptionKnownAnalyzer {
+public class InvalidDataExceptionKnownAnalyzer extends FFSimpleExceptionKnownAnalyzer {
 
 	/**
 	 * 

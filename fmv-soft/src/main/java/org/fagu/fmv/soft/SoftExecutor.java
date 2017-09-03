@@ -20,6 +20,7 @@ import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.ExecHelper;
 import org.fagu.fmv.soft.exec.FMVCommandLine;
 import org.fagu.fmv.soft.exec.FMVExecutor;
+import org.fagu.fmv.soft.exec.LookReader;
 import org.fagu.fmv.soft.exec.PIDProcessOperator;
 import org.fagu.fmv.soft.exec.ReadLine;
 import org.fagu.fmv.soft.exec.WrapFuture;
@@ -102,6 +103,16 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 	 */
 	public SoftExecutor ifExceptionDo(ExceptionConsumer exceptionConsumer) {
 		this.exceptionConsumer = exceptionConsumer;
+		return this;
+	}
+
+	/**
+	 * @param lookReader
+	 * @return
+	 */
+	@Override
+	public SoftExecutor lookReader(LookReader lookReader) {
+		this.lookReader = lookReader;
 		return this;
 	}
 
@@ -253,6 +264,14 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 	 */
 	private static interface ForExec<R> {
 
+		/**
+		 * @param fmvExecutor
+		 * @param commandLine
+		 * @param execListener
+		 * @param readLineList
+		 * @return
+		 * @throws IOException
+		 */
 		R exec(FMVExecutor fmvExecutor, CommandLine commandLine, ExecListener execListener, List<String> readLineList) throws IOException;
 	}
 

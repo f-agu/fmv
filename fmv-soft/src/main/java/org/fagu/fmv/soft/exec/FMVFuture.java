@@ -21,6 +21,7 @@ package org.fagu.fmv.soft.exec;
  */
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.concurrent.Future;
 
 
@@ -29,15 +30,15 @@ import java.util.concurrent.Future;
  */
 public class FMVFuture<V> extends UnaryWrapFuture<V> {
 
-	private final WritablePumpStreamHandler writablePumpStreamHandler;
+	private final OutputStream processInputStream;
 
 	/**
 	 * @param delegated
-	 * @param writablePumpStreamHandler
+	 * @param processInputStream
 	 */
-	FMVFuture(Future<V> delegated, WritablePumpStreamHandler writablePumpStreamHandler) {
+	FMVFuture(Future<V> delegated, OutputStream processInputStream) {
 		super(delegated);
-		this.writablePumpStreamHandler = writablePumpStreamHandler;
+		this.processInputStream = processInputStream;
 	}
 
 	/**
@@ -45,8 +46,8 @@ public class FMVFuture<V> extends UnaryWrapFuture<V> {
 	 * @throws IOException
 	 */
 	public void write(int b) throws IOException {
-		if(writablePumpStreamHandler != null) {
-			writablePumpStreamHandler.write(b);
+		if(processInputStream != null) {
+			processInputStream.write(b);
 		}
 	}
 
@@ -55,8 +56,8 @@ public class FMVFuture<V> extends UnaryWrapFuture<V> {
 	 * @throws IOException
 	 */
 	public void write(byte b[]) throws IOException {
-		if(writablePumpStreamHandler != null) {
-			writablePumpStreamHandler.write(b);
+		if(processInputStream != null) {
+			processInputStream.write(b);
 		}
 	}
 
@@ -67,8 +68,8 @@ public class FMVFuture<V> extends UnaryWrapFuture<V> {
 	 * @throws IOException
 	 */
 	public void write(byte b[], int off, int len) throws IOException {
-		if(writablePumpStreamHandler != null) {
-			writablePumpStreamHandler.write(b, 0, b.length);
+		if(processInputStream != null) {
+			processInputStream.write(b, 0, b.length);
 		}
 	}
 

@@ -1,9 +1,9 @@
-package org.fagu.fmv.soft.gs.exception;
+package org.fagu.fmv.ffmpeg.exception;
 
 import java.io.IOException;
 /*-
  * #%L
- * fmv-soft-auto
+ * fmv-ffmpeg
  * %%
  * Copyright (C) 2014 - 2017 fagu
  * %%
@@ -32,13 +32,13 @@ import org.fagu.fmv.soft.exec.exception.SimpleExceptionKnownAnalyzer;
 /**
  * @author f.agu
  */
-public abstract class GSExceptionKnownAnalyzer extends SimpleExceptionKnownAnalyzer {
+public abstract class FFSimpleExceptionKnownAnalyzer extends SimpleExceptionKnownAnalyzer implements FFExceptionKnownAnalyzer {
 
 	/**
 	 * @param title
 	 * @param strToFind
 	 */
-	public GSExceptionKnownAnalyzer(String title, String strToFind) {
+	public FFSimpleExceptionKnownAnalyzer(String title, String strToFind) {
 		super(title, strToFind);
 	}
 
@@ -46,7 +46,7 @@ public abstract class GSExceptionKnownAnalyzer extends SimpleExceptionKnownAnaly
 	 * @return
 	 */
 	public static List<ExceptionKnownAnalyzer> getAnalyzers() {
-		return ExceptionKnownAnalyzers.getExceptionKnownAnalyzers(GSExceptionKnownAnalyzer.class);
+		return ExceptionKnownAnalyzers.getExceptionKnownAnalyzers(FFExceptionKnownAnalyzer.class);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public abstract class GSExceptionKnownAnalyzer extends SimpleExceptionKnownAnaly
 	 * @return
 	 */
 	public static Optional<ExceptionKnown> getKnown(IOException e) {
-		return ExceptionKnownAnalyzers.getKnown(GSExceptionKnownAnalyzer.class, e);
+		return ExceptionKnownAnalyzers.getKnown(FFExceptionKnownAnalyzer.class, e);
 	}
 
 }

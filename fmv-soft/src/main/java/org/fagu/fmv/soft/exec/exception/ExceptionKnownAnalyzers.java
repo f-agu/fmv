@@ -45,9 +45,12 @@ public class ExceptionKnownAnalyzers {
 	 * @param cls
 	 * @return
 	 */
-	public static <A extends ExceptionKnownAnalyzer> List<A> getExceptionKnownAnalyzers(Class<A> cls) {
-		List<A> list = new ArrayList<>();
-		for(A exceptionKnown : ServiceLoader.load(cls)) {
+	public static List<ExceptionKnownAnalyzer> getExceptionKnownAnalyzers(Class<? extends ExceptionKnownAnalyzer> cls) {
+		List<ExceptionKnownAnalyzer> list = new ArrayList<>();
+		for(ExceptionKnownAnalyzer exceptionKnown : ServiceLoader.load(cls)) {
+			list.add(exceptionKnown);
+		}
+		for(ExceptionKnownAnalyzer exceptionKnown : ServiceLoader.load(ExceptionKnownAnalyzer.class)) {
 			list.add(exceptionKnown);
 		}
 		OrderComparator.sort(list);
@@ -61,9 +64,9 @@ public class ExceptionKnownAnalyzers {
 	 */
 	public static Optional<ExceptionKnown> getKnown(Class<? extends ExceptionKnownAnalyzer> cls, IOException e) {
 		NestedException nestedException = new NestedException(e);
-		return getExceptionKnownAnalyzers(cls).stream() //
-				.map(ek -> ek.anaylze(nestedException)) //
-				.filter(Objects::nonNull) //
+		return getExceptionKnownAnalyzers(cls).stream()
+				.map(ek -> ek.anaylze(nestedException))
+				.filter(Objects::nonNull)
 				.findFirst();
 	}
 

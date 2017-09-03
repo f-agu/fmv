@@ -123,7 +123,7 @@ public class GenerateFilter {
 	 */
 	public static void main(String[] args) {
 		GenerateFilter generateFilter = new GenerateFilter();
-		generateFilter.generate("amerge");
+		generateFilter.generate("showwaves");
 	}
 
 }

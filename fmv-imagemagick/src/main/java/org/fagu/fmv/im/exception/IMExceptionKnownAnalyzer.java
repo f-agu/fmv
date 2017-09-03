@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.fagu.fmv.soft.exec.exception.ExceptionKnown;
+import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
 import org.fagu.fmv.soft.exec.exception.SimpleExceptionKnownAnalyzer;
 
@@ -44,7 +45,7 @@ public abstract class IMExceptionKnownAnalyzer extends SimpleExceptionKnownAnaly
 	/**
 	 * @return
 	 */
-	public static List<IMExceptionKnownAnalyzer> getAnalyzers() {
+	public static List<ExceptionKnownAnalyzer> getAnalyzers() {
 		return ExceptionKnownAnalyzers.getExceptionKnownAnalyzers(IMExceptionKnownAnalyzer.class);
 	}
 

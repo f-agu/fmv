@@ -37,6 +37,8 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 
 	private final Charset charset;
 
+	private final LookReader lookReader;
+
 	/**
 	 * @param outAndErrReadLine
 	 * @param charset
@@ -51,9 +53,20 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 	 * @param charset
 	 */
 	public ReadLinePumpStreamHandler(ReadLine outReadLine, ReadLine errReadLine, Charset charset) {
+		this(outReadLine, errReadLine, charset, null);
+	}
+
+	/**
+	 * @param outReadLine
+	 * @param errReadLine
+	 * @param charset
+	 * @param lookReader
+	 */
+	public ReadLinePumpStreamHandler(ReadLine outReadLine, ReadLine errReadLine, Charset charset, LookReader lookReader) {
 		this.outReadLine = outReadLine;
 		this.errReadLine = errReadLine;
 		this.charset = charset;
+		this.lookReader = lookReader;
 	}
 
 	/**
@@ -96,7 +109,7 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 	 * @return
 	 */
 	protected Thread createPump(InputStream is, ReadLine readLine) {
-		final Thread result = new Thread(new ReadLineStreamPumper(is, readLine, charset), "ReadLineStreamPumper");
+		final Thread result = new Thread(new ReadLineStreamPumper(is, readLine, charset, lookReader), "ReadLineStreamPumper");
 		result.setDaemon(true);
 		return result;
 	}
