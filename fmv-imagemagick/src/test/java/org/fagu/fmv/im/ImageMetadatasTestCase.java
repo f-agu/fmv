@@ -110,7 +110,8 @@ public class ImageMetadatasTestCase {
 			ImageMetadatas.with(file).extract();
 			fail();
 		} catch(IOException e) {
-			assertTrue(e.getMessage().contains("Not a JPEG file"));
+			String message = e.getMessage();
+			assertTrue(message.contains("Not a JPEG file") || message.contains("insufficient image data"));
 		} finally {
 			if(file != null) {
 				file.delete();
