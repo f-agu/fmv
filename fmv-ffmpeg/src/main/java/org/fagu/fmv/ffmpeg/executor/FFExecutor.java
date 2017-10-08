@@ -98,7 +98,7 @@ public class FFExecutor<R> {
 
 	private ExceptionConsumer exceptionConsumer;
 
-	private Consumer<SoftExecutor> customizeSoftExecutor;
+	private final List<Consumer<SoftExecutor>> customizeSoftExecutors;
 
 	private InputStreamSupplier inputStreamSupplier;
 
@@ -147,6 +147,8 @@ public class FFExecutor<R> {
 
 		outDebugConsumer = line -> System.out.println("OUT  " + line);
 		errDebugConsumer = line -> System.out.println("ERR  " + line);
+
+		customizeSoftExecutors = new ArrayList<>();
 	}
 
 	/**
@@ -277,7 +279,7 @@ public class FFExecutor<R> {
 	 * @param customizeSoftExecutor
 	 */
 	public void customizeSoftExecutor(Consumer<SoftExecutor> customizeSoftExecutor) {
-		this.customizeSoftExecutor = customizeSoftExecutor;
+		this.customizeSoftExecutors = customizeSoftExecutor;
 	}
 
 	/**
@@ -435,8 +437,8 @@ public class FFExecutor<R> {
 				}
 			}
 			// don't add exceptionKnowConsumer here
-			if(customizeSoftExecutor != null) {
-				customizeSoftExecutor.accept(softExecutor);
+			if(customizeSoftExecutors != null) {
+				customizeSoftExecutors.accept(softExecutor);
 			}
 			return softExecutor;
 		}

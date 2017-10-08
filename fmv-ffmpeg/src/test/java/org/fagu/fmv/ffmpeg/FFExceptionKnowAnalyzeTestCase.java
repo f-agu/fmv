@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.junit.Test;
 
@@ -67,8 +68,11 @@ public class FFExceptionKnowAnalyzeTestCase {
 			folder.mkdirs();
 			File file = resource != null ? ResourceUtils.extract(resource, folder) : folder;
 			try {
-				MovieMetadatas extract = MovieMetadatas.with(file).extract();
-				fail(extract.toJSON());
+				MovieMetadatas extract = MovieMetadatas.with(file)
+						.customizeExecutor(e -> e.debug())
+						.customizeExecutor(e -> System.out.println(CommandLineUtils.toLine(e.getCommandLine())))
+						.extract();
+				fail(expectedMessage + ": " + extract.toJSON());
 			} catch(FMVExecuteException e) {
 				if(e.isKnown()) {
 					assertEquals(expectedMessage, e.getExceptionKnown().toString());
