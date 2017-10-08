@@ -26,10 +26,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -40,9 +43,11 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftInfo;
+import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
+import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.fmv.soft.xpdf.exception.XpdfExceptionKnownAnalyzer;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
@@ -130,6 +135,30 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		}
 
 		return super.createSoftExecutor(soft, execFile, parameters);
+	}
+
+	/**
+	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftLocator()
+	 */
+	@Override
+	public SoftLocator getSoftLocator() {
+		SoftLocator softLocator = super.getSoftLocator();
+		if(SystemUtils.IS_OS_WINDOWS) {
+			ProgramFilesLocatorSupplier.with(softLocator)
+					.find(programFile -> {
+						File[] listFiles = programFile.listFiles(f -> f.getName().startsWith("xpdf"));
+						if(listFiles == null || listFiles.length == 0) {
+							return Collections.emptyList();
+						}
+						String arch = "bin" + System.getProperty("sun.arch.data.model");
+						return Arrays.asList(listFiles).stream()
+								.map(f -> new File(f, arch))
+								.collect(Collectors.toList());
+					})
+					.supplyIn();
+			softLocator.addDefaultLocator();
+		}
+		return softLocator;
 	}
 
 	/**

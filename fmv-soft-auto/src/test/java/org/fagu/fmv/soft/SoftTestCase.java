@@ -43,9 +43,16 @@ public class SoftTestCase {
 	@Test
 	// @Ignore
 	public void testFindAll() throws Exception {
+		// System.getProperties().forEach((k, v) -> System.out.println(k + " : " + v));
 		Soft.searchAll().forEach(s -> {
-			System.out.println("[" + s.getSoftProvider().getGroupName() + "] " + s.getFirstInfo());
+			String prefix = "[" + s.getSoftProvider().getGroupName() + "] " + s.getName() + ' ';
+			if(s.isFound()) {
+				System.out.println(prefix + s.getFirstInfo());
+			} else {
+				System.out.println(prefix + " ==== NOT FOUND ====. " + s.getSoftProvider().getDownloadURL());
+			}
 		});
+
 	}
 
 	@Test
