@@ -65,8 +65,10 @@ public class ExceptionKnownAnalyzers {
 	public static Optional<ExceptionKnown> getKnown(Class<? extends ExceptionKnownAnalyzer> cls, IOException e) {
 		NestedException nestedException = new NestedException(e);
 		return getExceptionKnownAnalyzers(cls).stream()
+				.peek(eka -> System.out.println("ALL: " + eka))
 				.map(ek -> ek.anaylze(nestedException))
 				.filter(Objects::nonNull)
+				.peek(eka -> System.out.println("FILTERED: " + eka))
 				.findFirst();
 	}
 

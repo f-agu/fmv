@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ServiceLoader;
@@ -148,7 +149,7 @@ public class FFExecutor<R> {
 		outDebugConsumer = line -> System.out.println("OUT  " + line);
 		errDebugConsumer = line -> System.out.println("ERR  " + line);
 
-		customizeSoftExecutors = new ArrayList<>();
+		customizeSoftExecutors = new LinkedList<>();
 	}
 
 	/**
@@ -279,7 +280,9 @@ public class FFExecutor<R> {
 	 * @param customizeSoftExecutor
 	 */
 	public void customizeSoftExecutor(Consumer<SoftExecutor> customizeSoftExecutor) {
-		this.customizeSoftExecutors = customizeSoftExecutor;
+		if(customizeSoftExecutor != null) {
+			customizeSoftExecutors.add(customizeSoftExecutor);
+		}
 	}
 
 	/**
@@ -437,9 +440,7 @@ public class FFExecutor<R> {
 				}
 			}
 			// don't add exceptionKnowConsumer here
-			if(customizeSoftExecutors != null) {
-				customizeSoftExecutors.accept(softExecutor);
-			}
+			customizeSoftExecutors.forEach(cse -> cse.accept(softExecutor));
 			return softExecutor;
 		}
 

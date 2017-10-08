@@ -15,9 +15,7 @@ import org.fagu.fmv.soft.exec.exception.ProcessBlockedException;
 /**
  * @author fagu
  */
-public class NoOverwriteDeblock implements LookReader, ProcessOperator, ExceptionKnownConsumer, FFExceptionKnownAnalyzer
-
-{
+public class NoOverwriteDeblock implements LookReader, ProcessOperator, ExceptionKnownConsumer, FFExceptionKnownAnalyzer {
 
 	private Process process;
 
@@ -47,10 +45,12 @@ public class NoOverwriteDeblock implements LookReader, ProcessOperator, Exceptio
 
 	@Override
 	public void accept(ExceptionKnown exceptionKnown) throws IOException {
-		String lastLine = getLineIfBlocked(exceptionKnown.getNestedException());
+		NestedException nestedException = exceptionKnown.getNestedException();
+		String lastLine = getLineIfBlocked(nestedException);
 		if(lastLine != null) {
 			throw new ProcessBlockedException(lastLine);
 		}
+		throw nestedException.getIOException();
 	}
 
 	// *************************************************

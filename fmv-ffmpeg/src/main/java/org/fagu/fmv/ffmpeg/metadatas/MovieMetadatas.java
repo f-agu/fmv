@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -78,10 +79,11 @@ public class MovieMetadatas implements Metadatas, Serializable {
 
 		private Soft soft;
 
-		private Consumer<SoftExecutor> customizeSoftExecutor;
+		private final List<Consumer<SoftExecutor>> customizeSoftExecutors;
 
 		private MovieMetadatasBuilder(MediaInput mediaInput) {
 			this.mediaInput = Objects.requireNonNull(mediaInput);
+			customizeSoftExecutors = new LinkedList<>();
 		}
 
 		@Override
@@ -92,7 +94,9 @@ public class MovieMetadatas implements Metadatas, Serializable {
 
 		@Override
 		public MovieMetadatasBuilder customizeExecutor(Consumer<SoftExecutor> customizeSoftExecutor) {
-			this.customizeSoftExecutor = customizeSoftExecutor;
+			if(customizeSoftExecutor != null) {
+				customizeSoftExecutors.add(customizeSoftExecutor);
+			}
 			return this;
 		}
 
@@ -100,7 +104,7 @@ public class MovieMetadatas implements Metadatas, Serializable {
 		public MovieMetadatas extract() throws IOException {
 			InfoOperation infoOperation = new InfoOperation(mediaInput);
 			FFExecutor<MovieMetadatas> executor = new FFExecutor<>(infoOperation);
-			executor.customizeSoftExecutor(customizeSoftExecutor);
+			customizeSoftExecutors.forEach(executor::customizeSoftExecutor);
 			executor.setSoft(soft);
 			Executed<MovieMetadatas> execute = executor.execute();
 			return execute.getResult();
