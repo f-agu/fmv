@@ -32,6 +32,7 @@ import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.mymedia.utils.AppVersion;
+import org.fagu.fmv.soft.mplayer.CmdLineConfirmSelectTitlesPolicy;
 import org.fagu.fmv.soft.mplayer.DefaultSelectTitlesPolicy;
 import org.fagu.fmv.soft.mplayer.MPlayer;
 import org.fagu.fmv.soft.mplayer.MPlayerDump;
@@ -68,7 +69,7 @@ public class Ripper implements Closeable {
 
 		private File tmpDirectory = new File("d:\\tmp\\dvd-rip");
 
-		private SelectTitlesPolicy selectTitlesPolicy = new DefaultSelectTitlesPolicy();
+		private SelectTitlesPolicy selectTitlesPolicy = new CmdLineConfirmSelectTitlesPolicy(new DefaultSelectTitlesPolicy());
 
 		private TitlesExtractor titlesExtractor = (dvdDrive, logger) -> MPlayerTitles.fromDVDDrive(dvdDrive)
 				.logger(logger::log)
