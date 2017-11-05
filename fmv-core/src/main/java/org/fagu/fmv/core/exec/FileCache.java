@@ -151,7 +151,7 @@ public class FileCache {
 	 */
 	public File getFile(Executable executable, Cache cache) {
 		ExecutableCache executableCache = previousKeyMap.get(executable);
-		if(executableCache == null) {
+		if(executableCache == null || ! executableCache.previousHash.equals(executable.getHash())) {
 			executableCache = new ExecutableCache(executable.getHash());
 		}
 		if(executableCache.getFile(cache) == null) {

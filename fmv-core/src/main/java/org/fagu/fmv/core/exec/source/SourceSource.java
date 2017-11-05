@@ -132,7 +132,8 @@ public class SourceSource extends AbstractSource {
 	 */
 	@Override
 	public String toString() {
-		return super.toString() + " n:" + number;
+		FileSource fileSource = getProject().getSource(number);
+		return super.toString() + " n:" + number + " (" + fileSource.getFile().getName() + ')';
 	}
 
 	// ********************************************
