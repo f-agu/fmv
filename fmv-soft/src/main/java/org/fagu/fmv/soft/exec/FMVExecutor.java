@@ -40,6 +40,8 @@ import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.ProcessDestroyer;
 import org.apache.commons.exec.ShutdownHookProcessDestroyer;
+import org.fagu.fmv.soft.BasicExecuteDelegate;
+import org.fagu.fmv.soft.ExecuteDelegate;
 import org.fagu.fmv.soft.utils.Proxifier;
 import org.fagu.fmv.utils.order.OrderComparator;
 
@@ -48,6 +50,8 @@ import org.fagu.fmv.utils.order.OrderComparator;
  * @author f.agu
  */
 public class FMVExecutor extends DefaultExecutor {
+
+	// ---------------------------------------------
 
 	public static class FMVExecutorBuilder {
 
@@ -109,8 +113,6 @@ public class FMVExecutor extends DefaultExecutor {
 			return new FMVExecutor(this);
 		}
 	}
-
-	// ---------------------------------------------
 
 	// ---------------------------------------------
 
@@ -265,10 +267,11 @@ public class FMVExecutor extends DefaultExecutor {
 	 * @return
 	 */
 	public FMVFuture<Integer> executeAsynchronous(CommandLine command, ExecutorService executorService) {
-		return executeAsynchronous(command, executorService, null, null, null);
+		return executeAsynchronous(BasicExecuteDelegate.INSTANCE, command, executorService, null, null, null);
 	}
 
 	/**
+	 * @param executeDelegate
 	 * @param command
 	 * @param executorService
 	 * @param before
@@ -276,7 +279,8 @@ public class FMVExecutor extends DefaultExecutor {
 	 * @param ioExceptionConsumer
 	 * @return
 	 */
-	public FMVFuture<Integer> executeAsynchronous(CommandLine command, ExecutorService executorService, Runnable before, IntConsumer after,
+	public FMVFuture<Integer> executeAsynchronous(ExecuteDelegate executeDelegate, CommandLine command, ExecutorService executorService,
+			Runnable before, IntConsumer after,
 			IOExceptionConsumer ioExceptionConsumer) {
 		ExecuteStreamHandler streamHandler = getStreamHandler();
 		WritablePumpStreamHandler wpsh = streamHandler instanceof WritablePumpStreamHandler ? (WritablePumpStreamHandler)streamHandler : null;
@@ -285,7 +289,7 @@ public class FMVExecutor extends DefaultExecutor {
 				before.run();
 			}
 			try {
-				int exitValue = execute(command);
+				int exitValue = executeDelegate.execute(this, command);
 				if(after != null) {
 					after.accept(exitValue);
 				}

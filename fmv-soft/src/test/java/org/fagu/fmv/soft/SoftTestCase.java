@@ -95,7 +95,9 @@ public class SoftTestCase {
 		softFormatter.logDetails(System.out::println);
 		// System.out.println(soft.getFounds());
 		// System.out.println(soft.getFile());
-		// soft.withParameters("").execute();
+		soft.withParameters("")
+				.execute();
+
 	}
 
 	@Test

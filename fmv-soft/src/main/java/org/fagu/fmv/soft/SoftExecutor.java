@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalLong;
 import java.util.concurrent.ExecutorService;
@@ -45,9 +47,13 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 
 	private final List<ExecListener> execListeners;
 
+	private final Map<String, String> environmentMap;
+
 	private ExceptionKnownConsumer exceptionKnowConsumer;
 
 	private ExceptionConsumer exceptionConsumer;
+
+	private ExecuteDelegate executeDelegate;
 
 	/**
 	 * @param softProvider
@@ -58,7 +64,8 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		this.softProvider = Objects.requireNonNull(softProvider);
 		this.execFile = Objects.requireNonNull(execFile);
 		this.parameters = Collections.unmodifiableList(new ArrayList<>(parameters)); // defensive copy
-		this.execListeners = new ArrayList<>();
+		execListeners = new ArrayList<>();
+		environmentMap = new HashMap<>();
 	}
 
 	/**
@@ -117,6 +124,34 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 	}
 
 	/**
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	public SoftExecutor addEnv(String key, String value) {
+		environmentMap.put(key, value);
+		return this;
+	}
+
+	/**
+	 * @param map
+	 * @return
+	 */
+	public SoftExecutor addEnvs(Map<String, String> map) {
+		environmentMap.putAll(map);
+		return this;
+	}
+
+	/**
+	 * @param executeDelegate
+	 * @return
+	 */
+	public SoftExecutor setExecuteDelegate(ExecuteDelegate executeDelegate) {
+		this.executeDelegate = Objects.requireNonNull(executeDelegate);
+		return this;
+	}
+
+	/**
 	 * @return
 	 */
 	public CommandLine getCommandLine() {
@@ -137,7 +172,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 			fmvExecutor.addProcessOperator(pidProcessOperator);
 			try {
 				execListener.eventExecuting(cmdLineStr);
-				exitValue = fmvExecutor.execute(commandLine);
+				exitValue = geExecuteDelegate().execute(fmvExecutor, commandLine);
 				time = System.currentTimeMillis() - startTime;
 				execListener.eventExecuted(cmdLineStr, exitValue, time);
 			} catch(ExecuteException e) {
@@ -163,7 +198,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 			final AtomicLong time = new AtomicLong();
 			final PIDProcessOperator pidProcessOperator = new PIDProcessOperator();
 			fmvExecutor.addProcessOperator(pidProcessOperator);
-			return new WrapFuture<>(fmvExecutor.executeAsynchronous(commandLine, executorService,
+			return new WrapFuture<>(fmvExecutor.executeAsynchronous(geExecuteDelegate(), commandLine, executorService,
 					// before
 					() -> {
 						startTime.set(System.currentTimeMillis());
@@ -252,6 +287,19 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		applyCustomizeExecutor(fmvExecutor);
 
 		return forExec.exec(fmvExecutor, commandLine, execListener, readLineList);
+	}
+
+	/**
+	 * @return
+	 */
+	private ExecuteDelegate geExecuteDelegate() {
+		if(executeDelegate != null) {
+			return executeDelegate;
+		}
+		if(environmentMap.isEmpty()) {
+			return BasicExecuteDelegate.INSTANCE;
+		}
+		return new EnvironmentExecuteDelegate(environmentMap);
 	}
 
 	// --------------------------------------------------
