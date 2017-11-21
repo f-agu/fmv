@@ -99,7 +99,7 @@ public class GenericExecutable extends AbstractExecutable {
 	 */
 	@Override
 	public String toString() {
-		return "generic-exec " + super.toString();
+		return getCode() + ' ' + super.toString();
 	}
 
 	// *******************************************************

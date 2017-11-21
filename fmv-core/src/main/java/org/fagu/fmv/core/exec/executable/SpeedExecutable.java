@@ -95,7 +95,7 @@ public class SpeedExecutable extends GenericExecutable {
 	 */
 	@Override
 	public String toString() {
-		return "generic-exec " + super.toString();
+		return "speed (x" + multiply + ")";
 	}
 
 	// ************************************
