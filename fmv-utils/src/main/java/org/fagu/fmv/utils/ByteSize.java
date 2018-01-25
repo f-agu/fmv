@@ -40,8 +40,8 @@ public class ByteSize {
 	private static final Map<Locale, String[]> UNITS_MAP = new HashMap<>(4);
 
 	static {
-		UNITS_MAP.put(Locale.FRENCH, new String[] {"o", "ko", "Mo", "Go", "To", "Eo"});
-		UNITS_MAP.put(Locale.ENGLISH, new String[] {"B", "kB", "MB", "GB", "TB", "EB"});
+		UNITS_MAP.put(Locale.FRENCH, new String[] {"o", "ko", "Mo", "Go", "To", "Po", "Eo"});
+		UNITS_MAP.put(Locale.ENGLISH, new String[] {"B", "kB", "MB", "GB", "TB", "PB", "EB"});
 	}
 
 	/**
@@ -65,9 +65,6 @@ public class ByteSize {
 	 * @return
 	 */
 	public static String formatSize(long size, Locale locale) {
-		// if(size == 0) {
-		// return "0 ko";
-		// }
 		String[] units = UNITS_MAP.get(locale);
 		if(units == null) {
 			units = UNITS_MAP.get(Locale.FRENCH);
@@ -88,7 +85,7 @@ public class ByteSize {
 			if(unit < 0) {
 				return "?";
 			}
-			value = (double)(absSize / pow(1024, unit));
+			value = absSize / pow(1024, unit);
 			if(size < 0) {
 				buf.append('-');
 			}
