@@ -35,11 +35,6 @@ import org.fagu.fmv.cli.completion.FileCompleterFactory;
 public class Add extends AbstractCommand {
 
 	/**
-	 * 
-	 */
-	public Add() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

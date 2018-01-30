@@ -318,7 +318,7 @@ public class Project {
 		String extlc = extension.toLowerCase();
 		return extensions.entrySet().stream()
 				.filter(e -> e.getValue().contains(extlc))
-				.map(e -> e.getKey())
+				.map(Entry::getKey)
 				.findFirst()
 				.orElse(null);
 	}
@@ -491,7 +491,7 @@ public class Project {
 	private void loadSources(Element root) {
 		Element sourcesElement = root.element("sources");
 
-		TreeMap<Integer, FileSource> srcMap = new TreeMap<Integer, FileSource>();
+		TreeMap<Integer, FileSource> srcMap = new TreeMap<>();
 		for(Element element : LoadUtils.elements(sourcesElement, "source")) {
 			// number
 			int number = NumberUtils.toInt(element.attributeValue("n"), Integer.MIN_VALUE);

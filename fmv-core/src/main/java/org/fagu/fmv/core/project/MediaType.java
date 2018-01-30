@@ -30,9 +30,6 @@ import java.util.List;
  */
 public enum MediaType {
 
-	/**
-	 *
-	 */
 	AUDIO() {
 
 		/**
@@ -50,9 +47,7 @@ public enum MediaType {
 			return null;
 		}
 	},
-	/**
-	 *
-	 */
+
 	VIDEO() {
 
 		/**
@@ -70,9 +65,7 @@ public enum MediaType {
 			return null;
 		}
 	},
-	/**
-	 *
-	 */
+
 	AUDIO_VIDEO(AUDIO, VIDEO) {
 
 		/**
@@ -128,6 +121,6 @@ public enum MediaType {
 	 * @param mediaType
 	 * @return
 	 */
-	abstract protected MediaType addType(MediaType mediaType);
+	protected abstract MediaType addType(MediaType mediaType);
 
 }

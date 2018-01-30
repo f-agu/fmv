@@ -79,7 +79,11 @@ public class FFExecutor<R> {
 
 	private final BufferedReadLine outputReadLine;
 
-	private final List<ReadLine> outReadLines, errReadLines, readLines;
+	private final List<ReadLine> outReadLines;
+
+	private final List<ReadLine> errReadLines;
+
+	private final List<ReadLine> readLines;
 
 	private final List<OperationListener> listeners;
 

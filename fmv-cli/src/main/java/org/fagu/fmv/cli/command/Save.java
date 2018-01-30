@@ -34,11 +34,6 @@ import org.fagu.fmv.cli.annotation.Command;
 public class Save extends AbstractCommand {
 
 	/**
-	 * 
-	 */
-	public Save() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

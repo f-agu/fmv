@@ -148,9 +148,7 @@ public class GenericFilterExec extends Attributable implements FilterExec {
 			builder.getFFMPEGOperation()
 					.getInputProcessorStream()
 					.filter(ip -> ip.contains(type))
-					.forEach(ip -> {
-						filterComplex.addInput(ip, type);
-					});
+					.forEach(ip -> filterComplex.addInput(ip, type));
 		}
 	}
 

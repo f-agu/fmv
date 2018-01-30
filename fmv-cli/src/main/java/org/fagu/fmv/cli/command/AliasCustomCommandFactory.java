@@ -74,7 +74,7 @@ public class AliasCustomCommandFactory implements CommandFactory {
 	@Override
 	public Command create(final ConsoleReader consoleReader, final CommandBuilder commandBuilder, Project project, String executable,
 			final String[] topArgs) throws LineParseException {
-		Command command = (Command)Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] {Command.class}, new InvocationHandler() {
+		return (Command)Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] {Command.class}, new InvocationHandler() {
 
 			/**
 			 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method,
@@ -95,7 +95,5 @@ public class AliasCustomCommandFactory implements CommandFactory {
 				throw new RuntimeException("Undefined process");
 			}
 		});
-
-		return command;
 	}
 }

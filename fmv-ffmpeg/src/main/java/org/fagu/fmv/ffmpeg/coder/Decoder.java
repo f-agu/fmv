@@ -232,7 +232,7 @@ public abstract class Decoder<M> extends Coder<M> {
 	 * @return
 	 */
 	public M bug(Collection<Bug> bugs) {
-		bugs.stream().filter(f -> io.accept(f.io())).forEach(f -> this.bugs.add(f));
+		bugs.stream().filter(f -> io.accept(f.io())).forEach(bugs::add);
 		return getMThis();
 	}
 
@@ -253,7 +253,7 @@ public abstract class Decoder<M> extends Coder<M> {
 	 * @return
 	 */
 	public M errDetect(Collection<ErrDetect> errDetects) {
-		errDetects.stream().filter(f -> io.accept(f.io())).forEach(f -> this.errDetects.add(f));
+		errDetects.stream().filter(f -> io.accept(f.io())).forEach(errDetects::add);
 		return getMThis();
 	}
 
@@ -274,7 +274,7 @@ public abstract class Decoder<M> extends Coder<M> {
 	 * @return
 	 */
 	public M ec(Collection<Ec> ecs) {
-		ecs.stream().filter(f -> io.accept(f.io())).forEach(f -> this.ecs.add(f));
+		ecs.stream().filter(f -> io.accept(f.io())).forEach(ecs::add);
 		return getMThis();
 	}
 
@@ -295,7 +295,7 @@ public abstract class Decoder<M> extends Coder<M> {
 	 * @return
 	 */
 	public M vismv(Collection<Vismv> vismvs) {
-		vismvs.stream().filter(f -> io.accept(f.io())).forEach(f -> this.vismvs.add(f));
+		vismvs.stream().filter(f -> io.accept(f.io())).forEach(vismvs::add);
 		return getMThis();
 	}
 
@@ -444,7 +444,7 @@ public abstract class Decoder<M> extends Coder<M> {
 	 * @return
 	 */
 	public M subCharencMode(Collection<SubCharencMode> subCharencModes) {
-		subCharencModes.stream().filter(f -> io.accept(f.io())).forEach(f -> this.subCharencModes.add(f));
+		subCharencModes.stream().filter(f -> io.accept(f.io())).forEach(subCharencModes::add);
 		return getMThis();
 	}
 

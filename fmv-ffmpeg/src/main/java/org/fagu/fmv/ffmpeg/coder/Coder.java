@@ -451,7 +451,11 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @author f.agu
 	 */
 	public enum FieldOrder {
-		PROGRESSIVE("progressive", IO.INPUT_OUTPUT), TT("tt", IO.INPUT_OUTPUT), BB("bb", IO.INPUT_OUTPUT), TB("tb", IO.INPUT_OUTPUT), BT("bt",
+		PROGRESSIVE("progressive", IO.INPUT_OUTPUT),
+		TT("tt", IO.INPUT_OUTPUT),
+		BB("bb", IO.INPUT_OUTPUT),
+		TB("tb", IO.INPUT_OUTPUT),
+		BT("bt",
 				IO.INPUT_OUTPUT);
 
 		private final String flag;
@@ -543,7 +547,7 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @return
 	 */
 	public M flags(Collection<CFlags> flagss) {
-		flagss.stream().filter(f -> io.accept(f.io())).forEach(f -> this.cflagss.add(f));
+		flagss.stream().filter(f -> io.accept(f.io())).forEach(cflagss::add);
 		return getMThis();
 	}
 

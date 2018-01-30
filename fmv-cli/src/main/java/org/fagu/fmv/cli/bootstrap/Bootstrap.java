@@ -127,12 +127,12 @@ public class Bootstrap {
 			String name = scanner.nextLine();
 
 			// save file
-			final File DEFAULT_SAVE_FILE = new File(name);
-			printStream.print("SaveFolder: [" + DEFAULT_SAVE_FILE.getAbsolutePath() + "] ");
+			final File defaultSaveFile = new File(name);
+			printStream.print("SaveFolder: [" + defaultSaveFile.getAbsolutePath() + "] ");
 			File saveFile = null;
 			String ssavefile = scanner.nextLine();
 			if(StringUtils.isBlank(ssavefile)) {
-				saveFile = DEFAULT_SAVE_FILE;
+				saveFile = defaultSaveFile;
 			} else {
 				saveFile = new File(ssavefile);
 			}
@@ -140,21 +140,21 @@ public class Bootstrap {
 			saveFile.getParentFile().mkdirs();
 
 			// format
-			final String DEFAULT_FORMAT = "mp4";
-			printStream.print("Format: [" + DEFAULT_FORMAT + "] ");
+			final String defaultFormat = "mp4";
+			printStream.print("Format: [" + defaultFormat + "] ");
 			String format = scanner.nextLine();
 			if(StringUtils.isBlank(format)) {
-				format = DEFAULT_FORMAT;
+				format = defaultFormat;
 			}
 
 			// size
-			final Size DEFAULT_SIZE = Size.HD720;
-			printStream.print("Size: [" + DEFAULT_SIZE + "] ");
+			final Size defaultSize = Size.HD720;
+			printStream.print("Size: [" + defaultSize + "] ");
 			Size size = null;
 			while(size == null) {
 				String ssize = scanner.nextLine();
 				if(StringUtils.isBlank(ssize)) {
-					size = DEFAULT_SIZE;
+					size = defaultSize;
 				} else {
 					try {
 						size = Size.parse(ssize);
@@ -165,13 +165,13 @@ public class Bootstrap {
 			}
 
 			// rate
-			final FrameRate DEFAULT_RATE = FrameRate.valueOf(30, 1);
-			printStream.print("Rate: [" + DEFAULT_RATE + "] ");
+			final FrameRate defaultRate = FrameRate.valueOf(30, 1);
+			printStream.print("Rate: [" + defaultRate + "] ");
 			FrameRate frameRate = null;
 			while(frameRate == null) {
 				String srate = scanner.nextLine();
 				if(StringUtils.isBlank(srate)) {
-					frameRate = DEFAULT_RATE;
+					frameRate = defaultRate;
 				} else {
 					try {
 						frameRate = FrameRate.parse(srate);

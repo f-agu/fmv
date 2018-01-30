@@ -117,7 +117,7 @@ public class Scaler extends Element<Scaler> {
 	 * @return
 	 */
 	public Scaler swsFlags(Collection<SwsFlags> swsFlagss) {
-		swsFlagss.stream().filter(f -> IO.OUTPUT.accept(f.io())).forEach(f -> this.swsFlagss.add(f));
+		swsFlagss.stream().filter(f -> IO.OUTPUT.accept(f.io())).forEach(swsFlagss::add);
 		return this;
 	}
 

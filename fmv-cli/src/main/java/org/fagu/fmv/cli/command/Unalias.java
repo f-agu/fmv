@@ -41,11 +41,6 @@ public class Unalias extends AbstractCommand {
 	private CommandBuilder commandBuilder;
 
 	/**
-	 *
-	 */
-	public Unalias() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override
@@ -54,7 +49,7 @@ public class Unalias extends AbstractCommand {
 
 		List<String> names;
 		if(cmdLine.hasOption('a')) {
-			names = new ArrayList<String>();
+			names = new ArrayList<>();
 			for(CommandFactory commandFactory : commandBuilder.getCommandFactories()) {
 				if(commandFactory instanceof AliasCustomCommandFactory) {
 					names.add(commandFactory.getCommandName());

@@ -20,7 +20,6 @@ package org.fagu.fmv.cli;
  * #L%
  */
 
-
 import org.fagu.fmv.core.exec.Executable;
 
 
@@ -28,11 +27,6 @@ import org.fagu.fmv.core.exec.Executable;
  * @author f.agu
  */
 public class BasePrompt implements Prompt {
-
-	/**
-	 * 
-	 */
-	public BasePrompt() {}
 
 	/**
 	 * @see org.fagu.fmv.cli.Prompt#get(org.fagu.fmv.cli.Environnement)

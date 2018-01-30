@@ -596,7 +596,7 @@ public class Resampler extends Element<Resampler> {
 	 * @return
 	 */
 	public Resampler flags(Collection<RFlags> rflagss) {
-		rflagss.stream().filter(f -> IO.OUTPUT.accept(f.io())).forEach(f -> this.rflagss.add(f));
+		rflagss.stream().filter(f -> IO.OUTPUT.accept(f.io())).forEach(rflagss::add);
 		return this;
 	}
 
@@ -617,7 +617,7 @@ public class Resampler extends Element<Resampler> {
 	 * @return
 	 */
 	public Resampler swrFlags(Collection<SwrFlags> swrFlagss) {
-		swrFlagss.stream().filter(f -> IO.OUTPUT.accept(f.io())).forEach(f -> this.swrFlagss.add(f));
+		swrFlagss.stream().filter(f -> IO.OUTPUT.accept(f.io())).forEach(swrFlagss::add);
 		return this;
 	}
 

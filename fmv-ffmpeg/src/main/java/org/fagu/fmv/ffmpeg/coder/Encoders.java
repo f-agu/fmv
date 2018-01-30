@@ -37,9 +37,6 @@ import org.fagu.fmv.ffmpeg.utils.HelpCache;
  */
 public class Encoders extends Coders {
 
-	/**
-	 * 
-	 */
 	private static final HelpCache<Encoders, EncoderHelp> HELP_CACHE = new HelpCache<>(runnable(), Encoders::new);
 
 	/**
@@ -930,7 +927,7 @@ public class Encoders extends Coders {
 			try {
 				FFExecutor<List<String>> executor = new FFExecutor<>(operation);
 				Consumer<EncoderHelp> cacheConsumer = HELP_CACHE.consumer();
-				Function<String, EncoderHelp> factory = name -> new EncoderHelp(name);
+				Function<String, EncoderHelp> factory = EncoderHelp::new;
 
 				AvailableHelp<EncoderHelp> availableHelp = AvailableHelp.create();
 				availableHelp.title().legend().unreadLine().values(factory, cacheConsumer).parse(executor.execute().getResult());

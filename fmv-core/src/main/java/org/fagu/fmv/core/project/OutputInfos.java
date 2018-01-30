@@ -39,11 +39,6 @@ public class OutputInfos implements Cloneable {
 	private int audioSampling;
 
 	/**
-	 *
-	 */
-	public OutputInfos() {}
-
-	/**
 	 * @return
 	 */
 	public String getFormat() {

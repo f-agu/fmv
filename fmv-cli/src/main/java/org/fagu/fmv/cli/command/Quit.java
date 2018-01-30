@@ -33,11 +33,6 @@ import org.fagu.fmv.cli.exception.ExitException;
 public class Quit extends AbstractCommand {
 
 	/**
-	 * 
-	 */
-	public Quit() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

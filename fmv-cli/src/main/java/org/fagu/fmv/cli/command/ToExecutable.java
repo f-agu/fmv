@@ -38,11 +38,6 @@ import org.fagu.fmv.core.exec.Identifiable;
 public class ToExecutable extends AbstractCommand {
 
 	/**
-	 * 
-	 */
-	public ToExecutable() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

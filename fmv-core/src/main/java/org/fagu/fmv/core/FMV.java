@@ -32,11 +32,6 @@ import org.apache.commons.io.IOUtils;
 public class FMV {
 
 	/**
-	 * 
-	 */
-	public FMV() {}
-
-	/**
 	 * @return
 	 */
 	public static String getVersion() {

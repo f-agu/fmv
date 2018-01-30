@@ -36,11 +36,6 @@ import org.fagu.fmv.core.project.Properties;
 public class View extends AbstractCommand {
 
 	/**
-	 * 
-	 */
-	public View() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

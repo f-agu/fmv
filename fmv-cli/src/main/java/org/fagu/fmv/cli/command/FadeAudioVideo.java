@@ -38,13 +38,6 @@ import org.fagu.fmv.utils.time.Time;
 public class FadeAudioVideo extends AbstractCommand {
 
 	/**
-	 * 
-	 */
-	public FadeAudioVideo() {
-		super();
-	}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

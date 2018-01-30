@@ -45,11 +45,6 @@ public class ExecList extends AbstractCommand {
 	private static final int TIME_WIDTH = 15;
 
 	/**
-	 *
-	 */
-	public ExecList() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

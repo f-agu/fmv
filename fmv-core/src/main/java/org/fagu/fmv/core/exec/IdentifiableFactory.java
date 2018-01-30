@@ -20,7 +20,6 @@ package org.fagu.fmv.core.exec;
  * #L%
  */
 
-
 import org.dom4j.Element;
 import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.Project;
@@ -35,7 +34,7 @@ public class IdentifiableFactory<T extends Identifiable> extends Factory<T> {
 	 * @param clazz
 	 */
 	public IdentifiableFactory(Class<T> clazz) {
-		super(clazz, identifiable -> identifiable.getCode());
+		super(clazz, Identifiable::getCode);
 	}
 
 	/**

@@ -69,42 +69,6 @@ public class Console {
 	}
 
 	/**
-	 * @param fmvcliConfig
-	 * @param project
-	 */
-	// public Console(FMVCLIConfig fmvcliConfig, Project project) {
-	// try {
-	// this.consoleReader = new ConsoleReader();
-	// } catch(IOException e) {
-	// throw new RuntimeException(e);
-	// }
-	// consoleReader.setPrompt("# ");
-	// this.fmvcliConfig = fmvcliConfig;
-	// this.project = project;
-	// this.commandBuilder = new DefaultCommandBuilder(this);
-	// }
-	//
-	// /**
-	// * @param fmvcliConfig
-	// * @param consoleReader
-	// * @param project
-	// */
-	// public Console(FMVCLIConfig fmvcliConfig, ConsoleReader consoleReader, Project project) {
-	// this(fmvcliConfig, (CommandBuilder)null, project);
-	// }
-	//
-	// /**
-	// * @param fmvcliConfig
-	// * @param commandBuilder
-	// * @param project
-	// */
-	// public Console(FMVCLIConfig fmvcliConfig, CommandBuilder commandBuilder, Project project) {
-	// this.fmvcliConfig = fmvcliConfig;
-	// this.commandBuilder = commandBuilder != null ? commandBuilder : new DefaultCommandBuilder(this);
-	// this.project = project;
-	// }
-
-	/**
 	 * @throws IOException
 	 */
 	public void run() throws IOException {
@@ -144,15 +108,6 @@ public class Console {
 	/**
 	 * @param consoleReader
 	 */
-	// private void initCommands(ConsoleReader consoleReader) {
-	// for(CommandFactory commandFactory : commandBuilder.getCommandFactories()) {
-	// commandFactory.init(consoleReader);
-	// }
-	// }
-
-	/**
-	 * @param consoleReader
-	 */
 	private void initListener(final ConsoleReader consoleReader) {
 		project.addListener(new ProjectListener() {
 
@@ -183,18 +138,6 @@ public class Console {
 			}
 
 			// *******************************
-
-			/**
-			 * @param msg
-			 */
-			// private void print(String msg) {
-			// try {
-			// consoleReader.print(msg);
-			// consoleReader.flush();
-			// } catch(IOException e) {
-			// e.printStackTrace();
-			// }
-			// }
 
 			private String getPadding(Executable executable) {
 				return StringUtils.leftPad("", 4 * (1 + executable.getDepth(i -> i instanceof Executable)));

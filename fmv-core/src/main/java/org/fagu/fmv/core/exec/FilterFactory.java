@@ -73,12 +73,10 @@ public class FilterFactory extends Factory<Filter> {
 	@Override
 	protected Filter instanciate(Class<Filter> cls) {
 		try {
-			Method buildMethod = cls.getDeclaredMethod("build", new Class<?>[0]);
-			return (Filter)buildMethod.invoke(cls, new Object[0]);
+			Method buildMethod = cls.getDeclaredMethod("build");
+			return (Filter)buildMethod.invoke(cls);
 		} catch(Exception e) {
-			// System.out.println(cls);
 			return null;
-			// throw new RuntimeException("Error to instanciate " + cls, e);
 		}
 	}
 

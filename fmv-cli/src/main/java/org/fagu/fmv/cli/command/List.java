@@ -40,11 +40,6 @@ import org.fagu.fmv.media.FileType;
 public class List extends AbstractCommand {
 
 	/**
-	 * 
-	 */
-	public List() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override
@@ -76,6 +71,7 @@ public class List extends AbstractCommand {
 	/**
 	 * @see org.fagu.fmv.cli.command.AbstractCommand#getOptions()
 	 */
+	@Override
 	public Options getOptions() {
 		Options options = super.getOptions();
 		for(FileType fileType : FileType.values()) {

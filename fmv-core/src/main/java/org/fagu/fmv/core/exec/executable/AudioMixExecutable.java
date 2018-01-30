@@ -46,9 +46,9 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Map;
 import org.fagu.fmv.ffmpeg.operation.Map.On;
-import org.fagu.fmv.utils.time.Time;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Type;
+import org.fagu.fmv.utils.time.Time;
 
 
 /**
@@ -125,7 +125,7 @@ public class AudioMixExecutable extends GenericExecutable {
 
 		FFMPEGExecutorBuilder builder = FFUtils.builder(getProject());
 
-		List<InputProcessor> inputProcessors = new ArrayList<InputProcessor>();
+		List<InputProcessor> inputProcessors = new ArrayList<>();
 
 		// executable
 		for(Executable executable : executables) {
@@ -151,7 +151,7 @@ public class AudioMixExecutable extends GenericExecutable {
 			}
 		}
 
-		List<InputProcessor> videoInputProcessors = new ArrayList<InputProcessor>();
+		List<InputProcessor> videoInputProcessors = new ArrayList<>();
 		for(InputProcessor inputProcessor : inputProcessors) {
 			MovieMetadatas movieMetadatas = inputProcessor.getMovieMetadatas();
 			if(movieMetadatas.contains(Type.AUDIO) && ! movieMetadatas.contains(Type.VIDEO)) {
@@ -172,7 +172,7 @@ public class AudioMixExecutable extends GenericExecutable {
 		Map map = outputProcessor.map();
 		map.allStreams().input(audioMix);
 		On videoStreams = map.types(Type.VIDEO);
-		videoInputProcessors.stream().forEach(vip -> videoStreams.input(vip));
+		videoInputProcessors.stream().forEach(videoStreams::input);
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();

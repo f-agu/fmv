@@ -378,11 +378,11 @@ public abstract class BaseIdentifiable implements Identifiable {
 	 * @return
 	 */
 	public static List<Executable> getRoots(Project project) {
-		return stream(project). //
-				filter(id -> id.isExecutable()). //
-				map(id -> (Executable)id). //
-				filter(id -> id.isRoot()). //
-				collect(Collectors.toList());
+		return stream(project)
+				.filter(Identifiable::isExecutable)
+				.map(id -> (Executable)id)
+				.filter(Executable::isRoot)
+				.collect(Collectors.toList());
 	}
 
 	/**

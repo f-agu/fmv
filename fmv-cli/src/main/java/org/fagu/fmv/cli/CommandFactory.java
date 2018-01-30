@@ -1,5 +1,8 @@
 package org.fagu.fmv.cli;
 
+import org.fagu.fmv.cli.exception.LineParseException;
+import org.fagu.fmv.core.project.Project;
+
 /*
  * #%L
  * fmv-cli
@@ -20,11 +23,7 @@ package org.fagu.fmv.cli;
  * #L%
  */
 
-
 import jline.console.ConsoleReader;
-
-import org.fagu.fmv.cli.exception.LineParseException;
-import org.fagu.fmv.core.project.Project;
 
 
 /**
@@ -42,9 +41,10 @@ public interface CommandFactory {
 	 * @param commandBuilder
 	 * @param project
 	 * @param executable
-	 * @param args TODO
+	 * @param args
 	 * @return
 	 * @throws LineParseException
 	 */
-	Command create(ConsoleReader consoleReader, CommandBuilder commandBuilder, Project project, String executable, String[] args) throws LineParseException;
+	Command create(ConsoleReader consoleReader, CommandBuilder commandBuilder, Project project, String executable, String[] args)
+			throws LineParseException;
 }

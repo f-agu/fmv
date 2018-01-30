@@ -37,11 +37,6 @@ import org.fagu.fmv.media.FileType;
 public class Make extends AbstractCommand {
 
 	/**
-	 * 
-	 */
-	public Make() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

@@ -177,7 +177,7 @@ public class ArgumentCompleter implements Completer {
 		// then trim any delimiters from the candidates, since we do not need to have an extra delimiter.
 		//
 		// E.g., if we have a completion for "foo", and we enter "f bar" into the buffer, and move to after the "f"
-		// and hit TAB, we want "foo bar" instead of "foo  bar".
+		// and hit TAB, we want "foo bar" instead of "foo bar".
 
 		if((cursor != buffer.length()) && delim.isDelimiter(buffer, cursor)) {
 			for(int i = 0; i < candidates.size(); i++) {
@@ -255,7 +255,7 @@ public class ArgumentCompleter implements Completer {
 
 		@Override
 		public ArgumentList delimit(final CharSequence buffer, final int cursor) {
-			List<String> args = new LinkedList<String>();
+			List<String> args = new LinkedList<>();
 			StringBuilder arg = new StringBuilder();
 			int argpos = - 1;
 			int bindex = - 1;

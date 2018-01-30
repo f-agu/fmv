@@ -40,11 +40,6 @@ import org.fagu.fmv.media.FileType;
 public class Preview extends AbstractCommand {
 
 	/**
-	 * 
-	 */
-	public Preview() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

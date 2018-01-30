@@ -22,11 +22,6 @@ public class Help extends AbstractCommand {
 	private CommandBuilder commandBuilder;
 
 	/**
-	 *
-	 */
-	public Help() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

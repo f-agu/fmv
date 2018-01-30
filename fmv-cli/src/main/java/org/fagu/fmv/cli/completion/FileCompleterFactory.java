@@ -32,11 +32,6 @@ public class FileCompleterFactory implements CompleterFactory {
 	public static final String CLS_NAME = "org.fagu.fmv.cli.completion.FileCompleterFactory";
 
 	/**
-	 *
-	 */
-	public FileCompleterFactory() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.completion.CompleterFactory#create(java.lang.String)
 	 */
 	@Override

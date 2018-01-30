@@ -40,7 +40,7 @@ public class Hash {
 	 * @param objects
 	 */
 	public Hash(Object... objects) {
-		list = new ArrayList<String>();
+		list = new ArrayList<>();
 		for(Object obj : objects) {
 			append(obj);
 		}
@@ -101,10 +101,8 @@ public class Hash {
 				md5.update(value.getBytes("UTF-8"));
 			}
 			return Base64.encodeBase64URLSafeString(md5.digest());
-		} catch(NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		} catch(UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
+		} catch(NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			throw new RuntimeException(e); // NOSONAR
 		}
 	}
 }

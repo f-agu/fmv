@@ -155,7 +155,6 @@ public class FFHelper {
 		builder.addMediaOutputFile(outFile);
 
 		FFExecutor<Object> executor = builder.build();
-		// System.out.println(executor.getCommandLine());
 		executor.execute();
 	}
 
@@ -190,7 +189,6 @@ public class FFHelper {
 				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
-		// System.out.println(executor.getCommandLine());
 		executor.execute();
 	}
 
@@ -807,46 +805,46 @@ public class FFHelper {
 		VideoStream videoStream2 = video2InputProcessor.getMovieMetadatas().getVideoStream();
 
 		Optional<Duration> duration1 = videoStream1.duration();
-		Time startTime_T1 = Time.valueOf(duration1.get().toSeconds() - fadeDuration.toSeconds());
-		Duration duration_0_T1 = Duration.valueOf(startTime_T1.toSeconds());
+		Time startTimeT1 = Time.valueOf(duration1.get().toSeconds() - fadeDuration.toSeconds());
+		Duration duration0T1 = Duration.valueOf(startTimeT1.toSeconds());
 		Optional<Duration> duration2 = videoStream2.duration();
-		Time startTime_T2 = Time.valueOf(duration2.get().toSeconds() - fadeDuration.toSeconds());
-		Duration duration_T2_END = Duration.valueOf(startTime_T2.toSeconds());
+		Time startTimeT2 = Time.valueOf(duration2.get().toSeconds() - fadeDuration.toSeconds());
+		Duration durationT2END = Duration.valueOf(startTimeT2.toSeconds());
 
 		// source 1: video
-		NullSourceVideo nullSourceVideo1 = NullSourceVideo.build().size(videoStream1.size()).duration(duration_T2_END);
+		NullSourceVideo nullSourceVideo1 = NullSourceVideo.build().size(videoStream1.size()).duration(durationT2END);
 		Concat concat1V = Concat.create(builder, video1InputProcessor, FilterComplex.create(nullSourceVideo1))
 				.countVideo(1)
 				.countAudio(0)
 				.countInputs(2);
 		// source 1: audio
-		AudioGenerator audioGenerator1 = AudioGenerator.build().silence().duration(duration_T2_END);
+		AudioGenerator audioGenerator1 = AudioGenerator.build().silence().duration(durationT2END);
 		Concat concat1A = Concat.create(builder, video1InputProcessor, FilterComplex.create(audioGenerator1))
 				.countVideo(0)
 				.countAudio(1)
 				.countInputs(2);
-		FilterComplex fadeAudio1 = FilterComplex.create(FadeAudio.out().startTime(startTime_T1).duration(fadeDuration)).addInput(concat1A);
+		FilterComplex fadeAudio1 = FilterComplex.create(FadeAudio.out().startTime(startTimeT1).duration(fadeDuration)).addInput(concat1A);
 
 		// source 2: video
-		NullSourceVideo nullSourceVideo2 = NullSourceVideo.build().size(videoStream2.size()).duration(duration_0_T1);
+		NullSourceVideo nullSourceVideo2 = NullSourceVideo.build().size(videoStream2.size()).duration(duration0T1);
 		Concat concat2V = Concat.create(builder, FilterComplex.create(nullSourceVideo2), video2InputProcessor)
 				.countVideo(1)
 				.countAudio(0)
 				.countInputs(2);
 		// source 2: audio
-		AudioGenerator audioGenerator2 = AudioGenerator.build().silence().duration(duration_0_T1);
+		AudioGenerator audioGenerator2 = AudioGenerator.build().silence().duration(duration0T1);
 		Concat concat2A = Concat.create(builder, FilterComplex.create(audioGenerator2), video2InputProcessor)
 				.countVideo(0)
 				.countAudio(1)
 				.countInputs(2);
-		FilterComplex fadeAudio2 = FilterComplex.create(FadeAudio.in().startTime(startTime_T1).duration(fadeDuration)).addInput(concat2A);
+		FilterComplex fadeAudio2 = FilterComplex.create(FadeAudio.in().startTime(startTimeT1).duration(fadeDuration)).addInput(concat2A);
 
 		// blend / merge video
 		SetSAR setSAR = SetSAR.toRatio("1");
 		Format formatRGBA = Format.with(PixelFormat.RGBA);
 		FilterComplex vfc1 = FilterComplex.create(setSAR, formatRGBA).addInput(concat1V);
 		FilterComplex vfc2 = FilterComplex.create(setSAR, formatRGBA).addInput(concat2V);
-		Blend blend = Blend.build().mode(Mode.ADDITION).repeatLast(true).opacity(1).exprFade(startTime_T1, fadeDuration);
+		Blend blend = Blend.build().mode(Mode.ADDITION).repeatLast(true).opacity(1).exprFade(startTimeT1, fadeDuration);
 		Format formatYUV = Format.with(PixelFormat.YUVA422P10LE);
 		FilterComplex vfcBlend = FilterComplex.create(blend, formatYUV).addInput(vfc1).addInput(vfc2);
 		builder.filter(vfcBlend);

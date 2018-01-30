@@ -282,9 +282,7 @@ public class DefaultCommandBuilder implements CommandBuilder {
 				}
 			}
 			return command;
-		} catch(InstantiationException e) {
-			throw new RuntimeException(e);
-		} catch(IllegalAccessException e) {
+		} catch(InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
 	}

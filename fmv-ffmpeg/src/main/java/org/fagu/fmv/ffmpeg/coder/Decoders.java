@@ -37,9 +37,6 @@ import org.fagu.fmv.ffmpeg.utils.HelpCache;
  */
 public class Decoders extends Coders {
 
-	/**
-	 * 
-	 */
 	private static final HelpCache<Decoders, DecoderHelp> HELP_CACHE = new HelpCache<>(runnable(), Decoders::new);
 
 	/**

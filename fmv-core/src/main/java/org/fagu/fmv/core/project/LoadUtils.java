@@ -36,11 +36,6 @@ import org.fagu.fmv.utils.time.Time;
 public class LoadUtils {
 
 	/**
-	 * 
-	 */
-	public LoadUtils() {}
-
-	/**
 	 * @param element
 	 * @param name
 	 * @return
@@ -82,10 +77,9 @@ public class LoadUtils {
 	/**
 	 * @param element
 	 * @return
-	 * @throws LoadException
 	 */
 	@SuppressWarnings("unchecked")
-	public static List<Attribute> attributes(Element element) throws LoadException {
+	public static List<Attribute> attributes(Element element) {
 		if(element == null) {
 			return Collections.emptyList();
 		}
@@ -145,20 +139,6 @@ public class LoadUtils {
 	 * @return
 	 * @throws LoadException
 	 */
-	public static String attributeRequireString(Element element, String attributeName) throws LoadException {
-		String value = element.attributeValue(attributeName);
-		if(value == null) {
-			throw LoadException.attribute(element, attributeName);
-		}
-		return value;
-	}
-
-	/**
-	 * @param element
-	 * @param attributeName
-	 * @return
-	 * @throws LoadException
-	 */
 	public static int attributeRequireInt(Element element, String attributeName) throws LoadException {
 		String value = element.attributeValue(attributeName);
 		try {
@@ -202,9 +182,8 @@ public class LoadUtils {
 	 * @param element
 	 * @param attributeName
 	 * @return
-	 * @throws LoadException
 	 */
-	public static Time attributeTime(Element element, String attributeName) throws LoadException {
+	public static Time attributeTime(Element element, String attributeName) {
 		String value = element.attributeValue(attributeName);
 		if(StringUtils.isBlank(value)) {
 			return null;

@@ -41,11 +41,6 @@ public class Info extends AbstractCommand {
 	private static final String DEFAULT_PADDING = "  ";
 
 	/**
-	 *
-	 */
-	public Info() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

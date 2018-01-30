@@ -31,11 +31,6 @@ import org.fagu.fmv.cli.annotation.Command;
 public class Set extends AbstractCommand {
 
 	/**
-	 * 
-	 */
-	public Set() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override

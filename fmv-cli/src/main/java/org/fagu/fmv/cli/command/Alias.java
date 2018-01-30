@@ -36,11 +36,6 @@ public class Alias extends AbstractCommand {
 	private CommandBuilder commandBuilder;
 
 	/**
-	 *
-	 */
-	public Alias() {}
-
-	/**
 	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
 	 */
 	@Override
