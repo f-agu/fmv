@@ -36,11 +36,10 @@ import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.OutputInfos;
 import org.fagu.fmv.core.project.Project;
 import org.fagu.fmv.core.project.Properties;
-import org.fagu.fmv.ffmpeg.coder.Libx264;
+import org.fagu.fmv.ffmpeg.coder.H264;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
 import org.fagu.fmv.ffmpeg.format.BasicStreamMuxer;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
-
 
 /**
  * @author f.agu
@@ -52,7 +51,8 @@ public abstract class AbstractExecutable extends Attributable implements Executa
 	/**
 	 *
 	 */
-	public AbstractExecutable() {}
+	public AbstractExecutable() {
+	}
 
 	/**
 	 * @param project
@@ -79,19 +79,19 @@ public abstract class AbstractExecutable extends Attributable implements Executa
 	}
 
 	/**
-	 * @see org.fagu.fmv.core.exec.Attributable#load(org.fagu.fmv.core.project.Project, org.dom4j.Element,
-	 *      org.fagu.fmv.core.exec.Identifiable)
+	 * @see org.fagu.fmv.core.exec.Attributable#load(org.fagu.fmv.core.project.Project,
+	 *      org.dom4j.Element, org.fagu.fmv.core.exec.Identifiable)
 	 */
 	@Override
 	public void load(Project project, Element fromElement, Identifiable parent) throws LoadException {
 		super.load(project, fromElement, parent);
 
 		String optionsStr = fromElement.attributeValue("options");
-		if(optionsStr != null) {
-			for(String optionStr : optionsStr.split(",")) {
+		if (optionsStr != null) {
+			for (String optionStr : optionsStr.split(",")) {
 				try {
 					options.add(ExecutableOption.valueOf(optionStr));
-				} catch(IllegalArgumentException e) {
+				} catch (IllegalArgumentException e) {
 					// ignore
 				}
 			}
@@ -105,7 +105,7 @@ public abstract class AbstractExecutable extends Attributable implements Executa
 	public void save(Element toElement) {
 		super.save(toElement);
 
-		if( ! options.isEmpty()) {
+		if (!options.isEmpty()) {
 			String optionsStr = options.stream().map(opt -> opt.name().toLowerCase()).collect(Collectors.joining(","));
 			toElement.addAttribute("options", optionsStr);
 		}
@@ -141,8 +141,8 @@ public abstract class AbstractExecutable extends Attributable implements Executa
 	 * @return
 	 */
 	protected OutputProcessor outputProcessor(OutputProcessor outputProcessor, Cache cache) {
-		int crf = getX264CRFQuality(cache);
-		outputProcessor.codec(Libx264.build().mostCompatible().crf(crf));
+		int crf = getH264Quality(cache);
+		outputProcessor.codec(H264.findRecommanded().mostCompatible().quality(crf));
 		outputProcessor.qualityScaleAudio(0);
 		outputProcessor.qualityScaleVideo(0);
 		outputProcessor.overwrite();
@@ -155,14 +155,14 @@ public abstract class AbstractExecutable extends Attributable implements Executa
 	 * @param cache
 	 * @return
 	 */
-	private int getX264CRFQuality(Cache cache) {
-		if(cache == Cache.PREVIEW) {
-			return getProject().getProperty(Properties.PREVIEW_X264_CRF);
+	private int getH264Quality(Cache cache) {
+		if (cache == Cache.PREVIEW) {
+			return getProject().getProperty(Properties.PREVIEW_H264_CRF);
 		}
-		if(cache != Cache.MAKE) {
+		if (cache != Cache.MAKE) {
 			throw new RuntimeException("Not implemented");
 		}
-		return getProject().getProperty(isRoot() ? Properties.MAKE_X264_CRF : Properties.PREPARE_MAKE_X264_CRF);
+		return getProject().getProperty(isRoot() ? Properties.MAKE_H264_CRF : Properties.PREPARE_MAKE_H264_CRF);
 	}
 
 }

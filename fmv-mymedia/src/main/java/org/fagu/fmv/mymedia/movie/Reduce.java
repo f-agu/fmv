@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.io.FilenameUtils;
-import org.fagu.fmv.ffmpeg.coder.Libx264;
+import org.fagu.fmv.ffmpeg.coder.H264;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
 import org.fagu.fmv.ffmpeg.flags.Strict;
@@ -42,7 +42,6 @@ import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Type;
 
-
 /**
  * @author f.agu
  */
@@ -53,7 +52,8 @@ public class Reduce {
 	// private static final long BEFORE_TIME = 1449010800000L; // 2015-12-02
 	// 1449244477913
 
-	private static Set<String> MOVIE_SET = new HashSet<>(Arrays.asList("avi", "mov", "mp4", "wmv", "mpg", "3gp", "flv", "ts", "mkv"));
+	private static Set<String> MOVIE_SET = new HashSet<>(
+			Arrays.asList("avi", "mov", "mp4", "wmv", "mpg", "3gp", "flv", "ts", "mkv"));
 
 	/**
 	 * @param args
@@ -80,7 +80,7 @@ public class Reduce {
 						totalSize.addAndGet(fileSize);
 
 						doIt(p.toFile());
-					} catch(Exception e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				});
@@ -94,31 +94,32 @@ public class Reduce {
 	 */
 	private static void doIt(File sourceFile) throws IOException {
 		String extension = FilenameUtils.getExtension(sourceFile.getName()).toLowerCase();
-		if( ! "mkv".equals(extension)) {
+		if (!"mkv".equals(extension)) {
 			extension = "mp4";
 		}
-		File destinationFile = new File(sourceFile.getParentFile(), FilenameUtils.getBaseName(sourceFile.getName()) + "-new." + extension);
+		File destinationFile = new File(sourceFile.getParentFile(),
+				FilenameUtils.getBaseName(sourceFile.getName()) + "-new." + extension);
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.hideBanner();
 
 		InputProcessor inputProcessor = builder.addMediaInputFile(sourceFile);
 		MovieMetadatas videoMetadatas = inputProcessor.getMovieMetadatas();
-		boolean doVideo = ! videoMetadatas.getVideoStream().isTreatedByFMV();
+		boolean doVideo = !videoMetadatas.getVideoStream().isTreatedByFMV();
 
 		boolean doAudio = doVideo;
 		Collection<AudioStream> audioStreams = StreamOrder.sort(videoMetadatas.getAudioStreams());
 
-		for(AudioStream audioStream : audioStreams) {
-			if("vorbis".equals(audioStream.codecName().get())) {
+		for (AudioStream audioStream : audioStreams) {
+			if ("vorbis".equals(audioStream.codecName().get())) {
 				doAudio |= true;
 				break;
 			}
-			if("aac".equals(audioStream.codecName().get())) {
+			if ("aac".equals(audioStream.codecName().get())) {
 				doAudio = false;
 				break;
 			}
 		}
-		if( ! doVideo && ! doAudio) {
+		if (!doVideo && !doAudio) {
 			return;
 		}
 
@@ -127,22 +128,22 @@ public class Reduce {
 
 		// ------------------------ map ------------------------
 		// video
-		for(Stream stream : videoMetadatas.getVideoStreams()) {
+		for (Stream stream : videoMetadatas.getVideoStreams()) {
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 		// audio
-		for(Stream stream : audioStreams) {
+		for (Stream stream : audioStreams) {
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 		// subtitle
 		Collection<SubtitleStream> subtitleStreams = StreamOrder.sort(videoMetadatas.getSubtitleStreams());
-		for(Stream stream : subtitleStreams) {
+		for (Stream stream : subtitleStreams) {
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 		// other stream
-		for(Stream stream : videoMetadatas.getStreams()) {
+		for (Stream stream : videoMetadatas.getStreams()) {
 			Type type = stream.type();
-			if(type != Type.AUDIO && type != Type.VIDEO && type != Type.SUBTITLE) {
+			if (type != Type.AUDIO && type != Type.VIDEO && type != Type.SUBTITLE) {
 				outputProcessor.map().streams(stream).input(inputProcessor);
 			}
 		}
@@ -150,17 +151,17 @@ public class Reduce {
 		// ------------------------ disposition default ------------------------
 		//
 		int count = 0;
-		for(Stream stream : audioStreams) {
+		for (Stream stream : audioStreams) {
 			boolean beDefault = count == 1;
-			if(stream.isDefaultStream() != beDefault) {
+			if (stream.isDefaultStream() != beDefault) {
 				outputProcessor.metadataStream(Type.AUDIO, count, "disposition:default", beDefault ? "1" : "0");
 			}
 			++count;
 		}
 		count = 0;
-		for(Stream stream : subtitleStreams) {
+		for (Stream stream : subtitleStreams) {
 			boolean beDefault = count == 1;
-			if(stream.isDefaultStream() != beDefault) {
+			if (stream.isDefaultStream() != beDefault) {
 				outputProcessor.metadataStream(Type.SUBTITLE, count, "disposition:default", beDefault ? "1" : "0");
 			}
 			++count;
@@ -169,21 +170,21 @@ public class Reduce {
 		// -------------------------- codec -------------------------
 
 		// video
-		if(doVideo) {
-			outputProcessor.codec(Libx264.build().strict(Strict.EXPERIMENTAL).crf(23));
+		if (doVideo) {
+			outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(23));
 		} else {
 			outputProcessor.codecCopy(Type.VIDEO);
 		}
 
 		// audio
-		if(doAudio) {
+		if (doAudio) {
 			outputProcessor.codecAutoSelectAAC();
 		} else {
 			outputProcessor.codecCopy(Type.AUDIO);
 		}
 
 		// subtitle
-		if(videoMetadatas.contains(Type.SUBTITLE)) {
+		if (videoMetadatas.contains(Type.SUBTITLE)) {
 			outputProcessor.codecCopy(Type.SUBTITLE);
 		}
 

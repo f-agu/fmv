@@ -23,7 +23,6 @@ import org.fagu.fmv.utils.PropertyValue;
 import org.fagu.fmv.utils.PropertyValues.IntegerPropertyValue;
 import org.fagu.fmv.utils.PropertyValues.StringPropertyValue;
 
-
 /**
  * @author Oodrive
  * @author f.agu
@@ -33,10 +32,13 @@ public class Properties {
 
 	public static final String PROPERTY_PREFIX = "fmv.ffmpeg.";
 
-	public static final PropertyValue<String> X264_PRESET = new StringPropertyValue(PROPERTY_PREFIX + "x264.preset", "medium");
+	public static final PropertyValue<String> H264_PRESET = new StringPropertyValue(PROPERTY_PREFIX + "h264.preset",
+			"medium");
 
-	public static final PropertyValue<Integer> X264_CRF = new IntegerPropertyValue(PROPERTY_PREFIX + "x264.crf", 22);
+	public static final PropertyValue<Integer> H264_QUALITY = new IntegerPropertyValue(PROPERTY_PREFIX + "h264.quality",
+			22);
 
-	private Properties() {}
+	private Properties() {
+	}
 
 }

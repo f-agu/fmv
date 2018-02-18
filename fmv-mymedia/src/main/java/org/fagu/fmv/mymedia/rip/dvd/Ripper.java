@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.fagu.fmv.ffmpeg.coder.Libx264;
+import org.fagu.fmv.ffmpeg.coder.H264;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
 import org.fagu.fmv.ffmpeg.flags.Strict;
@@ -46,7 +46,6 @@ import org.fagu.fmv.textprogressbar.part.PercentPart;
 import org.fagu.fmv.textprogressbar.part.ProgressPart;
 import org.fagu.fmv.textprogressbar.part.SpinnerPart;
 
-
 /**
  * @author f.agu
  * @created 5 juin 2017 13:08:48
@@ -69,15 +68,16 @@ public class Ripper implements Closeable {
 
 		private File tmpDirectory = new File("d:\\tmp\\dvd-rip");
 
-		private SelectTitlesPolicy selectTitlesPolicy = new CmdLineConfirmSelectTitlesPolicy(new DefaultSelectTitlesPolicy());
+		private SelectTitlesPolicy selectTitlesPolicy = new CmdLineConfirmSelectTitlesPolicy(
+				new DefaultSelectTitlesPolicy());
 
 		private TitlesExtractor titlesExtractor = (dvdDrive, logger) -> MPlayerTitles.fromDVDDrive(dvdDrive)
-				.logger(logger::log)
-				.find();
+				.logger(logger::log).find();
 
 		private DVDName dvdName = Ripper::getDVDName;
 
-		private MPlayerDumperBuilder mPlayerDumperBuilder = (dvdDrive, logger) -> MPlayerDump.fromDVDDrive(dvdDrive).logger(logger::log);
+		private MPlayerDumperBuilder mPlayerDumperBuilder = (dvdDrive, logger) -> MPlayerDump.fromDVDDrive(dvdDrive)
+				.logger(logger::log);
 
 		private Supplier<FFMPEGExecutorBuilder> ffMPEGExecutorBuilderSupplier = FFMPEGExecutorBuilder::create;
 
@@ -110,7 +110,8 @@ public class Ripper implements Closeable {
 			return this;
 		}
 
-		public RipperBuilder ffMPEGExecutorBuilderSupplier(Supplier<FFMPEGExecutorBuilder> ffMPEGExecutorBuilderSupplier) {
+		public RipperBuilder ffMPEGExecutorBuilderSupplier(
+				Supplier<FFMPEGExecutorBuilder> ffMPEGExecutorBuilderSupplier) {
 			this.ffMPEGExecutorBuilderSupplier = Objects.requireNonNull(ffMPEGExecutorBuilderSupplier);
 			return this;
 		}
@@ -201,8 +202,9 @@ public class Ripper implements Closeable {
 		this.mPlayerDumperBuilder = builder.mPlayerDumperBuilder;
 		this.ffMPEGExecutorBuilderSupplier = builder.ffMPEGExecutorBuilderSupplier;
 		try {
-			this.logger = LoggerFactory.openLogger(LoggerFactory.getLogFile(tmpDirectory, PROPERTY_LOG_FILE, PROPERTY_LOG_FILE_DEFAULT_NAME));
-		} catch(IOException e) {
+			this.logger = LoggerFactory.openLogger(
+					LoggerFactory.getLogFile(tmpDirectory, PROPERTY_LOG_FILE, PROPERTY_LOG_FILE_DEFAULT_NAME));
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		ffmpegService = Executors.newSingleThreadExecutor();
@@ -225,9 +227,7 @@ public class Ripper implements Closeable {
 		String msg = "Analyzing DVD on " + dvdDrive + "...";
 		logger.log(msg);
 		String name = null;
-		try (TextProgressBar bar = TextProgressBar.newBar()
-				.appendText(msg + "   ")
-				.append(new SpinnerPart())
+		try (TextProgressBar bar = TextProgressBar.newBar().appendText(msg + "   ").append(new SpinnerPart())
 				.buildAndSchedule()) {
 			name = dvdName.nameOf(dvdDrive, logger);
 		}
@@ -236,9 +236,7 @@ public class Ripper implements Closeable {
 		msg = "Scanning titles...";
 		logger.log(msg);
 		MPlayerTitles mPlayerTitles = null;
-		try (TextProgressBar bar = TextProgressBar.newBar()
-				.appendText(msg + "   ")
-				.append(new SpinnerPart())
+		try (TextProgressBar bar = TextProgressBar.newBar().appendText(msg + "   ").append(new SpinnerPart())
 				.buildAndSchedule()) {
 			mPlayerTitles = titlesExtractor.extract(dvdDrive, logger);
 		}
@@ -258,31 +256,27 @@ public class Ripper implements Closeable {
 		});
 
 		final String finalName = name;
-		TextProgressBarBuilder builder = TextProgressBar.newBar()
-				.fixWidth(32)
+		TextProgressBarBuilder builder = TextProgressBar.newBar().fixWidth(32)
 				.withText(StringUtils.abbreviate(finalName, prefixWidth) + " ");
 
-		if(titles.size() == 1) {
-			builder.fixWidth(20).with(s -> currentTitle.get() == 1 ? "reading DVD..." : currentEncoding.get() == 1 ? "encoding..." : "");
+		if (titles.size() == 1) {
+			builder.fixWidth(20).with(
+					s -> currentTitle.get() == 1 ? "reading DVD..." : currentEncoding.get() == 1 ? "encoding..." : "");
 		} else {
-			builder.fixWidth(19).with(s -> currentTitle.get() > 0 ? "reading DVD: " + currentTitle.get() + "/" + titles.size()
-					: "");
-			builder.fixWidth(15).with(s -> currentEncoding.get() > 0 ? "encoding: " + currentEncoding.get() + "/" + titles.size()
-					: "");
+			builder.fixWidth(19).with(
+					s -> currentTitle.get() > 0 ? "reading DVD: " + currentTitle.get() + "/" + titles.size() : "");
+			builder.fixWidth(15).with(
+					s -> currentEncoding.get() > 0 ? "encoding: " + currentEncoding.get() + "/" + titles.size() : "");
 		}
-		textProgressBar = builder
-				.append(ProgressPart.width(31).build())
-				.fixWidth(6)
-				.leftPad()
-				.with(new PercentPart())
+		textProgressBar = builder.append(ProgressPart.width(31).build()).fixWidth(6).leftPad().with(new PercentPart())
 				.buildAndSchedule(() -> progressList.stream().mapToInt(AtomicInteger::get).sum() / nbProgresses);
 
-		if( ! tmpDirectory.exists() && ! tmpDirectory.mkdirs()) {
+		if (!tmpDirectory.exists() && !tmpDirectory.mkdirs()) {
 			throw new IOException("Unable to make directory: " + tmpDirectory);
 		}
 		CountDownLatch encodingLatch = new CountDownLatch(titles.size());
 		Iterator<AtomicInteger> progressIterator = progressList.iterator();
-		for(MPlayerTitle title : titles) {
+		for (MPlayerTitle title : titles) {
 			AtomicInteger dumpProgress = progressIterator.next();
 			AtomicInteger encodeProgress = progressIterator.next();
 
@@ -291,18 +285,17 @@ public class Ripper implements Closeable {
 			File vobFile = File.createTempFile(baseName + '-', ".vob", tmpDirectory);
 			logger.log("Dumping title " + currentTitle + "/" + titles.size() + ": " + vobFile.getAbsolutePath());
 
-			MPlayerDump mPlayerDump = mPlayerDumperBuilder.prepare(dvdDrive, logger)
-					.progress(dumpProgress::set)
+			MPlayerDump mPlayerDump = mPlayerDumperBuilder.prepare(dvdDrive, logger).progress(dumpProgress::set)
 					.dump(title.getNum(), vobFile);
 
 			File mp4File = new File(tmpDirectory, baseName + ".mp4");
 			logger.log("Encoding title " + currentTitle + "/" + titles.size() + ": " + mp4File.getAbsolutePath());
 			encode(vobFile, mp4File, mPlayerDump, encodeProgress, currentEncoding, encodingLatch);
 		}
-		currentTitle.set( - 1);
+		currentTitle.set(-1);
 		try {
 			encodingLatch.await();
-		} catch(InterruptedException e) {
+		} catch (InterruptedException e) {
 			throw new IOException(e);
 		}
 		logger.log("End");
@@ -334,9 +327,8 @@ public class Ripper implements Closeable {
 	 * @param progressEncode
 	 * @throws IOException
 	 */
-	private void encode(File vobFile, File mp4File, MPlayerDump mPlayerDump, AtomicInteger progressEncode, AtomicInteger currentEncoding,
-			CountDownLatch encodingLatch)
-			throws IOException {
+	private void encode(File vobFile, File mp4File, MPlayerDump mPlayerDump, AtomicInteger progressEncode,
+			AtomicInteger currentEncoding, CountDownLatch encodingLatch) throws IOException {
 		FFMPEGExecutorBuilder builder = ffMPEGExecutorBuilderSupplier.get();
 		builder.hideBanner();
 
@@ -346,22 +338,23 @@ public class Ripper implements Closeable {
 		OutputProcessor outputProcessor = builder.addMediaOutputFile(mp4File);
 
 		// video
-		for(VideoStream stream : movieMetadatas.getVideoStreams()) {
+		for (VideoStream stream : movieMetadatas.getVideoStreams()) {
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 
 		// audio
-		filterAndMap(inputProcessor, outputProcessor, movieMetadatas.getAudioStreams().iterator(), mPlayerDump.getAudioStreams());
+		filterAndMap(inputProcessor, outputProcessor, movieMetadatas.getAudioStreams().iterator(),
+				mPlayerDump.getAudioStreams());
 
 		// subtitle
-		filterAndMap(inputProcessor, outputProcessor, movieMetadatas.getSubtitleStreams().iterator(), mPlayerDump.getSubtitles());
+		filterAndMap(inputProcessor, outputProcessor, movieMetadatas.getSubtitleStreams().iterator(),
+				mPlayerDump.getSubtitles());
 
-		outputProcessor.codec(Libx264.build().strict(Strict.EXPERIMENTAL).crf(21))
-				.overwrite();
+		outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(21)).overwrite();
 
 		int nbFrames = 0;
 		OptionalInt countEstimateFrames = movieMetadatas.getVideoStream().countEstimateFrames();
-		if(countEstimateFrames.isPresent()) {
+		if (countEstimateFrames.isPresent()) {
 			nbFrames = countEstimateFrames.getAsInt();
 		} else {
 			// TODO
@@ -374,7 +367,7 @@ public class Ripper implements Closeable {
 			try {
 				currentEncoding.incrementAndGet();
 				executor.execute();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				logger.log(e);
 			} finally {
 				encodingLatch.countDown();
@@ -389,22 +382,22 @@ public class Ripper implements Closeable {
 	 * @param ffmpegStreams
 	 * @param mplayerStreams
 	 */
-	private void filterAndMap(InputProcessor inputProcessor, OutputProcessor outputProcessor, Iterator<? extends Stream> ffmpegStreams,
-			List<? extends org.fagu.fmv.soft.mplayer.Stream> mplayerStreams) {
-		if(mplayerStreams.size() == 1) {
+	private void filterAndMap(InputProcessor inputProcessor, OutputProcessor outputProcessor,
+			Iterator<? extends Stream> ffmpegStreams, List<? extends org.fagu.fmv.soft.mplayer.Stream> mplayerStreams) {
+		if (mplayerStreams.size() == 1) {
 			outputProcessor.map().streams(ffmpegStreams.next()).input(inputProcessor);
-		} else if(mplayerStreams.size() > 1) {
+		} else if (mplayerStreams.size() > 1) {
 			Set<Locale> locales = new HashSet<>();
-			for(org.fagu.fmv.soft.mplayer.Stream mplayerStream : mplayerStreams) {
+			for (org.fagu.fmv.soft.mplayer.Stream mplayerStream : mplayerStreams) {
 				String lang = mplayerStream.getLanguage();
 				org.fagu.fmv.ffmpeg.metadatas.Stream ffmpegStream = ffmpegStreams.next();
 				Locale locale = null;
-				if(lang.toLowerCase().startsWith("fr")) {
+				if (lang.toLowerCase().startsWith("fr")) {
 					locale = Locale.FRENCH;
-				} else if(lang.toLowerCase().startsWith("en")) {
+				} else if (lang.toLowerCase().startsWith("en")) {
 					locale = Locale.ENGLISH;
 				}
-				if(locale != null && locales.add(locale)) {
+				if (locale != null && locales.add(locale)) {
 					outputProcessor.map().streams(ffmpegStream).input(inputProcessor);
 				}
 			}
@@ -429,22 +422,20 @@ public class Ripper implements Closeable {
 		params.add("dvd://");
 
 		MutableObject<String> volumeId = new MutableObject<>();
-		MPlayer.search()
-				.withParameters(params)
-				.logCommandLine(logger::log)
-				.addOutReadLine(l -> {
-					if(l.startsWith("ID_DVD_VOLUME_ID=")) {
-						volumeId.setValue(StringUtils.substringAfter(l, "="));
-					}
-				})
-				.execute();
+		MPlayer.search().withParameters(params).logCommandLine(logger::log).addOutReadLine(l -> {
+			if (l.startsWith("ID_DVD_VOLUME_ID=")) {
+				volumeId.setValue(StringUtils.substringAfter(l, "="));
+			}
+		}).execute();
 		return volumeId.getValue();
 	}
 
 	// public static void main(String[] args) throws IOException {
 	// Ripper ripper = Ripper.fromDVDDrive(new File("e:")).build();
-	// File vobFile = new File("D:\\tmp\\dvd-rip\\dvd-123_DVD01_SAISON_IV-1-6694961849075169155.vob");
-	// File mp4File = new File("D:\\tmp\\dvd-rip\\dvd-123_DVD01_SAISON_IV-1-6694961849075169155.mp4");
+	// File vobFile = new
+	// File("D:\\tmp\\dvd-rip\\dvd-123_DVD01_SAISON_IV-1-6694961849075169155.vob");
+	// File mp4File = new
+	// File("D:\\tmp\\dvd-rip\\dvd-123_DVD01_SAISON_IV-1-6694961849075169155.mp4");
 	//
 	// Map<String, String> map = new HashMap<>();
 	// map.put("audio stream", "0");
@@ -452,19 +443,23 @@ public class Ripper implements Closeable {
 	// map.put("language", "fr");
 	// map.put("aid", "128");
 	//
-	// List<org.fagu.fmv.soft.mplayer.Stream> asList = Arrays.asList(new AudioStream(0, map));
+	// List<org.fagu.fmv.soft.mplayer.Stream> asList = Arrays.asList(new
+	// AudioStream(0, map));
 	// MPlayerDump mPlayerDump = new MPlayerDump(asList);
 	// ripper.encode(vobFile, mp4File, mPlayerDump);
 	// }
 
 	// public static void main(String[] args) throws Exception {
-	// File vobFile = new File("D:\\tmp\\dvd-rip\\shak\\dvd-Shark_Tale-50-7679807258330259065.vob");
-	// File mp4File = new File("D:\\tmp\\dvd-rip\\shak\\dvd-Shark_Tale-50-7679807258330259065.mp4");
+	// File vobFile = new
+	// File("D:\\tmp\\dvd-rip\\shak\\dvd-Shark_Tale-50-7679807258330259065.vob");
+	// File mp4File = new
+	// File("D:\\tmp\\dvd-rip\\shak\\dvd-Shark_Tale-50-7679807258330259065.mp4");
 	// Ripper ripper = Ripper.fromDVDDrive(new File(".")).build();
 	// AtomicInteger progressEncode = new AtomicInteger();
 	// AtomicInteger currentEncoding = new AtomicInteger();
 	// CountDownLatch encodingLatch = new CountDownLatch(1);
-	// ripper.encode(vobFile, mp4File, null, progressEncode, currentEncoding, encodingLatch);
+	// ripper.encode(vobFile, mp4File, null, progressEncode, currentEncoding,
+	// encodingLatch);
 	// }
 
 }
