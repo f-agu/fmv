@@ -105,9 +105,9 @@ public class FFReducer extends AbstractReducer {
 
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
-			ffReducer.reduceMedia(new File("D:\\tmp\\dvd-rip\\test\\a\\a.vob"),
+			ffReducer.reduceMedia(new File("D:\\tmp\\Colo ski 17 au 25 fevrier\\IMG_0955.MOV"),
 					"totogsdlfjhsdkfjhqsdfiohqsdohqsjhbqsdjhbqsdgjhqbsdgoqbrgioqdbgqdfjkgbgqdfjgbgbqdfjkgbqdfjgbqdf",
-					Loggers.noOperation());
+					Loggers.systemOut());
 		} catch (FMVExecuteException e) {
 			e.printStackTrace();
 			// if( ! e.isKnown()) {
@@ -347,13 +347,13 @@ public class FFReducer extends AbstractReducer {
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 		// other stream
-		for (Stream stream : videoMetadatas.getStreams()) {
-			Type type = stream.type();
-			if (type != Type.AUDIO && type != Type.VIDEO && type != Type.SUBTITLE) {
-				logger.log("map other stream: " + stream);
-				outputProcessor.map().streams(stream).input(inputProcessor);
-			}
-		}
+		// for (Stream stream : videoMetadatas.getStreams()) {
+		// Type type = stream.type();
+		// if (type != Type.AUDIO && type != Type.VIDEO && type != Type.SUBTITLE) {
+		// logger.log("map other stream: " + stream);
+		// outputProcessor.map().streams(stream).input(inputProcessor);
+		// }
+		// }
 
 		// -------------------------- codec -------------------------
 
