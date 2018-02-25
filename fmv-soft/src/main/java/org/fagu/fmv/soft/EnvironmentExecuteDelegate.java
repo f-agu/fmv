@@ -35,7 +35,7 @@ public class EnvironmentExecuteDelegate implements ExecuteDelegate {
 	 */
 	@Override
 	public int execute(FMVExecutor fmvExecutor, CommandLine commandLine) throws IOException {
-		return fmvExecutor.execute(commandLine);
+		return fmvExecutor.execute(commandLine, envs);
 	}
 
 }
