@@ -71,8 +71,10 @@ public abstract class Format<M> extends ElementParameterized<M> {
 	 * @param avioflags
 	 * @return
 	 */
-	public M avioflags(Collection<Avioflags> avioflagss) {
-		avioflagss.stream().filter(f -> getIO().accept(f.io())).forEach(f -> this.avioflagss.add(f));
+	public M avioflags(Collection<Avioflags> inavioflagss) {
+		inavioflagss.stream()
+				.filter(f -> getIO().accept(f.io()))
+				.forEach(avioflagss::add);
 		return getMThis();
 	}
 
@@ -92,8 +94,10 @@ public abstract class Format<M> extends ElementParameterized<M> {
 	 * @param fflags
 	 * @return
 	 */
-	public M fflags(Collection<Fflags> fflagss) {
-		fflagss.stream().filter(f -> getIO().accept(f.io())).forEach(f -> this.fflagss.add(f));
+	public M fflags(Collection<Fflags> infflagss) {
+		infflagss.stream()
+				.filter(f -> getIO().accept(f.io()))
+				.forEach(fflagss::add);
 		return getMThis();
 	}
 
@@ -113,8 +117,10 @@ public abstract class Format<M> extends ElementParameterized<M> {
 	 * @param fdebug
 	 * @return
 	 */
-	public M fdebug(Collection<Fdebug> fdebugs) {
-		fdebugs.stream().filter(f -> getIO().accept(f.io())).forEach(f -> this.fdebugs.add(f));
+	public M fdebug(Collection<Fdebug> infdebugs) {
+		infdebugs.stream()
+				.filter(f -> getIO().accept(f.io()))
+				.forEach(fdebugs::add);
 		return getMThis();
 	}
 
@@ -176,6 +182,6 @@ public abstract class Format<M> extends ElementParameterized<M> {
 	/**
 	 * @return
 	 */
-	abstract public IO getIO();
+	public abstract IO getIO();
 
 }

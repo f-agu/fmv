@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.utils.srcgen;
  * #L%
  */
 
-
 import java.text.BreakIterator;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,10 +30,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ClassNameUtils {
 
-	/**
-	 * 
-	 */
-	public ClassNameUtils() {}
+	private ClassNameUtils() {}
 
 	/**
 	 * @param name

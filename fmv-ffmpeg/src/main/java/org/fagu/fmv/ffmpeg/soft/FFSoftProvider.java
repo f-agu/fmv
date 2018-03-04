@@ -143,6 +143,8 @@ public abstract class FFSoftProvider extends SoftProvider {
 	Parser createParser(File file) {
 		return new Parser() {
 
+			private static final String CONFIGURATION_START_PATTERN = "configuration:";
+
 			private Version version = null;
 
 			private Date builtDate = null;
@@ -150,8 +152,6 @@ public abstract class FFSoftProvider extends SoftProvider {
 			private Set<String> configuration = null; // configuration
 
 			private Map<String, Version> libVersions = new HashMap<>(); // lib versions
-
-			private final String configurationStartPattern = "configuration:";
 
 			private SoftFound softFound;
 
@@ -174,8 +174,8 @@ public abstract class FFSoftProvider extends SoftProvider {
 				}
 
 				// configuration
-				if(line.startsWith(configurationStartPattern)) {
-					configuration = getConfiguration(StringUtils.substringAfter(line, configurationStartPattern).trim());
+				if(line.startsWith(CONFIGURATION_START_PATTERN)) {
+					configuration = getConfiguration(StringUtils.substringAfter(line, CONFIGURATION_START_PATTERN).trim());
 					return;
 				}
 
@@ -255,7 +255,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 	 * @return
 	 */
 	static Set<String> getConfiguration(String line) {
-		Set<String> set = new LinkedHashSet<String>(32);
+		Set<String> set = new LinkedHashSet<>(32);
 
 		boolean inMark = false;
 		StringBuilder currentBuf = new StringBuilder();

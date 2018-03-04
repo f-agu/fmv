@@ -42,7 +42,7 @@ public class Formats {
 	/**
 	 * 
 	 */
-	private static final HelpCache<Formats, FormatsHelp> HELP_CACHE = new HelpCache<Formats, FormatsHelp>(runnable(), Formats::new);
+	private static final HelpCache<Formats, FormatsHelp> HELP_CACHE = new HelpCache<>(runnable(), Formats::new);
 
 	/**
 	 * 3GP2 (3GPP2 file format), QuickTime / MOV
@@ -1487,7 +1487,10 @@ public class Formats {
 	 * @return
 	 */
 	public String getDescription() {
-		return HELP_CACHE.cache(name).stream().map(b -> b.getText()).collect(Collectors.joining(", "));
+		return HELP_CACHE.cache(name)
+				.stream()
+				.map(FormatsHelp::getText)
+				.collect(Collectors.joining(", "));
 	}
 
 	/**
@@ -1548,7 +1551,7 @@ public class Formats {
 			try {
 				FFExecutor<List<String>> executor = new FFExecutor<>(operation);
 				Consumer<FormatsHelp> cacheConsumer = HELP_CACHE.consumer();
-				Function<String, FormatsHelp> factory = name -> new FormatsHelp(name);
+				Function<String, FormatsHelp> factory = FormatsHelp::new;
 
 				AvailableHelp<FormatsHelp> availableHelp = AvailableHelp.create();
 				availableHelp.title().legend().unreadLine().values(factory, cacheConsumer).parse(executor.execute().getResult());

@@ -40,11 +40,9 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
  */
 public class FontUtils {
 
-	private static BidiMap<String, Font> FONT_MAP;
+	private static BidiMap<String, Font> fontMap;
 
-	private static Map<Font, File> FONTFILE_MAP;
-
-	//
+	private static Map<Font, File> fontFileMap;
 
 	/**
 	 * 
@@ -57,7 +55,7 @@ public class FontUtils {
 	 */
 	public static File getFile(String fontName) {
 		loadAllSystemFonts();
-		Font font = FONT_MAP.get(fontName);
+		Font font = fontMap.get(fontName);
 		return getFile(font);
 	}
 
@@ -67,7 +65,7 @@ public class FontUtils {
 	 */
 	public static File getFile(Font font) {
 		loadAllSystemFonts();
-		return FONTFILE_MAP.get(font);
+		return fontFileMap.get(font);
 	}
 
 	/**
@@ -86,7 +84,7 @@ public class FontUtils {
 		}
 
 		try {
-			Method method = fontManagerClass.getDeclaredMethod("getFontPath", new Class<?>[] {boolean.class});
+			Method method = fontManagerClass.getDeclaredMethod("getFontPath", boolean.class);
 			method.setAccessible(true);
 			return (String)method.invoke(fontManager, true);
 		} catch(Exception e) {
@@ -100,22 +98,22 @@ public class FontUtils {
 	 * 
 	 */
 	private static void loadAllSystemFonts() {
-		if(FONT_MAP != null) {
+		if(fontMap != null) {
 			return;
 		}
-		BidiMap<String, Font> fontMap = new DualHashBidiMap<>();
+		BidiMap<String, Font> tmpFontBidiMap = new DualHashBidiMap<>();
 		Map<Font, File> fileMap = new HashMap<>();
 		File folder = new File(getSystemFontPath());
 		for(File file : folder.listFiles((FileFilter)new SuffixFileFilter(".ttf", IOCase.INSENSITIVE))) {
 			try {
 				Font font = Font.createFont(Font.TRUETYPE_FONT, file);
-				fontMap.put(font.getName().toLowerCase(), font);
+				tmpFontBidiMap.put(font.getName().toLowerCase(), font);
 				fileMap.put(font, file);
 			} catch(FontFormatException | IOException e) {
 				// e.printStackTrace();
 			}
 		}
-		FONT_MAP = fontMap;
-		FONTFILE_MAP = fileMap;
+		fontMap = tmpFontBidiMap;
+		fontFileMap = fileMap;
 	}
 }

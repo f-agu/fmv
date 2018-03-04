@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -149,8 +148,7 @@ public class Ebur128 extends AbstractFilter implements ParsedLibLog {
 	 */
 	@Override
 	public void log(String title, String somethings, String log) {
-		// TODO Auto-generated method stub
-
+		// NOTHING
 	}
 
 	/**

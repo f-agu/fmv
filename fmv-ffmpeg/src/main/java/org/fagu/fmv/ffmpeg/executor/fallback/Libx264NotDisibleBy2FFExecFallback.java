@@ -31,35 +31,29 @@ import org.fagu.fmv.ffmpeg.filter.impl.ScaleMode;
 import org.fagu.fmv.ffmpeg.operation.AbstractOperation;
 import org.fagu.fmv.utils.media.Size;
 
+
 /**
  * @author f.agu
  */
 public class Libx264NotDisibleBy2FFExecFallback implements FFExecFallback {
 
 	/**
-	 * 
-	 */
-	public Libx264NotDisibleBy2FFExecFallback() {
-	}
-
-	/**
-	 * @see org.fagu.fmv.ffmpeg.executor.FFExecFallback#prepare(org.fagu.fmv.ffmpeg.executor.FFEnv,
-	 *      java.io.IOException)
+	 * @see org.fagu.fmv.ffmpeg.executor.FFExecFallback#prepare(org.fagu.fmv.ffmpeg.executor.FFEnv, java.io.IOException)
 	 */
 	@Override
 	public boolean prepare(FFEnv ffEnv, IOException ioException) throws IOException {
 		FFExecutor<Object> executor = ffEnv.getExecutor();
-		AbstractOperation<?, ?> operation = (AbstractOperation<?, ?>) ffEnv.getOperation();
-		for (String line : executor.getOutputReadLine().getLines()) {
-			if (line.startsWith("[libx264 @") && line.contains(" not divisible by 2")) {
-				for (Filter filter : operation.getFilters()) {
-					if (filter instanceof Scale) {
-						Scale scale = (Scale) filter;
+		AbstractOperation<?, ?> operation = (AbstractOperation<?, ?>)ffEnv.getOperation();
+		for(String line : executor.getOutputReadLine().getLines()) {
+			if(line.startsWith("[libx264 @") && line.contains(" not divisible by 2")) {
+				for(Filter filter : operation.getFilters()) {
+					if(filter instanceof Scale) {
+						Scale scale = (Scale)filter;
 						Size size = scale.getSize();
 						ScaleMode scaleMode = scale.getScaleMode();
-						if (size != null && scaleMode != null) {
+						if(size != null && scaleMode != null) {
 							Size newSize = resize(size);
-							if (newSize == null) {
+							if(newSize == null) {
 								return false;
 							}
 							scale.set(size, scaleMode);
@@ -85,16 +79,13 @@ public class Libx264NotDisibleBy2FFExecFallback implements FFExecFallback {
 	 * @param size
 	 * @return
 	 */
-	public static Size resize(Size size) {
-		Size newSize = null;
-		if (size.getHeight() % 2 == 1) {
-			newSize = size = Size.valueOf(size.getWidth(), size.getHeight() - 1);
+	public static Size resize(final Size size) {
+		Size newSize = size;
+		if(size.getHeight() % 2 == 1) {
+			newSize = Size.valueOf(size.getWidth(), size.getHeight() - 1);
 		}
-		if (size.getWidth() % 2 == 1) {
-			newSize = size = Size.valueOf(size.getWidth() - 1, size.getHeight());
-		}
-		if (newSize == null) {
-			newSize = size;
+		if(size.getWidth() % 2 == 1) {
+			newSize = Size.valueOf(size.getWidth() - 1, size.getHeight());
 		}
 		return size.fitAndKeepRatioTo(newSize);
 	}

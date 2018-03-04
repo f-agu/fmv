@@ -59,30 +59,15 @@ public class HelpCache<E, H extends Help> {
 
 	// -----------------------------------------
 
-	/**
-	 * 
-	 */
 	private final Map<String, Both<E, H>> cacheMap = new TreeMap<>();
 
-	/**
-	 * 
-	 */
 	private List<E> entityList;
 
-	/**
-	 * 
-	 */
 	private boolean availableLoaded;
 
-	/**
-	 * 
-	 */
-	private Runnable runnable;
+	private final Runnable runnable;
 
-	/**
-	 * 
-	 */
-	private Function<String, E> eFactory;
+	private final Function<String, E> eFactory;
 
 	/**
 	 * @param runnable
@@ -109,11 +94,7 @@ public class HelpCache<E, H extends Help> {
 		if(name == null) {
 			return;
 		}
-		Both<E, H> both = cacheMap.get(name);
-		if(both == null) {
-			both = new Both<>();
-			cacheMap.put(name, both);
-		}
+		Both<E, H> both = cacheMap.computeIfAbsent(name, k -> new Both<>());
 		if(e != null && both.e == null) {
 			both.e = e;
 		}

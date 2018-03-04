@@ -190,8 +190,10 @@ public abstract class Demuxer<M> extends Format<M> implements MediaInput {
 	 * @param errDetect
 	 * @return
 	 */
-	public M errDetect(Collection<ErrDetect> errDetects) {
-		errDetects.stream().filter(f -> getIO().accept(f.io())).forEach(f -> this.errDetects.add(f));
+	public M errDetect(Collection<ErrDetect> inerrDetects) {
+		inerrDetects.stream()
+				.filter(f -> getIO().accept(f.io()))
+				.forEach(errDetects::add);
 		return getMThis();
 	}
 

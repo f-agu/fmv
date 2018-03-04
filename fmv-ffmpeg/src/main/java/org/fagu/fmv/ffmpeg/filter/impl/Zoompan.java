@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -73,7 +72,7 @@ public class Zoompan extends AbstractFilter {
 		if(factor < 1) {
 			throw new IllegalArgumentException("factor must be at least 1: " + Integer.toString(factor));
 		}
-		float inc = (factor - 1) / durationInFrames;
+		float inc = (factor - 1F) / durationInFrames;
 		return zoom("zoom+" + inc).duration(durationInFrames);
 	}
 

@@ -53,7 +53,11 @@ public class Concat extends FilterComplex {
 
 	private final List<Object> inputs;
 
-	private Integer countInputs, countAudio, countVideo;
+	private Integer countInputs;
+
+	private Integer countAudio;
+
+	private Integer countVideo;
 
 	/**
 	 * @param builder
@@ -64,7 +68,7 @@ public class Concat extends FilterComplex {
 		// map
 		addMap("out");
 
-		inputs = new ArrayList<Object>();
+		inputs = new ArrayList<>();
 	}
 
 	/**

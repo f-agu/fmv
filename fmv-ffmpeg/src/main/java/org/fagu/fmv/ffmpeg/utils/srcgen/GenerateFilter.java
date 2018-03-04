@@ -32,13 +32,6 @@ import org.apache.commons.lang3.StringUtils;
 public class GenerateFilter {
 
 	/**
-	 *
-	 */
-	public GenerateFilter() {
-
-	}
-
-	/**
 	 * @param name
 	 */
 	public void generate(String name) {

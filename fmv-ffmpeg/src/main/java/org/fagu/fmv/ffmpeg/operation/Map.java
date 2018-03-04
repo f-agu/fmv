@@ -165,6 +165,32 @@ public class Map {
 			return this;
 		}
 
+		/**
+		 * @param map
+		 * @param iterator
+		 * @param isLabel
+		 * @return
+		 */
+		private Map with(String map, Iterator<String> iterator, boolean isLabel) {
+			if(iterator == null || ! iterator.hasNext()) {
+				return map(map, isLabel);
+			}
+			while(iterator.hasNext()) {
+				map(map + ':' + iterator.next(), isLabel);
+			}
+			return Map.this;
+		}
+
+		/**
+		 * @param name
+		 * @param isLabel
+		 * @return
+		 */
+		private Map map(String name, boolean isLabel) {
+			String map = isLabel ? '[' + name + ']' : name;
+			outputProcessor.add(Parameter.before(outputProcessor.getMediaOutput(), "-map", map));
+			return Map.this;
+		}
 	}
 
 	// ---------------------------------------------
@@ -203,35 +229,6 @@ public class Map {
 	 */
 	public On streams(Stream... streams) {
 		return new On(streams);
-	}
-
-	// ************************************************************
-
-	/**
-	 * @param name
-	 * @param isLabel
-	 * @return
-	 */
-	private Map map(String name, boolean isLabel) {
-		String map = isLabel ? '[' + name + ']' : name;
-		outputProcessor.add(Parameter.before(outputProcessor.getMediaOutput(), "-map", map));
-		return this;
-	}
-
-	/**
-	 * @param map
-	 * @param iterator
-	 * @param isLabel
-	 * @return
-	 */
-	private Map with(String map, Iterator<String> iterator, boolean isLabel) {
-		if(iterator == null || ! iterator.hasNext()) {
-			return map(map, isLabel);
-		}
-		while(iterator.hasNext()) {
-			map(map + ':' + iterator.next(), isLabel);
-		}
-		return this;
 	}
 
 }

@@ -39,11 +39,11 @@ import org.fagu.fmv.utils.time.Duration;
  */
 public class ParamType<P> {
 
-	public static final ParamType<Binary> BINARY = new ParamType<Binary>(Binary.class);
+	public static final ParamType<Binary> BINARY = new ParamType<>(Binary.class);
 
-	public static final ParamType<ChannelLayout> CHANNEL_LAYOUT = new ParamType<ChannelLayout>(ChannelLayout.class);
+	public static final ParamType<ChannelLayout> CHANNEL_LAYOUT = new ParamType<>(ChannelLayout.class);
 
-	public static final ParamType<Color> COLOR = new ParamType<Color>(Color.class);
+	public static final ParamType<Color> COLOR = new ParamType<>(Color.class);
 
 	public static final ParamType<Double> DOUBLE = new ParamType<Double>(Double.class) {
 
@@ -63,9 +63,9 @@ public class ParamType<P> {
 		}
 	};
 
-	public static final ParamType<Duration> DURATION = new ParamType<Duration>(Duration.class);
+	public static final ParamType<Duration> DURATION = new ParamType<>(Duration.class);
 
-	public static final ParamType<Object> FLAGS = new ParamType<Object>(Object.class);
+	public static final ParamType<Object> FLAGS = new ParamType<>(Object.class);
 
 	public static final ParamType<Float> FLOAT = new ParamType<Float>(Float.class) {
 
@@ -85,7 +85,7 @@ public class ParamType<P> {
 		}
 	};
 
-	public static final ParamType<Size> IMAGE_SIZE = new ParamType<Size>(Size.class);
+	public static final ParamType<Size> IMAGE_SIZE = new ParamType<>(Size.class);
 
 	public static final ParamType<Integer> INT = new ParamType<Integer>(Integer.class) {
 
@@ -141,7 +141,7 @@ public class ParamType<P> {
 		}
 	};
 
-	public static final ParamType<PixelFormat> PIX_FMT = new ParamType<PixelFormat>(PixelFormat.class);
+	public static final ParamType<PixelFormat> PIX_FMT = new ParamType<>(PixelFormat.class);
 
 	public static final ParamType<Fraction> RATIONAL = new ParamType<Fraction>(Fraction.class) {
 
@@ -154,7 +154,7 @@ public class ParamType<P> {
 		}
 	};
 
-	public static final ParamType<AudioSampleFormat> SAMPLE_FMT = new ParamType<AudioSampleFormat>(AudioSampleFormat.class);
+	public static final ParamType<AudioSampleFormat> SAMPLE_FMT = new ParamType<>(AudioSampleFormat.class);
 
 	public static final ParamType<String> STRING = new ParamType<String>(String.class) {
 
@@ -181,9 +181,6 @@ public class ParamType<P> {
 
 	public static final ParamType<FrameRate> VIDEO_RATE = new ParamType<>(FrameRate.class);
 
-	/**
-	 *
-	 */
 	private final Class<?> cls;
 
 	/**

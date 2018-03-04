@@ -24,6 +24,7 @@ package org.fagu.fmv.ffmpeg.flags;
  * @author f.agu
  */
 public enum PatternType {
+
 	// select glob/sequence pattern type
 	GLOB_SEQUENCE("glob_sequence"),
 	// select glob pattern type

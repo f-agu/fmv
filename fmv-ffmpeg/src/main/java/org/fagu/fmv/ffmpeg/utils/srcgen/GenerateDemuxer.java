@@ -37,11 +37,6 @@ public class GenerateDemuxer {
 	private static final Pattern FROM_TO_PATTERN = Pattern.compile(".*\\(from ([-\\w]+) to ([-\\w]+)\\).*");
 
 	/**
-	 * 
-	 */
-	public GenerateDemuxer() {}
-
-	/**
 	 * @param name
 	 */
 	public void generate(String name) {

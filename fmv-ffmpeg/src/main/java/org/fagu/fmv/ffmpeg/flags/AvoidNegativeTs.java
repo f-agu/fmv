@@ -27,6 +27,7 @@ import org.fagu.fmv.ffmpeg.format.IO;
  * @author f.agu
  */
 public enum AvoidNegativeTs {
+
 	// enabled when required by target format
 	AUTO("auto", IO.OUTPUT),
 	// do not change timestamps

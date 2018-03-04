@@ -360,9 +360,6 @@ public class PixelFormat {
 
 	public static final PixelFormat YVYU422 = new PixelFormat("yvyu422");
 
-	/**
-	 * 
-	 */
 	private final String name;
 
 	/**

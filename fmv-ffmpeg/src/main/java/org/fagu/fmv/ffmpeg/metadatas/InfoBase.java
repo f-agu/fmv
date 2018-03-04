@@ -374,7 +374,7 @@ public abstract class InfoBase implements MetadataProperties {
 	protected <R> Optional<R> get(String name, Function<String, R> function) {
 		String s = getString(name).orElse(null);
 		if(StringUtils.isBlank(s)) {
-			return null;
+			return Optional.empty();
 		}
 		try {
 			return Optional.ofNullable(function.apply(s));

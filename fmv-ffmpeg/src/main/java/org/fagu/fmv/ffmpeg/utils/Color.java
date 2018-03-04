@@ -38,7 +38,8 @@ public class Color {
 	 */
 	private static final Map<String, Color> SEQUENCE_COLOR = new HashMap<>();
 
-	private static final Pattern SEQ_PATTERN = Pattern.compile("(?:0x|#)?(?:([A-F0-9]{6})|([A-Z]+))@?(?:([A-F0-9]{2})|(1|(?:0(?:\\.[0-9]+)?)))?", Pattern.CASE_INSENSITIVE);
+	private static final Pattern SEQ_PATTERN = Pattern.compile("(?:0x|#)?(?:([A-F0-9]{6})|([A-Z]+))@?(?:([A-F0-9]{2})|(1|(?:0(?:\\.[0-9]+)?)))?",
+			Pattern.CASE_INSENSITIVE);
 
 	public static final Color ALICEBLUE = new Color("AliceBlue", "F0F8FF");
 
@@ -320,19 +321,10 @@ public class Color {
 
 	public static final Color YELLOWGREEN = new Color("YellowGreen", "9ACD32");
 
-	/**
-	 * 
-	 */
 	private final String name;
 
-	/**
-	 * 
-	 */
 	private final String sequence;
 
-	/**
-	 * 
-	 */
 	private String opacity;
 
 	/**

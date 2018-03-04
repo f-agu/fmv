@@ -36,7 +36,9 @@ public class VolumeDetected {
 
 	private final long countSample;
 
-	private final float mean, max;
+	private final float mean;
+
+	private final float max;
 
 	private final SortedMap<Integer, Long> histogram;
 
@@ -106,7 +108,8 @@ public class VolumeDetected {
 	 */
 	public static VolumeDetected parse(String line) {
 		Long countSample = null;
-		Float mean = null, max = null;
+		Float mean = null;
+		Float max = null;
 		SortedMap<Integer, Long> histogram = null;
 		for(String split : line.split(",")) {
 			String[] kv = split.split(":");

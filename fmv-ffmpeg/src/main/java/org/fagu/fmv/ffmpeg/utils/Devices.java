@@ -58,9 +58,6 @@ public class Devices {
 	//
 	public static final Devices VIDEO4LINUX2 = new Devices("video4linux2");
 
-	/**
-	 * 
-	 */
 	private final String name;
 
 	/**

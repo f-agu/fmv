@@ -29,16 +29,11 @@ import org.fagu.fmv.ffmpeg.operation.Operation;
 public class FFExecutorFactoryImpl implements FFExecutorFactory {
 
 	/**
-	 * 
-	 */
-	public FFExecutorFactoryImpl() {}
-
-	/**
 	 * @see org.fagu.fmv.ffmpeg.executor.FFExecutorFactory#create(org.fagu.fmv.ffmpeg.operation.Operation,
 	 *      org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder)
 	 */
 	@Override
 	public <R> FFExecutor<R> create(Operation<R, ?> operation, FFMPEGExecutorBuilder ffmpegExecutorBuilder) {
-		return new FFExecutor<R>(operation, ffmpegExecutorBuilder);
+		return new FFExecutor<>(operation, ffmpegExecutorBuilder);
 	}
 }

@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -82,8 +81,8 @@ public class Hue extends AbstractFilter {
 	 * @param H
 	 * @return
 	 */
-	public Hue H(String H) {
-		parameter("H", H);
+	public Hue H(String h) {
+		parameter("H", h);
 		return this;
 	}
 

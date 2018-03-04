@@ -304,7 +304,8 @@ public class FFExecutor<R> {
 		if(prepare != null) {
 			throw new RuntimeException("Already prepared");
 		}
-		return prepare = new Prepare();
+		prepare = new Prepare();
+		return prepare;
 	}
 
 	/**

@@ -69,9 +69,6 @@ public class AudioSampleFormat {
 	// depth: 8
 	public static final AudioSampleFormat U8P = new AudioSampleFormat("u8p");
 
-	/**
-	 * 
-	 */
 	private final String name;
 
 	/**

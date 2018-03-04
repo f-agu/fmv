@@ -30,7 +30,21 @@ public class Flags {
 
 	private static final Flags NOTHING = new Flags();
 
-	private boolean encoder, decoder, filter, video, audio, subtitle, x, r;
+	private boolean encoder;
+
+	private boolean decoder;
+
+	private boolean filter;
+
+	private boolean video;
+
+	private boolean audio;
+
+	private boolean subtitle;
+
+	// private boolean x;
+
+	// private boolean r;
 
 	private Flags() {}
 

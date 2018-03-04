@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.utils;
  * #L%
  */
 
-
 /**
  * @author f.agu
  */
@@ -48,10 +47,7 @@ public enum VSync {
 	 */
 	AUTO("-1");
 
-	/**
-	 * 
-	 */
-	private String value;
+	private final String value;
 
 	/**
 	 * @param value

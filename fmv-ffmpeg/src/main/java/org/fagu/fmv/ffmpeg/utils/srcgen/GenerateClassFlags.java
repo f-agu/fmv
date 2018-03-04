@@ -32,15 +32,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class GenerateClassFlags {
 
-	// private static final String path =
-	// "C:\\Nos Documents\\Fabrice\\workspace-4.4.1\\fmv-parent\\fmv-ffmpeg\\src\\main\\java\\org\\fagu\\fmv\\ffmpeg\\flags";
-
 	private static final String path = "C:\\Project-4.4.1\\fmv-parent\\fmv-ffmpeg\\src\\main\\java\\org\\fagu\\fmv\\ffmpeg\\flags";
-
-	/**
-	 * 
-	 */
-	public GenerateClassFlags() {}
 
 	/**
 	 * @param param

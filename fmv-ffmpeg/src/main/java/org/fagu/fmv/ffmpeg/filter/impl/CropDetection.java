@@ -53,11 +53,29 @@ public class CropDetection {
 	 */
 	public static class CropSize {
 
-		private final int x1, x2, y1, y2, w, h, x, y;
+		private final int x1;
 
-		private int startPTS, endPTS;
+		private final int x2;
 
-		private Time startTime, endTime;
+		private final int y1;
+
+		private final int y2;
+
+		private final int w;
+
+		private final int h;
+
+		private final int x;
+
+		private final int y;
+
+		private int startPTS;
+
+		private int endPTS;
+
+		private Time startTime;
+
+		private Time endTime;
 
 		private int count;
 
@@ -189,7 +207,7 @@ public class CropDetection {
 		 * @return
 		 */
 		public float getCountPercent() {
-			return 100 * count / totalCount.get();
+			return 100F * count / totalCount.get();
 		}
 
 		/**

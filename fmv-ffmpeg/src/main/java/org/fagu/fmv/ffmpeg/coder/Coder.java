@@ -611,8 +611,10 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @param debug
 	 * @return
 	 */
-	public M debug(Collection<Debug> debugs) {
-		debugs.stream().filter(f -> io.accept(f.io())).forEach(f -> this.debugs.add(f));
+	public M debug(Collection<Debug> indebugs) {
+		indebugs.stream()
+				.filter(f -> io.accept(f.io()))
+				.forEach(debugs::add);
 		return getMThis();
 	}
 
@@ -632,8 +634,10 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @param flags2
 	 * @return
 	 */
-	public M flags2(Collection<Flags2> flags2s) {
-		flags2s.stream().filter(f -> io.accept(f.io())).forEach(f -> this.flags2s.add(f));
+	public M flags2(Collection<Flags2> inflags2s) {
+		inflags2s.stream()
+				.filter(f -> io.accept(f.io()))
+				.forEach(flags2s::add);
 		return getMThis();
 	}
 
@@ -750,8 +754,10 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @param threadType
 	 * @return
 	 */
-	public M threadType(Collection<ThreadType> threadTypes) {
-		threadTypes.stream().filter(f -> io.accept(f.io())).forEach(f -> this.threadTypes.add(f));
+	public M threadType(Collection<ThreadType> inthreadTypes) {
+		inthreadTypes.stream()
+				.filter(f -> io.accept(f.io()))
+				.forEach(threadTypes::add);
 		return getMThis();
 	}
 

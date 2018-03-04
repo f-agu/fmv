@@ -159,14 +159,18 @@ public class Protocol {
 	 * @return
 	 */
 	public boolean isInput() {
-		return HELP_CACHE.cache(name).stream().map(h -> h.io).filter(io -> io == IO.INPUT).findFirst().isPresent();
+		return HELP_CACHE.cache(name).stream()
+				.map(h -> h.io)
+				.anyMatch(io -> io == IO.INPUT);
 	}
 
 	/**
 	 * @return
 	 */
 	public boolean isOutput() {
-		return HELP_CACHE.cache(name).stream().map(h -> h.io).filter(io -> io == IO.OUTPUT).findFirst().isPresent();
+		return HELP_CACHE.cache(name).stream()
+				.map(h -> h.io)
+				.anyMatch(io -> io == IO.OUTPUT);
 	}
 
 	/**
@@ -216,13 +220,6 @@ public class Protocol {
 	}
 
 	// **************************************************
-
-	/**
-	 * @return
-	 */
-	// private ProtocolHelp cache() {
-	// return HELP_CACHE.cache(name).get(0);
-	// }
 
 	/**
 	 * @return

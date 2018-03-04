@@ -67,10 +67,10 @@ public abstract class StreamMuxer<M> extends Muxer<M> {
 	 * @param movflags
 	 * @return
 	 */
-	public M movflags(Collection<Movflags> movflagss) {
-		movflagss.stream()
+	public M movflags(Collection<Movflags> inmovflagss) {
+		inmovflagss.stream()
 				.filter(f -> getIO().accept(f.io()))
-				.forEach(f -> this.movflagss.add(f));
+				.forEach(movflagss::add);
 		return getMThis();
 	}
 
@@ -104,8 +104,10 @@ public abstract class StreamMuxer<M> extends Muxer<M> {
 	 * @param rtpflags
 	 * @return
 	 */
-	public M rtpflags(Collection<Rtpflags> rtpflagss) {
-		rtpflagss.stream().filter(f -> getIO().accept(f.io())).forEach(f -> this.rtpflagss.add(f));
+	public M rtpflags(Collection<Rtpflags> inrtpflagss) {
+		inrtpflagss.stream()
+				.filter(f -> getIO().accept(f.io()))
+				.forEach(rtpflagss::add);
 		return getMThis();
 	}
 

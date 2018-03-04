@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.utils;
  * #L%
  */
 
-
 /**
  * Configuration preset. This does some automatic settings based on the general type of the image.
  * 
@@ -57,10 +56,7 @@ public enum Preset {
 	 */
 	TEXT("text");
 
-	/**
-	 * 
-	 */
-	private String value;
+	private final String value;
 
 	/**
 	 * @param value

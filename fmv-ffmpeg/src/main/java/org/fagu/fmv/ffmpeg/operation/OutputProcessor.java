@@ -439,11 +439,11 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 	 * @throws IOException
 	 */
 	public OutputProcessor mapStreams(Predicate<Stream> predicate, InputProcessor forInputProcessor) throws IOException {
-		Map map = map();
+		Map myMap = map();
 		MovieMetadatas movieMetadatas = forInputProcessor.getMovieMetadatas();
 		for(Stream stream : movieMetadatas.getStreams()) {
 			if(predicate.test(stream)) {
-				map.streams(stream).input(forInputProcessor);
+				myMap.streams(stream).input(forInputProcessor);
 			}
 		}
 		return this;

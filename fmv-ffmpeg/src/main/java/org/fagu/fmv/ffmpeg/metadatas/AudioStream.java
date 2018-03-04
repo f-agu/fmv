@@ -62,7 +62,7 @@ public class AudioStream extends Stream {
 	 * @return
 	 */
 	public Optional<AudioSampleFormat> sampleFormat() {
-		return get("sample_fmt", s -> AudioSampleFormat.byName(s));
+		return get("sample_fmt", AudioSampleFormat::byName);
 	}
 
 	/**

@@ -39,7 +39,9 @@ class VolumeDetection {
 
 	private Long countSample;
 
-	private Float mean, max;
+	private Float mean;
+
+	private Float max;
 
 	private final SortedMap<Integer, Long> histogram;
 

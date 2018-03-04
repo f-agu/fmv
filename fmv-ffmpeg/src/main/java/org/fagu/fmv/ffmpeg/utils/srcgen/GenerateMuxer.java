@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.utils.srcgen;
  * #L%
  */
 
-
 import java.io.PrintStream;
 import java.util.Map;
 
@@ -31,11 +30,6 @@ import org.apache.commons.lang3.StringUtils;
  * @author f.agu
  */
 public class GenerateMuxer {
-
-	/**
-	 * 
-	 */
-	public GenerateMuxer() {}
 
 	/**
 	 * @param name

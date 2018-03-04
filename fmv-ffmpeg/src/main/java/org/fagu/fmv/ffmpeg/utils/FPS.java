@@ -27,14 +27,14 @@ public class FPS {
 
 	private final double countFrameBySeconds;
 
-	private final String fps;
+	private final String value;
 
 	/**
 	 * @param fps
 	 * @param countFrameBySeconds
 	 */
 	private FPS(String fps, double countFrameBySeconds) {
-		this.fps = fps;
+		this.value = fps;
 		this.countFrameBySeconds = countFrameBySeconds;
 	}
 
@@ -69,7 +69,7 @@ public class FPS {
 	 */
 	@Override
 	public String toString() {
-		return fps;
+		return value;
 	}
 
 }

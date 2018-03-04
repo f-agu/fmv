@@ -40,13 +40,6 @@ public class GenerateAVContext {
 	private static final Pattern FROM_TO_PATTERN = Pattern.compile(".*\\(from ([\\-\\+\\w\\.]+) to ([\\-\\+\\w\\.]+)\\).*");
 
 	/**
-	 * 
-	 */
-	public GenerateAVContext() {
-		//
-	}
-
-	/**
 	 * @param name
 	 */
 	public void generate() {
@@ -138,7 +131,8 @@ public class GenerateAVContext {
 					ps.println("\t\t// " + value.getDescription());
 				}
 				if(io != null) {
-					ps.print("\t\t" + ClassNameUtils.fieldStatic(value.getName()) + "(\"" + value.getName() + "\", IO." + value.getFlags().io() + ")");
+					ps.print("\t\t" + ClassNameUtils.fieldStatic(value.getName()) + "(\"" + value.getName() + "\", IO." + value.getFlags().io()
+							+ ")");
 				} else {
 					ps.print("\t\t" + ClassNameUtils.fieldStatic(value.getName()) + "(\"" + value.getName() + "\")");
 				}
@@ -340,7 +334,8 @@ public class GenerateAVContext {
 	 * @param input
 	 * @param output
 	 */
-	public static void writeMethodsFlagsCollection(PrintStream ps, Param param, String returnClassName, boolean checkio, boolean input, boolean output) {
+	public static void writeMethodsFlagsCollection(PrintStream ps, Param param, String returnClassName, boolean checkio, boolean input,
+			boolean output) {
 		if(checkio && ( ! accept(param.getFlags().io(), input, output) || param.getType() != ParamType.FLAGS)) {
 			return;
 		}

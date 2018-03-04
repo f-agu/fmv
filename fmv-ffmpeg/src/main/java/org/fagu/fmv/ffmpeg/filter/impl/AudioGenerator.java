@@ -114,7 +114,9 @@ public class AudioGenerator extends AbstractFilter implements MediaInput, Genera
 	 * @see org.fagu.fmv.ffmpeg.operation.IOEntity#eventAdded(org.fagu.fmv.ffmpeg.operation.Processor, IOEntity)
 	 */
 	@Override
-	public void eventAdded(Processor<?> processor, IOEntity ioEntity) {}
+	public void eventAdded(Processor<?> processor, IOEntity ioEntity) {
+		// NOTHING
+	}
 
 	/**
 	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()

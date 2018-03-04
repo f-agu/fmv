@@ -27,6 +27,7 @@ import org.fagu.fmv.ffmpeg.format.IO;
  * @author f.agu
  */
 public enum Strict {
+
 	// strictly conform to all the things in the spec no matter what the consequences
 	STRICT("strict", IO.INPUT_OUTPUT),
 	//

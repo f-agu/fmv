@@ -40,11 +40,6 @@ import org.fagu.fmv.ffmpeg.operation.Parameter.Way;
 public class MP4TagCodecNotFoundFFExecFallback implements FFExecFallback {
 
 	/**
-	 * 
-	 */
-	public MP4TagCodecNotFoundFFExecFallback() {}
-
-	/**
 	 * @see org.fagu.fmv.ffmpeg.executor.FFExecFallback#prepare(java.io.IOException)
 	 */
 	@Override

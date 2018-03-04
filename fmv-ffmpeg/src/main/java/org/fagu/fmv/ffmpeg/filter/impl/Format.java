@@ -37,18 +37,28 @@ import org.fagu.fmv.ffmpeg.utils.PixelFormat;
  */
 public class Format extends AbstractFilter {
 
+	private static final String CODE = "format";
+
 	/**
 	 * 
 	 */
 	protected Format() {
-		super("format");
+		super(CODE);
 	}
 
 	/**
 	 * @param formats
 	 */
 	protected Format(PixelFormat... formats) {
-		super("format");
+		super(CODE);
+		set(formats);
+	}
+
+	/**
+	 * @param formats
+	 */
+	public Format(Collection<PixelFormat> formats) {
+		super(CODE);
 		set(formats);
 	}
 
@@ -66,14 +76,6 @@ public class Format extends AbstractFilter {
 	 */
 	public static Format with(Collection<PixelFormat> formats) {
 		return new Format(formats);
-	}
-
-	/**
-	 * @param formats
-	 */
-	public Format(Collection<PixelFormat> formats) {
-		super("format");
-		set(formats);
 	}
 
 	/**

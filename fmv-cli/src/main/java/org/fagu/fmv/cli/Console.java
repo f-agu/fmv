@@ -41,7 +41,6 @@ import org.fagu.fmv.utils.time.Time;
 
 import jline.console.ConsoleReader;
 
-
 /**
  * @author f.agu
  */
@@ -75,21 +74,20 @@ public class Console {
 
 		addCommands();
 		initListener(consoleReader);
-		// initCommands(consoleReader);
 		startConsole(consoleReader);
 
-		while(true) {
+		while (true) { // NOSONAR
 			consoleReader.setPrompt(prompt.get(environnement));
 			String line = consoleReader.readLine();
-			if(StringUtils.isBlank(line)) {
+			if (StringUtils.isBlank(line)) {
 				continue;
 			}
 			try {
 				commandBuilder.createAndExec(line);
-			} catch(LineParseException e) {
+			} catch (LineParseException e) {
 				consoleReader.println("Error: " + e.getMessage());
 				e.printStackTrace();
-			} catch(ExitException e) {
+			} catch (ExitException e) {
 				// TODO without saving ?
 				break;
 			}
@@ -150,7 +148,7 @@ public class Console {
 				try {
 					consoleReader.println(msg);
 					consoleReader.flush();
-				} catch(IOException e) {
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
@@ -163,16 +161,18 @@ public class Console {
 	 */
 	private void startConsole(ConsoleReader consoleReader) throws IOException {
 		List<Executable> executables = project.getExecutables();
-		if( ! executables.isEmpty()) {
+		if (!executables.isEmpty()) {
 			return;
 		}
 		consoleReader.println("Create a default structure");
 		GenericExecutable rootExec = new GenericExecutable(project);
 
-		FadeAudioVideoFilterExec fadeOut = new FadeAudioVideoFilterExec(project, FadeType.OUT, Time.valueOf(200), Duration.valueOf(3));
+		FadeAudioVideoFilterExec fadeOut = new FadeAudioVideoFilterExec(project, FadeType.OUT, Time.valueOf(200),
+				Duration.valueOf(3));
 		rootExec.add(fadeOut);
 
-		FadeAudioVideoFilterExec fadeIn = new FadeAudioVideoFilterExec(project, FadeType.IN, Time.valueOf(0), Duration.valueOf(2));
+		FadeAudioVideoFilterExec fadeIn = new FadeAudioVideoFilterExec(project, FadeType.IN, Time.valueOf(0),
+				Duration.valueOf(2));
 		fadeOut.add(fadeIn);
 
 		GenericFilterExec audioMerge = new GenericFilterExec(project, "amerge");

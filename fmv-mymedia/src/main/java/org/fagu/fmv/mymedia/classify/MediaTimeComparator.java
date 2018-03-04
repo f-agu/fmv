@@ -25,7 +25,6 @@ import java.util.Comparator;
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.utils.file.FileFinder;
 
-
 /**
  * @author f.agu
  */
@@ -54,7 +53,19 @@ public interface MediaTimeComparator<M extends Media> extends Comparator<FileFin
 	default public int compare(FileFinder<M>.InfosFile o1, FileFinder<M>.InfosFile o2) {
 		long t1 = getTime(o1);
 		long t2 = getTime(o2);
-		return t1 < t2 ? - 1 : t1 > t2 ? 1 : 0;
+		if (t1 < t2) {
+			return -1;
+		}
+		if (t1 > t2) {
+			return 1;
+		}
+		String file1 = o1.getMain().getFile().getName();
+		String file2 = o2.getMain().getFile().getName();
+		int compare = file1.compareToIgnoreCase(file2);
+		if (compare != 0) {
+			return compare;
+		}
+		return Integer.compare(o1.hashCode(), o2.hashCode());
 	}
 
 }

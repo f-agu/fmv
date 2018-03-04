@@ -28,7 +28,7 @@ public class ClassUtils {
 	/**
 	 * 
 	 */
-	public ClassUtils() {}
+	private ClassUtils() {}
 
 	/**
 	 * @param param

@@ -55,7 +55,9 @@ public class ShowInfo extends AbstractFilter implements LibLog {
 
 		private Time ptsTime;
 
-		private long pts, position;
+		private long pts;
+
+		private long position;
 
 		private PixelFormat pixelFormat;
 

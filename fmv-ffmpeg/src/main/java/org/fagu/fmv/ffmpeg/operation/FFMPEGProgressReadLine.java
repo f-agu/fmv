@@ -51,11 +51,6 @@ public class FFMPEGProgressReadLine implements ProgressReadLine {
 	private Float speed;
 
 	/**
-	 *
-	 */
-	public FFMPEGProgressReadLine() {}
-
-	/**
 	 * @see org.fagu.fmv.utils.exec.ReadLine#read(java.lang.String)
 	 */
 	@Override

@@ -168,7 +168,7 @@ public class AvailableHelp<H extends Help> {
 		public String toString() {
 			return "TitleReader(" + (line == null ? "un" : "") + "read)";
 		}
-	};
+	}
 
 	// ------------------------------------
 
@@ -177,24 +177,12 @@ public class AvailableHelp<H extends Help> {
 	 */
 	protected static class LegendReader implements Reader {
 
-		/**
-		 * 
-		 */
 		private static final Pattern LEGEND_PATTERN = Pattern.compile("(\\.*([A-Za-z0-9\\|])\\.*)\\s+=\\s+(\\w+.*)");
 
-		/**
-		 * 
-		 */
-		private Map<Character, String> legendMap;
+		private final Map<Character, String> legendMap;
 
-		/**
-		 * 
-		 */
 		private int countPossibilties;
 
-		/**
-		 * 
-		 */
 		private boolean checkDot;
 
 		/**

@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.flags;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.format.IO;
 
 
@@ -31,9 +30,6 @@ import org.fagu.fmv.ffmpeg.format.IO;
  */
 public class Bug extends Flags<Bug> {
 
-	/**
-	 * 
-	 */
 	public static final Bug AUTODETECT = new Bug(0, "autodetect", IO.INPUT);
 
 	/**
@@ -56,9 +52,6 @@ public class Bug extends Flags<Bug> {
 	 */
 	public static final Bug NO_PADDING = new Bug(4, "no_padding", IO.INPUT);
 
-	/**
-	 * 
-	 */
 	public static final Bug AMV = new Bug(5, "amv", IO.INPUT);
 
 	/**
@@ -66,9 +59,6 @@ public class Bug extends Flags<Bug> {
 	 */
 	public static final Bug AC_VLC = new Bug(6, "ac_vlc", IO.INPUT);
 
-	/**
-	 * 
-	 */
 	public static final Bug QPEL_CHROMA = new Bug(7, "qpel_chroma", IO.INPUT);
 
 	/**

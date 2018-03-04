@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.utils.srcgen;
  * #L%
  */
 
-
 import java.util.Map;
 
 
@@ -28,11 +27,6 @@ import java.util.Map;
  * @author f.agu
  */
 public class GenerateEncoder {
-
-	/**
-	 * 
-	 */
-	public GenerateEncoder() {}
 
 	/**
 	 * @param name

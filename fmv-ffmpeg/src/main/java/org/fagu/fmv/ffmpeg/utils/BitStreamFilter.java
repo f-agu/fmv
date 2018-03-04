@@ -63,9 +63,6 @@ public class BitStreamFilter {
 
 	public static final BitStreamFilter TEXT2MOVSUB = new BitStreamFilter("text2movsub");
 
-	/**
-	 * 
-	 */
 	private final String name;
 
 	/**

@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.metadatas;
  * #L%
  */
 
-
 import java.util.NavigableMap;
 
 
@@ -28,11 +27,6 @@ import java.util.NavigableMap;
  * @author f.agu
  */
 public class VideoStreamFactory implements StreamFactory {
-
-	/**
-	 * 
-	 */
-	public VideoStreamFactory() {}
 
 	/**
 	 * @see org.fagu.fmv.ffmpeg.metadatas.StreamFactory#create(NavigableMap,

@@ -36,11 +36,6 @@ import org.fagu.fmv.ffmpeg.utils.BitStreamFilter;
 public class AAC_ADTSTOASCBitStreamFilterFFExecFallback implements FFExecFallback {
 
 	/**
-	 * 
-	 */
-	public AAC_ADTSTOASCBitStreamFilterFFExecFallback() {}
-
-	/**
 	 * @see org.fagu.fmv.ffmpeg.executor.FFExecFallback#prepare(java.io.IOException)
 	 */
 	@Override

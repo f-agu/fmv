@@ -35,9 +35,10 @@ import org.fagu.fmv.ffmpeg.operation.LinesFFMPEGOperation;
 
 /**
  * @author f.agu
- *
  */
 public class FullHelpExtract {
+
+	private FullHelpExtract() {}
 
 	/**
 	 * @return
