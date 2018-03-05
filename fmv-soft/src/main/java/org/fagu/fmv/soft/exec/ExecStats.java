@@ -72,11 +72,6 @@ public class ExecStats {
 	private final Map<String, Stats> statsMap = new HashMap<>();
 
 	/**
-	 * 
-	 */
-	public ExecStats() {}
-
-	/**
 	 * @return
 	 */
 	public static ExecStats getInstance() {
@@ -108,8 +103,6 @@ public class ExecStats {
 
 		private long startTime;
 
-		private long duration;
-
 		@Override
 		public void eventPreExecute(FMVExecutor fmvExecutor, CommandLine command, @SuppressWarnings("rawtypes") Map environment,
 				ExecuteResultHandler handler) {
@@ -126,7 +119,7 @@ public class ExecStats {
 		@Override
 		public void eventFailed(FMVExecutor fmvExecutor, CommandLine command, @SuppressWarnings("rawtypes") Map environment,
 				ExecuteResultHandler handler, IOException ioe) {
-			duration = System.currentTimeMillis() - startTime;
+			long duration = System.currentTimeMillis() - startTime;
 
 			Stats stats = statsMap.computeIfAbsent(softName.toLowerCase(), k -> new Stats());
 			if(ioe == null) {

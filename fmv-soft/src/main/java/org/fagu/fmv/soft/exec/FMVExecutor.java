@@ -229,7 +229,7 @@ public class FMVExecutor extends DefaultExecutor {
 	 * @see org.apache.commons.exec.DefaultExecutor#execute(org.apache.commons.exec.CommandLine, java.util.Map)
 	 */
 	@Override
-	public int execute(CommandLine command, Map<String, String> environment) throws ExecuteException, IOException {
+	public int execute(CommandLine command, Map<String, String> environment) throws IOException {
 		proxyFMVExecListener.eventPreExecute(this, command, environment, null);
 		try {
 			int exitValue = super.execute(command, environment);
@@ -246,7 +246,7 @@ public class FMVExecutor extends DefaultExecutor {
 	 *      org.apache.commons.exec.ExecuteResultHandler)
 	 */
 	@Override
-	public void execute(CommandLine command, Map<String, String> environment, ExecuteResultHandler handler) throws ExecuteException, IOException {
+	public void execute(CommandLine command, Map<String, String> environment, ExecuteResultHandler handler) throws IOException {
 		proxyFMVExecListener.eventPreExecute(this, command, environment, handler);
 		try {
 			try {

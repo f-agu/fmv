@@ -55,7 +55,7 @@ public class FMVFuture<V> extends UnaryWrapFuture<V> {
 	 * @param b
 	 * @throws IOException
 	 */
-	public void write(byte b[]) throws IOException {
+	public void write(byte[] b) throws IOException {
 		if(processInputStream != null) {
 			processInputStream.write(b);
 		}
@@ -67,7 +67,7 @@ public class FMVFuture<V> extends UnaryWrapFuture<V> {
 	 * @param len
 	 * @throws IOException
 	 */
-	public void write(byte b[], int off, int len) throws IOException {
+	public void write(byte[] b, int off, int len) throws IOException {
 		if(processInputStream != null) {
 			processInputStream.write(b, 0, b.length);
 		}

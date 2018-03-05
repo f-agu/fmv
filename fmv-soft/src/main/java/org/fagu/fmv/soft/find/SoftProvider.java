@@ -1,7 +1,5 @@
 package org.fagu.fmv.soft.find;
 
-import java.io.File;
-
 /*-
  * #%L
  * fmv-soft
@@ -21,7 +19,7 @@ import java.io.File;
  * limitations under the License.
  * #L%
  */
-
+import java.io.File;
 import java.io.FileFilter;
 import java.util.List;
 import java.util.Objects;
@@ -72,9 +70,9 @@ public abstract class SoftProvider {
 		Class<? extends SoftProvider> cls = getClass();
 		Class<?> superclass = cls.getSuperclass();
 		String grpName = superclass != SoftProvider.class ? superclass.getSimpleName() : cls.getSimpleName();
-		String name = StringUtils.substringBefore(grpName, "SoftProvider");
-		name = StringUtils.substringBefore(name, "Provider");
-		return name.toLowerCase();
+		grpName = StringUtils.substringBefore(grpName, "SoftProvider");
+		grpName = StringUtils.substringBefore(grpName, "Provider");
+		return grpName.toLowerCase();
 	}
 
 	// --------------------------------------
@@ -139,18 +137,18 @@ public abstract class SoftProvider {
 	 * @return
 	 */
 	public String getMinVersion() {
-		SoftPolicy softPolicy = getSoftPolicy();
-		return softPolicy != null ? softPolicy.toString() : "";
+		SoftPolicy sPolicy = getSoftPolicy();
+		return sPolicy != null ? sPolicy.toString() : "";
 	}
 
 	/**
 	 * @return
 	 */
 	public SoftLocator getSoftLocator() {
-		SoftPolicy softPolicy = getSoftPolicy();
-		Sorter sorter = softPolicy != null ? softPolicy.getSorter() : null;
+		SoftPolicy sPolicy = getSoftPolicy();
+		Sorter sorter = sPolicy != null ? sPolicy.getSorter() : null;
 		SoftLocator softLocator = new SoftLocator(getName(), sorter, getFileFilter());
-		softLocator.setSoftPolicy(softPolicy);
+		softLocator.setSoftPolicy(sPolicy);
 		softLocator.setEnvName(getName().toUpperCase() + "_HOME");
 		return softLocator;
 	}

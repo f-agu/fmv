@@ -30,5 +30,5 @@ public enum FoundReasons implements FoundReason {
 	BAD_SOFT,
 	NOT_FOUND,
 	ERROR,
-	MULTIPLE;
+	MULTIPLE
 }

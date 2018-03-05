@@ -20,25 +20,19 @@ package org.fagu.fmv.soft.find.strategy;
  * #L%
  */
 
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
-import org.fagu.fmv.soft.find.Sorter;
 import org.fagu.fmv.soft.find.SoftFound;
+import org.fagu.fmv.soft.find.Sorter;
 
 
 /**
  * @author f.agu
  */
 public class HighestPrecedenceSorter implements Sorter {
-
-	/**
-	 * 
-	 */
-	public HighestPrecedenceSorter() {}
 
 	/**
 	 * @see org.fagu.fmv.soft.find.Sorter#sort(java.util.Collection)

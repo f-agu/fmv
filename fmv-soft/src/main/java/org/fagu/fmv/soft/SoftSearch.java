@@ -136,9 +136,9 @@ public class SoftSearch {
 	public Soft search(SoftFoundFactory softFoundFactory) {
 		checkUsed();
 		SoftLocator locator = getLocator();
-		Founds founds = locator.find((file, loc, softPolicy) -> {
+		Founds founds = locator.find((file, loc, softPol) -> {
 			try {
-				SoftFound softFound = softFoundFactory.create(file, loc, softPolicy);
+				SoftFound softFound = softFoundFactory.create(file, loc, softPol);
 				if(softFound == null) {
 					return SoftFound.foundBadSoft(file);
 				}

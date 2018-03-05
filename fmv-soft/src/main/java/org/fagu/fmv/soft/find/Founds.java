@@ -32,7 +32,7 @@ public class Founds implements Iterable<SoftFound> {
 
 	private final String softName;
 
-	private final NavigableSet<SoftFound> founds;
+	private final NavigableSet<SoftFound> foundSet;
 
 	private final SoftPolicy softPolicy;
 
@@ -43,7 +43,7 @@ public class Founds implements Iterable<SoftFound> {
 	 */
 	public Founds(String softName, NavigableSet<SoftFound> founds, SoftPolicy softPolicy) {
 		this.softName = Objects.requireNonNull(softName);
-		this.founds = Objects.requireNonNull(founds);
+		this.foundSet = Objects.requireNonNull(founds);
 		this.softPolicy = softPolicy;
 	}
 
@@ -58,8 +58,8 @@ public class Founds implements Iterable<SoftFound> {
 	 * @return
 	 */
 	public boolean isFound() {
-		return founds.stream()
-				.map(f -> f.isFound())
+		return foundSet.stream()
+				.map(SoftFound::isFound)
 				.filter(f -> f)
 				.findFirst()
 				.orElse(false);
@@ -69,7 +69,7 @@ public class Founds implements Iterable<SoftFound> {
 	 * @return
 	 */
 	public boolean isEmpty() {
-		return founds.isEmpty();
+		return foundSet.isEmpty();
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class Founds implements Iterable<SoftFound> {
 	 * @return
 	 */
 	public SoftFound getFirstFound(SoftFound defaultValue) {
-		return founds.descendingSet()
+		return foundSet.descendingSet()
 				.stream()
 				.filter(f -> f.isFound() && f.getFile().exists())
 				.findFirst()
@@ -103,7 +103,7 @@ public class Founds implements Iterable<SoftFound> {
 	 */
 	@Override
 	public Iterator<SoftFound> iterator() {
-		return founds.iterator();
+		return foundSet.iterator();
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class Founds implements Iterable<SoftFound> {
 	 */
 	@Override
 	public String toString() {
-		return founds.toString();
+		return foundSet.toString();
 	}
 
 }

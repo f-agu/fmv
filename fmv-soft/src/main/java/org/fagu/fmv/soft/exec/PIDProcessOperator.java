@@ -75,14 +75,11 @@ public class PIDProcessOperator implements ProcessOperator {
 	/**
 	 * @param process
 	 * @param cls
+	 * @param field
 	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	private void consume(Process process, Class<? extends Process> cls, String field) throws NoSuchFieldException, SecurityException,
-			IllegalArgumentException,
-			IllegalAccessException {
+	private void consume(Process process, Class<? extends Process> cls, String field) throws NoSuchFieldException, IllegalAccessException {
 		Field f = cls.getDeclaredField(field);
 		f.setAccessible(true);
 		pid = f.getLong(process);

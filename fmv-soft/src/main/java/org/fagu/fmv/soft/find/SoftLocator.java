@@ -46,7 +46,7 @@ public class SoftLocator {
 
 	private static final Function<Founds, File> DEFAULT_FOUND_POLICY = founds -> founds.getFirstFound().getFile();
 
-	private static final SoftTester DEFAULT_SOFT_TESTER = (file, locator, softPolicy) -> SoftFound.found(file)
+	private static final SoftTester DEFAULT_SOFT_TESTER = (file, locator, softPol) -> SoftFound.found(file)
 			.setLocalizedBy(locator != null ? locator.toString() : null);
 
 	private static final Map<String, Founds> CACHE_MAP = new HashMap<>();
@@ -147,7 +147,14 @@ public class SoftLocator {
 	 */
 	public SoftLocator enableCacheInSameFolderOfGroup(String groupName) {
 		return enableCache(n -> groupName, founds -> {
-			File file = founds.getFirstFound().getFile();
+			if(founds == null) {
+				return null;
+			}
+			SoftFound firstFound = founds.getFirstFound();
+			if(firstFound == null) {
+				return null;
+			}
+			File file = firstFound.getFile();
 			return file != null ? Collections.singletonList(createLocators().byPath(file.getParent())) : null;
 		});
 	}

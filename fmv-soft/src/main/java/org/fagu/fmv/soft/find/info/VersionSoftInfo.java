@@ -82,10 +82,11 @@ public class VersionSoftInfo extends SoftInfo {
 	 */
 	@Override
 	public String toString() {
-		if(version == null) {
-			return super.toString();
+		Optional<Version> versionOpt = getVersion();
+		if(versionOpt.isPresent()) {
+			return super.toString() + ' ' + versionOpt.get();
 		}
-		return super.toString() + ' ' + getVersion().get();
+		return super.toString();
 	}
 
 }

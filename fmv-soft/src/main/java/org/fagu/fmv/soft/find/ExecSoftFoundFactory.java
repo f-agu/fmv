@@ -155,14 +155,14 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 		}
 
 		public ExecSoftFoundFactory build() {
-			build = true;
-			if( ! build) {
+			if(build) {
 				throw new IllegalStateException("Already call");
 			}
 			if(parserFactory == null) {
 				throw new IllegalStateException("ParserFactory is missing");
 			}
 			ExecutorFactory execFact = executorFactory != null ? executorFactory : getDefaultExecutorFactory();
+			build = true;
 			return new ExecSoftFoundFactory(execFact, parameters, parserFactory);
 		}
 
