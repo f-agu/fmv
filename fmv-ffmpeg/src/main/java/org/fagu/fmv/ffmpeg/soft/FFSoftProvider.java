@@ -58,7 +58,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 	private static final Pattern LIBVERSION_PATTERN = Pattern.compile("([\\w]+)\\ +\\ ([0-9]+\\.\\ *[0-9]+\\.[0-9]+).*");
 
-	private static final Pattern NVERSION_PATTERN = Pattern.compile("[N|n]-?(.+)-[a-zA-Z0-9]{8}");
+	private static final Pattern NVERSION_PATTERN = Pattern.compile("[N|n]-?(.+)-[a-zA-Z0-9]+");
 
 	private static final Pattern BUILD_PATTERN = Pattern.compile(".*built on (.*) with gcc.*");
 
