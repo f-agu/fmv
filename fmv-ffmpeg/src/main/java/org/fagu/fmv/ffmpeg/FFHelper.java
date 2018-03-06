@@ -32,7 +32,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.ffmpeg.coder.Encoders;
 import org.fagu.fmv.ffmpeg.coder.H264;
 import org.fagu.fmv.ffmpeg.coder.LibFDK_AAC;
-import org.fagu.fmv.ffmpeg.coder.Libx264;
 import org.fagu.fmv.ffmpeg.executor.Executed;
 import org.fagu.fmv.ffmpeg.executor.FFExecFallback;
 import org.fagu.fmv.ffmpeg.executor.FFExecListener;
@@ -103,6 +102,7 @@ import org.fagu.fmv.utils.media.Size;
 import org.fagu.fmv.utils.time.Duration;
 import org.fagu.fmv.utils.time.Time;
 
+
 /**
  * @author f.agu
  */
@@ -111,8 +111,7 @@ public class FFHelper {
 	/**
 	 *
 	 */
-	private FFHelper() {
-	}
+	private FFHelper() {}
 
 	/**
 	 * @param inFile
@@ -323,7 +322,7 @@ public class FFHelper {
 	 * @throws IOException
 	 */
 	public static ExtractThumbnail extractThumbnails(File inFile, File outFolder, FPS fps) throws IOException {
-		if (!outFolder.exists()) {
+		if( ! outFolder.exists()) {
 			outFolder.mkdirs();
 		}
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
@@ -358,7 +357,7 @@ public class FFHelper {
 
 		MovieMetadatas videoMetadatas = inputProcessor.getMovieMetadatas();
 		VideoStream videoStream = videoMetadatas.getVideoStreams().get(0);
-		if (!outFolder.exists()) {
+		if( ! outFolder.exists()) {
 			outFolder.mkdirs();
 		}
 
@@ -385,7 +384,7 @@ public class FFHelper {
 	 * @throws IOException
 	 */
 	public static void extractThumbnails2GIF(File inFile, File outFile, int countFrame) throws IOException {
-		if (!"gif".equalsIgnoreCase(FilenameUtils.getExtension(outFile.getName()))) {
+		if( ! "gif".equalsIgnoreCase(FilenameUtils.getExtension(outFile.getName()))) {
 			throw new IllegalArgumentException("Not a gif: " + outFile.getPath());
 		}
 
@@ -892,7 +891,7 @@ public class FFHelper {
 
 		OutputProcessor outputProcessor = builder.addMediaOutputFile(outFile);
 
-		for (Stream stream : videoMetadatas.getStreams()) {
+		for(Stream stream : videoMetadatas.getStreams()) {
 			// exclude some subtitles
 			// if(stream.is(Type.SUBTITLE) && ! locales.contains(stream.locale())) {
 			// continue;

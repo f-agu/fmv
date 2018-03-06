@@ -76,6 +76,7 @@ import org.fagu.fmv.utils.media.Rotation;
 import org.fagu.fmv.utils.media.Size;
 import org.fagu.fmv.utils.time.Duration;
 
+
 /**
  * @author f.agu
  */
@@ -105,10 +106,10 @@ public class FFReducer extends AbstractReducer {
 
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
-			ffReducer.reduceMedia(new File("D:\\tmp\\Colo ski 17 au 25 fevrier\\IMG_0955.MOV"),
+			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\a\\The Foreigner.mkv"),
 					"totogsdlfjhsdkfjhqsdfiohqsdohqsjhbqsdjhbqsdgjhqbsdgoqbrgioqdbgqdfjkgbgqdfjgbgbqdfjkgbqdfjgbqdf",
 					Loggers.systemOut());
-		} catch (FMVExecuteException e) {
+		} catch(FMVExecuteException e) {
 			e.printStackTrace();
 			// if( ! e.isKnown()) {
 			// throw e;
@@ -123,7 +124,7 @@ public class FFReducer extends AbstractReducer {
 	public FFReducer() {
 		try {
 			audioSampleRate = Integer.parseInt(System.getProperty("fmv.reduce.audio.samplerate"));
-		} catch (Exception e) {// ignore
+		} catch(Exception e) {// ignore
 		}
 		// try {
 		// videoSampleRate =
@@ -147,25 +148,24 @@ public class FFReducer extends AbstractReducer {
 	}
 
 	/**
-	 * @see org.fagu.fmv.mymedia.reduce.Reducer#reduceMedia(java.io.File, String,
-	 *      Logger)
+	 * @see org.fagu.fmv.mymedia.reduce.Reducer#reduceMedia(java.io.File, String, Logger)
 	 */
 	@Override
 	public File reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException {
 		File destFile = null;
 		MovieMetadatas metadatas = MovieMetadatas.with(srcFile).extract();
-		if (isVideo(metadatas, logger)) {
+		if(isVideo(metadatas, logger)) {
 			logger.log("is video");
-			if (needToReduceVideo(metadatas)) {
+			if(needToReduceVideo(metadatas)) {
 				destFile = getTempFile(srcFile, getVideoFormat(srcFile));
 				reduceVideo(metadatas, srcFile, metadatas, destFile, consolePrefixMessage, logger);
 			} else {
 				logger.log("Video already reduced by FMV");
 			}
 
-		} else if (metadatas.contains(Type.AUDIO)) {
+		} else if(metadatas.contains(Type.AUDIO)) {
 			logger.log("is audio");
-			if (needToReduceAudio(metadatas, srcFile)) {
+			if(needToReduceAudio(metadatas, srcFile)) {
 				destFile = getTempFile(srcFile, getAudioFormat(srcFile));
 				reduceAudio(metadatas, srcFile, destFile, "128k", consolePrefixMessage, logger);
 			} else {
@@ -180,7 +180,7 @@ public class FFReducer extends AbstractReducer {
 	 */
 	@Override
 	public void close() throws IOException {
-		if (textProgressBar != null) {
+		if(textProgressBar != null) {
 			textProgressBar.close();
 		}
 	}
@@ -210,22 +210,22 @@ public class FFReducer extends AbstractReducer {
 		VideoStream videoStream = movieMetadatas.getVideoStream();
 		Size size = videoStream.size();
 		Rotation rotation = inRotation;
-		if (rotation == null) {
+		if(rotation == null) {
 			rotation = videoStream.rotate();
 		}
-		if (rotation != null) {
+		if(rotation != null) {
 			size = rotation.resize(size);
 		}
-		if (size.getWidth() <= maxSize.getWidth() && size.getHeight() <= maxSize.getHeight()) {
+		if(size.getWidth() <= maxSize.getWidth() && size.getHeight() <= maxSize.getHeight()) {
 			return size;
 		}
 		StringBuilder log = new StringBuilder();
 		log.append("Need to resize ").append(size);
-		if (rotation != null) {
+		if(rotation != null) {
 			log.append(" (rotation of ").append(rotation.getValue()).append(')');
 		}
 		size = size.fitAndKeepRatioTo(maxSize);
-		if (rotation != null && !AutoRotate.isAutoRotateObsolete()) {
+		if(rotation != null && ! AutoRotate.isAutoRotateObsolete()) {
 			size = rotation.resize(size);
 		}
 
@@ -272,19 +272,19 @@ public class FFReducer extends AbstractReducer {
 	 * @return
 	 */
 	private boolean isVideo(MovieMetadatas metadatas, Logger logger) {
-		if (!metadatas.contains(Type.VIDEO)) {
+		if( ! metadatas.contains(Type.VIDEO)) {
 			logger.log("Is audio: not contains video stream");
 			return false;
 		}
 		VideoStream videoStream = metadatas.getVideoStream();
 		OptionalInt numberOfFrames = videoStream.numberOfFrames();
-		if (numberOfFrames.isPresent() && numberOfFrames.getAsInt() == 1) {
+		if(numberOfFrames.isPresent() && numberOfFrames.getAsInt() == 1) {
 			logger.log("Is audio: number of frames unavailable: " + numberOfFrames);
 			return false;
 		}
-		if (Decoders.MJPEG.getName().equals(videoStream.codecName().get())) {
+		if(Decoders.MJPEG.getName().equals(videoStream.codecName().get())) {
 			FrameRate frameRate = videoStream.frameRate().orElse(null);
-			if (frameRate != null && frameRate.floatValue() < 100) {
+			if(frameRate != null && frameRate.floatValue() < 100) {
 				return true;
 			}
 			logger.log("Is audio: frameRate is null or too high: " + frameRate);
@@ -298,7 +298,7 @@ public class FFReducer extends AbstractReducer {
 	 * @return
 	 */
 	private boolean needToReduceVideo(MovieMetadatas metadatas) {
-		return !metadatas.isTreatedByFMV();
+		return ! metadatas.isTreatedByFMV();
 	}
 
 	/**
@@ -331,18 +331,18 @@ public class FFReducer extends AbstractReducer {
 
 		// ------------------------ map ------------------------
 		// video
-		for (Stream stream : videoMetadatas.getVideoStreams()) {
+		for(Stream stream : videoMetadatas.getVideoStreams()) {
 			logger.log("map video: " + stream);
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 		// audio
-		for (Stream stream : audioStreams) {
+		for(Stream stream : audioStreams) {
 			logger.log("map audio: " + stream);
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 		// subtitle
 		Collection<SubtitleStream> subtitleStreams = StreamOrder.sort(videoMetadatas.getSubtitleStreams());
-		for (Stream stream : subtitleStreams) {
+		for(Stream stream : subtitleStreams) {
 			logger.log("map subtitle: " + stream);
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
@@ -363,7 +363,7 @@ public class FFReducer extends AbstractReducer {
 		outputProcessor.codecAutoSelectAAC();
 
 		// subtitle
-		if (videoMetadatas.contains(Type.SUBTITLE)) {
+		if(videoMetadatas.contains(Type.SUBTITLE)) {
 			outputProcessor.codecCopy(Type.SUBTITLE);
 		}
 
@@ -377,15 +377,15 @@ public class FFReducer extends AbstractReducer {
 
 		OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
 		Progress progress = executor.getProgress();
-		if (countEstimateFrames.isPresent() && progress != null) {
+		if(countEstimateFrames.isPresent() && progress != null) {
 			textProgressBar = FFMpegProgressBar.with(progress).byFrame(countEstimateFrames.getAsInt())
 					.fileSize(srcFile.length()).build().makeBar(consolePrefixMessage);
 		} else {
 			StringJoiner joiner = new StringJoiner(", ");
-			if (progress == null) {
+			if(progress == null) {
 				joiner.add("progress not found");
 			}
-			if (!countEstimateFrames.isPresent()) {
+			if( ! countEstimateFrames.isPresent()) {
 				joiner.add("nb frames nout found");
 			}
 			logger.log("No progress bar: " + joiner.toString());
@@ -402,11 +402,11 @@ public class FFReducer extends AbstractReducer {
 	private boolean needToReduceAudio(MovieMetadatas metadatas, File srcFile) {
 		AudioStream audioStream = metadatas.getAudioStream();
 		String extension = FilenameUtils.getExtension(srcFile.getName());
-		if (!audioFormat.equalsIgnoreCase(extension) || audioStream.bitRate().getAsInt() > 128000) {
+		if( ! audioFormat.equalsIgnoreCase(extension) || audioStream.bitRate().getAsInt() > 128000) {
 			return true;
 		}
 		VideoStream videoStream = metadatas.getVideoStream();
-		if (videoStream != null && Decoders.MJPEG.getName().equals(videoStream.codecName().get())) {
+		if(videoStream != null && Decoders.MJPEG.getName().equals(videoStream.codecName().get())) {
 			return true; // has cover
 		}
 		return false;
@@ -444,7 +444,7 @@ public class FFReducer extends AbstractReducer {
 		executor.addListener(createLogFFExecListener(logger));
 		Duration duration = metadatas.getAudioStream().duration().orElse(null);
 		Progress progress = executor.getProgress();
-		if (duration != null && progress != null) {
+		if(duration != null && progress != null) {
 			textProgressBar = FFMpegProgressBar.with(progress).byDuration(duration).fileSize(srcFile.length()).build()
 					.makeBar(consolePrefixMessage);
 		}
@@ -458,14 +458,14 @@ public class FFReducer extends AbstractReducer {
 	 */
 	private List<String> getProperyList(String propertyKey, List<String> defaultValues) {
 		String values = System.getProperty(propertyKey);
-		if (values == null) {
+		if(values == null) {
 			return defaultValues;
 		}
 		StringTokenizer stringTokenizer = new StringTokenizer(values, ",;");
 		List<String> list = new ArrayList<>();
-		while (stringTokenizer.hasMoreTokens()) {
+		while(stringTokenizer.hasMoreTokens()) {
 			String value = stringTokenizer.nextToken().trim();
-			if (StringUtils.isNotBlank(value)) {
+			if(StringUtils.isNotBlank(value)) {
 				list.add(value);
 			}
 		}
@@ -481,8 +481,7 @@ public class FFReducer extends AbstractReducer {
 
 			/**
 			 * @see org.fagu.fmv.utils.exec.FMVExecListener#eventPreExecute(org.fagu.fmv.utils.exec.FMVExecutor,
-			 *      org.apache.commons.exec.CommandLine, java.util.Map,
-			 *      org.apache.commons.exec.ExecuteResultHandler)
+			 *      org.apache.commons.exec.CommandLine, java.util.Map, org.apache.commons.exec.ExecuteResultHandler)
 			 */
 			@Override
 			public void eventPreExecute(FMVExecutor fmvExecutor, CommandLine command,
@@ -524,19 +523,18 @@ public class FFReducer extends AbstractReducer {
 
 			/**
 			 * @see org.fagu.fmv.soft.exec.FMVExecListener#eventPostExecute(org.fagu.fmv.soft.exec.FMVExecutor,
-			 *      org.apache.commons.exec.CommandLine, java.util.Map,
-			 *      org.apache.commons.exec.ExecuteResultHandler)
+			 *      org.apache.commons.exec.CommandLine, java.util.Map, org.apache.commons.exec.ExecuteResultHandler)
 			 */
 			@Override
 			public void eventPostExecute(FMVExecutor fmvExecutor, CommandLine command, Map environment,
 					ExecuteResultHandler handler) {
 				CropDetection cropDetection = cropDetect.getCropSizeDetected();
 				SortedSet<CropSize> orderedCropSizes = cropDetection.getOrderedCropSizes();
-				if (!orderedCropSizes.isEmpty()) {
+				if( ! orderedCropSizes.isEmpty()) {
 					CropSize first = orderedCropSizes.first();
 					Size size = first.toSize();
 
-					if (!videoMetadatas.getVideoStreams().stream().anyMatch(s -> size.equals(s.size()))) {
+					if( ! videoMetadatas.getVideoStreams().stream().anyMatch(s -> size.equals(s.size()))) {
 						logger.log("CropDetect: " + cropDetection.getTotalCount() + " lines parsed");
 						orderedCropSizes.stream().limit(10).forEach(cs -> logger.log("CropDetect: " + cs));
 						logger.log("CropDetect: Add crop filter: " + first.toCrop());
@@ -557,13 +555,12 @@ public class FFReducer extends AbstractReducer {
 
 			/**
 			 * @see org.fagu.fmv.soft.exec.FMVExecListener#eventPostExecute(org.fagu.fmv.soft.exec.FMVExecutor,
-			 *      org.apache.commons.exec.CommandLine, java.util.Map,
-			 *      org.apache.commons.exec.ExecuteResultHandler)
+			 *      org.apache.commons.exec.CommandLine, java.util.Map, org.apache.commons.exec.ExecuteResultHandler)
 			 */
 			@Override
 			public void eventPostExecute(FMVExecutor fmvExecutor, CommandLine command, Map environment,
 					ExecuteResultHandler handler) {
-				if (volumeDetect.isDetected()) {
+				if(volumeDetect.isDetected()) {
 					VolumeDetected detected = volumeDetect.getDetected();
 					logger.log("VolumeDetect: nb_sample= " + detected.countSample());
 					logger.log("VolumeDetect: max=       " + detected.getMax());
@@ -584,7 +581,7 @@ public class FFReducer extends AbstractReducer {
 	 */
 	private Size getMaxSize() {
 		String property = System.getProperty("fmv.reduce.video.maxsize");
-		if (property == null) {
+		if(property == null) {
 			return MAX_SIZE;
 		}
 		return Size.parse(property);
