@@ -50,6 +50,7 @@ public class SyncAllLocal {
 	public static void main(String[] args) throws IOException {
 		File localPhotos = new File("D:\\Photos fagu & Vv");
 		File localVideos = new File("D:\\Video_fagu&Vv");
+		File localMusiques = new File("D:\\Musiques");
 		File faguVv1 = FileUtils.getRootByName("fagu_Vv_1").orElse(null);
 		File faguVv2 = FileUtils.getRootByName("fagu_Vv_2").orElse(null);
 		if(faguVv1 != null) {
@@ -74,6 +75,10 @@ public class SyncAllLocal {
 
 			if(hdRoots.size() == 2) {
 				syncBothHD(printStream, faguVv1, faguVv2);
+			}
+
+			if(exists(faguVv2)) {
+				syncLocalToHD2(printStream, localMusiques, faguVv2);
 			}
 		}
 	}
@@ -128,6 +133,16 @@ public class SyncAllLocal {
 		for(String folder : folders) {
 			synchronize(printStream, new File(faguVv2, folder), Collections.singletonList(new File(faguVv1, folder)));
 		}
+	}
+
+	/**
+	 * @param printStream
+	 * @param localMusiques
+	 * @param faguVv2
+	 * @throws IOException
+	 */
+	private static void syncLocalToHD2(PrintStream printStream, File localMusiques, File faguVv2) throws IOException {
+		synchronize(printStream, localMusiques, Collections.singletonList(new File(faguVv2, "Musiques")));
 	}
 
 	/**
