@@ -39,9 +39,4 @@ public class ActuatorConfig {
 		return new SoftFoundHealthIndicator();
 	}
 
-	@Bean
-	public SoftMetrics softMetrics() {
-		return new SoftMetrics();
-	}
-
 }

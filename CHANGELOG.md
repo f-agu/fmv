@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+### Changed
+- spring-boot: 1.4.0.RELEASE -> 2.0.0.RELEASE
+
 
 ## [0.7.1] - 2017-05-24
 
