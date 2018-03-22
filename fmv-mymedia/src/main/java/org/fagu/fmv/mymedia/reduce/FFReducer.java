@@ -54,6 +54,7 @@ import org.fagu.fmv.ffmpeg.filter.impl.ScaleMode;
 import org.fagu.fmv.ffmpeg.filter.impl.VolumeDetect;
 import org.fagu.fmv.ffmpeg.filter.impl.VolumeDetected;
 import org.fagu.fmv.ffmpeg.flags.Strict;
+import org.fagu.fmv.ffmpeg.format.Formats;
 import org.fagu.fmv.ffmpeg.metadatas.AudioStream;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.Stream;
@@ -96,19 +97,20 @@ public class FFReducer extends AbstractReducer {
 
 	private int audioSampleRate = DEFAULT_SAMPLE_RATE;
 
-	// , videoSampleRate = DEFAULT_SAMPLE_RATE;
+	private String audioFormat;
 
-	private String audioFormat, videoFormat;
+	private String videoFormat;
 
-	private List<String> audioFormatUnchanges, videoFormatUnchanges;
+	private List<String> audioFormatUnchanges;
+
+	private List<String> videoFormatUnchanges;
 
 	private TextProgressBar textProgressBar;
 
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
-			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\a\\The Foreigner.mkv"),
-					"totogsdlfjhsdkfjhqsdfiohqsdohqsjhbqsdjhbqsdgjhqbsdgoqbrgioqdbgqdfjkgbgqdfjgbgbqdfjkgbqdfjgbqdf",
-					Loggers.systemOut());
+			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\..."),
+					"totqdf", Loggers.systemOut());
 		} catch(FMVExecuteException e) {
 			e.printStackTrace();
 			// if( ! e.isKnown()) {
@@ -313,13 +315,19 @@ public class FFReducer extends AbstractReducer {
 	private void reduceVideo(MovieMetadatas metadatas, File srcFile, MovieMetadatas movieMetadatas, File destFile,
 			String consolePrefixMessage, Logger logger) throws IOException {
 
+		AudioStream audioStream = movieMetadatas.getAudioStream();
+		boolean audioCodecCopy = audioStream.isCodec(Formats.AC3);
+
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.hideBanner();
 		InputProcessor inputProcessor = builder.addMediaInputFile(srcFile);
 		builder.filter(AutoRotate.create(movieMetadatas));
 		applyScaleIfNecessary(builder, movieMetadatas, getMaxSize(), logger);
-		VolumeDetect volumeDetect = VolumeDetect.build();
-		builder.filter(volumeDetect);
+		VolumeDetect volumeDetect = null;
+		if( ! audioCodecCopy) {
+			volumeDetect = VolumeDetect.build();
+			builder.filter(volumeDetect);
+		}
 		CropDetect cropDetect = CropDetect.build();
 		builder.filter(cropDetect);
 
@@ -332,21 +340,21 @@ public class FFReducer extends AbstractReducer {
 		// ------------------------ map ------------------------
 		// video
 		for(Stream stream : videoMetadatas.getVideoStreams()) {
-			logger.log("map video: " + stream);
+			logger.log("map[" + stream.index() + "] video: " + stream);
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 		// audio
 		for(Stream stream : audioStreams) {
-			logger.log("map audio: " + stream);
+			logger.log("map[" + stream.index() + "] audio: " + stream);
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 		// subtitle
 		Collection<SubtitleStream> subtitleStreams = StreamOrder.sort(videoMetadatas.getSubtitleStreams());
 		for(Stream stream : subtitleStreams) {
-			logger.log("map subtitle: " + stream);
+			logger.log("map[" + stream.index() + "] subtitle: " + stream);
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
-		// other stream
+		// other stream (Apple... again bullshit)
 		// for (Stream stream : videoMetadatas.getStreams()) {
 		// Type type = stream.type();
 		// if (type != Type.AUDIO && type != Type.VIDEO && type != Type.SUBTITLE) {
@@ -360,7 +368,13 @@ public class FFReducer extends AbstractReducer {
 		outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(23));
 
 		// audio
-		outputProcessor.codecAutoSelectAAC();
+		if(audioCodecCopy) {
+			logger.log("Audio: AC3, copy");
+			outputProcessor.codecCopy(Type.AUDIO);
+		} else {
+			logger.log("Audio: force AAC");
+			outputProcessor.codecAutoSelectAAC();
+		}
 
 		// subtitle
 		if(videoMetadatas.contains(Type.SUBTITLE)) {
@@ -373,7 +387,9 @@ public class FFReducer extends AbstractReducer {
 
 		executor.addListener(createLogFFExecListener(logger));
 		executor.addListener(createCropDetectFFExecListener(logger, cropDetect, videoMetadatas));
-		executor.addListener(createVolumeDetectFFExecListener(logger, volumeDetect));
+		if( ! audioCodecCopy) {
+			executor.addListener(createVolumeDetectFFExecListener(logger, volumeDetect));
+		}
 
 		OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
 		Progress progress = executor.getProgress();
@@ -570,7 +586,6 @@ public class FFReducer extends AbstractReducer {
 				} else {
 					logger.log("volume not detected");
 				}
-
 			}
 
 		};

@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.fagu.fmv.ffmpeg.format.Formats;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.Fraction;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
@@ -90,6 +91,18 @@ public abstract class Stream extends InfoBase {
 	 */
 	public int index() {
 		return getInt("index").getAsInt();
+	}
+
+	/**
+	 * @param formats
+	 * @return
+	 */
+	public boolean isCodec(Formats formats) {
+		Optional<String> codec = codecName();
+		if(codec.isPresent()) {
+			return codec.get().equalsIgnoreCase(formats.getName());
+		}
+		return false;
 	}
 
 	/**
