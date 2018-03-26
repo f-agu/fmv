@@ -45,5 +45,5 @@ public interface Reducer extends Closeable {
 	 * @return
 	 * @throws IOException
 	 */
-	File reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException;
+	Reduced reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException;
 }

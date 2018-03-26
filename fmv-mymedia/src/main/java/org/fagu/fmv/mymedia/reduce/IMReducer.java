@@ -69,7 +69,7 @@ public class IMReducer extends AbstractReducer {
 	 * @see org.fagu.fmv.mymedia.reduce.Reducer#reduceMedia(java.io.File, String, Logger)
 	 */
 	@Override
-	public File reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException {
+	public Reduced reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException {
 		File destFile = getTempFile(srcFile, format);
 		IMOperation op = new IMOperation();
 		op.image(srcFile, "[0]").autoOrient().quality(quality).image(destFile);
@@ -78,7 +78,7 @@ public class IMReducer extends AbstractReducer {
 		convertSoft.withParameters(op.toList())
 				.logCommandLine(line -> logger.log("Exec: " + line))
 				.execute();
-		return destFile;
+		return new Reduced(destFile, false);
 	}
 
 	@Override

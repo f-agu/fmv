@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.SortedSet;
 import java.util.StringJoiner;
@@ -109,7 +110,7 @@ public class FFReducer extends AbstractReducer {
 
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
-			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\..."),
+			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\out.mkv"),
 					"totqdf", Loggers.systemOut());
 		} catch(FMVExecuteException e) {
 			e.printStackTrace();
@@ -153,14 +154,15 @@ public class FFReducer extends AbstractReducer {
 	 * @see org.fagu.fmv.mymedia.reduce.Reducer#reduceMedia(java.io.File, String, Logger)
 	 */
 	@Override
-	public File reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException {
+	public Reduced reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException {
 		File destFile = null;
+		boolean forceReplace = false;
 		MovieMetadatas metadatas = MovieMetadatas.with(srcFile).extract();
 		if(isVideo(metadatas, logger)) {
 			logger.log("is video");
 			if(needToReduceVideo(metadatas)) {
 				destFile = getTempFile(srcFile, getVideoFormat(srcFile));
-				reduceVideo(metadatas, srcFile, metadatas, destFile, consolePrefixMessage, logger);
+				forceReplace = reduceVideo(metadatas, srcFile, metadatas, destFile, consolePrefixMessage, logger);
 			} else {
 				logger.log("Video already reduced by FMV");
 			}
@@ -169,12 +171,12 @@ public class FFReducer extends AbstractReducer {
 			logger.log("is audio");
 			if(needToReduceAudio(metadatas, srcFile)) {
 				destFile = getTempFile(srcFile, getAudioFormat(srcFile));
-				reduceAudio(metadatas, srcFile, destFile, "128k", consolePrefixMessage, logger);
+				forceReplace = reduceAudio(metadatas, srcFile, destFile, "128k", consolePrefixMessage, logger);
 			} else {
 				logger.log("Audio already reduced by FMV");
 			}
 		}
-		return destFile;
+		return new Reduced(destFile, forceReplace);
 	}
 
 	/**
@@ -312,7 +314,7 @@ public class FFReducer extends AbstractReducer {
 	 * @param logger
 	 * @throws IOException
 	 */
-	private void reduceVideo(MovieMetadatas metadatas, File srcFile, MovieMetadatas movieMetadatas, File destFile,
+	private boolean reduceVideo(MovieMetadatas metadatas, File srcFile, MovieMetadatas movieMetadatas, File destFile,
 			String consolePrefixMessage, Logger logger) throws IOException {
 
 		AudioStream audioStream = movieMetadatas.getAudioStream();
@@ -391,7 +393,8 @@ public class FFReducer extends AbstractReducer {
 			executor.addListener(createVolumeDetectFFExecListener(logger, volumeDetect));
 		}
 
-		OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
+		VideoStream videoStream = metadatas.getVideoStream();
+		OptionalInt countEstimateFrames = videoStream.countEstimateFrames();
 		Progress progress = executor.getProgress();
 		if(countEstimateFrames.isPresent() && progress != null) {
 			textProgressBar = FFMpegProgressBar.with(progress).byFrame(countEstimateFrames.getAsInt())
@@ -408,6 +411,12 @@ public class FFReducer extends AbstractReducer {
 		}
 
 		executor.execute();
+
+		Optional<String> codecName = videoStream.codecName();
+		if(codecName.isPresent() && codecName.get().equalsIgnoreCase(Formats.HEVC.getName())) { // h265
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -435,10 +444,12 @@ public class FFReducer extends AbstractReducer {
 	 * @param bitRate
 	 * @param consolePrefixMessage
 	 * @param logger
+	 * @return
 	 * @throws IOException
 	 */
-	private void reduceAudio(MovieMetadatas metadatas, File srcFile, File destFile, String bitRate,
+	private boolean reduceAudio(MovieMetadatas metadatas, File srcFile, File destFile, String bitRate,
 			String consolePrefixMessage, Logger logger) throws IOException {
+
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.hideBanner();
 
@@ -465,6 +476,8 @@ public class FFReducer extends AbstractReducer {
 					.makeBar(consolePrefixMessage);
 		}
 		executor.execute();
+
+		return false;
 	}
 
 	/**
@@ -492,7 +505,7 @@ public class FFReducer extends AbstractReducer {
 	 * @param logger
 	 * @return
 	 */
-	private FFExecListener createLogFFExecListener(Logger logger) {
+	public static FFExecListener createLogFFExecListener(Logger logger) {
 		return new FFExecListener() {
 
 			/**

@@ -34,11 +34,6 @@ import org.fagu.fmv.mymedia.movie.list.Column;
 public class FMVTreatedColumn implements Column {
 
 	/**
-	 *
-	 */
-	public FMVTreatedColumn() {}
-
-	/**
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#title()
 	 */
 	@Override

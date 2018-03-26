@@ -99,14 +99,14 @@ public class Bootstrap {
 					Supplier<Reducer> supplier = reducerMap.get(FilenameUtils.getExtension(p.getName(p.getNameCount() - 1).toString()).toLowerCase());
 					if(supplier != null) {
 						File srcFile = p.toFile();
-						File destFile = null;
+						Reduced reduced = null;
 						try (Reducer reducer = supplier.get()) {
 							logger.log("Reducer found: " + reducer.getName());
 
 							try {
 								String msg = LocalDateTime.now().format(DATE_TIME_FORMATTER) + ' ' + srcFile.getPath();
 								System.out.print(msg);
-								destFile = reducer.reduceMedia(srcFile, msg, logger);
+								reduced = reducer.reduceMedia(srcFile, msg, logger);
 							} catch(Exception e) {
 								System.out.println();
 								e.printStackTrace();
@@ -114,13 +114,15 @@ public class Bootstrap {
 						} catch(IOException e) {
 							throw new UncheckedIOException(e);
 						}
+						File destFile = reduced.getDestFile();
 						if(destFile != null && destFile.exists()) {
 							try {
 								boolean extensionChanged = ! FilenameUtils.getExtension(srcFile.getName()).equalsIgnoreCase(FilenameUtils
 										.getExtension(destFile.getName()));
-								if(destFile.length() > 100 && (srcFile.length() > destFile.length() || extensionChanged)) {
+								if(reduced.isForceReplace() || (destFile.length() > 100 && (srcFile.length() > destFile.length()
+										|| extensionChanged))) {
 									String stringDiffSize = toStringDiffSize(srcFile.length(), destFile.length());
-									logger.log("Replace source by reduced: " + stringDiffSize);
+									logger.log("Replace source by reduced: " + stringDiffSize + (reduced.isForceReplace() ? "  [FORCED]" : ""));
 									System.out.print(" OK : " + stringDiffSize);
 									previousSize.add(srcFile.length());
 									newSize.add(destFile.length());

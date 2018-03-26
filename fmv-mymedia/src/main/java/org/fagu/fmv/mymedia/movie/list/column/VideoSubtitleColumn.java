@@ -38,11 +38,6 @@ import org.fagu.fmv.mymedia.movie.list.Column;
 public class VideoSubtitleColumn implements Column {
 
 	/**
-	 *
-	 */
-	public VideoSubtitleColumn() {}
-
-	/**
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#title()
 	 */
 	@Override

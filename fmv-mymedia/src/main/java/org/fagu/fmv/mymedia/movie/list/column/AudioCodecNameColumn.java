@@ -24,23 +24,22 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
+import org.fagu.fmv.ffmpeg.metadatas.AudioStream;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.mymedia.movie.list.Column;
-import org.fagu.fmv.utils.media.Size;
 
 
 /**
  * @author f.agu
  */
-public class VideoHDColumn implements Column {
+public class AudioCodecNameColumn implements Column {
 
 	/**
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#title()
 	 */
 	@Override
 	public String title() {
-		return "HD";
+		return "Audio codec";
 	}
 
 	/**
@@ -48,11 +47,11 @@ public class VideoHDColumn implements Column {
 	 */
 	@Override
 	public String value(Path rootPath, File file, Supplier<MovieMetadatas> movieMetadatasSupplier) {
-		VideoStream videoStream = movieMetadatasSupplier.get().getVideoStream();
-		if(videoStream == null) {
+		AudioStream audioStream = movieMetadatasSupplier.get().getAudioStream();
+		if(audioStream == null) {
 			return null;
 		}
-		Size size = videoStream.size();
-		return size != null && size.countPixel() > 600_000 ? "HD" : null;
+		return audioStream.codecName().orElse(null);
 	}
+
 }

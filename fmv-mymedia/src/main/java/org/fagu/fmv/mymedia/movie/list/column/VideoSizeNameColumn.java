@@ -37,11 +37,6 @@ import org.fagu.fmv.utils.media.Size;
 public class VideoSizeNameColumn implements Column {
 
 	/**
-	 *
-	 */
-	public VideoSizeNameColumn() {}
-
-	/**
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#title()
 	 */
 	@Override

@@ -38,11 +38,6 @@ import org.fagu.fmv.mymedia.movie.list.Column;
 public class AudioColumn implements Column {
 
 	/**
-	 *
-	 */
-	public AudioColumn() {}
-
-	/**
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#title()
 	 */
 	@Override

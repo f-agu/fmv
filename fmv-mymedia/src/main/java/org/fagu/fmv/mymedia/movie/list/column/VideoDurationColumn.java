@@ -37,11 +37,6 @@ import org.fagu.fmv.utils.time.Duration;
 public class VideoDurationColumn implements Column {
 
 	/**
-	 *
-	 */
-	public VideoDurationColumn() {}
-
-	/**
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#title()
 	 */
 	@Override

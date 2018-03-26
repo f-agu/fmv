@@ -39,11 +39,6 @@ import org.fagu.fmv.utils.collection.MapList;
 public class StreamsTypeCountColumn implements Column {
 
 	/**
-	 *
-	 */
-	public StreamsTypeCountColumn() {}
-
-	/**
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#title()
 	 */
 	@Override

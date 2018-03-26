@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.movie.list.column;
  * #L%
  */
 
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.function.Supplier;
@@ -34,11 +33,6 @@ import org.fagu.fmv.mymedia.movie.list.Column;
  * @author f.agu
  */
 public class NameColumn implements Column {
-
-	/**
-	 *
-	 */
-	public NameColumn() {}
 
 	/**
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#title()

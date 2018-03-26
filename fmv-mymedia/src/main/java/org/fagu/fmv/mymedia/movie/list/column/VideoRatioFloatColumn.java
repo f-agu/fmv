@@ -37,11 +37,6 @@ import org.fagu.fmv.utils.media.Size;
 public class VideoRatioFloatColumn implements Column {
 
 	/**
-	 *
-	 */
-	public VideoRatioFloatColumn() {}
-
-	/**
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#title()
 	 */
 	@Override

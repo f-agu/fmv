@@ -27,20 +27,19 @@ import java.util.function.Supplier;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.mymedia.movie.list.Column;
-import org.fagu.fmv.utils.media.Size;
 
 
 /**
  * @author f.agu
  */
-public class VideoHDColumn implements Column {
+public class VideoCodecLongNameColumn implements Column {
 
 	/**
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#title()
 	 */
 	@Override
 	public String title() {
-		return "HD";
+		return "Vidéo long codec";
 	}
 
 	/**
@@ -52,7 +51,7 @@ public class VideoHDColumn implements Column {
 		if(videoStream == null) {
 			return null;
 		}
-		Size size = videoStream.size();
-		return size != null && size.countPixel() > 600_000 ? "HD" : null;
+		return videoStream.codecName().orElse(null);
 	}
+
 }
