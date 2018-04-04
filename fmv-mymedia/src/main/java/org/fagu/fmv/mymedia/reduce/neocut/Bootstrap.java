@@ -22,7 +22,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.mymedia.compare.ImageDiffPercent;
 import org.fagu.fmv.utils.time.Time;
 
@@ -46,6 +48,8 @@ public class Bootstrap {
 
 	private final NavigableSet<File> movieFiles = new TreeSet<>();
 
+	private final List<Template> templates = new ArrayList<>();
+
 	private final ExecutorService executorService = Executors.newFixedThreadPool(times.size());
 
 	public Bootstrap(File folderToReduce) {
@@ -53,10 +57,23 @@ public class Bootstrap {
 		images = new Images(new File(folderToReduce, "images-neocut"), times);
 	}
 
-	public void cut() throws IOException {
-		loadAllImages(folderToReduce);
-		Map<File, Set<File>> similarMap = analyze();
+	public void findSimilarBetweenThem() throws IOException {
+		init();
+		Map<File, Set<File>> similarMap = analyzeBetweenThem();
 		similarMap.forEach((k, v) -> System.out.println(k + ": " + v));
+	}
+
+	public void findSimilarWithTemplate() throws IOException {
+		init();
+		Map<File, Set<File>> similarMap = analyzeBetweenThem();
+		similarMap.forEach((k, v) -> System.out.println(k + ": " + v));
+	}
+
+	// ***************************************
+
+	private void init() throws IOException {
+		loadAllImages(folderToReduce);
+		loadTemplates();
 	}
 
 	private void loadAllImages(File folder) throws IOException {
@@ -77,7 +94,19 @@ public class Bootstrap {
 		}
 	}
 
-	private Map<File, Set<File>> analyze() throws IOException {
+	private void loadTemplates() throws IOException {
+		File templateFolder = new File(folderToReduce, "conf-neocut");
+		FileUtils.forceMkdir(templateFolder);
+		File[] files = templateFolder.listFiles(f -> "properties".equalsIgnoreCase(FilenameUtils.getExtension(f.getName())));
+		if(files == null) {
+			return;
+		}
+		for(File file : files) {
+			templates.add(Template.load(file));
+		}
+	}
+
+	private Map<File, Set<File>> analyzeBetweenThem() throws IOException {
 		Set<File> done = new HashSet<>();
 		Map<File, Set<File>> map = new HashMap<>();
 		for(File movieFile : movieFiles) {
@@ -101,9 +130,37 @@ public class Bootstrap {
 		return map;
 	}
 
+	private Map<Template, Set<File>> analyzeWithTemplate() throws IOException {
+		Set<File> done = new HashSet<>();
+		Map<Template, Set<File>> map = new HashMap<>();
+		for(Template template : templates) {
+			System.out.print(StringUtils.rightPad(template.getName(), 20));
+			for(File movieFile : movieFiles) {
+				if(done.contains(movieFile)) {
+					System.out.print("#");
+					continue;
+				}
+				if(isSimilar(template.getModelMap(), images.getImages(movieFile))) {
+					map.computeIfAbsent(template, k -> new HashSet<>())
+							.add(movieFile);
+					done.add(movieFile);
+					System.out.print('X');
+				} else {
+					System.out.print('.');
+				}
+			}
+			System.out.println();
+		}
+		return map;
+	}
+
 	private boolean isSimilar(File f1, File f2) throws IOException {
 		Map<Time, File> map1 = images.getImages(f1);
 		Map<Time, File> map2 = images.getImages(f2);
+		return isSimilar(map1, map2);
+	}
+
+	private boolean isSimilar(Map<Time, File> map1, Map<Time, File> map2) throws IOException {
 		AtomicBoolean similar = new AtomicBoolean(false);
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<>();
 		for(Entry<Time, File> entry : map1.entrySet()) {
@@ -136,7 +193,7 @@ public class Bootstrap {
 	public static void main(String[] args) throws IOException {
 		File folderToCut = new File(args[0]);
 		Bootstrap bootstrap = new Bootstrap(folderToCut);
-		bootstrap.cut();
+		bootstrap.findSimilarBetweenThem();
 	}
 
 }
