@@ -23,6 +23,7 @@ package org.fagu.fmv.mymedia.movie.list.column;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.Supplier;
 
@@ -49,10 +50,12 @@ public class AudioColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public String value(Path rootPath, File file, Supplier<MovieMetadatas> movieMetadatasSupplier) {
-		List<AudioStream> audioStreams = movieMetadatasSupplier.get().getAudioStreams();
+	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
+		List<AudioStream> audioStreams = movieMetadatasOptSupplier.get()
+				.map(MovieMetadatas::getAudioStreams)
+				.orElse(null);
 		if(CollectionUtils.isEmpty(audioStreams)) {
-			return null;
+			return Optional.empty();
 		}
 		StringJoiner joiner = new StringJoiner(", ");
 		for(AudioStream audioStream : audioStreams) {
@@ -63,7 +66,7 @@ public class AudioColumn implements Column {
 			joiner.add(name);
 		}
 		String list = joiner.toString();
-		return audioStreams.size() + (list.isEmpty() ? "" : ": " + list);
+		return Optional.of(audioStreams.size() + (list.isEmpty() ? "" : ": " + list));
 	}
 
 }

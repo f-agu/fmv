@@ -24,6 +24,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -59,12 +60,14 @@ public class StreamTypeCountColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public String value(Path rootPath, File file, Supplier<MovieMetadatas> movieMetadatasSupplier) {
-		List<InfoBase> streams = movieMetadatasSupplier.get().getStreams(type);
+	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
+		List<InfoBase> streams = movieMetadatasOptSupplier.get()
+				.map(mm -> mm.getStreams(type))
+				.orElse(null);
 		if(CollectionUtils.isEmpty(streams)) {
-			return null;
+			return Optional.empty();
 		}
-		return Integer.toString(streams.size());
+		return Optional.of(Integer.toString(streams.size()));
 	}
 
 }

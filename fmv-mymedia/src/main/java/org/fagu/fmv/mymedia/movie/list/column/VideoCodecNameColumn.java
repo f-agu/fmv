@@ -22,6 +22,7 @@ package org.fagu.fmv.mymedia.movie.list.column;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
@@ -46,12 +47,10 @@ public class VideoCodecNameColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public String value(Path rootPath, File file, Supplier<MovieMetadatas> movieMetadatasSupplier) {
-		VideoStream videoStream = movieMetadatasSupplier.get().getVideoStream();
-		if(videoStream == null) {
-			return null;
-		}
-		return videoStream.codecLongName().orElse(null);
+	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
+		return movieMetadatasOptSupplier.get()
+				.map(MovieMetadatas::getVideoStream)
+				.flatMap(VideoStream::codecLongName);
 	}
 
 }

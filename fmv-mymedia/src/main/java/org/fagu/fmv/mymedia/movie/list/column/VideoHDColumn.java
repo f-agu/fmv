@@ -22,12 +22,12 @@ package org.fagu.fmv.mymedia.movie.list.column;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.mymedia.movie.list.Column;
-import org.fagu.fmv.utils.media.Size;
 
 
 /**
@@ -47,12 +47,10 @@ public class VideoHDColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public String value(Path rootPath, File file, Supplier<MovieMetadatas> movieMetadatasSupplier) {
-		VideoStream videoStream = movieMetadatasSupplier.get().getVideoStream();
-		if(videoStream == null) {
-			return null;
-		}
-		Size size = videoStream.size();
-		return size != null && size.countPixel() > 600_000 ? "HD" : null;
+	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
+		return movieMetadatasOptSupplier.get()
+				.map(MovieMetadatas::getVideoStream)
+				.map(VideoStream::size)
+				.map(size -> size.countPixel() > 600_000 ? "HD" : null);
 	}
 }

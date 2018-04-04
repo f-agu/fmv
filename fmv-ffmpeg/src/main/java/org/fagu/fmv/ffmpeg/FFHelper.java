@@ -308,7 +308,10 @@ public class FFHelper {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.addMediaInputFile(inFile);
 
-		builder.mux(Image2Muxer.to(outImageFile)).timeSeek(time).numberOfVideoFrameToRecord(1); // only one thumbnail
+		builder.mux(Image2Muxer.to(outImageFile))
+				.timeSeek(time)
+				.numberOfVideoFrameToRecord(1)// only one thumbnail
+				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();

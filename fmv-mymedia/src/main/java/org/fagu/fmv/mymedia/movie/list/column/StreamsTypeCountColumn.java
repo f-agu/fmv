@@ -23,6 +23,7 @@ package org.fagu.fmv.mymedia.movie.list.column;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.Supplier;
 
@@ -50,10 +51,14 @@ public class StreamsTypeCountColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public String value(Path rootPath, File file, Supplier<MovieMetadatas> movieMetadatasSupplier) {
-		MapList<Type, Stream> typeMap = movieMetadatasSupplier.get().toTypeMap();
+	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
+		MovieMetadatas movieMetadatas = movieMetadatasOptSupplier.get().orElse(null);
+		if(movieMetadatas == null) {
+			return Optional.empty();
+		}
+		MapList<Type, Stream> typeMap = movieMetadatas.toTypeMap();
 		if(typeMap.isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 		StringJoiner joiner = new StringJoiner(", ");
 		Type[] values = {Type.VIDEO, Type.AUDIO, Type.SUBTITLE, Type.DATA, Type.ATTACHEMENTS, Type.UNKNOWN};
@@ -63,7 +68,7 @@ public class StreamsTypeCountColumn implements Column {
 				joiner.add(type.name().toLowerCase() + "(" + list.size() + ")");
 			}
 		}
-		return joiner.toString();
+		return Optional.of(joiner.toString());
 	}
 
 }

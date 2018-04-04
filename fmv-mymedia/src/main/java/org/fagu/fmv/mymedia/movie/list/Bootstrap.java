@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,6 +50,7 @@ import org.fagu.fmv.mymedia.movie.list.column.AudioCodecNameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.AudioColumn;
 import org.fagu.fmv.mymedia.movie.list.column.CategoryColumn;
 import org.fagu.fmv.mymedia.movie.list.column.FMVTreatedColumn;
+import org.fagu.fmv.mymedia.movie.list.column.LastModifiedDateColumn;
 import org.fagu.fmv.mymedia.movie.list.column.NameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.PathColumn;
 import org.fagu.fmv.mymedia.movie.list.column.SizeBytesColumn;
@@ -154,9 +156,11 @@ public class Bootstrap implements Closeable {
 		columns.add(new VideoDurationColumn());
 		columns.add(new VideoCodecNameColumn());
 		columns.add(new VideoCodecLongNameColumn());
+		columns.add(new CategoryColumn(0));
 		columns.add(new CategoryColumn(1));
 		columns.add(new CategoryColumn(2));
 		columns.add(new SizeBytesColumn());
+		columns.add(new LastModifiedDateColumn());
 		columns.add(new AudioColumn());
 		columns.add(new AudioCodecNameColumn());
 		columns.add(new AudioCodecLongNameColumn());
@@ -249,7 +253,7 @@ public class Bootstrap implements Closeable {
 		}
 
 		AtomicReference<MovieMetadatas> atomicReference = new AtomicReference<>();
-		Supplier<MovieMetadatas> movieMetadatasSupplier = () -> {
+		Supplier<Optional<MovieMetadatas>> movieMetadatasSupplier = () -> {
 			MovieMetadatas movieMetadatas = atomicReference.get();
 			if(movieMetadatas == null) {
 				try {
@@ -259,10 +263,10 @@ public class Bootstrap implements Closeable {
 				}
 				atomicReference.set(movieMetadatas);
 			}
-			return movieMetadatas;
+			return Optional.ofNullable(movieMetadatas);
 		};
 		printStream.println(columns.stream()
-				.map(c -> c.value(rootPath, file, movieMetadatasSupplier))
+				.map(c -> c.value(rootPath, file, movieMetadatasSupplier).orElse(null))
 				.map(StringUtils::defaultString)
 				.collect(Collectors.joining("\t")));
 	}
@@ -286,11 +290,13 @@ public class Bootstrap implements Closeable {
 				.orElseThrow(() -> new RuntimeException("Harddrive not found"));
 		try (PrintStream printStream = new PrintStream(new File("D:\\tmp\\list-full.out")); //
 				Bootstrap listMovies = new Bootstrap(printStream)) {
-			// listMovies.addColumn(new VideoHDColumn());
-			// listMovies.addColumn(new NameColumn());
+
 			listMovies.list(new File(root, "Dessins animés"));
+			listMovies.list(new File(root, "Dessins animés série"));
+			listMovies.list(new File(root, "Documentaires"));
 			listMovies.list(new File(root, "Films"));
 			listMovies.list(new File(root, "Films HD"));
+			listMovies.list(new File(root, "Séries"));
 		}
 	}
 

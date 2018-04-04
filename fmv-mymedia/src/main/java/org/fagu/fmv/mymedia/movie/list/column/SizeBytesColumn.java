@@ -22,6 +22,7 @@ package org.fagu.fmv.mymedia.movie.list.column;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
@@ -45,8 +46,8 @@ public class SizeBytesColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public String value(Path rootPath, File file, Supplier<MovieMetadatas> movieMetadatasSupplier) {
-		return Long.toString(file.length());
+	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
+		return Optional.of(Long.toString(file.length()));
 	}
 
 }

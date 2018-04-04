@@ -23,6 +23,7 @@ package org.fagu.fmv.mymedia.movie.list.column;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.Supplier;
 
@@ -49,17 +50,19 @@ public class VideoSubtitleColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public String value(Path rootPath, File file, Supplier<MovieMetadatas> movieMetadatasSupplier) {
-		List<SubtitleStream> subtitleStreams = movieMetadatasSupplier.get().getSubtitleStreams();
+	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
+		List<SubtitleStream> subtitleStreams = movieMetadatasOptSupplier.get()
+				.map(MovieMetadatas::getSubtitleStreams)
+				.orElse(null);
 		if(CollectionUtils.isEmpty(subtitleStreams)) {
-			return null;
+			return Optional.empty();
 		}
 		StringJoiner joiner = new StringJoiner(", ");
 		for(SubtitleStream subtitleStream : subtitleStreams) {
 			String name = subtitleStream.title().orElse(subtitleStream.language().orElse("?"));
 			joiner.add(name);
 		}
-		return subtitleStreams.size() + ": " + joiner.toString();
+		return Optional.of(subtitleStreams.size() + ": " + joiner.toString());
 	}
 
 }

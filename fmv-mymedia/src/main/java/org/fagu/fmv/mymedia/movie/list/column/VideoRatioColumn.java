@@ -22,6 +22,7 @@ package org.fagu.fmv.mymedia.movie.list.column;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
@@ -48,17 +49,12 @@ public class VideoRatioColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public String value(Path rootPath, File file, Supplier<MovieMetadatas> movieMetadatasSupplier) {
-		VideoStream videoStream = movieMetadatasSupplier.get().getVideoStream();
-		if(videoStream == null) {
-			return null;
-		}
-		Size size = videoStream.size();
-		if(size == null) {
-			return null;
-		}
-		Ratio ratio = size.getRatio();
-		return ratio.toString();
+	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
+		return movieMetadatasOptSupplier.get()
+				.map(MovieMetadatas::getVideoStream)
+				.map(VideoStream::size)
+				.map(Size::getRatio)
+				.map(Ratio::toString);
 	}
 
 }

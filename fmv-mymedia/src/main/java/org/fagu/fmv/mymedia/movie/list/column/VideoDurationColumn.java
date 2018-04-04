@@ -22,13 +22,13 @@ package org.fagu.fmv.mymedia.movie.list.column;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.metadatas.Format;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.mymedia.movie.list.Column;
-import org.fagu.fmv.utils.time.Duration;
 
 
 /**
@@ -48,14 +48,11 @@ public class VideoDurationColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public String value(Path rootPath, File file, Supplier<MovieMetadatas> movieMetadatasSupplier) {
-		Format format = movieMetadatasSupplier.get().getFormat();
-		Duration duration = format.duration().orElse(null);
-		if(duration == null) {
-			return null;
-		}
-		String durstr = duration.toString();
-		return StringUtils.substringBefore(durstr, ".");
+	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
+		return movieMetadatasOptSupplier.get()
+				.map(MovieMetadatas::getFormat)
+				.flatMap(Format::duration)
+				.map(d -> StringUtils.substringBefore(d.toString(), "."));
 	}
 
 }

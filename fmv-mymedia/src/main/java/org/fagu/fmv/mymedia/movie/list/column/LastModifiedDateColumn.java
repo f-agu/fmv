@@ -22,25 +22,31 @@ package org.fagu.fmv.mymedia.movie.list.column;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.mymedia.movie.list.Column;
 
 
 /**
  * @author f.agu
  */
-public class VideoSizeWidthColumn implements Column {
+public class LastModifiedDateColumn implements Column {
+
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
 
 	/**
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#title()
 	 */
 	@Override
 	public String title() {
-		return "Largeur";
+		return "Date";
 	}
 
 	/**
@@ -48,10 +54,8 @@ public class VideoSizeWidthColumn implements Column {
 	 */
 	@Override
 	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
-		return movieMetadatasOptSupplier.get()
-				.map(MovieMetadatas::getVideoStream)
-				.map(VideoStream::size)
-				.map(size -> Integer.toString(size.getWidth()));
+		LocalDateTime localDateTime = Instant.ofEpochMilli(file.lastModified()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		return Optional.of(formatter.format(localDateTime));
 	}
 
 }
