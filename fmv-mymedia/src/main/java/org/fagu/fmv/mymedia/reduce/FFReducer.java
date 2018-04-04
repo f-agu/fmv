@@ -92,11 +92,15 @@ public class FFReducer extends AbstractReducer {
 
 	private static final Size MAX_SIZE = Size.HD1080;
 
+	private static final int CRF = 23;
+
 	private static final List<String> DEFAULT_AUDIO_FORMAT_UNCHANGE = Arrays.asList("");
 
 	private static final List<String> DEFAULT_VIDEO_FORMAT_UNCHANGE = Arrays.asList("mkv");
 
 	private int audioSampleRate = DEFAULT_SAMPLE_RATE;
+
+	private int crf = CRF;
 
 	private String audioFormat;
 
@@ -162,7 +166,7 @@ public class FFReducer extends AbstractReducer {
 			logger.log("is video");
 			if(needToReduceVideo(metadatas)) {
 				destFile = getTempFile(srcFile, getVideoFormat(srcFile));
-				forceReplace = reduceVideo(metadatas, srcFile, metadatas, destFile, consolePrefixMessage, logger);
+				forceReplace = reduceVideo(metadatas, srcFile, destFile, consolePrefixMessage, logger);
 			} else {
 				logger.log("Video already reduced by FMV");
 			}
@@ -177,6 +181,14 @@ public class FFReducer extends AbstractReducer {
 			}
 		}
 		return new Reduced(destFile, forceReplace);
+	}
+
+	public int getCrf() {
+		return crf;
+	}
+
+	public void setCrf(int crf) {
+		this.crf = crf;
 	}
 
 	/**
@@ -314,17 +326,17 @@ public class FFReducer extends AbstractReducer {
 	 * @param logger
 	 * @throws IOException
 	 */
-	private boolean reduceVideo(MovieMetadatas metadatas, File srcFile, MovieMetadatas movieMetadatas, File destFile,
+	private boolean reduceVideo(MovieMetadatas metadatas, File srcFile, File destFile,
 			String consolePrefixMessage, Logger logger) throws IOException {
 
-		AudioStream audioStream = movieMetadatas.getAudioStream();
+		AudioStream audioStream = metadatas.getAudioStream();
 		boolean audioCodecCopy = audioStream.isCodec(Formats.AC3);
 
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.hideBanner();
 		InputProcessor inputProcessor = builder.addMediaInputFile(srcFile);
-		builder.filter(AutoRotate.create(movieMetadatas));
-		applyScaleIfNecessary(builder, movieMetadatas, getMaxSize(), logger);
+		builder.filter(AutoRotate.create(metadatas));
+		applyScaleIfNecessary(builder, metadatas, getMaxSize(), logger);
 		VolumeDetect volumeDetect = null;
 		if( ! audioCodecCopy) {
 			volumeDetect = VolumeDetect.build();
@@ -367,7 +379,7 @@ public class FFReducer extends AbstractReducer {
 
 		// -------------------------- codec -------------------------
 
-		outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(23));
+		outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(crf));
 
 		// audio
 		if(audioCodecCopy) {

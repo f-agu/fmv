@@ -65,7 +65,7 @@ public class Bootstrap {
 
 	public void findSimilarWithTemplate() throws IOException {
 		init();
-		Map<File, Set<File>> similarMap = analyzeBetweenThem();
+		Map<Template, Set<File>> similarMap = analyzeWithTemplate();
 		similarMap.forEach((k, v) -> System.out.println(k + ": " + v));
 	}
 
@@ -87,9 +87,9 @@ public class Bootstrap {
 			} else {
 				images.getImages(file);
 
-				// if(file.getName().startsWith("720P")) {
-				movieFiles.add(file);
-				// }
+				if(file.getName().startsWith("tushy")) {
+					movieFiles.add(file);
+				}
 			}
 		}
 	}
@@ -145,6 +145,7 @@ public class Bootstrap {
 							.add(movieFile);
 					done.add(movieFile);
 					System.out.print('X');
+					Images.extractImage(movieFile, Time.valueOf(60));
 				} else {
 					System.out.print('.');
 				}
@@ -193,7 +194,8 @@ public class Bootstrap {
 	public static void main(String[] args) throws IOException {
 		File folderToCut = new File(args[0]);
 		Bootstrap bootstrap = new Bootstrap(folderToCut);
-		bootstrap.findSimilarBetweenThem();
+		// bootstrap.findSimilarBetweenThem();
+		bootstrap.findSimilarWithTemplate();
 	}
 
 }

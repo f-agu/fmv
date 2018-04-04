@@ -47,12 +47,10 @@ public class Images {
 	public Map<Time, File> getImages(File movieFile) throws IOException {
 		Map<Time, File> map = new HashMap<>();
 		for(Time time : times) {
-			map.put(time, extractImage(movieFile, time));
+			map.put(time, getOrExtractImage(imageFolder, movieFile, time));
 		}
 		return map;
 	}
-
-	// ****************************************************
 
 	/**
 	 * @param movieFile
@@ -60,8 +58,21 @@ public class Images {
 	 * @return
 	 * @throws IOException
 	 */
-	private File extractImage(File movieFile, Time time) throws IOException {
-		File imgFile = new File(imageFolder,
+	public static File extractImage(File movieFile, Time time) throws IOException {
+		return getOrExtractImage(movieFile.getParentFile(), movieFile, time);
+	}
+
+	// ****************************************************
+
+	/**
+	 * @param parentFile
+	 * @param movieFile
+	 * @param time
+	 * @return
+	 * @throws IOException
+	 */
+	private static File getOrExtractImage(File parentFile, File movieFile, Time time) throws IOException {
+		File imgFile = new File(parentFile,
 				FilenameUtils.getBaseName(movieFile.getName()) + '-' + time.toString().replace(':', '_') + ".png");
 		if(imgFile.exists() && imgFile.length() > 1) {
 			return imgFile;
