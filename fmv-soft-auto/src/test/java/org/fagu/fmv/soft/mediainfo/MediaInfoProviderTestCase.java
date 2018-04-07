@@ -1,4 +1,4 @@
-package org.fagu.fmv.soft.xpdf;
+package org.fagu.fmv.soft.mediainfo;
 
 /*
  * #%L
@@ -25,7 +25,9 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.version.Version;
@@ -35,49 +37,14 @@ import org.junit.Test;
 /**
  * @author f.agu
  */
-public class PdfInfoSoftProviderTestCase {
+public class MediaInfoProviderTestCase {
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
-	public void testParseOnLinux_original() throws IOException {
+	public void testParse() throws IOException {
 		Parser parser = newParser();
-		parser.readLine("pdfinfo version 3.04");
-		parser.readLine("Copyright 1996-2014 Glyph & Cog, LLC");
-		assertInfo(parser, new Version(3, 4));
-	}
-
-	/**
-	 * @throws IOException
-	 */
-	@Test
-	public void testParseOnLinux_popplers() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("pdfinfo version 0.12.4");
-		parser.readLine("Copyright 2005-2009 The Poppler Developers - http://poppler.freedesktop.org");
-		parser.readLine("Copyright 1996-2004 Glyph & Cog, LLC");
-		assertInfo(parser, new Version(0, 12, 4));
-	}
-
-	/**
-	 * @throws IOException
-	 */
-	@Test
-	public void testParseOnWindows_original() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("pdfinfo version 3.04");
-		parser.readLine("Copyright 1996-2014 Glyph & Cog, LLC");
-		assertInfo(parser, new Version(3, 4));
-	}
-
-	/**
-	 * @throws IOException
-	 */
-	@Test
-	public void testSoftPolicy() throws IOException {
-		PdfInfoSoftProvider softProvider = new PdfInfoSoftProvider();
-		assertEquals("xpdf[>= v3] ; poppler[>= v0.12] ; All platforms[>= v0.12]", softProvider.getMinVersion());
+		parser.readLine("MediaInfo Command line,");
+		parser.readLine("MediaInfoLib - v18.03.1");
+		assertInfo(parser, new Version(18, 3, 1));
 	}
 
 	// *******************************************************
@@ -86,8 +53,9 @@ public class PdfInfoSoftProviderTestCase {
 	 * @return
 	 */
 	private Parser newParser() {
-		PdfInfoSoftProvider softProvider = new PdfInfoSoftProvider();
-		return softProvider.createParser(new File("."));
+		MediaInfoSoftProvider softProvider = new MediaInfoSoftProvider();
+		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory()).getParserFactory();
+		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
 	/**

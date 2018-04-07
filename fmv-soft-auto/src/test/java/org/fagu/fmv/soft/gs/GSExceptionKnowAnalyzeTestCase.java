@@ -46,11 +46,6 @@ import org.junit.Test;
 public class GSExceptionKnowAnalyzeTestCase {
 
 	/**
-	 * 
-	 */
-	public GSExceptionKnowAnalyzeTestCase() {}
-
-	/**
 	 * @throws IOException
 	 */
 	@Test

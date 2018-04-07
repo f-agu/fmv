@@ -42,11 +42,6 @@ import org.junit.Test;
 public class JavaSoftProviderTestCase {
 
 	/**
-	 *
-	 */
-	public JavaSoftProviderTestCase() {}
-
-	/**
 	 * @throws IOException
 	 */
 	@Test

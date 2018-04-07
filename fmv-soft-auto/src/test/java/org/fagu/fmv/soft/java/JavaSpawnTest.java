@@ -26,11 +26,6 @@ import org.junit.Test;
 public class JavaSpawnTest {
 
 	/**
-	 * 
-	 */
-	public JavaSpawnTest() {}
-
-	/**
 	 * @throws IOException
 	 */
 	@Test

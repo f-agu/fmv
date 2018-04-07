@@ -44,11 +44,6 @@ import org.junit.Test;
 public class XpdfExceptionKnowAnalyzeTestCase {
 
 	/**
-	 * 
-	 */
-	public XpdfExceptionKnowAnalyzeTestCase() {}
-
-	/**
 	 * @throws IOException
 	 */
 	@Test

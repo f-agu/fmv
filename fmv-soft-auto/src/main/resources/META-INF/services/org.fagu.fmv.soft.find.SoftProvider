@@ -1,5 +1,6 @@
 org.fagu.fmv.soft._7z._7zSoftProvider
 org.fagu.fmv.soft.gs.GSSoftProvider
+org.fagu.fmv.soft.mediainfo.MediaInfoSoftProvider
 org.fagu.fmv.soft.mplayer.MEncoderSoftProvider
 org.fagu.fmv.soft.mplayer.MPlayerSoftProvider
 org.fagu.fmv.soft.vlc.VLCSoftProvider

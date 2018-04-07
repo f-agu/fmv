@@ -42,11 +42,6 @@ import org.junit.Test;
  */
 public class PdfToTextTestCase {
 
-	/**
-	 * 
-	 */
-	public PdfToTextTestCase() {}
-
 	@Test
 	public void test() throws IOException {
 		File folder = new File(System.getProperty("java.io.tmpdir"), "xpdf-pdftotext");

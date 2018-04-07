@@ -42,11 +42,6 @@ import org.junit.Test;
 public class GSSoftProviderTestCase {
 
 	/**
-	 *
-	 */
-	public GSSoftProviderTestCase() {}
-
-	/**
 	 * @throws IOException
 	 */
 	@Test
