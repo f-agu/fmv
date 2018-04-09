@@ -46,6 +46,7 @@ import org.fagu.fmv.textprogressbar.part.PercentPart;
 import org.fagu.fmv.textprogressbar.part.ProgressPart;
 import org.fagu.fmv.textprogressbar.part.SpinnerPart;
 
+
 /**
  * @author f.agu
  * @created 5 juin 2017 13:08:48
@@ -204,7 +205,7 @@ public class Ripper implements Closeable {
 		try {
 			this.logger = LoggerFactory.openLogger(
 					LoggerFactory.getLogFile(tmpDirectory, PROPERTY_LOG_FILE, PROPERTY_LOG_FILE_DEFAULT_NAME));
-		} catch (IOException e) {
+		} catch(IOException e) {
 			throw new RuntimeException(e);
 		}
 		ffmpegService = Executors.newSingleThreadExecutor();
@@ -256,10 +257,10 @@ public class Ripper implements Closeable {
 		});
 
 		final String finalName = name;
-		TextProgressBarBuilder builder = TextProgressBar.newBar().fixWidth(32)
-				.withText(StringUtils.abbreviate(finalName, prefixWidth) + " ");
+		TextProgressBarBuilder builder = TextProgressBar.newBar()
+				.fixWidth(32).withText(StringUtils.abbreviate(finalName, prefixWidth) + " ");
 
-		if (titles.size() == 1) {
+		if(titles.size() == 1) {
 			builder.fixWidth(20).with(
 					s -> currentTitle.get() == 1 ? "reading DVD..." : currentEncoding.get() == 1 ? "encoding..." : "");
 		} else {
@@ -271,12 +272,12 @@ public class Ripper implements Closeable {
 		textProgressBar = builder.append(ProgressPart.width(31).build()).fixWidth(6).leftPad().with(new PercentPart())
 				.buildAndSchedule(() -> progressList.stream().mapToInt(AtomicInteger::get).sum() / nbProgresses);
 
-		if (!tmpDirectory.exists() && !tmpDirectory.mkdirs()) {
+		if( ! tmpDirectory.exists() && ! tmpDirectory.mkdirs()) {
 			throw new IOException("Unable to make directory: " + tmpDirectory);
 		}
 		CountDownLatch encodingLatch = new CountDownLatch(titles.size());
 		Iterator<AtomicInteger> progressIterator = progressList.iterator();
-		for (MPlayerTitle title : titles) {
+		for(MPlayerTitle title : titles) {
 			AtomicInteger dumpProgress = progressIterator.next();
 			AtomicInteger encodeProgress = progressIterator.next();
 
@@ -292,10 +293,10 @@ public class Ripper implements Closeable {
 			logger.log("Encoding title " + currentTitle + "/" + titles.size() + ": " + mp4File.getAbsolutePath());
 			encode(vobFile, mp4File, mPlayerDump, encodeProgress, currentEncoding, encodingLatch);
 		}
-		currentTitle.set(-1);
+		currentTitle.set( - 1);
 		try {
 			encodingLatch.await();
-		} catch (InterruptedException e) {
+		} catch(InterruptedException e) {
 			throw new IOException(e);
 		}
 		logger.log("End");
@@ -338,7 +339,7 @@ public class Ripper implements Closeable {
 		OutputProcessor outputProcessor = builder.addMediaOutputFile(mp4File);
 
 		// video
-		for (VideoStream stream : movieMetadatas.getVideoStreams()) {
+		for(VideoStream stream : movieMetadatas.getVideoStreams()) {
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 
@@ -354,7 +355,7 @@ public class Ripper implements Closeable {
 
 		int nbFrames = 0;
 		OptionalInt countEstimateFrames = movieMetadatas.getVideoStream().countEstimateFrames();
-		if (countEstimateFrames.isPresent()) {
+		if(countEstimateFrames.isPresent()) {
 			nbFrames = countEstimateFrames.getAsInt();
 		} else {
 			// TODO
@@ -367,7 +368,7 @@ public class Ripper implements Closeable {
 			try {
 				currentEncoding.incrementAndGet();
 				executor.execute();
-			} catch (Exception e) {
+			} catch(Exception e) {
 				logger.log(e);
 			} finally {
 				encodingLatch.countDown();
@@ -384,20 +385,20 @@ public class Ripper implements Closeable {
 	 */
 	private void filterAndMap(InputProcessor inputProcessor, OutputProcessor outputProcessor,
 			Iterator<? extends Stream> ffmpegStreams, List<? extends org.fagu.fmv.soft.mplayer.Stream> mplayerStreams) {
-		if (mplayerStreams.size() == 1) {
+		if(mplayerStreams.size() == 1) {
 			outputProcessor.map().streams(ffmpegStreams.next()).input(inputProcessor);
-		} else if (mplayerStreams.size() > 1) {
+		} else if(mplayerStreams.size() > 1) {
 			Set<Locale> locales = new HashSet<>();
-			for (org.fagu.fmv.soft.mplayer.Stream mplayerStream : mplayerStreams) {
+			for(org.fagu.fmv.soft.mplayer.Stream mplayerStream : mplayerStreams) {
 				String lang = mplayerStream.getLanguage();
 				org.fagu.fmv.ffmpeg.metadatas.Stream ffmpegStream = ffmpegStreams.next();
 				Locale locale = null;
-				if (lang.toLowerCase().startsWith("fr")) {
+				if(lang.toLowerCase().startsWith("fr")) {
 					locale = Locale.FRENCH;
-				} else if (lang.toLowerCase().startsWith("en")) {
+				} else if(lang.toLowerCase().startsWith("en")) {
 					locale = Locale.ENGLISH;
 				}
-				if (locale != null && locales.add(locale)) {
+				if(locale != null && locales.add(locale)) {
 					outputProcessor.map().streams(ffmpegStream).input(inputProcessor);
 				}
 			}
@@ -423,7 +424,7 @@ public class Ripper implements Closeable {
 
 		MutableObject<String> volumeId = new MutableObject<>();
 		MPlayer.search().withParameters(params).logCommandLine(logger::log).addOutReadLine(l -> {
-			if (l.startsWith("ID_DVD_VOLUME_ID=")) {
+			if(l.startsWith("ID_DVD_VOLUME_ID=")) {
 				volumeId.setValue(StringUtils.substringAfter(l, "="));
 			}
 		}).execute();

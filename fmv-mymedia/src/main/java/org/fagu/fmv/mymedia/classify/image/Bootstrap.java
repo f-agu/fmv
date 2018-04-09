@@ -70,8 +70,7 @@ public class Bootstrap {
 		FindProgress findProgress = new FindProgress() {
 
 			private TextProgressBar textProgressBar = TextProgressBar.newBar()
-					.fixWidth(40)
-					.withText("Finding images")
+					.fixWidth(40).withText("Finding images")
 					.buildForPrinting();
 
 			/**

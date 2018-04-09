@@ -172,7 +172,6 @@ public class Bootstrap {
 				if(isSimilar(template.getModelMap(), images.getImages(movieFile))) {
 					similarConsumer.accept(template, movieFile);
 					done.add(movieFile);
-					Images.extractImage(movieFile, Time.valueOf(60));
 				}
 			}
 		}

@@ -28,11 +28,6 @@ public class ByDuration extends By {
 			this.duration = Objects.requireNonNull(duration);
 		}
 
-		public ByDurationBuilder fileSize(long size) {
-			this.fileSize = size;
-			return this;
-		}
-
 		public ByDuration build() {
 			return new ByDuration(this);
 		}

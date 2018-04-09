@@ -47,8 +47,7 @@ public class Bootstrap {
 		AtomicInteger value = new AtomicInteger();
 		IntSupplier progressInPercent = value::get;
 		try (TextProgressBar bar = TextProgressBar.newBar()
-				.fixWidth(25)
-				.withText("Basic progress")
+				.fixWidth(25).withText("Basic progress")
 				.append(ProgressPart.width(32).build())
 				.buildAndSchedule(progressInPercent)) {
 
@@ -64,9 +63,7 @@ public class Bootstrap {
 	 */
 	private static void spinner() throws Exception {
 		try (TextProgressBar bar = TextProgressBar.newBar()
-				.fixWidth(40)
-				.centerPad()
-				.withText("Spinner: 2 turns per second...")
+				.fixWidth(40).centerPad().withText("Spinner: 2 turns per second...")
 				.append(new SpinnerPart(2))
 				.buildAndSchedule()) {
 

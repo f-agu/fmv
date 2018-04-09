@@ -71,12 +71,10 @@ public abstract class By {
 	 */
 	public TextProgressBar makeBar(String text) {
 		TextProgressBarBuilder builder = TextProgressBar.newBar();
-		return builder.fixWidth(60)
-				.withText(text)
+		return builder.fixWidth(60).withText(text)
 				.appendText("  ")
 				.append(progressPart())
-				.fixWidth(11)
-				.with(new FinishedOrNotPart(etaPart(), new SpendTimePart()))
+				.fixWidth(11).with(new FinishedOrNotPart(etaPart(), new SpendTimePart()))
 				.buildAndSchedule(progressInPercent());
 
 	}

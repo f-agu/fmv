@@ -71,4 +71,11 @@ public class Logo {
 		return i;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Logo[x=").append(x).append(",y=").append(y)
+				.append(",width=").append(w).append(",height=").append(h).append(']');
+		return sb.toString();
+	}
 }

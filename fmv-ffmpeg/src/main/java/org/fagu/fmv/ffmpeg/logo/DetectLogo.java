@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
@@ -22,11 +22,18 @@ import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
 import org.fagu.fmv.ffmpeg.filter.impl.SelectVideo;
 import org.fagu.fmv.ffmpeg.format.Image2Muxer;
+import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.ffmpeg.operation.ExtractThumbnail;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
+import org.fagu.fmv.ffmpeg.operation.Progress;
+import org.fagu.fmv.ffmpeg.progressbar.FFMpegProgressBar;
 import org.fagu.fmv.ffmpeg.utils.VSync;
 import org.fagu.fmv.image.Blur;
 import org.fagu.fmv.image.diff.ImageDiff;
+import org.fagu.fmv.textprogressbar.TextProgressBar;
+import org.fagu.fmv.textprogressbar.part.ProgressPart;
+import org.fagu.fmv.utils.time.Duration;
 import org.fagu.fmv.utils.time.Time;
 
 
@@ -106,7 +113,7 @@ public class DetectLogo implements Closeable {
 		return new Builder(Objects.requireNonNull(movieFile));
 	}
 
-	public Optional<Rectangle> detect() throws IOException {
+	public Detected detect() throws IOException {
 		List<File> sceneFiles = extractScenes().getFiles();
 		List<File> bwFiles = generateBlackAndWhite(sceneFiles);
 		File bwAllFile = compareAllTogether(bwFiles);
@@ -123,8 +130,12 @@ public class DetectLogo implements Closeable {
 	private ExtractThumbnail extractScenes() throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		InputProcessor inputProcessor = builder.addMediaInputFile(movieFile);
+		MovieMetadatas movieMetadatas = inputProcessor.getMovieMetadatas();
+		VideoStream videoStream = movieMetadatas.getVideoStream();
+		Duration duration = videoStream.duration().get();
 		if(timeSeek != null) {
 			inputProcessor.timeSeek(timeSeek);
+			duration = duration.add( - timeSeek.toSeconds());
 		}
 
 		SelectVideo selectVideo = SelectVideo.build().expr("gt(scene\\,0.4)");
@@ -134,7 +145,15 @@ public class DetectLogo implements Closeable {
 				.videoSync(VSync.PASSTHROUGH);
 
 		FFExecutor<Object> executor = builder.build();
-		executor.execute();
+		logger.accept(executor.getCommandLine());
+		Progress progress = executor.getProgress();
+		try (TextProgressBar textProgressBar = FFMpegProgressBar.with(progress)
+				.byDuration(duration)
+				.build()
+				.makeBar("   Extracting scenes")) {
+
+			executor.execute();
+		}
 
 		return ExtractThumbnail.find(tmpFolder, "scene\\d+\\.png");
 	}
@@ -142,20 +161,27 @@ public class DetectLogo implements Closeable {
 	private List<File> generateBlackAndWhite(List<File> sceneFiles) throws IOException {
 		Iterator<File> iterator = sceneFiles.iterator();
 		File firstImage = iterator.next();
-		int index = 0;
+		AtomicInteger index = new AtomicInteger();
 		List<File> bwFiles = new ArrayList<>();
-		while(iterator.hasNext()) {
-			File nextFile = iterator.next();
-			ImageDiff<BufferedImage> imageDiff = ImageDiff.generateImageBlackAndWhite(10);
-			BufferedImage compare = imageDiff.compare(firstImage, nextFile);
+		try (TextProgressBar textProgressBar = TextProgressBar.newBar()
+				.fixWidth(60).withText("   Generating B&W")
+				.appendText("  ")
+				.append(ProgressPart.width(32).build())
+				.buildAndSchedule(() -> 100 * index.get() / sceneFiles.size())) {
 
-			compare = Blur.blur(compare, 1F / 4);
-			File bwFile = new File(tmpFolder, "bw" + index + ".png");
-			ImageIO.write(compare, "png", bwFile);
-			bwFiles.add(bwFile);
-			++index;
+			while(iterator.hasNext()) {
+				File nextFile = iterator.next();
+				ImageDiff<BufferedImage> imageDiff = ImageDiff.generateImageBlackAndWhite(10);
+				BufferedImage compare = imageDiff.compare(firstImage, nextFile);
+
+				compare = Blur.blur(compare, 1F / 4);
+				File bwFile = new File(tmpFolder, "bw" + index.get() + ".png");
+				ImageIO.write(compare, "png", bwFile);
+				bwFiles.add(bwFile);
+				index.incrementAndGet();
+			}
+			return bwFiles;
 		}
-		return bwFiles;
 	}
 
 	private File compareAllTogether(List<File> bwFiles) throws IOException {
@@ -172,16 +198,25 @@ public class DetectLogo implements Closeable {
 		int width = firstImage.getWidth();
 		int height = firstImage.getHeight();
 		BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
-		for(int y = 0; y < height; y++) {
-			for(int x = 0; x < width; x++) {
-				count = 0;
-				for(BufferedImage image : images) {
-					if(image.getRGB(x, y) == white) {
-						++count;
+		AtomicInteger progressHeight = new AtomicInteger();
+		try (TextProgressBar textProgressBar = TextProgressBar.newBar()
+				.fixWidth(60).withText("   Comparing")
+				.appendText("  ")
+				.append(ProgressPart.width(32).build())
+				.buildAndSchedule(() -> 100 * progressHeight.get() / height)) {
+
+			for(int y = 0; y < height; y++) {
+				progressHeight.set(y);
+				for(int x = 0; x < width; x++) {
+					count = 0;
+					for(BufferedImage image : images) {
+						if(image.getRGB(x, y) == white) {
+							++count;
+						}
 					}
-				}
-				if(count / max > 0.8D) {
-					out.setRGB(x, y, white);
+					if(count / max > 0.8D) {
+						out.setRGB(x, y, white);
+					}
 				}
 			}
 		}
@@ -191,7 +226,7 @@ public class DetectLogo implements Closeable {
 		return outFile;
 	}
 
-	private Optional<Rectangle> detectRectangle(File bwAllFile) throws IOException {
+	private Detected detectRectangle(File bwAllFile) throws IOException {
 		BufferedImage image = ImageIO.read(bwAllFile);
 		DetectRectangle detectRectangle = new DetectRectangle(image);
 		List<Rectangle> rectangles = detectRectangle.findRectangles();
@@ -207,16 +242,16 @@ public class DetectLogo implements Closeable {
 			y2 = Math.max(y2, (int)rectangle.getMaxY());
 		}
 		if(x1 > x2 || y1 > y2) {
-			return Optional.empty();
+			return new Detected(image.getWidth(), image.getHeight(), null);
 		}
 		Rectangle rect = new Rectangle(x1, y1, x2 - x1, y2 - y1);
 		logger.accept("Aggregate to rectangle: " + rect);
 		double coverPercent = rect.getWidth() * rect.getHeight() / (image.getWidth() * image.getHeight());
 		if(coverPercent > maxCoverPercent) {
 			log("Max cover (" + maxCoverPercent + "%) reach: " + coverPercent + "%");
-			return Optional.empty();
+			return new Detected(image.getWidth(), image.getHeight(), null);
 		}
-		return Optional.of(rect);
+		return new Detected(image.getWidth(), image.getHeight(), rect);
 	}
 
 	private void log(String msg) {

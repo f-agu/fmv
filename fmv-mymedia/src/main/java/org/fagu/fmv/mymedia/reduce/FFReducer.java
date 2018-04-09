@@ -110,8 +110,6 @@ public class FFReducer extends AbstractReducer {
 
 	private List<String> videoFormatUnchanges;
 
-	private TextProgressBar textProgressBar;
-
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
 			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\out.mkv"),
@@ -195,11 +193,7 @@ public class FFReducer extends AbstractReducer {
 	 * @see java.io.Closeable#close()
 	 */
 	@Override
-	public void close() throws IOException {
-		if(textProgressBar != null) {
-			textProgressBar.close();
-		}
-	}
+	public void close() throws IOException {}
 
 	/**
 	 * @param builder
@@ -408,9 +402,13 @@ public class FFReducer extends AbstractReducer {
 		VideoStream videoStream = metadatas.getVideoStream();
 		OptionalInt countEstimateFrames = videoStream.countEstimateFrames();
 		Progress progress = executor.getProgress();
+		TextProgressBar textProgressBar = null;
 		if(countEstimateFrames.isPresent() && progress != null) {
-			textProgressBar = FFMpegProgressBar.with(progress).byFrame(countEstimateFrames.getAsInt())
-					.fileSize(srcFile.length()).build().makeBar(consolePrefixMessage);
+			textProgressBar = FFMpegProgressBar.with(progress)
+					.byFrame(countEstimateFrames.getAsInt())
+					.fileSize(srcFile.length())
+					.build()
+					.makeBar(consolePrefixMessage);
 		} else {
 			StringJoiner joiner = new StringJoiner(", ");
 			if(progress == null) {
@@ -422,7 +420,13 @@ public class FFReducer extends AbstractReducer {
 			logger.log("No progress bar: " + joiner.toString());
 		}
 
-		executor.execute();
+		try {
+			executor.execute();
+		} finally {
+			if(textProgressBar != null) {
+				textProgressBar.close();
+			}
+		}
 
 		Optional<String> codecName = videoStream.codecName();
 		if(codecName.isPresent() && codecName.get().equalsIgnoreCase(Formats.HEVC.getName())) { // h265
@@ -483,11 +487,20 @@ public class FFReducer extends AbstractReducer {
 		executor.addListener(createLogFFExecListener(logger));
 		Duration duration = metadatas.getAudioStream().duration().orElse(null);
 		Progress progress = executor.getProgress();
+		TextProgressBar textProgressBar = null;
 		if(duration != null && progress != null) {
-			textProgressBar = FFMpegProgressBar.with(progress).byDuration(duration).fileSize(srcFile.length()).build()
+			textProgressBar = FFMpegProgressBar.with(progress)
+					.byDuration(duration)
+					.build()
 					.makeBar(consolePrefixMessage);
 		}
-		executor.execute();
+		try {
+			executor.execute();
+		} finally {
+			if(textProgressBar != null) {
+				textProgressBar.close();
+			}
+		}
 
 		return false;
 	}

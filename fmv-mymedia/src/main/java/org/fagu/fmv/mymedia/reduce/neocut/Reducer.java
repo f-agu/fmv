@@ -10,15 +10,21 @@ import java.util.OptionalDouble;
 import org.fagu.fmv.ffmpeg.coder.H264;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
-import org.fagu.fmv.ffmpeg.filter.impl.Delogo;
 import org.fagu.fmv.ffmpeg.flags.Strict;
 import org.fagu.fmv.ffmpeg.logo.DetectLogo;
+import org.fagu.fmv.ffmpeg.logo.Detected;
+import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
+import org.fagu.fmv.ffmpeg.operation.Progress;
+import org.fagu.fmv.ffmpeg.progressbar.FFMpegProgressBar;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.soft.mediainfo.Info;
 import org.fagu.fmv.soft.mediainfo.MediaInfoExtractor;
 import org.fagu.fmv.soft.mediainfo.VideoInfo;
+import org.fagu.fmv.textprogressbar.TextProgressBar;
+import org.fagu.fmv.utils.time.Duration;
 import org.fagu.fmv.utils.time.Time;
 
 
@@ -27,6 +33,8 @@ import org.fagu.fmv.utils.time.Time;
  * @created 4 avr. 2018 18:32:36
  */
 public class Reducer implements Closeable {
+
+	private static final int LOGO_PIXEL_SPAN = 4;
 
 	private final Logger logger;
 
@@ -40,27 +48,32 @@ public class Reducer implements Closeable {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.hideBanner();
 		InputProcessor inputProcessor = builder.addMediaInputFile(srcFile);
+		MovieMetadatas movieMetadatas = inputProcessor.getMovieMetadatas();
+		VideoStream videoStream = movieMetadatas.getVideoStream();
+		Duration maxDuration = videoStream.duration().get();
 		Time offsetStart = template.getOffsetStart();
 		if(offsetStart != null) {
 			inputProcessor.timeSeek(offsetStart);
+			maxDuration = maxDuration.add( - offsetStart.toSeconds());
 		}
 
 		Logo logo = template.getLogo();
 		if(logo != null) {
 			logo = getLogo(srcFile, logo);
 			if(logo == null) {
-				return; // failed
+				return; // failed, logo not found
 			}
-			Delogo delogo = logo.generateFilter()
-					.show(true);
-			builder.filter(delogo);
+			builder.filter(logo.generateFilter());
+		}
+
+		Duration endDuration = template.getEndDuration();
+		if(endDuration != null) {
+			maxDuration = maxDuration.add( - endDuration.toSeconds());
 		}
 
 		OutputProcessor outputProcessor = builder.addMediaOutputFile(destFile);
 		outputProcessor.qualityScale(0);
-
-		// TODO remove it ! just for debug
-		// outputProcessor.duration(Duration.valueOf(60));
+		outputProcessor.duration(maxDuration);
 
 		outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(crf));
 
@@ -68,7 +81,15 @@ public class Reducer implements Closeable {
 
 		FFExecutor<Object> executor = builder.build();
 		logger.log(executor.getCommandLine());
-		executor.execute();
+
+		Progress progress = executor.getProgress();
+		try (TextProgressBar textProgressBar = FFMpegProgressBar.with(progress)
+				.byDuration(maxDuration)
+				.build()
+				.makeBar("   Reducing")) {
+
+			executor.execute();
+		}
 	}
 
 	@Override
@@ -80,18 +101,24 @@ public class Reducer implements Closeable {
 
 	private Logo getLogo(File srcFile, Logo logo) throws IOException {
 		if( ! logo.isAutoDetect()) {
-			logger.log("Logo defined");
+			logger.log("Logo defined: " + logo);
 			return logo;
 		}
 		try (DetectLogo detectLogo = DetectLogo.with(srcFile)
 				.withTimeSeek(Time.valueOf(60))
 				.withLogger(logger::log)
 				.build()) {
-			Optional<Rectangle> ro = detectLogo.detect();
+			Detected detected = detectLogo.detect();
+			Optional<Rectangle> ro = detected.getRectangle();
 			if(ro.isPresent()) {
 				Rectangle r = ro.get();
-				logger.log("Logo found: " + r);
-				return Logo.defined(r.x, r.y, r.width, r.height);
+				Logo defined = Logo.defined(
+						r.x - LOGO_PIXEL_SPAN,
+						r.y - LOGO_PIXEL_SPAN,
+						Math.min(r.width + LOGO_PIXEL_SPAN, detected.getMovieWidth()),
+						Math.min(r.height + LOGO_PIXEL_SPAN, detected.getMovieHeight()));
+				logger.log("Logo found: " + defined);
+				return defined;
 			}
 			logger.log("Logo not found");
 			return null;
