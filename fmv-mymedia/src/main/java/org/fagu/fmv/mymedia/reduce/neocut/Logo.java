@@ -10,6 +10,8 @@ import org.fagu.fmv.ffmpeg.filter.impl.Delogo;
  */
 public class Logo {
 
+	private final boolean autoDetect;
+
 	private final int x;
 
 	private final int y;
@@ -18,11 +20,24 @@ public class Logo {
 
 	private final int h;
 
-	public Logo(int x, int y, int w, int h) {
+	private Logo(boolean autoDetect, int x, int y, int w, int h) {
+		this.autoDetect = autoDetect;
 		this.x = requirePositive("x", x);
 		this.y = requirePositive("y", y);
 		this.w = requirePositive("w", w);
 		this.h = requirePositive("h", h);
+	}
+
+	public static Logo autoDetect() {
+		return new Logo(true, 0, 0, 0, 0);
+	}
+
+	public static Logo defined(int x, int y, int w, int h) {
+		return new Logo(false, x, y, w, h);
+	}
+
+	public boolean isAutoDetect() {
+		return autoDetect;
 	}
 
 	public int getX() {

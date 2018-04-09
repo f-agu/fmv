@@ -16,7 +16,7 @@ import org.fagu.fmv.utils.time.Time;
 
 
 /**
- * @author Utilisateur
+ * @author f.agu
  * @created 4 avr. 2018 09:48:32
  */
 public class Images {

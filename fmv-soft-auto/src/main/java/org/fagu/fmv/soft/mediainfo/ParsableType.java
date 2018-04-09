@@ -14,6 +14,9 @@ public interface ParsableType {
 
 	default OptionalInt getInt(String key) {
 		String value = getString(key);
+		if(value == null) {
+			return OptionalInt.empty();
+		}
 		try {
 			return OptionalInt.of(Integer.parseInt(value));
 		} catch(NumberFormatException e) {
@@ -23,6 +26,9 @@ public interface ParsableType {
 
 	default OptionalDouble getDouble(String key) {
 		String value = getString(key);
+		if(value == null) {
+			return OptionalDouble.empty();
+		}
 		try {
 			return OptionalDouble.of(Double.parseDouble(value));
 		} catch(NumberFormatException e) {

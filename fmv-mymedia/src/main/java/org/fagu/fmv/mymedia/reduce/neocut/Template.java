@@ -112,10 +112,13 @@ public class Template {
 	}
 
 	private static Logo loadLogo(Properties properties) {
-		String strX = properties.getProperty("x");
-		String strY = properties.getProperty("y");
-		String strW = properties.getProperty("w");
-		String strH = properties.getProperty("h");
+		if(Boolean.valueOf(properties.getProperty("logo.autoDetect", "false"))) {
+			return Logo.autoDetect();
+		}
+		String strX = properties.getProperty("logo.x");
+		String strY = properties.getProperty("logo.y");
+		String strW = properties.getProperty("logo.w");
+		String strH = properties.getProperty("logo.h");
 		if(strX == null && strY == null && strW == null && strH == null) {
 			return null;
 		}
@@ -123,7 +126,7 @@ public class Template {
 		int y = Integer.parseInt(strY);
 		int w = Integer.parseInt(strW);
 		int h = Integer.parseInt(strH);
-		return new Logo(x, y, w, h);
+		return Logo.defined(x, y, w, h);
 	}
 
 }

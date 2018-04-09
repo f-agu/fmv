@@ -15,6 +15,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.fagu</groupId>
+			<artifactId>fmv-image</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.fagu</groupId>
 			<artifactId>fmv-media</artifactId>
 			<version>${project.version}</version>
 		</dependency>

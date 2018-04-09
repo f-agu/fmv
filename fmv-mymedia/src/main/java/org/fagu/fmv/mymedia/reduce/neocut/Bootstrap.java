@@ -21,11 +21,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.mymedia.compare.ImageDiffPercent;
+import org.fagu.fmv.mymedia.logger.Logger;
+import org.fagu.fmv.mymedia.logger.Loggers;
 import org.fagu.fmv.utils.time.Time;
 
 
@@ -34,6 +36,10 @@ import org.fagu.fmv.utils.time.Time;
  * @created 3 avr. 2018 23:00:35
  */
 public class Bootstrap {
+
+	private static final String PROPERTY_LOG_FILE = "fmv.reduceneo.log.file";
+
+	private static final String PROPERTY_LOG_FILE_DEFAULT_NAME = "fmv-reduceneo.log";
 
 	private static final double MAX_PERCENT_NOT_SIMILAR = 5D;
 
@@ -52,7 +58,12 @@ public class Bootstrap {
 
 	private final ExecutorService executorService = Executors.newFixedThreadPool(times.size());
 
-	public Bootstrap(File folderToReduce) {
+	private final Logger logger;
+
+	public Bootstrap(File folderToReduce) throws IOException {
+		// logger = LoggerFactory.openLogger(LoggerFactory.getLogFile(folderToReduce, PROPERTY_LOG_FILE,
+		// PROPERTY_LOG_FILE_DEFAULT_NAME));
+		logger = Loggers.systemOut();
 		this.folderToReduce = Objects.requireNonNull(folderToReduce);
 		images = new Images(new File(folderToReduce, "images-neocut"), times);
 	}
@@ -65,8 +76,29 @@ public class Bootstrap {
 
 	public void findSimilarWithTemplate() throws IOException {
 		init();
-		Map<Template, Set<File>> similarMap = analyzeWithTemplate();
-		similarMap.forEach((k, v) -> System.out.println(k + ": " + v));
+		compareWithTemplate((template, movieFile) -> {
+			System.out.println(movieFile.getName() + " : " + template.getName());
+		});
+		//
+		// Map<Template, Set<File>>
+		// Map<Template, Set<File>> similarMap = compareWithTemplate();
+		// similarMap.forEach((k, v) -> System.out.println(k + ": " + v));
+	}
+
+	public void reduce() throws IOException {
+		init();
+		compareWithTemplate((template, movieFile) -> {
+			logger.log(template.getName() + " => " + movieFile);
+			try (Reducer reducer = new Reducer(logger)) {
+				String fileName = movieFile.getName();
+				File destFile = File.createTempFile(FilenameUtils.getBaseName(fileName), '.' + FilenameUtils.getExtension(fileName), movieFile
+						.getParentFile());
+				reducer.reduce(movieFile, destFile, template);
+
+			} catch(Exception e) {
+				logger.log(e);
+			}
+		});
 	}
 
 	// ***************************************
@@ -130,29 +162,20 @@ public class Bootstrap {
 		return map;
 	}
 
-	private Map<Template, Set<File>> analyzeWithTemplate() throws IOException {
+	private void compareWithTemplate(BiConsumer<Template, File> similarConsumer) throws IOException {
 		Set<File> done = new HashSet<>();
-		Map<Template, Set<File>> map = new HashMap<>();
 		for(Template template : templates) {
-			System.out.print(StringUtils.rightPad(template.getName(), 20));
 			for(File movieFile : movieFiles) {
 				if(done.contains(movieFile)) {
-					System.out.print("#");
 					continue;
 				}
 				if(isSimilar(template.getModelMap(), images.getImages(movieFile))) {
-					map.computeIfAbsent(template, k -> new HashSet<>())
-							.add(movieFile);
+					similarConsumer.accept(template, movieFile);
 					done.add(movieFile);
-					System.out.print('X');
 					Images.extractImage(movieFile, Time.valueOf(60));
-				} else {
-					System.out.print('.');
 				}
 			}
-			System.out.println();
 		}
-		return map;
 	}
 
 	private boolean isSimilar(File f1, File f2) throws IOException {
@@ -179,7 +202,7 @@ public class Bootstrap {
 			CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[completableFutures.size()]))
 					.get();
 		} catch(InterruptedException | ExecutionException e) {
-			e.printStackTrace();
+			logger.log(e);
 		}
 		return similar.get();
 	}
@@ -195,7 +218,8 @@ public class Bootstrap {
 		File folderToCut = new File(args[0]);
 		Bootstrap bootstrap = new Bootstrap(folderToCut);
 		// bootstrap.findSimilarBetweenThem();
-		bootstrap.findSimilarWithTemplate();
+		// bootstrap.findSimilarWithTemplate();
+		bootstrap.reduce();
 	}
 
 }

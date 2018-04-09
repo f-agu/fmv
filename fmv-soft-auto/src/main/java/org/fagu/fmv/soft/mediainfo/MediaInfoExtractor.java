@@ -70,6 +70,7 @@ public class MediaInfoExtractor {
 	 */
 	public Map<File, Info> extractAll(Collection<File> files) throws IOException {
 		List<String> parameters = new ArrayList<>(files.size() + 1);
+		parameters.add("--Details=0");
 		files.stream()
 				.map(File::toString)
 				.forEach(parameters::add);
@@ -86,9 +87,15 @@ public class MediaInfoExtractor {
 
 	// **************************************************************
 
-	private static interface ReadLineCloseable extends ReadLine, Closeable {
+	// -----------------------------------------
 
-	}
+	/**
+	 * @author f.agu
+	 * @created 9 avr. 2018 09:32:57
+	 */
+	private static interface ReadLineCloseable extends ReadLine, Closeable {}
+
+	// -----------------------------------------
 
 	/**
 	 * @param files
