@@ -1,6 +1,7 @@
 package org.fagu.fmv.mymedia.reduce.neocut;
 
 import org.fagu.fmv.ffmpeg.filter.impl.Delogo;
+import org.fagu.fmv.image.Rectangle;
 
 
 /**
@@ -8,24 +9,13 @@ import org.fagu.fmv.ffmpeg.filter.impl.Delogo;
  * @author f.agu
  * @created 4 avr. 2018 15:43:58
  */
-public class Logo {
+public class Logo extends Rectangle {
 
 	private final boolean autoDetect;
 
-	private final int x;
-
-	private final int y;
-
-	private final int w;
-
-	private final int h;
-
 	private Logo(boolean autoDetect, int x, int y, int w, int h) {
+		super(x, y, w, h);
 		this.autoDetect = autoDetect;
-		this.x = requirePositive("x", x);
-		this.y = requirePositive("y", y);
-		this.w = requirePositive("w", w);
-		this.h = requirePositive("h", h);
 	}
 
 	public static Logo autoDetect() {
@@ -40,42 +30,34 @@ public class Logo {
 		return autoDetect;
 	}
 
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public int getW() {
-		return w;
-	}
-
-	public int getH() {
-		return h;
-	}
-
 	public Delogo generateFilter() {
 		return Delogo.build()
-				.x(x)
-				.y(y)
-				.w(w)
-				.h(h);
-	}
-
-	private static int requirePositive(String title, int i) {
-		if(i < 0) {
-			throw new IllegalArgumentException(title + " must be positive: " + i);
-		}
-		return i;
+				.x(getX())
+				.y(getY())
+				.w(getWidth())
+				.h(getHeight());
 	}
 
 	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Logo[x=").append(x).append(",y=").append(y)
-				.append(",width=").append(w).append(",height=").append(h).append(']');
-		return sb.toString();
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + (autoDetect ? 1231 : 1237);
+		return result;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj)
+			return true;
+		if( ! super.equals(obj))
+			return false;
+		if(getClass() != obj.getClass())
+			return false;
+		Logo other = (Logo)obj;
+		if(autoDetect != other.autoDetect)
+			return false;
+		return super.equals(obj);
+	}
+
 }

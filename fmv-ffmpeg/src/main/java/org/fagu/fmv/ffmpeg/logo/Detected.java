@@ -1,7 +1,8 @@
 package org.fagu.fmv.ffmpeg.logo;
 
-import java.awt.Rectangle;
 import java.util.Optional;
+
+import org.fagu.fmv.image.Rectangle;
 
 
 /**

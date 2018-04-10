@@ -1,11 +1,12 @@
 package org.fagu.fmv.ffmpeg.logo;
 
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import org.fagu.fmv.image.Rectangle;
 
 
 /**
@@ -38,7 +39,7 @@ public class DetectRectangle {
 			for(int x = 0; x < width; ++x) {
 				if(isMazeColour(image.getRGB(x, y))) {
 					Rectangle rect = findRectangle(x, y);
-					x += rect.width;
+					x += rect.getWidth();
 				}
 			}
 		}
@@ -68,7 +69,7 @@ public class DetectRectangle {
 		Rectangle toReturn = new Rectangle(x, y, xD, yD);
 
 		for(Rectangle rectangle : rectangles) {
-			if( ! rectangle.contains(x, y) && coverage(rectangle) > coverage(toReturn)) {
+			if( ! rectangle.contains(x, y) && rectangle.countPixels() > toReturn.countPixels()) {
 				return rectangle;
 			}
 		}
@@ -77,7 +78,4 @@ public class DetectRectangle {
 		return toReturn;
 	}
 
-	private int coverage(Rectangle r) {
-		return r.width * r.height;
-	}
 }

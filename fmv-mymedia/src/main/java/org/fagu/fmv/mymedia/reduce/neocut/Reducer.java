@@ -1,6 +1,5 @@
 package org.fagu.fmv.mymedia.reduce.neocut;
 
-import java.awt.Rectangle;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +18,7 @@ import org.fagu.fmv.ffmpeg.operation.InputProcessor;
 import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Progress;
 import org.fagu.fmv.ffmpeg.progressbar.FFMpegProgressBar;
+import org.fagu.fmv.image.Rectangle;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.soft.mediainfo.Info;
 import org.fagu.fmv.soft.mediainfo.MediaInfoExtractor;
@@ -34,7 +34,7 @@ import org.fagu.fmv.utils.time.Time;
  */
 public class Reducer implements Closeable {
 
-	private static final int LOGO_PIXEL_SPAN = 4;
+	private static final int LOGO_PIXEL_SPAN = 5;
 
 	private final Logger logger;
 
@@ -113,10 +113,10 @@ public class Reducer implements Closeable {
 			if(ro.isPresent()) {
 				Rectangle r = ro.get();
 				Logo defined = Logo.defined(
-						r.x - LOGO_PIXEL_SPAN,
-						r.y - LOGO_PIXEL_SPAN,
-						Math.min(r.width + LOGO_PIXEL_SPAN, detected.getMovieWidth()),
-						Math.min(r.height + LOGO_PIXEL_SPAN, detected.getMovieHeight()));
+						r.getX() - LOGO_PIXEL_SPAN,
+						r.getY() - LOGO_PIXEL_SPAN,
+						Math.min(r.getWidth() + LOGO_PIXEL_SPAN, detected.getMovieWidth()),
+						Math.min(r.getHeight() + LOGO_PIXEL_SPAN, detected.getMovieHeight()));
 				logger.log("Logo found: " + defined);
 				return defined;
 			}

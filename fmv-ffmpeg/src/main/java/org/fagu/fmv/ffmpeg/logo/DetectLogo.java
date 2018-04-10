@@ -1,7 +1,6 @@
 package org.fagu.fmv.ffmpeg.logo;
 
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.Closeable;
 import java.io.File;
@@ -30,6 +29,7 @@ import org.fagu.fmv.ffmpeg.operation.Progress;
 import org.fagu.fmv.ffmpeg.progressbar.FFMpegProgressBar;
 import org.fagu.fmv.ffmpeg.utils.VSync;
 import org.fagu.fmv.image.Blur;
+import org.fagu.fmv.image.Rectangle;
 import org.fagu.fmv.image.diff.ImageDiff;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.textprogressbar.part.ProgressPart;
@@ -236,10 +236,10 @@ public class DetectLogo implements Closeable {
 		int x2 = 0;
 		int y2 = 0;
 		for(Rectangle rectangle : rectangles) {
-			x1 = Math.min(x1, rectangle.x);
-			x2 = Math.max(x2, (int)rectangle.getMaxX());
-			y1 = Math.min(y1, rectangle.y);
-			y2 = Math.max(y2, (int)rectangle.getMaxY());
+			x1 = Math.min(x1, rectangle.getX());
+			x2 = Math.max(x2, rectangle.getMaxX());
+			y1 = Math.min(y1, rectangle.getY());
+			y2 = Math.max(y2, rectangle.getMaxY());
 		}
 		if(x1 > x2 || y1 > y2) {
 			return new Detected(image.getWidth(), image.getHeight(), null);
