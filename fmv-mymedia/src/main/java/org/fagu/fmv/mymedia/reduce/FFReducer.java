@@ -286,7 +286,15 @@ public class FFReducer extends AbstractReducer {
 			logger.log("Is audio: not contains video stream");
 			return false;
 		}
-		VideoStream videoStream = metadatas.getVideoStream();
+		return isVideoStream(metadatas.getVideoStream(), logger);
+	}
+
+	/**
+	 * @param videoStream
+	 * @param logger
+	 * @return
+	 */
+	private boolean isVideoStream(VideoStream videoStream, Logger logger) {
 		OptionalInt numberOfFrames = videoStream.numberOfFrames();
 		if(numberOfFrames.isPresent() && numberOfFrames.getAsInt() == 1) {
 			logger.log("Is audio: number of frames unavailable: " + numberOfFrames);
@@ -347,9 +355,12 @@ public class FFReducer extends AbstractReducer {
 
 		// ------------------------ map ------------------------
 		// video
-		for(Stream stream : videoMetadatas.getVideoStreams()) {
-			logger.log("map[" + stream.index() + "] video: " + stream);
-			outputProcessor.map().streams(stream).input(inputProcessor);
+		for(VideoStream stream : videoMetadatas.getVideoStreams()) {
+			boolean isVideo = isVideoStream(stream, logger);
+			logger.log("map[" + stream.index() + "] video: " + stream + (isVideo ? "" : " (not included, it's not really a video)"));
+			if(isVideo) {
+				outputProcessor.map().streams(stream).input(inputProcessor);
+			}
 		}
 		// audio
 		for(Stream stream : audioStreams) {
