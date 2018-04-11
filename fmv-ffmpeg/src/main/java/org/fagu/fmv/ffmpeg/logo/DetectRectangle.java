@@ -39,10 +39,13 @@ public class DetectRectangle {
 			for(int x = 0; x < width; ++x) {
 				if(isMazeColour(image.getRGB(x, y))) {
 					Rectangle rect = findRectangle(x, y);
-					x += rect.getWidth();
+					if(rect != null) {
+						x += rect.getWidth();
+					}
 				}
 			}
 		}
+
 		return rectangles;
 	}
 
@@ -56,6 +59,12 @@ public class DetectRectangle {
 		// this could be optimized. You could keep a separate collection where
 		// you remove rectangles from, once your cursor is below that rectangle
 		// find the width of the `Rectangle`
+		// for(Rectangle rectangle : rectangles) {
+		// if( ! rectangle.contains(x, y)) {
+		// return rectangle;
+		// }
+		// }
+
 		int xD = 0;
 		while(x + xD < width && isMazeColour(image.getRGB(x + xD + 1, y))) {
 			++xD;
@@ -65,15 +74,11 @@ public class DetectRectangle {
 		while(y + yD < height && isMazeColour(image.getRGB(x, y + yD + 1))) {
 			++yD;
 		}
-
-		Rectangle toReturn = new Rectangle(x, y, xD, yD);
-
-		for(Rectangle rectangle : rectangles) {
-			if( ! rectangle.contains(x, y) && rectangle.countPixels() > toReturn.countPixels()) {
-				return rectangle;
-			}
+		if(xD == 0 || yD == 0) {
+			return null;
 		}
 
+		Rectangle toReturn = new Rectangle(x, y, xD, yD);
 		rectangles.add(toReturn);
 		return toReturn;
 	}

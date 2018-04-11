@@ -17,7 +17,7 @@ public class MediaInfoExtractorTestCase {
 	public void test1() throws IOException {
 		MediaInfoExtractor extractor = new MediaInfoExtractor();
 		Map<File, Info> map = extractor.extractAll(
-				new File("D:\\tmp\\movie\\2018-04-09\\The Karate Kid (2010) MULTi-VF2 [1080p] BluRay x264-PopHD.mkv"));
+				new File("..0."));
 
 		map.forEach((file, info) -> {
 			System.out.println();

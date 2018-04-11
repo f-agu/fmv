@@ -19,7 +19,7 @@ public class Logo extends Rectangle {
 	}
 
 	public static Logo autoDetect() {
-		return new Logo(true, 0, 0, 0, 0);
+		return new Logo(true, 0, 0, 1, 1);
 	}
 
 	public static Logo defined(int x, int y, int w, int h) {

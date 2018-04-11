@@ -99,7 +99,7 @@ public class RectangleTestCase {
 		Rectangle r1 = new Rectangle(10, 20, 30, 40);
 		Rectangle r2 = new Rectangle(5, 10, 14, 10);
 		draw("CanJoinWith", r1, r2);
-		r1.canJoinWith(r2);
+		r1.isGlued(r2);
 	}
 
 	// ******************************************
@@ -117,6 +117,8 @@ public class RectangleTestCase {
 		if(rectangles.length == 2) {
 			rectangles[0].intersection(rectangles[1]).ifPresent(r -> drawRectangle(r, graphics, Color.WHITE));
 			rectangles[0].union(rectangles[1]).ifPresent(r -> drawRectangle(r, graphics, Color.YELLOW));
+			boolean glued = rectangles[0].isGlued(rectangles[1]);
+			System.out.println((glued ? "" : "NOT ") + "GLUED: " + title);
 		}
 
 		try {
@@ -128,11 +130,6 @@ public class RectangleTestCase {
 		}
 	}
 
-	/**
-	 * @param r
-	 * @param graphics
-	 * @param color
-	 */
 	private void drawRectangle(Rectangle r, Graphics2D graphics, Color color) {
 		graphics.setColor(color);
 		graphics.drawLine(r.getX(), r.getY(), r.getX(), r.getMaxY());

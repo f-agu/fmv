@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -51,7 +53,7 @@ public class DetectLogo implements Closeable {
 
 		private Time timeSeek;
 
-		private double maxCoverPercent = 0.1D;
+		private double maxCoverPercent = 0.05D;
 
 		private Consumer<String> logger;
 
@@ -230,28 +232,45 @@ public class DetectLogo implements Closeable {
 		BufferedImage image = ImageIO.read(bwAllFile);
 		DetectRectangle detectRectangle = new DetectRectangle(image);
 		List<Rectangle> rectangles = detectRectangle.findRectangles();
-		// rectangles.forEach(r -> logger.accept("Find rectangle: " + r));
-		int x1 = image.getWidth();
-		int y1 = image.getHeight();
-		int x2 = 0;
-		int y2 = 0;
-		for(Rectangle rectangle : rectangles) {
-			x1 = Math.min(x1, rectangle.getX());
-			x2 = Math.max(x2, rectangle.getMaxX());
-			y1 = Math.min(y1, rectangle.getY());
-			y2 = Math.max(y2, rectangle.getMaxY());
+		if(rectangles.isEmpty()) {
+			return Detected.notFound(image.getWidth(), image.getHeight());
 		}
-		if(x1 > x2 || y1 > y2) {
-			return new Detected(image.getWidth(), image.getHeight(), null);
+		Set<Rectangle> read = new HashSet<>();
+
+		List<Rectangle> endRects = new ArrayList<>();
+		Rectangle curR = null;
+		for(Rectangle r1 : rectangles) {
+			if(read.contains(r1)) {
+				continue;
+			}
+			curR = r1;
+			read.add(r1);
+			for(Rectangle r2 : rectangles) {
+				if(read.contains(r2)) {
+					continue;
+				}
+				if(curR.intersects(r2) || curR.isGlued(r2)) {
+					curR = curR.union(r2).get();
+					read.add(r2);
+				}
+			}
+			endRects.add(curR);
 		}
-		Rectangle rect = new Rectangle(x1, y1, x2 - x1, y2 - y1);
-		logger.accept("Aggregate to rectangle: " + rect);
-		double coverPercent = rect.getWidth() * rect.getHeight() / (image.getWidth() * image.getHeight());
-		if(coverPercent > maxCoverPercent) {
-			log("Max cover (" + maxCoverPercent + "%) reach: " + coverPercent + "%");
-			return new Detected(image.getWidth(), image.getHeight(), null);
+
+		endRects.forEach(r -> log("Aggregate to rectangle: " + r));
+		Iterator<Rectangle> iterator = endRects.iterator();
+		while(iterator.hasNext()) {
+			Rectangle rect = iterator.next();
+			double coverPercent = rect.getWidth() * rect.getHeight() / (image.getWidth() * image.getHeight());
+			if(coverPercent > maxCoverPercent) {
+				log("Max cover (" + maxCoverPercent + "%) reach: " + coverPercent + "%");
+				iterator.remove();
+			}
 		}
-		return new Detected(image.getWidth(), image.getHeight(), rect);
+		if(endRects.isEmpty()) {
+			return Detected.notFound(image.getWidth(), image.getHeight());
+		}
+		return Detected.found(image.getWidth(), image.getHeight(), endRects);
 	}
 
 	private void log(String msg) {

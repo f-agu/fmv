@@ -150,7 +150,7 @@ public class Rectangle {
 		return Optional.of(new Rectangle(tx1, ty1, (int)tx2, (int)ty2));
 	}
 
-	public boolean canJoinWith(Rectangle other) {
+	public boolean isGlued(Rectangle other) {
 		int ox = other.x;
 		int omx = other.getMaxX();
 		int mx = getMaxX();
@@ -158,12 +158,18 @@ public class Rectangle {
 		int my = getMaxY();
 		int omy = other.getMaxY();
 		for(int s = - 1; s <= 1; ++s) {
-			if((x + s == ox || x + s == omx
+			if(((x + s == ox || x + s == omx
 					|| mx + s == ox || mx + s == omx)
 					&& ((y < oy && oy < my)
 							|| (y < omy && omy < my)
 							|| (y < oy && my > omy)
-							|| (y > oy && my < omy))) {
+							|| (y > oy && my < omy)))
+					|| ((y + s == oy || y + s == omy
+							|| my + s == oy || my + s == omy)
+							&& ((x < ox && ox < mx)
+									|| (x < omx && omx < mx)
+									|| (x < ox && mx > omx)
+									|| (x > ox && mx < omx)))) {
 				return true;
 			}
 		}

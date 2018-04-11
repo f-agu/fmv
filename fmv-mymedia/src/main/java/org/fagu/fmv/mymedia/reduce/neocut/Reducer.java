@@ -3,6 +3,10 @@ package org.fagu.fmv.mymedia.reduce.neocut;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
@@ -59,11 +63,11 @@ public class Reducer implements Closeable {
 
 		Logo logo = template.getLogo();
 		if(logo != null) {
-			logo = getLogo(srcFile, logo);
-			if(logo == null) {
+			List<Logo> logos = getLogo(srcFile, logo);
+			if(logos.isEmpty()) {
 				return; // failed, logo not found
 			}
-			builder.filter(logo.generateFilter());
+			logos.forEach(lg -> builder.filter(lg.generateFilter()));
 		}
 
 		Duration endDuration = template.getEndDuration();
@@ -99,29 +103,32 @@ public class Reducer implements Closeable {
 
 	// *********************************************************
 
-	private Logo getLogo(File srcFile, Logo logo) throws IOException {
+	private List<Logo> getLogo(File srcFile, Logo logo) throws IOException {
 		if( ! logo.isAutoDetect()) {
 			logger.log("Logo defined: " + logo);
-			return logo;
+			return Collections.singletonList(logo);
 		}
 		try (DetectLogo detectLogo = DetectLogo.with(srcFile)
 				.withTimeSeek(Time.valueOf(60))
 				.withLogger(logger::log)
 				.build()) {
 			Detected detected = detectLogo.detect();
-			Optional<Rectangle> ro = detected.getRectangle();
-			if(ro.isPresent()) {
-				Rectangle r = ro.get();
+			Collection<Rectangle> rectangles = detected.getRectangles();
+			if(rectangles.isEmpty()) {
+				logger.log("Logo not found");
+				return Collections.emptyList();
+			}
+			List<Logo> logos = new ArrayList<>();
+			for(Rectangle r : rectangles) {
 				Logo defined = Logo.defined(
 						r.getX() - LOGO_PIXEL_SPAN,
 						r.getY() - LOGO_PIXEL_SPAN,
 						Math.min(r.getWidth() + LOGO_PIXEL_SPAN, detected.getMovieWidth()),
 						Math.min(r.getHeight() + LOGO_PIXEL_SPAN, detected.getMovieHeight()));
 				logger.log("Logo found: " + defined);
-				return defined;
+				logos.add(defined);
 			}
-			logger.log("Logo not found");
-			return null;
+			return logos;
 		}
 	}
 

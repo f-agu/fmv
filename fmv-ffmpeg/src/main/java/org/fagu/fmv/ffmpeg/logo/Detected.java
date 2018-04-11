@@ -1,6 +1,8 @@
 package org.fagu.fmv.ffmpeg.logo;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
 
 import org.fagu.fmv.image.Rectangle;
 
@@ -15,17 +17,20 @@ public class Detected {
 
 	private final int movieHeight;
 
-	private final Rectangle rectangle;
+	private final Collection<Rectangle> rectangles;
 
-	/**
-	 * @param movieWidth
-	 * @param movieHeight
-	 * @param rectangle
-	 */
-	public Detected(int movieWidth, int movieHeight, Rectangle rectangle) {
+	private Detected(int movieWidth, int movieHeight, Collection<Rectangle> rectangles) {
 		this.movieWidth = movieWidth;
 		this.movieHeight = movieHeight;
-		this.rectangle = rectangle;
+		this.rectangles = rectangles;
+	}
+
+	public static Detected found(int movieWidth, int movieHeight, Collection<Rectangle> rectangles) {
+		return new Detected(movieWidth, movieHeight, Objects.requireNonNull(rectangles));
+	}
+
+	public static Detected notFound(int movieWidth, int movieHeight) {
+		return new Detected(movieWidth, movieHeight, null);
 	}
 
 	public int getMovieWidth() {
@@ -36,8 +41,8 @@ public class Detected {
 		return movieHeight;
 	}
 
-	public Optional<Rectangle> getRectangle() {
-		return Optional.ofNullable(rectangle);
+	public Collection<Rectangle> getRectangles() {
+		return rectangles == null ? Collections.emptyList() : rectangles;
 	}
 
 }
