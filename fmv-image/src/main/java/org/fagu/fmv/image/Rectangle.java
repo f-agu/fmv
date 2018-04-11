@@ -1,5 +1,8 @@
 package org.fagu.fmv.image;
 
+import java.util.Optional;
+
+
 /**
  * @author Oodrive
  * @author f.agu
@@ -75,9 +78,95 @@ public class Rectangle {
 				(th < y || th > ry));
 	}
 
-	public boolean canJoinWith(Rectangle other) {
+	public Optional<Rectangle> intersection(Rectangle r) {
+		int tx1 = this.x;
+		int ty1 = this.y;
+		int rx1 = r.x;
+		int ry1 = r.y;
+		long tx2 = tx1;
+		tx2 += this.width;
+		long ty2 = ty1;
+		ty2 += this.height;
+		long rx2 = rx1;
+		rx2 += r.width;
+		long ry2 = ry1;
+		ry2 += r.height;
+		if(tx1 < rx1)
+			tx1 = rx1;
+		if(ty1 < ry1)
+			ty1 = ry1;
+		if(tx2 > rx2)
+			tx2 = rx2;
+		if(ty2 > ry2)
+			ty2 = ry2;
+		tx2 -= tx1;
+		ty2 -= ty1;
+		// tx2,ty2 will never overflow (they will never be
+		// larger than the smallest of the two source w,h)
+		// they might underflow, though...
+		if(tx2 < Integer.MIN_VALUE)
+			tx2 = Integer.MIN_VALUE;
+		if(ty2 < Integer.MIN_VALUE)
+			ty2 = Integer.MIN_VALUE;
+		if(tx1 < 0 || ty1 < 0 || tx2 <= 0 || ty2 <= 0) {
+			return Optional.empty();
+		}
+		return Optional.of(new Rectangle(tx1, ty1, (int)tx2, (int)ty2));
+	}
 
-		// TODO
+	public Optional<Rectangle> union(Rectangle r) {
+		long tx2 = this.width;
+		long ty2 = this.height;
+		long rx2 = r.width;
+		long ry2 = r.height;
+		int tx1 = this.x;
+		int ty1 = this.y;
+		tx2 += tx1;
+		ty2 += ty1;
+		int rx1 = r.x;
+		int ry1 = r.y;
+		rx2 += rx1;
+		ry2 += ry1;
+		if(tx1 > rx1)
+			tx1 = rx1;
+		if(ty1 > ry1)
+			ty1 = ry1;
+		if(tx2 < rx2)
+			tx2 = rx2;
+		if(ty2 < ry2)
+			ty2 = ry2;
+		tx2 -= tx1;
+		ty2 -= ty1;
+		// tx2,ty2 will never underflow since both original rectangles
+		// were already proven to be non-empty
+		// they might overflow, though...
+		if(tx2 > Integer.MAX_VALUE)
+			tx2 = Integer.MAX_VALUE;
+		if(ty2 > Integer.MAX_VALUE)
+			ty2 = Integer.MAX_VALUE;
+		if(tx1 < 0 || ty1 < 0 || tx2 <= 0 || ty2 <= 0) {
+			return Optional.empty();
+		}
+		return Optional.of(new Rectangle(tx1, ty1, (int)tx2, (int)ty2));
+	}
+
+	public boolean canJoinWith(Rectangle other) {
+		int ox = other.x;
+		int omx = other.getMaxX();
+		int mx = getMaxX();
+		int oy = other.y;
+		int my = getMaxY();
+		int omy = other.getMaxY();
+		for(int s = - 1; s <= 1; ++s) {
+			if((x + s == ox || x + s == omx
+					|| mx + s == ox || mx + s == omx)
+					&& ((y < oy && oy < my)
+							|| (y < omy && omy < my)
+							|| (y < oy && my > omy)
+							|| (y > oy && my < omy))) {
+				return true;
+			}
+		}
 		return false;
 	}
 

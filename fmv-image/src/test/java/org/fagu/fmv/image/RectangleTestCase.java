@@ -59,6 +59,15 @@ public class RectangleTestCase {
 	}
 
 	@Test
+	public void testIntersects_outside() {
+		Rectangle r1 = new Rectangle(10, 20, 30, 40);
+		Rectangle r2 = new Rectangle(50, 50, 10, 10);
+		draw("Intersects_outside", r1, r2);
+		assertFalse(r1.intersects(r2));
+		assertFalse(r2.intersects(r1));
+	}
+
+	@Test
 	public void testIntersects_inside() {
 		Rectangle r1 = new Rectangle(10, 20, 30, 40); // bigger
 		Rectangle r2 = new Rectangle(11, 21, 10, 10); // smaller
@@ -103,12 +112,13 @@ public class RectangleTestCase {
 		Graphics2D graphics = image.createGraphics();
 		Iterator<Color> iterator = colorIterator();
 		for(Rectangle r : rectangles) {
-			graphics.setColor(iterator.next());
-			graphics.drawLine(r.getX(), r.getY(), r.getX(), r.getMaxY());
-			graphics.drawLine(r.getX(), r.getY(), r.getMaxX(), r.getY());
-			graphics.drawLine(r.getX(), r.getMaxY(), r.getMaxX(), r.getMaxY());
-			graphics.drawLine(r.getMaxX(), r.getY(), r.getMaxX(), r.getMaxY());
+			drawRectangle(r, graphics, iterator.next());
 		}
+		if(rectangles.length == 2) {
+			rectangles[0].intersection(rectangles[1]).ifPresent(r -> drawRectangle(r, graphics, Color.WHITE));
+			rectangles[0].union(rectangles[1]).ifPresent(r -> drawRectangle(r, graphics, Color.YELLOW));
+		}
+
 		try {
 			File output = new File("rectangles-" + title + ".png");
 			System.out.println(output.getAbsolutePath());
@@ -118,8 +128,21 @@ public class RectangleTestCase {
 		}
 	}
 
+	/**
+	 * @param r
+	 * @param graphics
+	 * @param color
+	 */
+	private void drawRectangle(Rectangle r, Graphics2D graphics, Color color) {
+		graphics.setColor(color);
+		graphics.drawLine(r.getX(), r.getY(), r.getX(), r.getMaxY());
+		graphics.drawLine(r.getX(), r.getY(), r.getMaxX(), r.getY());
+		graphics.drawLine(r.getX(), r.getMaxY(), r.getMaxX(), r.getMaxY());
+		graphics.drawLine(r.getMaxX(), r.getY(), r.getMaxX(), r.getMaxY());
+	}
+
 	private Iterator<Color> colorIterator() {
-		List<Color> colors = Arrays.asList(Color.BLUE, Color.RED, Color.GREEN, Color.WHITE, Color.ORANGE, Color.PINK, Color.YELLOW, Color.CYAN,
+		List<Color> colors = Arrays.asList(Color.BLUE, Color.RED, Color.GREEN, Color.ORANGE, Color.PINK, Color.YELLOW, Color.CYAN,
 				Color.MAGENTA, Color.DARK_GRAY, Color.GRAY, Color.LIGHT_GRAY);
 		return new Iterator<Color>() {
 
