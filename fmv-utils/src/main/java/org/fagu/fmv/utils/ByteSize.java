@@ -94,4 +94,12 @@ public class ByteSize {
 		buf.append(formatter.format(value)).append(' ').append(units[unit]);
 		return buf.toString();
 	}
+
+	public static String toStringDiffSize(long origSize, long newSize) {
+		long diff = newSize - origSize;
+		int prct = origSize != 0 ? (int)(100 * diff / origSize) : 0;
+		String sign = diff < 0 ? "" : "+";
+		return formatSize(origSize) + " -> " + formatSize(newSize) + " : " + sign + formatSize(diff) + ", " + sign + prct + "%";
+	}
+
 }

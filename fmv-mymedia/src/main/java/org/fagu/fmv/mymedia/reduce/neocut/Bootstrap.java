@@ -1,5 +1,8 @@
 package org.fagu.fmv.mymedia.reduce.neocut;
 
+import static org.fagu.fmv.utils.ByteSize.toStringDiffSize;
+
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,7 +30,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.mymedia.compare.ImageDiffPercent;
 import org.fagu.fmv.mymedia.logger.Logger;
-import org.fagu.fmv.mymedia.logger.Loggers;
+import org.fagu.fmv.mymedia.logger.LoggerFactory;
+import org.fagu.fmv.mymedia.utils.AppVersion;
 import org.fagu.fmv.utils.time.Time;
 
 
@@ -35,7 +39,7 @@ import org.fagu.fmv.utils.time.Time;
  * @author Utilisateur
  * @created 3 avr. 2018 23:00:35
  */
-public class Bootstrap {
+public class Bootstrap implements Closeable {
 
 	private static final String PROPERTY_LOG_FILE = "fmv.reduceneo.log.file";
 
@@ -48,7 +52,11 @@ public class Bootstrap {
 	private final Set<Time> times = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
 			Time.valueOf(0.5), Time.valueOf(1.5), Time.valueOf(3))));
 
-	private final File folderToReduce;
+	private final File folderOrFileToReduce;
+
+	private final File destinationFolder;
+
+	private final File templateFolder;
 
 	private final Images images;
 
@@ -60,12 +68,19 @@ public class Bootstrap {
 
 	private final Logger logger;
 
-	public Bootstrap(File folderToReduce) throws IOException {
-		// logger = LoggerFactory.openLogger(LoggerFactory.getLogFile(folderToReduce, PROPERTY_LOG_FILE,
-		// PROPERTY_LOG_FILE_DEFAULT_NAME));
-		logger = Loggers.systemOut();
-		this.folderToReduce = Objects.requireNonNull(folderToReduce);
-		images = new Images(new File(folderToReduce, "images-neocut"), times);
+	public Bootstrap(File folderOrFileToReduce) throws IOException {
+		File folder = folderOrFileToReduce.isDirectory() ? folderOrFileToReduce : folderOrFileToReduce.getParentFile();
+		logger = LoggerFactory.openLogger(LoggerFactory.getLogFile(folder, PROPERTY_LOG_FILE, PROPERTY_LOG_FILE_DEFAULT_NAME));
+		// logger = Loggers.systemOut();
+
+		AppVersion.logMyVersion(logger::log);
+
+		this.folderOrFileToReduce = Objects.requireNonNull(folderOrFileToReduce);
+		destinationFolder = new File(folder.getAbsolutePath() + "-neocut");
+		FileUtils.forceMkdir(destinationFolder);
+		templateFolder = new File(folder, "conf-neocut");
+		logger.log("Destination folder: " + destinationFolder);
+		images = new Images(new File(folder, "images-neocut"), times);
 	}
 
 	public void findSimilarBetweenThem() throws IOException {
@@ -88,53 +103,68 @@ public class Bootstrap {
 	public void reduce() throws IOException {
 		init();
 		compareWithTemplate((template, movieFile) -> {
+			System.out.println(movieFile);
 			logger.log(template.getName() + " => " + movieFile);
 			try (Reducer reducer = new Reducer(logger)) {
 				String fileName = movieFile.getName();
-				File destFile = File.createTempFile(FilenameUtils.getBaseName(fileName), '.' + FilenameUtils.getExtension(fileName), movieFile
-						.getParentFile());
+				// File destFile = File.createTempFile(FilenameUtils.getBaseName(fileName), '.' +
+				// FilenameUtils.getExtension(fileName),
+				// destinationFolder);
+				File destFile = new File(destinationFolder, fileName);
+				if(destFile.exists() && destFile.length() > 10) {
+					logger.log("File exists: " + destFile);
+					return;
+				}
 				reducer.reduce(movieFile, destFile, template);
-
+				logger.log(toStringDiffSize(movieFile.length(), destFile.length()));
+				System.out.println();
 			} catch(Exception e) {
 				logger.log(e);
 			}
 		});
 	}
 
+	@Override
+	public void close() throws IOException {
+		executorService.shutdown();
+	}
+
 	// ***************************************
 
 	private void init() throws IOException {
-		loadAllImages(folderToReduce);
+		System.out.println("Loading images...");
+		loadAllImages(folderOrFileToReduce);
+		System.out.println("Loading templates...");
 		loadTemplates();
 	}
 
-	private void loadAllImages(File folder) throws IOException {
-		File[] files = folder.listFiles(f -> f.isDirectory() || extensions.contains(FilenameUtils.getExtension(f.getName())));
+	private void loadAllImages(File folderOrFile) throws IOException {
+		if(folderOrFile.isFile()) {
+			images.getImages(folderOrFile);
+			// if(file.getName().startsWith("...")) {
+			movieFiles.add(folderOrFile);
+			// }
+			return;
+		}
+		File[] files = folderOrFile.listFiles(f -> f.isDirectory() || extensions.contains(FilenameUtils.getExtension(f.getName())));
 		if(files == null) {
 			return;
 		}
 		for(File file : files) {
-			if(file.isDirectory()) {
-				loadAllImages(file);
-			} else {
-				images.getImages(file);
-
-				if(file.getName().startsWith("tushy")) {
-					movieFiles.add(file);
-				}
-			}
+			loadAllImages(file);
 		}
 	}
 
 	private void loadTemplates() throws IOException {
-		File templateFolder = new File(folderToReduce, "conf-neocut");
 		FileUtils.forceMkdir(templateFolder);
 		File[] files = templateFolder.listFiles(f -> "properties".equalsIgnoreCase(FilenameUtils.getExtension(f.getName())));
 		if(files == null) {
 			return;
 		}
 		for(File file : files) {
-			templates.add(Template.load(file));
+			Template template = Template.load(file);
+			templates.add(template);
+			logger.log("Add template " + template.getName());
 		}
 	}
 
@@ -214,11 +244,12 @@ public class Bootstrap {
 	}
 
 	public static void main(String[] args) throws IOException {
-		File folderToCut = new File(args[0]);
-		Bootstrap bootstrap = new Bootstrap(folderToCut);
-		// bootstrap.findSimilarBetweenThem();
-		// bootstrap.findSimilarWithTemplate();
-		bootstrap.reduce();
+		File folderOrFileToCut = new File(args[0]);
+		try (Bootstrap bootstrap = new Bootstrap(folderOrFileToCut)) {
+			// bootstrap.findSimilarBetweenThem();
+			// bootstrap.findSimilarWithTemplate();
+			bootstrap.reduce();
+		}
 	}
 
 }

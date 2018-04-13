@@ -38,7 +38,7 @@ import org.fagu.fmv.utils.time.Time;
  */
 public class Reducer implements Closeable {
 
-	private static final int LOGO_PIXEL_SPAN = 5;
+	private static final int LOGO_PIXEL_SPAN = 3;
 
 	private final Logger logger;
 
@@ -48,6 +48,7 @@ public class Reducer implements Closeable {
 
 	public void reduce(File srcFile, File destFile, Template template) throws IOException {
 		int crf = (int)(getCRF(srcFile).orElse(26));
+		logger.log("CRF: " + crf);
 
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.hideBanner();
@@ -97,9 +98,7 @@ public class Reducer implements Closeable {
 	}
 
 	@Override
-	public void close() throws IOException {
-
-	}
+	public void close() throws IOException {}
 
 	// *********************************************************
 
@@ -118,13 +117,14 @@ public class Reducer implements Closeable {
 				logger.log("Logo not found");
 				return Collections.emptyList();
 			}
+			System.out.println();
 			List<Logo> logos = new ArrayList<>();
 			for(Rectangle r : rectangles) {
 				Logo defined = Logo.defined(
 						r.getX() - LOGO_PIXEL_SPAN,
 						r.getY() - LOGO_PIXEL_SPAN,
-						Math.min(r.getWidth() + LOGO_PIXEL_SPAN, detected.getMovieWidth()),
-						Math.min(r.getHeight() + LOGO_PIXEL_SPAN, detected.getMovieHeight()));
+						Math.min(r.getWidth() + 2 * LOGO_PIXEL_SPAN, detected.getMovieWidth()),
+						Math.min(r.getHeight() + 2 * LOGO_PIXEL_SPAN, detected.getMovieHeight()));
 				logger.log("Logo found: " + defined);
 				logos.add(defined);
 			}

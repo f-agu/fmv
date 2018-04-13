@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -117,7 +118,9 @@ public class DetectLogo implements Closeable {
 
 	public Detected detect() throws IOException {
 		List<File> sceneFiles = extractScenes().getFiles();
+		System.out.println();
 		List<File> bwFiles = generateBlackAndWhite(sceneFiles);
+		System.out.println();
 		File bwAllFile = compareAllTogether(bwFiles);
 		return detectRectangle(bwAllFile);
 	}
@@ -235,6 +238,26 @@ public class DetectLogo implements Closeable {
 		if(rectangles.isEmpty()) {
 			return Detected.notFound(image.getWidth(), image.getHeight());
 		}
+		List<Rectangle> endRects = aggregate(rectangles);
+		endRects = aggregate(endRects);
+
+		endRects.forEach(r -> log("Aggregate to rectangle: " + r));
+		Iterator<Rectangle> iterator = endRects.iterator();
+		while(iterator.hasNext()) {
+			Rectangle rect = iterator.next();
+			double coverPercent = rect.getWidth() * rect.getHeight() / (image.getWidth() * image.getHeight());
+			if(coverPercent > maxCoverPercent) {
+				log("Max cover (" + maxCoverPercent + "%) reach: " + coverPercent + "%");
+				iterator.remove();
+			}
+		}
+		if(endRects.isEmpty()) {
+			return Detected.notFound(image.getWidth(), image.getHeight());
+		}
+		return Detected.found(image.getWidth(), image.getHeight(), endRects);
+	}
+
+	private List<Rectangle> aggregate(Collection<Rectangle> rectangles) {
 		Set<Rectangle> read = new HashSet<>();
 
 		List<Rectangle> endRects = new ArrayList<>();
@@ -256,21 +279,7 @@ public class DetectLogo implements Closeable {
 			}
 			endRects.add(curR);
 		}
-
-		endRects.forEach(r -> log("Aggregate to rectangle: " + r));
-		Iterator<Rectangle> iterator = endRects.iterator();
-		while(iterator.hasNext()) {
-			Rectangle rect = iterator.next();
-			double coverPercent = rect.getWidth() * rect.getHeight() / (image.getWidth() * image.getHeight());
-			if(coverPercent > maxCoverPercent) {
-				log("Max cover (" + maxCoverPercent + "%) reach: " + coverPercent + "%");
-				iterator.remove();
-			}
-		}
-		if(endRects.isEmpty()) {
-			return Detected.notFound(image.getWidth(), image.getHeight());
-		}
-		return Detected.found(image.getWidth(), image.getHeight(), endRects);
+		return endRects;
 	}
 
 	private void log(String msg) {

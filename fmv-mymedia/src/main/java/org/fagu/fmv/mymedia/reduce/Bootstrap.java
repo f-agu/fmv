@@ -19,8 +19,8 @@ package org.fagu.fmv.mymedia.reduce;
  * limitations under the License.
  * #L%
  */
-
 import static org.fagu.fmv.utils.ByteSize.formatSize;
+import static org.fagu.fmv.utils.ByteSize.toStringDiffSize;
 
 import java.io.File;
 import java.io.IOException;
@@ -139,7 +139,8 @@ public class Bootstrap {
 										logger.log("Rename failed: " + srcFile + " -> " + destFile);
 									}
 								} else {
-									logger.log("Revert");
+									logger.log("Revert [src: " + srcFile.length() + " (" + formatSize(srcFile.length()) + ") < dest: " + destFile
+											.length() + " (" + formatSize(destFile.length()) + ")]");
 									System.out.print(" Revert");
 									if( ! destFile.delete()) {
 										logger.log("Delete failed: " + destFile);
@@ -157,20 +158,6 @@ public class Bootstrap {
 				});
 		System.out.println();
 		System.out.println(toStringDiffSize(previousSize.longValue(), newSize.longValue()));
-	}
-
-	// ************************************************
-
-	/**
-	 * @param origSize
-	 * @param convertSize
-	 * @return
-	 */
-	private String toStringDiffSize(long origSize, long convertSize) {
-		long diff = convertSize - origSize;
-		int prct = origSize != 0 ? (int)(100 * diff / origSize) : 0;
-		String sign = diff < 0 ? "" : "+";
-		return formatSize(origSize) + " -> " + formatSize(convertSize) + " : " + sign + formatSize(diff) + ", " + sign + prct + "%";
 	}
 
 	// ************************************************

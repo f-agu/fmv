@@ -30,12 +30,12 @@ import org.springframework.context.annotation.Configuration;
 public class ActuatorConfig {
 
 	@Bean
-	public SoftInfoContributor softVersionInfoContributor() {
+	SoftInfoContributor softVersionInfoContributor() {
 		return new SoftInfoContributor();
 	}
 
 	@Bean
-	public SoftFoundHealthIndicator softHealthIndicator() {
+	SoftFoundHealthIndicator softHealthIndicator() {
 		return new SoftFoundHealthIndicator();
 	}
 

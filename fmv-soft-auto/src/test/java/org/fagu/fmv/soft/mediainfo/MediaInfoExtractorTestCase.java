@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -14,6 +15,7 @@ import org.junit.Test;
 public class MediaInfoExtractorTestCase {
 
 	@Test
+	@Ignore
 	public void test1() throws IOException {
 		MediaInfoExtractor extractor = new MediaInfoExtractor();
 		Map<File, Info> map = extractor.extractAll(

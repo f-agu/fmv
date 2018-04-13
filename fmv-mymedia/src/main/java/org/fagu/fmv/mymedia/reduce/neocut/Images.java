@@ -77,6 +77,7 @@ public class Images {
 		if(imgFile.exists() && imgFile.length() > 1) {
 			return imgFile;
 		}
+		System.out.println("  Generating images for " + movieFile.getName() + "  [" + time + "]...");
 		FFHelper.extractOneThumbnail(movieFile, imgFile, time);
 		return imgFile;
 	}

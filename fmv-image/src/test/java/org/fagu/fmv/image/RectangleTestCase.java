@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -73,7 +74,7 @@ public class RectangleTestCase {
 		Rectangle r2 = new Rectangle(11, 21, 10, 10); // smaller
 		draw("Intersects_inside", r1, r2);
 		assertTrue(r1.intersects(r2));
-		assertFalse(r2.intersects(r1));
+		assertTrue(r2.intersects(r1));
 	}
 
 	@Test
@@ -99,25 +100,56 @@ public class RectangleTestCase {
 		Rectangle r1 = new Rectangle(10, 20, 30, 40);
 		Rectangle r2 = new Rectangle(5, 10, 14, 10);
 		draw("CanJoinWith", r1, r2);
-		r1.isGlued(r2);
+	}
+
+	@Test
+	@Ignore
+	public void testSample() {
+		Rectangle r1 = new Rectangle(912, 658, 361, 55);
+		Rectangle r2 = new Rectangle(957, 658, 21, 54);
+		Rectangle r3 = new Rectangle(981, 658, 2, 54);
+		Rectangle r4 = new Rectangle(989, 658, 10, 54);
+		Rectangle r5 = new Rectangle(1018, 658, 1, 54);
+		Rectangle r6 = new Rectangle(1040, 658, 4, 54);
+		Rectangle r7 = new Rectangle(1062, 658, 45, 54);
+		Rectangle r8 = new Rectangle(1115, 658, 4, 55);
+		Rectangle r9 = new Rectangle(1121, 658, 9, 55);
+		Rectangle r10 = new Rectangle(1133, 658, 130, 55);
+		draw("Sample-r1-r2", r1, r2);
+		draw("Sample-all", r1, r2, r3, r4, r5, r6, r7, r8, r9, r10);
 	}
 
 	// ******************************************
 
 	private void draw(String title, Rectangle... rectangles) {
+		draw(title, Arrays.asList(rectangles));
+	}
+
+	private void draw(String title, List<Rectangle> rectangles) {
 		if( ! DEBUG) {
 			return;
 		}
-		BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+		int maxX = 0;
+		int maxY = 0;
+		for(Rectangle r : rectangles) {
+			maxX = Math.max(maxX, r.getMaxX());
+			maxY = Math.max(maxY, r.getMaxY());
+		}
+		maxX += 10;
+		maxY += 10;
+
+		BufferedImage image = new BufferedImage(maxX, maxY, BufferedImage.TYPE_INT_RGB);
 		Graphics2D graphics = image.createGraphics();
 		Iterator<Color> iterator = colorIterator();
 		for(Rectangle r : rectangles) {
 			drawRectangle(r, graphics, iterator.next());
 		}
-		if(rectangles.length == 2) {
-			rectangles[0].intersection(rectangles[1]).ifPresent(r -> drawRectangle(r, graphics, Color.WHITE));
-			rectangles[0].union(rectangles[1]).ifPresent(r -> drawRectangle(r, graphics, Color.YELLOW));
-			boolean glued = rectangles[0].isGlued(rectangles[1]);
+		if(rectangles.size() == 2) {
+			Rectangle r1 = rectangles.get(0);
+			Rectangle r2 = rectangles.get(1);
+			r1.intersection(r2).ifPresent(r -> drawRectangle(r, graphics, Color.WHITE));
+			r1.union(r2).ifPresent(r -> drawRectangle(r, graphics, Color.YELLOW));
+			boolean glued = r1.isGlued(r2);
 			System.out.println((glued ? "" : "NOT ") + "GLUED: " + title);
 		}
 
