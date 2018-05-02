@@ -53,6 +53,7 @@ import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownConsumer;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.fagu.fmv.utils.Proxifier;
+import org.fagu.fmv.utils.collection.LimitedLastQueue;
 import org.fagu.fmv.utils.io.InputStreamSupplier;
 
 
@@ -129,7 +130,7 @@ public class FFExecutor<R> {
 				progressReadLine = new FFMPEGProgressReadLine();
 			}
 		}
-		outputs = new ArrayList<>();
+		outputs = new LimitedLastQueue<>(500);
 		outputReadLine = new BufferedReadLine(outputs);
 		listeners = new ArrayList<>(operation.getListeners());
 

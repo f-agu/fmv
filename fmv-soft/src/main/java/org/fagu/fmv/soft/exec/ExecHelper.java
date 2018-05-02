@@ -320,11 +320,11 @@ public class ExecHelper<T extends ExecHelper<?>> {
 
 	/**
 	 * @param workingFolder
-	 * @param defaultReaDLine
+	 * @param defaultReadLine
 	 * @return
 	 * @throws IOException
 	 */
-	protected FMVExecutor createFMVExecutor(File workingFolder, ReadLine defaultReaDLine) throws IOException {
+	protected FMVExecutor createFMVExecutor(File workingFolder, ReadLine defaultReadLine) throws IOException {
 		checkStreamHandler();
 
 		// executeStreamHandler
@@ -336,8 +336,8 @@ public class ExecHelper<T extends ExecHelper<?>> {
 
 		// input/out/err
 		if(input != null || out != null || err != null) { // input & whatever
-			ReadLineOutputStream outRL = new ReadLineOutputStream(out, getOutReadLine(defaultReaDLine));
-			ReadLineOutputStream errRL = new ReadLineOutputStream(err, getErrReadLine(defaultReaDLine));
+			ReadLineOutputStream outRL = new ReadLineOutputStream(out, getOutReadLine(defaultReadLine));
+			ReadLineOutputStream errRL = new ReadLineOutputStream(err, getErrReadLine(defaultReadLine));
 			ExecuteStreamHandler customExecuteStreamHandler = new PumpStreamHandler(outRL, errRL, input);
 
 			return FMVExecutor.with(workingFolder)
@@ -347,8 +347,8 @@ public class ExecHelper<T extends ExecHelper<?>> {
 
 		// ReadLine
 		return FMVExecutor.with(workingFolder)
-				.out(getOutReadLine(defaultReaDLine))
-				.err(getErrReadLine(defaultReaDLine))
+				.out(getOutReadLine(defaultReadLine))
+				.err(getErrReadLine(defaultReadLine))
 				.charset(charset)
 				.lookReader(lookReader)
 				.build();

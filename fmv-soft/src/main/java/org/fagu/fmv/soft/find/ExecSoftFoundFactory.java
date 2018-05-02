@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.exec.CommandLine;
@@ -42,6 +43,7 @@ import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.soft.exec.ReadLine;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
+import org.fagu.fmv.utils.collection.LimitedLastQueue;
 import org.fagu.version.Version;
 
 
@@ -88,6 +90,8 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 		private boolean build;
 
 		private ExecutorFactory executorFactory;
+
+		private Supplier<List<String>> bufferedReadLineSupplier = () -> new LimitedLastQueue<>(500);
 
 		private ExecSoftFoundFactoryBuilder(SoftProvider softProvider, List<String> parameters) {
 			this.softProvider = softProvider;
@@ -149,6 +153,11 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 			});
 		}
 
+		public ExecSoftFoundFactoryBuilder withBufferedReadLineSupplier(Supplier<List<String>> bufferedReadLineSupplier) {
+			this.bufferedReadLineSupplier = Objects.requireNonNull(bufferedReadLineSupplier);
+			return this;
+		}
+
 		public ExecSoftFoundFactoryBuilder withExecutorFactory(ExecutorFactory executorFactory) {
 			this.executorFactory = executorFactory;
 			return this;
@@ -163,7 +172,7 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 			}
 			ExecutorFactory execFact = executorFactory != null ? executorFactory : getDefaultExecutorFactory();
 			build = true;
-			return new ExecSoftFoundFactory(execFact, parameters, parserFactory);
+			return new ExecSoftFoundFactory(execFact, parameters, parserFactory, bufferedReadLineSupplier);
 		}
 
 		// **********************************************************
@@ -348,15 +357,20 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	private final ParserFactory parserFactory;
 
+	private final Supplier<List<String>> bufferedReadLineSupplier;
+
 	/**
 	 * @param executorFactory
 	 * @param parameters
 	 * @param parserFactory
+	 * @param bufferedReadLineSupplier
 	 */
-	private ExecSoftFoundFactory(ExecutorFactory executorFactory, List<String> parameters, ParserFactory parserFactory) {
+	private ExecSoftFoundFactory(ExecutorFactory executorFactory, List<String> parameters, ParserFactory parserFactory,
+			Supplier<List<String>> bufferedReadLineSupplier) {
 		this.executorFactory = Objects.requireNonNull(executorFactory);
 		this.parameters = parameters;
 		this.parserFactory = parserFactory;
+		this.bufferedReadLineSupplier = bufferedReadLineSupplier;
 	}
 
 	/**
@@ -383,7 +397,7 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 		CommandLine commandLine = FMVCommandLine.create(file, parameters);
 		String cmdLineStr = CommandLineUtils.toLine(commandLine);
 
-		List<String> readLineList = new ArrayList<>();
+		List<String> readLineList = Objects.requireNonNull(bufferedReadLineSupplier.get());
 		BufferedReadLine bufferedReadLine = new BufferedReadLine(readLineList);
 
 		FMVExecutor executor = executorFactory.create(file, parser, bufferedReadLine);

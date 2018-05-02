@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteException;
@@ -32,6 +33,7 @@ import org.fagu.fmv.soft.exec.exception.ExceptionKnownConsumer;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.utils.Proxifier;
+import org.fagu.fmv.utils.collection.LimitedLastQueue;
 
 
 /**
@@ -54,6 +56,8 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 	private ExceptionConsumer exceptionConsumer;
 
 	private ExecuteDelegate executeDelegate;
+
+	private Supplier<List<String>> bufferedReadLineSupplier = () -> new LimitedLastQueue<>(500);
 
 	/**
 	 * @param softProvider
@@ -110,6 +114,15 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 	 */
 	public SoftExecutor ifExceptionDo(ExceptionConsumer exceptionConsumer) {
 		this.exceptionConsumer = exceptionConsumer;
+		return this;
+	}
+
+	/**
+	 * @param bufferedReadLineSupplier
+	 * @return
+	 */
+	public SoftExecutor setBufferedReadLineSupplier(Supplier<List<String>> bufferedReadLineSupplier) {
+		this.bufferedReadLineSupplier = Objects.requireNonNull(bufferedReadLineSupplier);
 		return this;
 	}
 
@@ -281,7 +294,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		String cmdLineStr = CommandLineUtils.toLine(commandLine);
 		execListener.eventPrepare(cmdLineStr);
 
-		List<String> readLineList = new ArrayList<>();
+		List<String> readLineList = Objects.requireNonNull(bufferedReadLineSupplier.get());
 		ReadLine bufferedReadLine = new BufferedReadLine(readLineList);
 		FMVExecutor fmvExecutor = createFMVExecutor(execFile.getParentFile(), bufferedReadLine);
 		applyCustomizeExecutor(fmvExecutor);
