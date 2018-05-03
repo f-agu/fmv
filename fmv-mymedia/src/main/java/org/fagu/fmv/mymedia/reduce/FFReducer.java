@@ -38,6 +38,7 @@ import org.apache.commons.exec.ExecuteResultHandler;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.coder.Decoders;
+import org.fagu.fmv.ffmpeg.coder.Decoders.SubType;
 import org.fagu.fmv.ffmpeg.coder.H264;
 import org.fagu.fmv.ffmpeg.executor.FFExecFallback;
 import org.fagu.fmv.ffmpeg.executor.FFExecListener;
@@ -112,7 +113,7 @@ public class FFReducer extends AbstractReducer {
 
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
-			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\out.mkv"),
+			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\audio-mjpeg.mp3"),
 					"totqdf", Loggers.systemOut());
 		} catch(FMVExecuteException e) {
 			e.printStackTrace();
@@ -300,12 +301,13 @@ public class FFReducer extends AbstractReducer {
 			logger.log("Is audio: number of frames unavailable: " + numberOfFrames);
 			return false;
 		}
-		if(Decoders.MJPEG.getName().equals(videoStream.codecName().get())) {
+		String name = videoStream.codecName().get();
+		if(Decoders.byName(name).is(SubType.IMAGE)) {
 			FrameRate frameRate = videoStream.frameRate().orElse(null);
 			if(frameRate != null && frameRate.floatValue() < 100) {
 				return true;
 			}
-			logger.log("Is audio: frameRate is null or too high: " + frameRate);
+			logger.log("Is audio: frameRate is null or too high (" + frameRate + ") AND video codec is " + name);
 			return false;
 		}
 		return true;

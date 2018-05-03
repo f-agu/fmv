@@ -31,8 +31,6 @@ import org.fagu.fmv.ffmpeg.Resampler;
 import org.fagu.fmv.ffmpeg.Scaler;
 import org.fagu.fmv.ffmpeg.coder.AAC;
 import org.fagu.fmv.ffmpeg.coder.Encoders;
-import org.fagu.fmv.ffmpeg.coder.LibFAAC;
-import org.fagu.fmv.ffmpeg.coder.LibFDK_AAC;
 import org.fagu.fmv.ffmpeg.filter.FilterNaming;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.Stream;
@@ -327,20 +325,6 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 	 * @return
 	 */
 	public OutputProcessor codecAutoSelectAAC() {
-		if(Encoders.LIBFDK_AAC.exists()) {
-			try {
-				return codec(LibFDK_AAC.build());
-			} catch(RequiredException e) {
-				// ignore
-			}
-		}
-		if(Encoders.LIBFAAC.exists()) {
-			try {
-				return codec(LibFAAC.build());
-			} catch(RequiredException e) {
-				// ignore
-			}
-		}
 		if(Encoders.AAC.exists()) {
 			try {
 				return codec(AAC.build());
@@ -398,7 +382,8 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 	 */
 	public OutputProcessor bitStream(Type type, Collection<BitStreamFilter> bitStreamFilters) {
 		if(CollectionUtils.isNotEmpty(bitStreamFilters)) {
-			outputParameters.add(Parameter.before(output, "-bsf:" + type.code(), bitStreamFilters.stream().map(BitStreamFilter::getName).collect(Collectors.joining(","))));
+			outputParameters.add(Parameter.before(output, "-bsf:" + type.code(), bitStreamFilters.stream().map(BitStreamFilter::getName).collect(
+					Collectors.joining(","))));
 		}
 		return this;
 	}

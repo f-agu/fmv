@@ -72,4 +72,11 @@ public abstract class Help {
 		return text;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return name + '[' + text + ']';
+	}
 }

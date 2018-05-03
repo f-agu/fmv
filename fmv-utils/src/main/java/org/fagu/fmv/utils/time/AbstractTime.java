@@ -135,7 +135,7 @@ public abstract class AbstractTime {
 			return false;
 		}
 		AbstractTime other = (AbstractTime)obj;
-		return negative == other.negative && hour == other.hour && minute == other.minute && NumberUtils.equals(second, other.second, 0.0001F);
+		return negative == other.negative && hour == other.hour && minute == other.minute && NumberUtils.equals(second, other.second, 0.001F);
 	}
 
 	/**

@@ -98,7 +98,9 @@ public class GenerateAVContext {
 	 * @param group
 	 */
 	public static void writeEnums(PrintStream ps, Group group, boolean checkio, boolean input, boolean output) {
-		Iterator<Param> paramIt = group.getParams().stream().filter(p -> ! p.getValues().isEmpty()).iterator();
+		Iterator<Param> paramIt = group.getParams().stream()
+				.filter(p -> ! p.getValues().isEmpty())
+				.iterator();
 		if(paramIt.hasNext()) {
 			ps.println("\t// -----------------------------------------------");
 		}

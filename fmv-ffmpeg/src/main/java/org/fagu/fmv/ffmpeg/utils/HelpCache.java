@@ -141,7 +141,10 @@ public class HelpCache<E, H extends Help> {
 	public List<E> available() {
 		if(entityList == null) {
 			load();
-			entityList = cacheMap.values().stream().map(b -> b.e).filter(Objects::nonNull).collect(Collectors.toList());
+			entityList = cacheMap.values().stream()
+					.map(b -> b.e)
+					.filter(Objects::nonNull)
+					.collect(Collectors.toList());
 		}
 		return entityList;
 	}

@@ -38,7 +38,6 @@ public abstract class Coders {
 
 	/**
 	 * @param name
-	 * @param codecClass
 	 */
 	Coders(String name) {
 		this.name = Objects.requireNonNull(name);
@@ -106,7 +105,9 @@ public abstract class Coders {
 	 * @return
 	 */
 	public String getDescription() {
-		return helpCache().cache(name).stream().map(b -> b.getText()).collect(Collectors.joining(", "));
+		return helpCache().cache(name).stream()
+				.map(CoderHelp::getText)
+				.collect(Collectors.joining(", "));
 	}
 
 	/**
@@ -134,7 +135,7 @@ public abstract class Coders {
 	/**
 	 * @author f.agu
 	 */
-	protected abstract static class CoderHelp extends Help {
+	public abstract static class CoderHelp extends Help {
 
 		/**
 		 * @param name
