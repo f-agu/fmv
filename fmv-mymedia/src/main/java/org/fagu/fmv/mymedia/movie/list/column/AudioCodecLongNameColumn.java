@@ -28,6 +28,8 @@ import java.util.function.Supplier;
 import org.fagu.fmv.ffmpeg.metadatas.AudioStream;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.mymedia.movie.list.Column;
+import org.fagu.fmv.mymedia.movie.list.DataStore;
+import org.fagu.fmv.mymedia.movie.list.datatype.FFDataType;
 
 
 /**
@@ -47,8 +49,8 @@ public class AudioCodecLongNameColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
-		return movieMetadatasOptSupplier.get()
+	public Optional<String> value(Path rootPath, File file, DataStore dataStore) {
+		return dataStore.getData(FFDataType.FF)
 				.map(MovieMetadatas::getAudioStream)
 				.flatMap(AudioStream::codecLongName);
 	}

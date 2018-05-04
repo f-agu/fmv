@@ -31,6 +31,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.fagu.fmv.ffmpeg.metadatas.AudioStream;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.mymedia.movie.list.Column;
+import org.fagu.fmv.mymedia.movie.list.DataStore;
+import org.fagu.fmv.mymedia.movie.list.datatype.FFDataType;
 
 
 /**
@@ -50,8 +52,8 @@ public class AudioColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
-		List<AudioStream> audioStreams = movieMetadatasOptSupplier.get()
+	public Optional<String> value(Path rootPath, File file, DataStore dataStore) {
+		List<AudioStream> audioStreams = dataStore.getData(FFDataType.FF)
 				.map(MovieMetadatas::getAudioStreams)
 				.orElse(null);
 		if(CollectionUtils.isEmpty(audioStreams)) {

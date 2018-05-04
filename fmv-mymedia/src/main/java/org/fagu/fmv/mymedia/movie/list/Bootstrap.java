@@ -31,20 +31,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.ffmpeg.FFHelper;
-import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.operation.Type;
+import org.fagu.fmv.mymedia.movie.list.column.AgeLegalColumn;
+import org.fagu.fmv.mymedia.movie.list.column.AgeSuggestedColumn;
 import org.fagu.fmv.mymedia.movie.list.column.AudioCodecLongNameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.AudioCodecNameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.AudioColumn;
@@ -67,6 +66,7 @@ import org.fagu.fmv.mymedia.movie.list.column.VideoSizeHeightColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoSizeNameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoSizeWidthColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoSubtitleColumn;
+import org.fagu.fmv.mymedia.movie.list.datatype.DataStoreImpl;
 import org.fagu.fmv.mymedia.utils.FileUtils;
 import org.fagu.fmv.utils.IniFile;
 
@@ -159,6 +159,8 @@ public class Bootstrap implements Closeable {
 		columns.add(new CategoryColumn(0));
 		columns.add(new CategoryColumn(1));
 		columns.add(new CategoryColumn(2));
+		columns.add(new AgeLegalColumn());
+		columns.add(new AgeSuggestedColumn());
 		columns.add(new SizeBytesColumn());
 		columns.add(new LastModifiedDateColumn());
 		columns.add(new AudioColumn());
@@ -252,21 +254,13 @@ public class Bootstrap implements Closeable {
 			return;
 		}
 
-		AtomicReference<MovieMetadatas> atomicReference = new AtomicReference<>();
-		Supplier<Optional<MovieMetadatas>> movieMetadatasSupplier = () -> {
-			MovieMetadatas movieMetadatas = atomicReference.get();
-			if(movieMetadatas == null) {
-				try {
-					movieMetadatas = FFHelper.videoMetadatas(file);
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-				atomicReference.set(movieMetadatas);
-			}
-			return Optional.ofNullable(movieMetadatas);
-		};
-		printStream.println(columns.stream()
-				.map(c -> c.value(rootPath, file, movieMetadatasSupplier).orElse(null))
+		Map<String, String> values = new LinkedHashMap<>();
+		for(Column column : columns) {
+			String value = column.value(rootPath, file, new DataStoreImpl(file, values)).orElse(null);
+			values.put(column.title(), value);
+		}
+
+		printStream.println(values.values().stream()
 				.map(StringUtils::defaultString)
 				.collect(Collectors.joining("\t")));
 	}

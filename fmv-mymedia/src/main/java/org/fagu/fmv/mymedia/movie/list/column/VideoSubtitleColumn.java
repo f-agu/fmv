@@ -31,6 +31,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.SubtitleStream;
 import org.fagu.fmv.mymedia.movie.list.Column;
+import org.fagu.fmv.mymedia.movie.list.DataStore;
+import org.fagu.fmv.mymedia.movie.list.datatype.FFDataType;
 
 
 /**
@@ -50,8 +52,8 @@ public class VideoSubtitleColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
-		List<SubtitleStream> subtitleStreams = movieMetadatasOptSupplier.get()
+	public Optional<String> value(Path rootPath, File file, DataStore dataStore) {
+		List<SubtitleStream> subtitleStreams = dataStore.getData(FFDataType.FF)
 				.map(MovieMetadatas::getSubtitleStreams)
 				.orElse(null);
 		if(CollectionUtils.isEmpty(subtitleStreams)) {

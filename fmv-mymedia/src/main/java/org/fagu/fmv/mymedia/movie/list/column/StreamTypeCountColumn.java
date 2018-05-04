@@ -29,9 +29,10 @@ import java.util.function.Supplier;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.fagu.fmv.ffmpeg.metadatas.InfoBase;
-import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.mymedia.movie.list.Column;
+import org.fagu.fmv.mymedia.movie.list.DataStore;
+import org.fagu.fmv.mymedia.movie.list.datatype.FFDataType;
 
 
 /**
@@ -60,8 +61,8 @@ public class StreamTypeCountColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
-		List<InfoBase> streams = movieMetadatasOptSupplier.get()
+	public Optional<String> value(Path rootPath, File file, DataStore dataStore) {
+		List<InfoBase> streams = dataStore.getData(FFDataType.FF)
 				.map(mm -> mm.getStreams(type))
 				.orElse(null);
 		if(CollectionUtils.isEmpty(streams)) {

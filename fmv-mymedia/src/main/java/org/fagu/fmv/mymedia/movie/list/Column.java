@@ -20,13 +20,9 @@ package org.fagu.fmv.mymedia.movie.list;
  * #L%
  */
 
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.function.Supplier;
-
-import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 
 
 /**
@@ -42,8 +38,9 @@ public interface Column {
 	/**
 	 * @param rootPath
 	 * @param file
-	 * @param movieMetadatasOptSupplier
+	 * @param dataStore
 	 * @return
 	 */
-	Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier);
+	// Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier
+	Optional<String> value(Path rootPath, File file, DataStore dataStore);
 }

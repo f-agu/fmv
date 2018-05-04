@@ -31,6 +31,8 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.Stream;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.mymedia.movie.list.Column;
+import org.fagu.fmv.mymedia.movie.list.DataStore;
+import org.fagu.fmv.mymedia.movie.list.datatype.FFDataType;
 import org.fagu.fmv.utils.collection.MapList;
 
 
@@ -51,8 +53,8 @@ public class StreamsTypeCountColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
-		MovieMetadatas movieMetadatas = movieMetadatasOptSupplier.get().orElse(null);
+	public Optional<String> value(Path rootPath, File file, DataStore dataStore) {
+		MovieMetadatas movieMetadatas = dataStore.getData(FFDataType.FF).orElse(null);
 		if(movieMetadatas == null) {
 			return Optional.empty();
 		}

@@ -25,8 +25,8 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.mymedia.movie.list.Column;
+import org.fagu.fmv.mymedia.movie.list.DataStore;
 
 
 /**
@@ -46,7 +46,7 @@ public class PathColumn implements Column {
 	 * @see org.fagu.fmv.mymedia.movie.list.Column#value(Path, java.io.File, Supplier)
 	 */
 	@Override
-	public Optional<String> value(Path rootPath, File file, Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier) {
+	public Optional<String> value(Path rootPath, File file, DataStore dataStore) {
 		return Optional.of(file.getAbsolutePath());
 	}
 
