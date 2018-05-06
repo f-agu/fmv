@@ -52,6 +52,8 @@ import org.fagu.fmv.mymedia.movie.list.column.FMVTreatedColumn;
 import org.fagu.fmv.mymedia.movie.list.column.LastModifiedDateColumn;
 import org.fagu.fmv.mymedia.movie.list.column.NameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.PathColumn;
+import org.fagu.fmv.mymedia.movie.list.column.SagaNameColumn;
+import org.fagu.fmv.mymedia.movie.list.column.SagaOrderColumn;
 import org.fagu.fmv.mymedia.movie.list.column.SizeBytesColumn;
 import org.fagu.fmv.mymedia.movie.list.column.StreamTypeCountColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoCodecLongNameColumn;
@@ -145,6 +147,8 @@ public class Bootstrap implements Closeable {
 	 */
 	private void populateDefaultColumns() {
 		columns.add(new NameColumn());
+		columns.add(new SagaNameColumn());
+		columns.add(new SagaOrderColumn());
 		columns.add(new VideoHDColumn());
 		columns.add(new VideoSizeColumn());
 		columns.add(new VideoSizeNameColumn());
@@ -285,10 +289,10 @@ public class Bootstrap implements Closeable {
 		try (PrintStream printStream = new PrintStream(new File("D:\\tmp\\list-full.out")); //
 				Bootstrap listMovies = new Bootstrap(printStream)) {
 
-			listMovies.list(new File(root, "Dessins animés"));
-			listMovies.list(new File(root, "Dessins animés série"));
-			listMovies.list(new File(root, "Documentaires"));
-			listMovies.list(new File(root, "Films"));
+			// listMovies.list(new File(root, "Dessins animés"));
+			// listMovies.list(new File(root, "Dessins animés série"));
+			// listMovies.list(new File(root, "Documentaires"));
+			// listMovies.list(new File(root, "Films"));
 			listMovies.list(new File(root, "Films HD"));
 			listMovies.list(new File(root, "Séries"));
 		}

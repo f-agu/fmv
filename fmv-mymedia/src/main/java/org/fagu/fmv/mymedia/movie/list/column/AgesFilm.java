@@ -14,6 +14,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.similarity.JaroWinklerDistance;
+import org.fagu.fmv.mymedia.movie.list.column.AgesCache.AgesElement;
 
 
 /**
@@ -29,6 +30,21 @@ public class AgesFilm {
 	// **********************************************
 
 	private Optional<Ages> search(String text) {
+		Optional<AgesElement> element = AgesCache.getInstance().find(text);
+		if(element.isPresent()) {
+			return element.get().getAges();
+		}
+
+		System.out.println("SEARCH AGES ### not in cache for: " + text);
+
+		Optional<Ages> ages = searchBy(text);
+		if(ages.isPresent()) {
+			return ages;
+		}
+		return searchBy(stripAccents(text).replaceAll("[^A-Za-z ]", " "));
+	}
+
+	private Optional<Ages> searchBy(String text) {
 		Set<Ages> ages = new TreeSet<>();
 		int page = 1;
 		try {
@@ -42,13 +58,13 @@ public class AgesFilm {
 			return Optional.empty();
 		}
 		if(ages.size() > 1) {
-			System.out.println(" ### " + text + " ==> " + ages);
+			System.out.println("SEARCH AGES ### multiple found: " + ages);
 		}
 		return Optional.of(ages.iterator().next()); // TODO re-filter
 	}
 
 	private boolean search(String text, int page, Collection<Ages> ages) throws IOException {
-		String lcTxt = stripAccents(text).replaceAll("[^A-Za-z ]", " ").toLowerCase();
+		String lcTxt = text.toLowerCase();
 		StringBuilder sb = new StringBuilder();
 		sb.append("http://www.filmages.ch/films/recherche/search/").append(URLEncoder.encode(lcTxt, "UTF-8")).append(".html");
 		if(page > 1) {
@@ -112,6 +128,6 @@ public class AgesFilm {
 
 	public static void main(String[] args) {
 		AgesFilm agesFilm = new AgesFilm();
-		agesFilm.getAges("L'armée des 12 singes");
+		System.out.println(agesFilm.getAges("Rrrrrrr !!!"));
 	}
 }
