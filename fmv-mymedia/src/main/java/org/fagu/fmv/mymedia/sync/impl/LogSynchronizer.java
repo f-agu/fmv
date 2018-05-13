@@ -21,14 +21,12 @@ package org.fagu.fmv.mymedia.sync.impl;
  */
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.sync.FileCount;
 import org.fagu.fmv.mymedia.sync.Item;
 import org.fagu.fmv.mymedia.sync.Storage;
@@ -47,15 +45,15 @@ public class LogSynchronizer extends WrappedSynchronizer {
 
 	private final FileCount deleteFileCount;
 
-	private final PrintStream printStream;
+	private final Logger logger;
 
 	/**
 	 * @param synchronizer
-	 * @param printStream
+	 * @param logger
 	 */
-	public LogSynchronizer(Synchronizer synchronizer, PrintStream printStream) {
+	public LogSynchronizer(Synchronizer synchronizer, Logger logger) {
 		super(synchronizer);
-		this.printStream = Objects.requireNonNull(printStream);
+		this.logger = Objects.requireNonNull(logger);
 		scanFileCount = new FileCount();
 		syncFileCount = new FileCount();
 		deleteFileCount = new FileCount();
@@ -235,15 +233,12 @@ public class LogSynchronizer extends WrappedSynchronizer {
 	 * @param log
 	 */
 	private void log(String code, String log) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String date = dateFormat.format(new Date());
 		StringBuilder buf = new StringBuilder(64);
-		buf.append(date).append(' ');
 		if(code != null) {
 			buf.append(code).append("  "); // StringUtils.rightPad(StringUtils.substring(code, 0, 5), 5)
 		}
 		buf.append(log);
-		printStream.println(buf.toString());
+		logger.log(buf.toString());
 	}
 
 }

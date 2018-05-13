@@ -21,11 +21,10 @@ package org.fagu.fmv.mymedia.sync.impl;
  */
 
 import java.io.IOException;
-import java.util.Scanner;
 
 import org.fagu.fmv.mymedia.sync.Item;
 import org.fagu.fmv.mymedia.sync.Synchronizer;
-import org.fagu.fmv.utils.io.UnclosedInputStream;
+import org.fagu.fmv.mymedia.utils.ScannerHelper;
 
 
 /**
@@ -45,7 +44,7 @@ public class ConfirmDeleteSynchronizer extends WrappedSynchronizer {
 	 */
 	@Override
 	public boolean delete(Item item) throws IOException {
-		if(confirmDelete(item)) {
+		if(ScannerHelper.yesNo("> Delete " + item)) {
 			return synchronizer.delete(item);
 		}
 		return false;
@@ -59,24 +58,4 @@ public class ConfirmDeleteSynchronizer extends WrappedSynchronizer {
 		return "confirm delete, " + super.toString();
 	}
 
-	// *******************************************************
-
-	/**
-	 * @return
-	 */
-	private static boolean confirmDelete(Item item) {
-		System.out.println("> Delete " + item + " ? [y/n] ");
-		try (Scanner scanner = new Scanner(new UnclosedInputStream(System.in))) {
-			String line = null;
-			while((line = scanner.nextLine()) != null) {
-				line = line.trim().toLowerCase();
-				if("y".equals(line) || "yes".equals(line)) {
-					return true;
-				} else if("n".equals(line) || "no".equals(line)) {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
 }

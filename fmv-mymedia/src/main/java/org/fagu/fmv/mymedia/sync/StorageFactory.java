@@ -81,7 +81,7 @@ public abstract class StorageFactory {
 	 * @param properties
 	 * @return
 	 */
-	abstract public Storage create(Properties properties);
+	public abstract Storage create(Properties properties);
 
 	/**
 	 * @param propertiesFile

@@ -49,7 +49,7 @@ public class LoggerFactory {
 	 */
 	public static Logger openLogger(File logFile) throws IOException {
 		final PrintStream printStream = new PrintStream(new FileOutputStream(logFile, true));
-		return Loggers.timestamp(Loggers.printStream(printStream));
+		return Loggers.timestamp(Loggers.printStream(printStream, logFile.toString()));
 	}
 
 }

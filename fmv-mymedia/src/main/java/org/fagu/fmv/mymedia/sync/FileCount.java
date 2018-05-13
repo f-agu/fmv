@@ -35,11 +35,6 @@ public class FileCount {
 	private long fileSize;
 
 	/**
-	 * 
-	 */
-	public FileCount() {}
-
-	/**
 	 * @return the countFiles
 	 */
 	public int getCountFiles() {

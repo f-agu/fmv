@@ -289,10 +289,10 @@ public class Bootstrap implements Closeable {
 		try (PrintStream printStream = new PrintStream(new File("D:\\tmp\\list-full.out")); //
 				Bootstrap listMovies = new Bootstrap(printStream)) {
 
-			// listMovies.list(new File(root, "Dessins animés"));
-			// listMovies.list(new File(root, "Dessins animés série"));
-			// listMovies.list(new File(root, "Documentaires"));
-			// listMovies.list(new File(root, "Films"));
+			listMovies.list(new File(root, "Dessins animés"));
+			listMovies.list(new File(root, "Dessins animés série"));
+			listMovies.list(new File(root, "Documentaires"));
+			listMovies.list(new File(root, "Films"));
 			listMovies.list(new File(root, "Films HD"));
 			listMovies.list(new File(root, "Séries"));
 		}

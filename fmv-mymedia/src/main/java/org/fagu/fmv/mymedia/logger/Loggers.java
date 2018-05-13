@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+
+import org.fagu.fmv.mymedia.utils.UnclosedPrintStream;
 
 
 /**
@@ -33,40 +36,49 @@ public class Loggers {
 
 	private static final DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-	/**
-	 *
-	 */
+	private static final Logger NO_OPERATION = new Logger() {
+
+		@Override
+		public void close() throws IOException {
+			// do nothing
+		}
+
+		@Override
+		public void log(Throwable throwable) {
+			// do nothing
+		}
+
+		@Override
+		public void log(String message) {
+			// do nothing
+		}
+	};
+
+	private static final Logger SYSTEM_OUT = printStream(new UnclosedPrintStream(System.out), "system-out");
+
+	private static final Logger SYSTEM_ERR = printStream(new UnclosedPrintStream(System.err), "system-err");
+
 	private Loggers() {}
 
 	/**
 	 * @return
 	 */
 	public static Logger noOperation() {
-		return new Logger() {
-
-			@Override
-			public void close() throws IOException {}
-
-			@Override
-			public void log(Throwable throwable) {}
-
-			@Override
-			public void log(String message) {}
-		};
+		return NO_OPERATION;
 	}
 
 	/**
 	 * @return
 	 */
 	public static Logger systemOut() {
-		return printStream(System.out);
+		return SYSTEM_OUT;
 	}
 
 	/**
 	 * @return
 	 */
 	public static Logger systemErr() {
-		return printStream(System.err);
+		return SYSTEM_ERR;
 	}
 
 	/**
@@ -74,30 +86,73 @@ public class Loggers {
 	 * @return
 	 */
 	public static Logger printStream(PrintStream printStream) {
+		return printStream(printStream, null);
+	}
+
+	/**
+	 * @param printStream
+	 * @return
+	 */
+	public static Logger printStream(PrintStream printStream, String toString) {
 		return new Logger() {
 
-			/**
-			 * @see java.io.Closeable#close()
-			 */
 			@Override
 			public void close() throws IOException {
 				printStream.close();
 			}
 
-			/**
-			 * @see org.fagu.fmv.mymedia.logger.Logger#log(java.lang.Throwable)
-			 */
 			@Override
 			public void log(Throwable throwable) {
 				throwable.printStackTrace(printStream);
 			}
 
-			/**
-			 * @see org.fagu.fmv.mymedia.logger.Logger#log(java.lang.String)
-			 */
 			@Override
 			public void log(String message) {
 				printStream.println(message);
+			}
+
+			@Override
+			public String toString() {
+				return toString != null ? toString : super.toString();
+			}
+		};
+	}
+
+	/**
+	 * @param logger
+	 * @return
+	 */
+	public static Logger fork(Logger... loggers) {
+		return new Logger() {
+
+			@Override
+			public void close() throws IOException {
+				IOException exception = null;
+				for(Logger logger : loggers) {
+					try {
+						logger.close();
+					} catch(IOException e) {
+						exception = e;
+					}
+				}
+				if(exception != null) {
+					throw exception;
+				}
+			}
+
+			@Override
+			public void log(Throwable throwable) {
+				Arrays.stream(loggers).forEach(l -> l.log(throwable));
+			}
+
+			@Override
+			public void log(String message) {
+				Arrays.stream(loggers).forEach(l -> l.log(message));
+			}
+
+			@Override
+			public String toString() {
+				return Arrays.asList(loggers).toString();
 			}
 		};
 	}
@@ -108,7 +163,7 @@ public class Loggers {
 	 * @throws IOException
 	 */
 	public static Logger timestamp(Logger logger) throws IOException {
-		return timstamp(logger, null);
+		return timestamp(logger, null);
 	}
 
 	/**
@@ -117,21 +172,15 @@ public class Loggers {
 	 * @return
 	 * @throws IOException
 	 */
-	public static Logger timstamp(Logger logger, DateTimeFormatter dateTimeFormatter) throws IOException {
+	public static Logger timestamp(Logger logger, DateTimeFormatter dateTimeFormatter) throws IOException {
 		final DateTimeFormatter dateFormatter = dateTimeFormatter == null ? DEFAULT_DATE_TIME_FORMATTER : dateTimeFormatter;
 		return new Logger() {
 
-			/**
-			 * @param throwable
-			 */
 			@Override
 			public void log(Throwable throwable) {
 				logger.log(throwable);
 			}
 
-			/**
-			 * @param message
-			 */
 			@Override
 			public void log(String message) {
 				StringBuilder buf = new StringBuilder(20 + message.length());
@@ -139,12 +188,14 @@ public class Loggers {
 				logger.log(buf.toString());
 			}
 
-			/**
-			 * @see java.io.Closeable#close()
-			 */
 			@Override
 			public void close() throws IOException {
 				logger.close();
+			}
+
+			@Override
+			public String toString() {
+				return "timestamp[" + logger.toString() + ']';
 			}
 		};
 	}
