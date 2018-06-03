@@ -1,4 +1,4 @@
-package org.fagu.fmv.mymedia.movie.list.column;
+package org.fagu.fmv.mymedia.movie.list;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,10 +6,13 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
+import org.fagu.fmv.mymedia.movie.list.column.Saga;
 
 
 /**
@@ -20,18 +23,27 @@ public class Sagas {
 
 	private static final Sagas INSTANCE = new Sagas();
 
-	private final Map<String, Saga> sagaMap;
+	private final Map<String, Saga> sagaTitleMap;
+
+	private final List<Saga> sagas;
 
 	private Sagas() {
-		sagaMap = Collections.unmodifiableMap(loadSagas());
+		sagaTitleMap = Collections.unmodifiableMap(loadSagas());
+		sagas = Collections.unmodifiableList(sagaTitleMap.values().stream()
+				.distinct()
+				.collect(Collectors.toList()));
 	}
 
 	public static Sagas getInstance() {
 		return INSTANCE;
 	}
 
+	public List<Saga> getSagas() {
+		return sagas;
+	}
+
 	public Optional<Saga> getSagaFor(String title) {
-		return Optional.ofNullable(sagaMap.get(title.toLowerCase()));
+		return Optional.ofNullable(sagaTitleMap.get(title.toLowerCase()));
 	}
 
 	// *************************************************
@@ -71,7 +83,7 @@ public class Sagas {
 	private static void loadSaga(Map<String, Saga> sagaMap, File sagaFile) {
 		try {
 			Saga saga = Saga.load(sagaFile);
-			saga.getTitles().forEach(t -> sagaMap.put(t.toLowerCase(), saga));
+			saga.getFileNames().forEach(t -> sagaMap.put(t.toLowerCase(), saga));
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

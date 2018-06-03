@@ -27,9 +27,9 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.mymedia.file.FileUtils;
 import org.fagu.fmv.mymedia.sync.Storage;
 import org.fagu.fmv.mymedia.sync.StorageFactory;
-import org.fagu.fmv.mymedia.utils.FileUtils;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.utils.PlaceHolder;
 import org.fagu.fmv.utils.Replacers;

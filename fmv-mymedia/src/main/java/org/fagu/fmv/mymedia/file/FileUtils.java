@@ -1,4 +1,4 @@
-package org.fagu.fmv.mymedia.utils;
+package org.fagu.fmv.mymedia.file;
 
 import java.io.File;
 import java.util.Arrays;

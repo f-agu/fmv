@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.operation.Type;
+import org.fagu.fmv.mymedia.file.FileUtils;
 import org.fagu.fmv.mymedia.movie.list.column.AgeLegalColumn;
 import org.fagu.fmv.mymedia.movie.list.column.AgeSuggestedColumn;
 import org.fagu.fmv.mymedia.movie.list.column.AudioCodecLongNameColumn;
@@ -69,7 +70,6 @@ import org.fagu.fmv.mymedia.movie.list.column.VideoSizeNameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoSizeWidthColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoSubtitleColumn;
 import org.fagu.fmv.mymedia.movie.list.datatype.DataStoreImpl;
-import org.fagu.fmv.mymedia.utils.FileUtils;
 import org.fagu.fmv.utils.IniFile;
 
 

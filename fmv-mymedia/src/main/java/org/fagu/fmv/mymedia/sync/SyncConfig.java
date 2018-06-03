@@ -11,8 +11,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.fagu.fmv.mymedia.file.PlaceHolderRootFile;
 import org.fagu.fmv.mymedia.logger.Logger;
-import org.fagu.fmv.mymedia.utils.FileUtils;
 
 
 /**
@@ -77,7 +77,7 @@ public class SyncConfig {
 					if(sourceFile == null) {
 						continue;
 					}
-					findFile(line, logger, "  Destination").ifPresent(destFiles::add);
+					PlaceHolderRootFile.findFile(line, logger, "  Destination").ifPresent(destFiles::add);
 				} else {
 					// source
 					if(sourceFile != null) { // flush previous
@@ -88,7 +88,7 @@ public class SyncConfig {
 						}
 						destFiles.clear();
 					}
-					Optional<File> findFile = findFile(line, logger, "  Source");
+					Optional<File> findFile = PlaceHolderRootFile.findFile(line, logger, "  Source");
 					if(findFile.isPresent()) {
 						sourceFile = findFile.get();
 					} else {
@@ -102,32 +102,6 @@ public class SyncConfig {
 
 	public List<SyncElement> getElements() {
 		return elements;
-	}
-
-	// ***************************************************
-
-	private static Optional<File> findFile(String path, Logger logger, String prefixMessage) {
-		Optional<File> toFileOpt = toFile(path);
-		if(toFileOpt.isPresent()) {
-			File toFile = toFileOpt.get();
-			if(toFile.exists()) {
-				return Optional.of(toFile);
-			}
-			logger.log(prefixMessage + " not found: " + toFile);
-		} else {
-			logger.log(prefixMessage + " not found: " + path.trim());
-		}
-		return Optional.empty();
-	}
-
-	private static Optional<File> toFile(String path) {
-		String p = path.trim();
-		if('[' == p.charAt(0)) {
-			String diskName = StringUtils.substringBetween(p, "[", "]");
-			return FileUtils.getRootByName(diskName)
-					.map(f -> new File(f, StringUtils.substringAfter(p, "]")));
-		}
-		return Optional.of(new File(p));
 	}
 
 }

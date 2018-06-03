@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import org.apache.commons.io.FilenameUtils;
-import org.fagu.fmv.mymedia.utils.FileUtils;
+import org.fagu.fmv.mymedia.file.FileUtils;
 
 
 /**
