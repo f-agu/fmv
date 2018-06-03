@@ -594,9 +594,11 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 				continue;
 			}
 			int index = line.indexOf('=');
-			String key = line.substring(0, index);
-			String value = line.substring(index + 1);
-			params.put(key.toLowerCase(), value);
+			if(index >= 0) {
+				String key = line.substring(0, index);
+				String value = line.substring(index + 1);
+				params.put(key.toLowerCase(), value);
+			}
 		}
 		if(currentFile != null) {
 			outMap.put(currentFile, new ImageMetadatas(params));
