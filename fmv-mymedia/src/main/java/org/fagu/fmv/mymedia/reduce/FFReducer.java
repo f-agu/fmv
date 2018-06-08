@@ -67,7 +67,6 @@ import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.ffmpeg.operation.Progress;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.progressbar.FFMpegProgressBar;
-import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.Loggers;
 import org.fagu.fmv.mymedia.movie.StreamOrder;
@@ -302,12 +301,13 @@ public class FFReducer extends AbstractReducer {
 			return false;
 		}
 		String name = videoStream.codecName().get();
+		logger.log("Video codec is " + name);
 		if(Decoders.byName(name).is(SubType.IMAGE)) {
-			FrameRate frameRate = videoStream.frameRate().orElse(null);
-			if(frameRate != null && frameRate.floatValue() < 100) {
-				return true;
-			}
-			logger.log("Is audio: frameRate is null or too high (" + frameRate + ") AND video codec is " + name);
+			// FrameRate frameRate = videoStream.frameRate().orElse(null);
+			// if(frameRate != null && frameRate.floatValue() < 100) {
+			// return true;
+			// }
+			// logger.log("Is audio: frameRate is null or too high (" + frameRate + ") AND video codec is " + name);
 			return false;
 		}
 		return true;
