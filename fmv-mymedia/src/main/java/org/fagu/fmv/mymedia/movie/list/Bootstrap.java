@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +33,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,7 +44,9 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.operation.Type;
-import org.fagu.fmv.mymedia.file.FileUtils;
+import org.fagu.fmv.mymedia.logger.Logger;
+import org.fagu.fmv.mymedia.logger.LoggerFactory;
+import org.fagu.fmv.mymedia.logger.Loggers;
 import org.fagu.fmv.mymedia.movie.list.column.AgeLegalColumn;
 import org.fagu.fmv.mymedia.movie.list.column.AgeSuggestedColumn;
 import org.fagu.fmv.mymedia.movie.list.column.AudioCodecLongNameColumn;
@@ -70,6 +74,8 @@ import org.fagu.fmv.mymedia.movie.list.column.VideoSizeNameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoSizeWidthColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoSubtitleColumn;
 import org.fagu.fmv.mymedia.movie.list.datatype.DataStoreImpl;
+import org.fagu.fmv.mymedia.utils.AppVersion;
+import org.fagu.fmv.mymedia.utils.ScannerHelper;
 import org.fagu.fmv.utils.IniFile;
 
 
@@ -77,6 +83,8 @@ import org.fagu.fmv.utils.IniFile;
  * @author f.agu
  */
 public class Bootstrap implements Closeable {
+
+	private static final String LOG_FILE_PROPERTY = "fmv.movie.list.logfile";
 
 	private static final Set<String> EXTENSIONS = getExtensions();
 
@@ -281,52 +289,77 @@ public class Bootstrap implements Closeable {
 	}
 
 	/**
+	 * @return
 	 * @throws IOException
 	 */
-	public static void listFull() throws IOException {
-		File root = FileUtils.findFirstHarddriveFaguVv()
-				.orElseThrow(() -> new RuntimeException("Harddrive not found"));
-		try (PrintStream printStream = new PrintStream(new File("D:\\tmp\\list-full.out")); //
-				Bootstrap listMovies = new Bootstrap(printStream)) {
-
-			listMovies.list(new File(root, "Dessins animés"));
-			listMovies.list(new File(root, "Dessins animés série"));
-			listMovies.list(new File(root, "Documentaires"));
-			listMovies.list(new File(root, "Films"));
-			listMovies.list(new File(root, "Films HD"));
-			listMovies.list(new File(root, "Séries"));
+	private static Logger openLogger() throws IOException {
+		String property = System.getProperty(LOG_FILE_PROPERTY);
+		if(property == null) {
+			property = "sync.log";
 		}
-	}
-
-	/**
-	 * @throws IOException
-	 */
-	public static void listName() throws IOException {
-		File root = FileUtils.findFirstHarddriveFaguVv()
-				.orElseThrow(() -> new RuntimeException("Harddrive not found"));
-		try (PrintStream printStream = new PrintStream(new File("D:\\tmp\\list-name.out")); //
-				Bootstrap listMovies = new Bootstrap(printStream)) {
-			listMovies.addColumn(new NameColumn());
-
-			// printStream.println("=== Dessins animés ===");
-			// listMovies.list(new File(root, "Dessins animés"));
-			// printStream.println("=== Dessins animés séries ===");
-			// Arrays.asList(new File(root, "Dessins animés série").list()).forEach(printStream::println);
-			// printStream.println("=== Films ===");
-			// listMovies.list(new File(root, "Films"));
-			printStream.println("=== Films HD ===");
-			listMovies.list(new File(root, "Films HD"));
-			// printStream.println("=== Séries ===");
-			// Arrays.asList(new File(root, "Séries").list()).forEach(printStream::println);
-		}
+		return LoggerFactory.openLogger(new File(property));
 	}
 
 	/**
 	 * @param args
+	 * @param logger
+	 * @return
+	 * @throws IOException
+	 */
+	private static List<ListConfig> loadConfig(String[] args, Logger logger) throws IOException {
+		List<ListConfig> configs = new LinkedList<>();
+		for(String arg : args) {
+			File confFile = new File(arg);
+			if( ! confFile.exists()) {
+				System.out.println("MovieListConfigFile not found: " + arg);
+				continue;
+			}
+			configs.add(ListConfig.load(confFile, logger));
+		}
+		return configs;
+	}
+
+	/**
+	 * @param configs
+	 * @param logger
+	 */
+	private static void displayConfig(List<ListConfig> configs, Logger logger) {
+		logger.log("List declared:");
+		configs.stream()
+				.flatMap(lc -> lc.getFolders().stream())
+				.forEach(f -> logger.log("Folder: " + f));
+	}
+
+	/**
+	 * @param args
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		// listName();
-		listFull();
+		if(args.length < 2) {
+			System.out.println("Usage: " + Bootstrap.class.getName()
+					+ " <output-file> <movielist-config-file1> [<movielist-config-file2> <movielist-config-file3> ...]");
+			return;
+		}
+		try (Logger logger = openLogger();
+				PrintStream printStream = new PrintStream(new File(args[0]));
+				Bootstrap bootstrap = new Bootstrap(printStream)) {
+			Logger forkLogger = Loggers.fork(logger, Loggers.systemOut());
+
+			forkLogger.log("file.encoding: " + System.getProperty("file.encoding"));
+			forkLogger.log("Default Charset=" + Charset.defaultCharset());
+
+			AppVersion.logMyVersion(forkLogger::log);
+			String[] confArgs = Arrays.copyOfRange(args, 1, args.length);
+			List<ListConfig> configs = loadConfig(confArgs, forkLogger);
+			forkLogger.log("");
+			displayConfig(configs, forkLogger);
+			forkLogger.log("");
+			if(ScannerHelper.yesNo("Continue with this configuration")) {
+				configs.stream()
+						.flatMap(lc -> lc.getFolders().stream())
+						.forEach(bootstrap::list);
+			}
+		}
 	}
 
 }

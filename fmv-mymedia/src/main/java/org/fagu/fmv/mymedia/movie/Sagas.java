@@ -1,4 +1,4 @@
-package org.fagu.fmv.mymedia.movie.list;
+package org.fagu.fmv.mymedia.movie;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -19,7 +19,7 @@ import org.fagu.fmv.mymedia.file.filter.ExcludeFMVFilefilter;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.mymedia.logger.Loggers;
-import org.fagu.fmv.mymedia.movie.list.Sagas;
+import org.fagu.fmv.mymedia.movie.Sagas;
 import org.fagu.fmv.mymedia.movie.list.column.Saga;
 import org.fagu.fmv.mymedia.movie.list.column.Saga.Movie;
 

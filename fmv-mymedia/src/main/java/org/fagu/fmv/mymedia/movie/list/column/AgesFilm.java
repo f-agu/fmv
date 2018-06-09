@@ -8,6 +8,9 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.Normalizer;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -23,8 +26,14 @@ import org.fagu.fmv.mymedia.movie.list.column.AgesCache.AgesElement;
  */
 public class AgesFilm {
 
+	private final Map<String, Optional<Ages>> notInCache = new HashMap<>();
+
 	public Optional<Ages> getAges(String movieTitle) {
 		return search(movieTitle);
+	}
+
+	public Map<String, Optional<Ages>> getNotInCache() {
+		return Collections.unmodifiableMap(notInCache);
 	}
 
 	// **********************************************
@@ -38,10 +47,11 @@ public class AgesFilm {
 		System.out.println("SEARCH AGES ### not in cache for: " + text);
 
 		Optional<Ages> ages = searchBy(text);
-		if(ages.isPresent()) {
-			return ages;
+		if( ! ages.isPresent()) {
+			ages = searchBy(stripAccents(text).replaceAll("[^A-Za-z ]", " "));
 		}
-		return searchBy(stripAccents(text).replaceAll("[^A-Za-z ]", " "));
+		notInCache.put(text, ages);
+		return ages;
 	}
 
 	private Optional<Ages> searchBy(String text) {

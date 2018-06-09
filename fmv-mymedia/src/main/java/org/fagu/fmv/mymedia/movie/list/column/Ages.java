@@ -59,9 +59,7 @@ public class Ages implements Comparable<Ages> {
 		Ages other = (Ages)obj;
 		if(legal != other.legal)
 			return false;
-		if(suggested != other.suggested)
-			return false;
-		return true;
+		return suggested == other.suggested;
 	}
 
 	@Override

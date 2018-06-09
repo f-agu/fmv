@@ -17,10 +17,14 @@ public class AgesDataType implements DataType<Ages> {
 
 	public static final DataType<Ages> AGES = new CachedDataType<>(new AgesDataType());
 
-	private AgesDataType() {}
+	private final AgesFilm agesFilm;
+
+	private AgesDataType() {
+		agesFilm = new AgesFilm();
+	}
 
 	@Override
 	public Optional<Ages> extractData(File file) {
-		return new AgesFilm().getAges(FilenameUtils.getBaseName(file.getName()));
+		return agesFilm.getAges(FilenameUtils.getBaseName(file.getName()));
 	}
 }
