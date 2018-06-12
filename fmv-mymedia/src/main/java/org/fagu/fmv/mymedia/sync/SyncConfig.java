@@ -96,6 +96,9 @@ public class SyncConfig {
 					}
 				}
 			}
+			if(sourceFile != null && ! destFiles.isEmpty()) {
+				elements.add(new SyncElement(sourceFile, destFiles));
+			}
 		}
 		return new SyncConfig(elements);
 	}

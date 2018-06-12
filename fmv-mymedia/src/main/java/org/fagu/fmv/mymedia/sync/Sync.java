@@ -129,6 +129,10 @@ public class Sync {
 		for(Entry<String, Item> entry : listChildren.entrySet()) {
 			String name = entry.getKey();
 			Item curSrcItem = entry.getValue();
+			if( ! accept(curSrcItem, srcInitFile)) {
+				synchronizer.ignore(curSrcItem.toString());
+				continue;
+			}
 
 			List<Item> curDestItems = new ArrayList<>();
 			for(Dest dest : dests) {
@@ -138,10 +142,6 @@ public class Sync {
 				Item curDestItem = destItems.remove(name);
 				if(curDestItem != null) {
 					curDestItems.add(curDestItem);
-				}
-				if( ! accept(curSrcItem, srcInitFile)) {
-					synchronizer.ignore(curSrcItem.toString());
-					continue;
 				}
 				if(curDestItem != null && ! accept(curDestItem, destInitFile)) {
 					synchronizer.ignore(curDestItem.toString());
