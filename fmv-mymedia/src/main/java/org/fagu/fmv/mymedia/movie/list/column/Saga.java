@@ -21,7 +21,7 @@ import org.apache.commons.lang.StringUtils;
  * @author f.agu
  * @created 6 mai 2018 12:07:02
  */
-public class Saga {
+public class Saga implements Comparable<Saga> {
 
 	public static class Movie {
 
@@ -100,6 +100,18 @@ public class Saga {
 			++index;
 		}
 		return OptionalInt.empty();
+	}
+
+	@Override
+	public int compareTo(Saga o) {
+		return name.compareTo(o.name);
+	}
+
+	@Override
+	public String toString() {
+		return new StringBuilder()
+				.append("Saga[").append(name).append(", ").append(movies.size()).append(" movies]")
+				.toString();
 	}
 
 }

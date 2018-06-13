@@ -18,3 +18,4 @@ local.properties
 # IntelliJ
 *.iml
 .idea
+/sync.log

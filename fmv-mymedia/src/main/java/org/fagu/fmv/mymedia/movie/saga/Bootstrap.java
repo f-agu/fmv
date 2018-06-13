@@ -3,9 +3,10 @@ package org.fagu.fmv.mymedia.movie.saga;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,13 +23,14 @@ import org.fagu.fmv.mymedia.logger.Loggers;
 import org.fagu.fmv.mymedia.movie.Sagas;
 import org.fagu.fmv.mymedia.movie.list.column.Saga;
 import org.fagu.fmv.mymedia.movie.list.column.Saga.Movie;
+import org.fagu.fmv.mymedia.utils.ScannerHelper;
 
 
 /**
  * @author Utilisateur
  * @created 2 juin 2018 14:41:57
  */
-public class Bootstrap implements AutoCloseable {
+public class Bootstrap {
 
 	private static final String LOG_FILE_PROPERTY = "fmv.movie.saga.logfile";
 
@@ -53,6 +55,7 @@ public class Bootstrap implements AutoCloseable {
 		Set<Movie> movies = saga.getMovies();
 		int maxLength = Integer.toString(movies.size()).length();
 		File sagaRoot = new File(destFolder, saga.getName());
+		Set<File> existingFiles = filesToSet(sagaRoot.listFiles());
 		FileUtils.forceMkdir(sagaRoot);
 		for(Movie movie : movies) {
 			++index;
@@ -73,19 +76,27 @@ public class Bootstrap implements AutoCloseable {
 				if( ! isSimilar(file, destFile)) {
 					logger.log("Not similar files: " + file + " -> " + destFile);
 				}
+				existingFiles.remove(destFile);
 				continue;
 			}
 			Files.createLink(destFile.toPath(), file.toPath());
 		}
-	}
-
-	@Override
-	public void close() throws Exception {
-		// TODO Auto-generated method stub
+		existingFiles.forEach(f -> {
+			if(ScannerHelper.yesNo("Delete " + f)) {
+				f.delete();
+			}
+		});
 	}
 
 	private boolean isSimilar(File srcFile, File destFile) {
 		return srcFile.length() == destFile.length();
+	}
+
+	private Set<File> filesToSet(File[] files) {
+		if(files == null || files.length == 0) {
+			return new HashSet<>();
+		}
+		return new HashSet<>(Arrays.asList(files));
 	}
 
 	// *******************
@@ -136,7 +147,8 @@ public class Bootstrap implements AutoCloseable {
 		Sagas sagas = Sagas.getInstance();
 		try (Logger logger = openLogger()) {
 			Logger forkLogger = Loggers.fork(logger, Loggers.systemOut());
-			List<Saga> sagaList = sagas.getSagas();
+			sagas.log(forkLogger);
+			Set<Saga> sagaList = sagas.getSagas();
 			if(sagaList.isEmpty()) {
 				logger.log("Sagas not found");
 				return;
@@ -144,10 +156,9 @@ public class Bootstrap implements AutoCloseable {
 			for(String arg : args) {
 				Optional<File> findFile = PlaceHolderRootFile.findFile(arg, logger, "Path");
 				if(findFile.isPresent()) {
-					try (Bootstrap bootstrap = new Bootstrap(forkLogger, findFile.get())) {
-						for(Saga saga : sagaList) {
-							bootstrap.doIt(saga);
-						}
+					Bootstrap bootstrap = new Bootstrap(forkLogger, findFile.get());
+					for(Saga saga : sagaList) {
+						bootstrap.doIt(saga);
 					}
 				}
 			}

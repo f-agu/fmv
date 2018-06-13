@@ -18,7 +18,7 @@ public class ScannerHelper {
 	 * @return
 	 */
 	public static boolean yesNo(String question) {
-		System.out.println(question + " ? [y/n] ");
+		System.out.print(question + " ? [y/n] ");
 		try (Scanner scanner = new Scanner(new UnclosedInputStream(System.in))) {
 			String line = null;
 			while((line = scanner.nextLine()) != null) {

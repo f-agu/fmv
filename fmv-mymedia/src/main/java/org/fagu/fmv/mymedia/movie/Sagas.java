@@ -6,12 +6,14 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Optional;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
+import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.movie.list.column.Saga;
 
 
@@ -25,25 +27,30 @@ public class Sagas {
 
 	private final Map<String, Saga> sagaTitleMap;
 
-	private final List<Saga> sagas;
+	private final NavigableSet<Saga> sagas;
 
 	private Sagas() {
 		sagaTitleMap = Collections.unmodifiableMap(loadSagas());
-		sagas = Collections.unmodifiableList(sagaTitleMap.values().stream()
+		sagas = Collections.unmodifiableNavigableSet(sagaTitleMap.values().stream()
 				.distinct()
-				.collect(Collectors.toList()));
+				.collect(Collectors.toCollection(TreeSet::new)));
 	}
 
 	public static Sagas getInstance() {
 		return INSTANCE;
 	}
 
-	public List<Saga> getSagas() {
+	public NavigableSet<Saga> getSagas() {
 		return sagas;
 	}
 
 	public Optional<Saga> getSagaFor(String title) {
 		return Optional.ofNullable(sagaTitleMap.get(title.toLowerCase()));
+	}
+
+	public void log(Logger logger) {
+		logger.log("Found " + sagas.size() + " sagas:");
+		sagas.forEach(s -> logger.log("  " + s.getName() + ": " + s.getFileNames().size() + " movies"));
 	}
 
 	// *************************************************
