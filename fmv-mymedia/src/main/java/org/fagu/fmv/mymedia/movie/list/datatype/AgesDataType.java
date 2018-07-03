@@ -1,6 +1,7 @@
 package org.fagu.fmv.mymedia.movie.list.datatype;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
@@ -15,12 +16,10 @@ import org.fagu.fmv.mymedia.movie.list.column.AgesFilm;
  */
 public class AgesDataType implements DataType<Ages> {
 
-	public static final DataType<Ages> AGES = new CachedDataType<>(new AgesDataType());
-
 	private final AgesFilm agesFilm;
 
-	private AgesDataType() {
-		agesFilm = new AgesFilm();
+	public AgesDataType(AgesFilm agesFilm) {
+		this.agesFilm = Objects.requireNonNull(agesFilm);
 	}
 
 	@Override

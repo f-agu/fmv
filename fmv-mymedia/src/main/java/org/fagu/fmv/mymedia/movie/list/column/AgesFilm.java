@@ -9,10 +9,11 @@ import java.net.URLEncoder;
 import java.text.Normalizer;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,13 @@ import org.fagu.fmv.mymedia.movie.list.column.AgesCache.AgesElement;
  */
 public class AgesFilm {
 
-	private final Map<String, Optional<Ages>> notInCache = new HashMap<>();
+	private final Map<String, Optional<Ages>> notInCache = new TreeMap<>();
+
+	private final AgesCache agesCache;
+
+	public AgesFilm(AgesCache agesCache) {
+		this.agesCache = Objects.requireNonNull(agesCache);
+	}
 
 	public Optional<Ages> getAges(String movieTitle) {
 		return search(movieTitle);
@@ -39,7 +46,7 @@ public class AgesFilm {
 	// **********************************************
 
 	private Optional<Ages> search(String text) {
-		Optional<AgesElement> element = AgesCache.getInstance().find(text);
+		Optional<AgesElement> element = agesCache.find(text);
 		if(element.isPresent()) {
 			return element.get().getAges();
 		}
@@ -51,6 +58,7 @@ public class AgesFilm {
 			ages = searchBy(stripAccents(text).replaceAll("[^A-Za-z ]", " "));
 		}
 		notInCache.put(text, ages);
+		agesCache.put(text, ages.orElse(null));
 		return ages;
 	}
 
@@ -137,7 +145,7 @@ public class AgesFilm {
 	}
 
 	public static void main(String[] args) {
-		AgesFilm agesFilm = new AgesFilm();
+		AgesFilm agesFilm = new AgesFilm(AgesCache.getInstance());
 		System.out.println(agesFilm.getAges("Rrrrrrr !!!"));
 	}
 }

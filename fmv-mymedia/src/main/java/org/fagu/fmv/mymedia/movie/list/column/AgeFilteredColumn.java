@@ -22,19 +22,34 @@ public abstract class AgeFilteredColumn implements Column {
 
 	private final Function<Ages, Integer> convert;
 
+	private final CategoryColumn categoryColumn;
+
+	static final AgesCache AGES_CACHE = AgesCache.getInstance();
+
+	static final AgesFilm AGES_FILM = new AgesFilm(AGES_CACHE);
+
+	private static final AgesDataType AGES_DATA_TYPE = new AgesDataType(AGES_FILM);
+
 	public AgeFilteredColumn(Function<Ages, Integer> convert) {
-		cat0Name = new CategoryColumn(0).title();
+		categoryColumn = new CategoryColumn(0);
+		cat0Name = categoryColumn.title();
 		this.convert = convert;
 	}
 
 	@Override
 	public final Optional<String> value(Path rootPath, File file, DataStore dataStore) {
 		Map<String, String> map = dataStore.getData(ValuesDataType.VALUES).get();
-		if( ! "Films HD".equals(map.get(cat0Name))) {
+		String cat0Value = map.get(cat0Name);
+		if( ! "Films HD".equals(cat0Value) && ! "Dessins animés".equals(cat0Value)) {
 			return Optional.empty();
 		}
-		Optional<Ages> ages = dataStore.getData(AgesDataType.AGES);
+		Optional<Ages> ages = dataStore.getData(AGES_DATA_TYPE);
 		return ages.map(a -> Integer.toString(convert.apply(a)));
+	}
+
+	@Override
+	public void close() throws Exception {
+		categoryColumn.close();
 	}
 
 }

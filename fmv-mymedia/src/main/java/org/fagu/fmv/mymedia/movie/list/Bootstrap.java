@@ -94,6 +94,8 @@ public class Bootstrap implements Closeable {
 
 	private boolean headerWritten;
 
+	private Logger logger;
+
 	/**
 	 * @param printStream
 	 */
@@ -138,6 +140,13 @@ public class Bootstrap implements Closeable {
 		for(File file : files) {
 			recurse(file.toPath(), file, 0, maxDepth.orElseGet(() -> Integer.MAX_VALUE));
 		}
+		for(Column column : columns) {
+			try {
+				column.close();
+			} catch(Exception e) {
+				logger.log(e);
+			}
+		}
 	}
 
 	/**
@@ -172,7 +181,7 @@ public class Bootstrap implements Closeable {
 		columns.add(new CategoryColumn(1));
 		columns.add(new CategoryColumn(2));
 		columns.add(new AgeLegalColumn());
-		columns.add(new AgeSuggestedColumn());
+		columns.add(new AgeSuggestedColumn(logger));
 		columns.add(new SizeBytesColumn());
 		columns.add(new LastModifiedDateColumn());
 		columns.add(new AudioColumn());
@@ -344,6 +353,7 @@ public class Bootstrap implements Closeable {
 				PrintStream printStream = new PrintStream(new File(args[0]));
 				Bootstrap bootstrap = new Bootstrap(printStream)) {
 			Logger forkLogger = Loggers.fork(logger, Loggers.systemOut());
+			bootstrap.logger = forkLogger;
 
 			forkLogger.log("file.encoding: " + System.getProperty("file.encoding"));
 			forkLogger.log("Default Charset=" + Charset.defaultCharset());

@@ -32,9 +32,6 @@ import org.fagu.fmv.ffmpeg.metadatas.Stream;
  */
 public class StreamOrder {
 
-	/**
-	 *
-	 */
 	private StreamOrder() {}
 
 	/**
@@ -44,10 +41,9 @@ public class StreamOrder {
 	public static <T extends Stream> Collection<T> sort(Collection<T> streams) {
 		T fr = streams.stream().filter(s -> s.language().isPresent() && s.language().get().toLowerCase().startsWith("fr")).findFirst().orElse(null);
 		T en = streams.stream()
-				.filter(s -> s.language().isPresent() && (s.language().get().toLowerCase().startsWith("ang") || s.language()
-						.get()
-						.toLowerCase()
-						.startsWith("en")))
+				.filter(s -> s.language().isPresent()
+						&& (s.language().get().toLowerCase().startsWith("ang")
+								|| s.language().get().toLowerCase().startsWith("en")))
 				.findFirst()
 				.orElse(null);
 		List<T> newStreams = new ArrayList<>();

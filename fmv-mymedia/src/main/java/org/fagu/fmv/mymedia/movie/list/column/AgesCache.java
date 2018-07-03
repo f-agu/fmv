@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -37,13 +36,16 @@ public class AgesCache {
 
 	private final Map<String, AgesElement> agesMap;
 
+	private final File file;
+
 	private AgesCache() {
 		String cacheFile = System.getProperty("fmv.movie.list.ages.cachefile");
 		if(cacheFile == null) {
-			agesMap = Collections.emptyMap();
+			agesMap = new HashMap<>();
+			file = null;
 			return;
 		}
-		File file = new File(cacheFile);
+		file = new File(cacheFile);
 		if( ! file.exists()) {
 			throw new UncheckedIOException(new FileNotFoundException(file.getAbsolutePath()));
 		}
@@ -54,9 +56,19 @@ public class AgesCache {
 		return INSTANCE;
 	}
 
+	public Optional<File> getCacheFile() {
+		return Optional.ofNullable(file);
+	}
+
 	public Optional<AgesElement> find(String title) {
 		return Optional.ofNullable(agesMap.get(title));
 	}
+
+	public void put(String title, Ages ages) {
+		agesMap.put(title, new AgesElement(ages));
+	}
+
+	// *********************************************************
 
 	private static Map<String, AgesElement> load(File file) {
 		Map<String, AgesElement> ageMap = new HashMap<>();
@@ -79,6 +91,6 @@ public class AgesCache {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-		return Collections.unmodifiableMap(ageMap);
+		return ageMap;
 	}
 }

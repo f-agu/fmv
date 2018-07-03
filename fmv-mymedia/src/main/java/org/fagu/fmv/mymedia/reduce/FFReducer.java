@@ -40,7 +40,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.coder.Decoders;
 import org.fagu.fmv.ffmpeg.coder.Decoders.SubType;
 import org.fagu.fmv.ffmpeg.coder.H264;
-import org.fagu.fmv.ffmpeg.executor.FFExecFallback;
 import org.fagu.fmv.ffmpeg.executor.FFExecListener;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
@@ -69,8 +68,8 @@ import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.progressbar.FFMpegProgressBar;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.Loggers;
+import org.fagu.fmv.mymedia.movie.LoggerFFExecListener;
 import org.fagu.fmv.mymedia.movie.StreamOrder;
-import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
@@ -112,7 +111,7 @@ public class FFReducer extends AbstractReducer {
 
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
-			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\audio-mjpeg.mp3"),
+			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\...\\....mkv"),
 					"totqdf", Loggers.systemOut());
 		} catch(FMVExecuteException e) {
 			e.printStackTrace();
@@ -372,8 +371,12 @@ public class FFReducer extends AbstractReducer {
 		// subtitle
 		Collection<SubtitleStream> subtitleStreams = StreamOrder.sort(videoMetadatas.getSubtitleStreams());
 		for(Stream stream : subtitleStreams) {
-			logger.log("map[" + stream.index() + "] subtitle: " + stream);
+			File subtitleOutputFile = getSubtitleOutputFile(srcFile, stream);
+			logger.log("map[" + stream.index() + "] subtitle: " + stream + "  => " + subtitleOutputFile.getName());
 			outputProcessor.map().streams(stream).input(inputProcessor);
+
+			builder.addMediaOutputFile(subtitleOutputFile)
+					.map().streams(stream).input(inputProcessor);
 		}
 		// other stream (Apple... again bullshit)
 		// for (Stream stream : videoMetadatas.getStreams()) {
@@ -398,7 +401,7 @@ public class FFReducer extends AbstractReducer {
 		}
 
 		// subtitle
-		if(videoMetadatas.contains(Type.SUBTITLE)) {
+		if( ! subtitleStreams.isEmpty()) {
 			outputProcessor.codecCopy(Type.SUBTITLE);
 		}
 
@@ -406,7 +409,7 @@ public class FFReducer extends AbstractReducer {
 
 		FFExecutor<Object> executor = builder.build();
 
-		executor.addListener(createLogFFExecListener(logger));
+		executor.addListener(new LoggerFFExecListener(logger));
 		executor.addListener(createCropDetectFFExecListener(logger, cropDetect, videoMetadatas));
 		if( ! audioCodecCopy) {
 			executor.addListener(createVolumeDetectFFExecListener(logger, volumeDetect));
@@ -446,6 +449,20 @@ public class FFReducer extends AbstractReducer {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @param srcFile
+	 * @param subtitleStream
+	 * @return
+	 */
+	private File getSubtitleOutputFile(File srcFile, Stream subtitleStream) {
+		StringBuilder joiner = new StringBuilder("")
+				.append(FilenameUtils.getBaseName(srcFile.getName()));
+		subtitleStream.language().ifPresent(lg -> joiner.append('-').append(lg));
+		subtitleStream.title().ifPresent(t -> joiner.append('-').append(t));
+		joiner.append('-').append(subtitleStream.index()).append(".srt");
+		return new File(srcFile.getParentFile(), joiner.toString());
 	}
 
 	/**
@@ -497,7 +514,7 @@ public class FFReducer extends AbstractReducer {
 		outputProcessor.map().allStreams().input(filter);
 
 		FFExecutor<Object> executor = builder.build();
-		executor.addListener(createLogFFExecListener(logger));
+		executor.addListener(new LoggerFFExecListener(logger));
 		Duration duration = metadatas.getAudioStream().duration().orElse(null);
 		Progress progress = executor.getProgress();
 		TextProgressBar textProgressBar = null;
@@ -537,45 +554,6 @@ public class FFReducer extends AbstractReducer {
 			}
 		}
 		return list;
-	}
-
-	/**
-	 * @param logger
-	 * @return
-	 */
-	public static FFExecListener createLogFFExecListener(Logger logger) {
-		return new FFExecListener() {
-
-			/**
-			 * @see org.fagu.fmv.utils.exec.FMVExecListener#eventPreExecute(org.fagu.fmv.utils.exec.FMVExecutor,
-			 *      org.apache.commons.exec.CommandLine, java.util.Map, org.apache.commons.exec.ExecuteResultHandler)
-			 */
-			@Override
-			public void eventPreExecute(FMVExecutor fmvExecutor, CommandLine command,
-					@SuppressWarnings("rawtypes") Map environment, ExecuteResultHandler handler) {
-				logger.log("Exec: " + CommandLineUtils.toLine(command));
-			}
-
-			/**
-			 * @see org.fagu.fmv.ffmpeg.executor.FFExecListener#eventPreExecFallbacks(org.apache.commons.exec.CommandLine,
-			 *      java.util.Collection)
-			 */
-			@Override
-			public void eventPreExecFallbacks(CommandLine command, Collection<FFExecFallback> fallbacks) {
-				logger.log("Exec fallback " + fallbacks + ": " + CommandLineUtils.toLine(command));
-			}
-
-			/**
-			 * @see org.fagu.fmv.ffmpeg.executor.FFExecListener#eventFallbackNotFound(org.fagu.fmv.soft.exec.FMVExecutor,
-			 *      org.apache.commons.exec.CommandLine)
-			 */
-			@Override
-			public void eventFallbackNotFound(CommandLine command, List<String> outputs) {
-				logger.log("Fallback not found: " + CommandLineUtils.toLine(command));
-				outputs.forEach(logger::log);
-			}
-
-		};
 	}
 
 	/**

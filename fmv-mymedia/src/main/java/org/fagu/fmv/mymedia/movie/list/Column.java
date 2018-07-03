@@ -28,7 +28,7 @@ import java.util.Optional;
 /**
  * @author f.agu
  */
-public interface Column {
+public interface Column extends AutoCloseable {
 
 	/**
 	 * @return
@@ -41,6 +41,8 @@ public interface Column {
 	 * @param dataStore
 	 * @return
 	 */
-	// Supplier<Optional<MovieMetadatas>> movieMetadatasOptSupplier
 	Optional<String> value(Path rootPath, File file, DataStore dataStore);
+
+	@Override
+	default void close() throws Exception {}
 }
