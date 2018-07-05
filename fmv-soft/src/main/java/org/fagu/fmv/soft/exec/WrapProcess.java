@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 5 juin 2017 18:03:29
  */

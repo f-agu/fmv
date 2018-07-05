@@ -30,7 +30,6 @@ import org.fagu.fmv.soft.exec.exception.ExceptionKnown;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 19 janv. 2017 16:52:08
  */

@@ -2,7 +2,7 @@
 git clone https://github.com/f-agu/fmv.git
 cd fmv
 mvn compile test
-mvn -Dtag=0.10.0 -DreleaseVersion=0.10.0 -DdevelopmentVersion=0.11.0-SNAPSHOT -U -B clean release:prepare
+mvn -Dtag=0.11.0 -DreleaseVersion=0.11.0 -DdevelopmentVersion=0.12.0-SNAPSHOT -U -B clean release:prepare
 
 git reset --hard
 git pull

@@ -33,6 +33,7 @@
 	<modules>
 		<module>fmv-cli</module>
 		<module>fmv-core</module>
+		<module>fmv-dependencies</module>
 		<module>fmv-ffmpeg</module>
 		<module>fmv-image</module>
 		<module>fmv-imagemagick</module>

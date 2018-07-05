@@ -20,10 +20,6 @@ import org.fagu.version.VersionParserManager;
 
 /**
  * @author f.agu
- */
-/**
- * @author Oodrive
- * @author f.agu
  * @created 5 juin 2017 09:57:00
  */
 public abstract class MSoftProvider extends SoftProvider {

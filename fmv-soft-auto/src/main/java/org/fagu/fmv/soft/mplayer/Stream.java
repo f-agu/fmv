@@ -6,7 +6,6 @@ import java.util.Map;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 5 juin 2017 13:28:15
  */
