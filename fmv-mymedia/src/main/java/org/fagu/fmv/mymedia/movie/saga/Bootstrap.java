@@ -34,6 +34,8 @@ public class Bootstrap {
 
 	private static final String LOG_FILE_PROPERTY = "fmv.movie.saga.logfile";
 
+	private Set<String> movieSet = new HashSet<>(Arrays.asList("avi", "mov", "mp4", "wmv", "mpg", "3gp", "flv", "ts", "mkv", "vob"));
+
 	private final Logger logger;
 
 	private final Map<String, File> movieNameMap;
@@ -101,13 +103,13 @@ public class Bootstrap {
 
 	// *******************
 
-	private static Map<String, File> findMovie(File folder, File destFolder) {
+	private Map<String, File> findMovie(File folder, File destFolder) {
 		Map<String, File> map = new HashMap<>();
 		findMovie(folder, map, destFolder);
 		return Collections.unmodifiableMap(map);
 	}
 
-	private static void findMovie(File file, Map<String, File> map, File destFolder) {
+	private void findMovie(File file, Map<String, File> map, File destFolder) {
 		File[] files = file.listFiles(ExcludeFMVFilefilter.INSTANCE);
 		if(files != null) {
 			for(File f : files) {
@@ -115,7 +117,10 @@ public class Bootstrap {
 					continue;
 				}
 				if(f.isFile()) {
-					map.put(FilenameUtils.getBaseName(f.getName()), f);
+					String extension = FilenameUtils.getExtension(f.getName());
+					if(extension != null && movieSet.contains(extension.toLowerCase())) {
+						map.put(FilenameUtils.getBaseName(f.getName()), f);
+					}
 				} else if(f.isDirectory()) {
 					findMovie(f, map, destFolder);
 				} else {
