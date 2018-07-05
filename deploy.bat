@@ -2,18 +2,21 @@
 
 rem set PWD=%~dp0
 rem set PWD=D:\tmp\fmv\fmv\
-set VERSION=0.7.6
+set VERSION=0.11.0
 
 set REPO_URL=https://nexus.oodrive.net/nexus/
-set REPO_LOCAL=%HOME%\.m2\repository\org\fagu\
+set REPO_LOCAL=%USERPROFILE%\.m2\repository\org\fagu\
 
 
+call:artefact fmv-dependencies
 call:artefact fmv-ffmpeg
 call:artefact fmv-imagemagick
 call:artefact fmv-media
 call:artefact fmv-parent
 call:artefact fmv-soft
 call:artefact fmv-soft-auto
+call:artefact fmv-soft-spring-boot-1.x
+call:artefact fmv-soft-spring-boot-2.x
 call:artefact fmv-utils
 call:artefact fmv-version
 
@@ -33,6 +36,7 @@ rem ---------------------
 
 :push_artefact
 if exist %1 (
+  echo "Send %1"
   curl --upload-file %1 %REPO_URL%content/repositories/releases/org/fagu/%2/%VERSION%/%~nx1
 ) 
 goto:eof
