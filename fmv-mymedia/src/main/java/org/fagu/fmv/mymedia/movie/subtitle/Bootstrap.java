@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
@@ -15,6 +13,8 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.Stream;
 import org.fagu.fmv.ffmpeg.metadatas.SubtitleStream;
 import org.fagu.fmv.ffmpeg.operation.InputProcessor;
+import org.fagu.fmv.media.FileType;
+import org.fagu.fmv.media.FileTypeUtils;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.mymedia.logger.Loggers;
@@ -30,8 +30,6 @@ public class Bootstrap {
 
 	private static final String LOG_FILE_PROPERTY = "fmv.movie.subtitle.logfile";
 
-	private Set<String> movieSet = new HashSet<>(Arrays.asList("avi", "mov", "mp4", "wmv", "mpg", "3gp", "flv", "ts", "mkv", "vob"));
-
 	public void extract(File rootFile) throws IOException {
 		try (Logger logger = openLogger(rootFile)) {
 
@@ -39,9 +37,8 @@ public class Bootstrap {
 			logger.log("#################### Root: " + rootFile.getAbsolutePath());
 			logger.log("");
 
-			Files.walk(rootFile.toPath()) //
-					.filter(p -> p.toFile().isFile()) //
-					.filter(p -> movieSet.contains(FilenameUtils.getExtension(p.toFile().getName()).toLowerCase()))
+			Files.walk(rootFile.toPath())
+					.filter(FileTypeUtils.with(FileType.VIDEO)::verify)
 					.forEach(p -> {
 						try {
 							File movieFile = p.toFile();

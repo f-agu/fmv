@@ -26,18 +26,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.mutable.MutableLong;
+import org.fagu.fmv.media.FileType;
+import org.fagu.fmv.media.FileTypeUtils;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.mymedia.utils.AppVersion;
@@ -54,29 +56,25 @@ public class Bootstrap {
 
 	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-	private Set<String> imageSet = new HashSet<>(Arrays.asList("jpg", "jpeg", "png", "tiff", "tif", "bmp", "psd", "tga"));
-
-	private Set<String> soundSet = new HashSet<>(Arrays.asList("mp3", "wma", "ogg", "m4a", "flac", "wav", "aac"));
-
-	private Set<String> movieSet = new HashSet<>(Arrays.asList("avi", "mov", "mp4", "wmv", "mpg", "3gp", "flv", "ts", "mkv", "vob"));
-
-	private Map<String, Supplier<Reducer>> reducerMap = new HashMap<>(4);
+	private Map<Predicate<Path>, Supplier<Reducer>> reducerMap = new HashMap<>(4);
 
 	/**
 	 *
 	 */
 	public Bootstrap() {
-		addReducer(IMReducer::new, imageSet);
-		addReducer(FFReducer::new, soundSet);
-		addReducer(FFReducer::new, movieSet);
+		addReducer(FileTypeUtils.with(FileType.IMAGE)::verify, IMReducer::new);
+		addReducer(FileTypeUtils.with(FileType.AUDIO)::verify, FFReducer::new);
+		addReducer(FileTypeUtils.with(FileType.VIDEO)::verify, FFReducer::new);
 	}
 
 	/**
 	 * @param reducer
 	 * @param extensions
 	 */
-	public void addReducer(Supplier<Reducer> reducer, Collection<String> extensions) {
-		extensions.forEach(s -> reducerMap.put(s.toLowerCase(), reducer));
+	public void addReducer(Predicate<Path> verifyPath, Supplier<Reducer> reducer) {
+		Objects.requireNonNull(verifyPath);
+		Objects.requireNonNull(reducer);
+		reducerMap.put(verifyPath, reducer);
 	}
 
 	/**

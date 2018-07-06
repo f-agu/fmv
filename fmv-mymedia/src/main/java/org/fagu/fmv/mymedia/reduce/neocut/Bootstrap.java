@@ -28,6 +28,9 @@ import java.util.function.BiConsumer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.fagu.fmv.media.FileType;
+import org.fagu.fmv.media.FileTypeUtils;
+import org.fagu.fmv.media.FileTypeUtils.FileIs;
 import org.fagu.fmv.mymedia.compare.ImageDiffPercent;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
@@ -46,8 +49,6 @@ public class Bootstrap implements Closeable {
 	private static final String PROPERTY_LOG_FILE_DEFAULT_NAME = "fmv-reduceneo.log";
 
 	private static final double MAX_PERCENT_NOT_SIMILAR = 5D;
-
-	private final Set<String> extensions = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("mp4", "avi", "mkv")));
 
 	private final Set<Time> times = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
 			Time.valueOf(0.5), Time.valueOf(1.5), Time.valueOf(3))));
@@ -146,7 +147,8 @@ public class Bootstrap implements Closeable {
 			// }
 			return;
 		}
-		File[] files = folderOrFile.listFiles(f -> f.isDirectory() || extensions.contains(FilenameUtils.getExtension(f.getName())));
+		FileIs verifyWith = FileTypeUtils.with(FileType.VIDEO);
+		File[] files = folderOrFile.listFiles(f -> f.isDirectory() || verifyWith.verify(f));
 		if(files == null) {
 			return;
 		}

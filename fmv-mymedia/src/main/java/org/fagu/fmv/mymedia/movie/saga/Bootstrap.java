@@ -15,6 +15,8 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.fagu.fmv.media.FileType;
+import org.fagu.fmv.media.FileTypeUtils;
 import org.fagu.fmv.mymedia.file.PlaceHolderRootFile;
 import org.fagu.fmv.mymedia.file.filter.ExcludeFMVFilefilter;
 import org.fagu.fmv.mymedia.logger.Logger;
@@ -33,8 +35,6 @@ import org.fagu.fmv.mymedia.utils.ScannerHelper;
 public class Bootstrap {
 
 	private static final String LOG_FILE_PROPERTY = "fmv.movie.saga.logfile";
-
-	private Set<String> movieSet = new HashSet<>(Arrays.asList("avi", "mov", "mp4", "wmv", "mpg", "3gp", "flv", "ts", "mkv", "vob"));
 
 	private final Logger logger;
 
@@ -116,15 +116,12 @@ public class Bootstrap {
 				if(f == destFolder) {
 					continue;
 				}
-				if(f.isFile()) {
-					String extension = FilenameUtils.getExtension(f.getName());
-					if(extension != null && movieSet.contains(extension.toLowerCase())) {
-						map.put(FilenameUtils.getBaseName(f.getName()), f);
-					}
+				if(FileTypeUtils.with(FileType.VIDEO).verify(f)) {
+					map.put(FilenameUtils.getBaseName(f.getName()), f);
 				} else if(f.isDirectory()) {
 					findMovie(f, map, destFolder);
 				} else {
-					throw new RuntimeException("Not implemented ! " + f);
+					// throw new RuntimeException("Not implemented ! " + f);
 				}
 			}
 		}

@@ -31,19 +31,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalInt;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.operation.Type;
+import org.fagu.fmv.media.FileType;
+import org.fagu.fmv.media.FileTypeUtils;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.mymedia.logger.Loggers;
@@ -85,8 +84,6 @@ import org.fagu.fmv.utils.IniFile;
 public class Bootstrap implements Closeable {
 
 	private static final String LOG_FILE_PROPERTY = "fmv.movie.list.logfile";
-
-	private static final Set<String> EXTENSIONS = getExtensions();
 
 	private final PrintStream printStream;
 
@@ -267,11 +264,7 @@ public class Bootstrap implements Closeable {
 			return;
 		}
 
-		String extension = FilenameUtils.getExtension(file.getName());
-		if(extension == null) {
-			return;
-		}
-		if( ! EXTENSIONS.contains(extension)) {
+		if( ! FileTypeUtils.with(FileType.VIDEO).verify(file)) {
 			return;
 		}
 
@@ -284,17 +277,6 @@ public class Bootstrap implements Closeable {
 		printStream.println(values.values().stream()
 				.map(StringUtils::defaultString)
 				.collect(Collectors.joining("\t")));
-	}
-
-	/**
-	 * @return
-	 */
-	private static Set<String> getExtensions() {
-		Set<String> set = new HashSet<>(4);
-		set.add("mp4");
-		set.add("avi");
-		set.add("mkv");
-		return Collections.unmodifiableSet(set);
 	}
 
 	/**
