@@ -6,6 +6,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.fagu.fmv.mymedia.logger.Loggers;
+import org.fagu.fmv.mymedia.movie.age.Ages;
+import org.fagu.fmv.mymedia.movie.age.AgesCache;
+import org.fagu.fmv.mymedia.movie.age.AgesFilm;
 import org.fagu.fmv.mymedia.movie.list.Column;
 import org.fagu.fmv.mymedia.movie.list.DataStore;
 import org.fagu.fmv.mymedia.movie.list.datatype.AgesDataType;
@@ -26,7 +30,7 @@ public abstract class AgeFilteredColumn implements Column {
 
 	static final AgesCache AGES_CACHE = AgesCache.getInstance();
 
-	static final AgesFilm AGES_FILM = new AgesFilm(AGES_CACHE);
+	static final AgesFilm AGES_FILM = new AgesFilm(Loggers.noOperation(), AGES_CACHE);
 
 	private static final AgesDataType AGES_DATA_TYPE = new AgesDataType(AGES_FILM);
 

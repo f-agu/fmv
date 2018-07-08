@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.mymedia.logger.Logger;
-import org.fagu.fmv.mymedia.movie.list.column.Saga;
+import org.fagu.fmv.mymedia.movie.saga.Saga;
 
 
 /**

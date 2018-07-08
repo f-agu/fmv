@@ -5,9 +5,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
+import org.fagu.fmv.mymedia.movie.age.Ages;
+import org.fagu.fmv.mymedia.movie.age.AgesFilm;
 import org.fagu.fmv.mymedia.movie.list.DataType;
-import org.fagu.fmv.mymedia.movie.list.column.Ages;
-import org.fagu.fmv.mymedia.movie.list.column.AgesFilm;
 
 
 /**

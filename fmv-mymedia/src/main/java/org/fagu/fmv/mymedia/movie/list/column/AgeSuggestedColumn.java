@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.fagu.fmv.mymedia.logger.Logger;
+import org.fagu.fmv.mymedia.movie.age.Ages;
 
 
 /**
@@ -28,7 +29,7 @@ public class AgeSuggestedColumn extends AgeFilteredColumn {
 
 	@Override
 	public void close() throws Exception {
-		Map<String, Optional<Ages>> notInCache = AGES_FILM.getNotInCache();
+		Map<String, Optional<Ages>> notInCache = AGES_FILM.getAfterSearchNotInCache();
 		if(notInCache.isEmpty()) {
 			return;
 		}

@@ -1,4 +1,4 @@
-package org.fagu.fmv.mymedia.movie.list.column;
+package org.fagu.fmv.mymedia.movie.age;
 
 /**
  * @author Utilisateur
