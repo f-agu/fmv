@@ -80,13 +80,31 @@ public class Bootstrap {
 				existingFiles.remove(destFile);
 				continue;
 			}
-			Files.createLink(destFile.toPath(), file.toPath());
+			createLink(destFile, file);
 		}
 		existingFiles.forEach(f -> {
 			if(ScannerHelper.yesNo("Delete " + f)) {
 				f.delete();
 			}
 		});
+	}
+
+	private void createLink(File linkFile, File existingFile) throws IOException {
+		Files.createLink(linkFile.toPath(), existingFile.toPath());
+
+		// subtitle
+		File existingSubtitleFile = getSubtitleFile(existingFile);
+		if(existingSubtitleFile.exists()) {
+			File linkSubtitleFile = getSubtitleFile(existingSubtitleFile);
+			if(linkSubtitleFile.exists() && ! linkSubtitleFile.delete()) {
+				logger.log("Unable to delete: " + linkSubtitleFile);
+			}
+			Files.createLink(linkSubtitleFile.toPath(), existingSubtitleFile.toPath());
+		}
+	}
+
+	private File getSubtitleFile(File file) {
+		return new File(file.getParentFile(), FilenameUtils.getBaseName(file.getName()) + ".srt");
 	}
 
 	private boolean isSimilar(File srcFile, File destFile) {

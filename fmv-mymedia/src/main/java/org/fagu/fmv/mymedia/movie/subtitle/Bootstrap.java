@@ -3,8 +3,11 @@ package org.fagu.fmv.mymedia.movie.subtitle;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
@@ -20,6 +23,7 @@ import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.mymedia.logger.Loggers;
 import org.fagu.fmv.mymedia.movie.LoggerFFExecListener;
 import org.fagu.fmv.mymedia.utils.AppVersion;
+import org.fagu.fmv.utils.IniFile;
 
 
 /**
@@ -38,7 +42,9 @@ public class Bootstrap {
 			logger.log("");
 
 			Files.walk(rootFile.toPath())
+					.filter(p -> accept(p.toFile().getParentFile()))
 					.filter(FileTypeUtils.with(FileType.VIDEO)::verify)
+					.filter(p -> ! getSubtitleOutputFile(p.toFile(), null).exists())
 					.forEach(p -> {
 						try {
 							File movieFile = p.toFile();
@@ -53,8 +59,30 @@ public class Bootstrap {
 
 	// ************************************
 
+	private boolean accept(File folder) {
+		File file = new File(folder, ".fmv-moviesubtitle");
+		if( ! file.exists()) {
+			return true;
+		}
+		try {
+			IniFile iniFile = IniFile.load(file);
+			return iniFile.contains("exclude", folder.getName());
+		} catch(IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private void extractSubtitle(Logger logger, File movieFile, MovieMetadatas metadatas) throws IOException {
-		List<SubtitleStream> subtitleStreams = metadatas.getSubtitleStreams();
+		List<SubtitleStream> subtitleStreams = metadatas.getSubtitleStreams().stream()
+				.filter(ss -> {
+					Optional<String> lngOpt = ss.language();
+					if( ! lngOpt.isPresent() || ! lngOpt.get().toLowerCase().contains("fr")) {
+						return false;
+					}
+					Optional<String> titleOpt = ss.title();
+					return titleOpt.isPresent() && titleOpt.get().toLowerCase().contains("forc");
+				})
+				.collect(Collectors.toList());
 		if(subtitleStreams.isEmpty()) {
 			return;
 		}
@@ -62,22 +90,40 @@ public class Bootstrap {
 		builder.hideBanner();
 		InputProcessor inputProcessor = builder.addMediaInputFile(movieFile);
 		logger.log("Extract for " + movieFile.getPath());
-		for(Stream stream : subtitleStreams) {
-			builder.addMediaOutputFile(getSubtitleOutputFile(movieFile, stream))
-					.map().streams(stream).input(inputProcessor);
+		List<File> files = new ArrayList<>();
+		if(subtitleStreams.size() == 1) {
+			File subFile = getSubtitleOutputFile(movieFile, null);
+			files.add(subFile);
+			builder.addMediaOutputFile(subFile)
+					.map().streams(subtitleStreams.get(0)).input(inputProcessor);
+		} else {
+			subtitleStreams.forEach(ss -> {
+				File subFile = getSubtitleOutputFile(movieFile, ss);
+				files.add(subFile);
+				builder.addMediaOutputFile(getSubtitleOutputFile(movieFile, ss))
+						.map().streams(ss).input(inputProcessor);
+			});
 		}
 
 		FFExecutor<Object> executor = builder.build();
 		executor.addListener(new LoggerFFExecListener(logger));
-		executor.execute();
+		try {
+			executor.execute();
+		} catch(IOException e) {
+			files.forEach(File::deleteOnExit);
+			throw e;
+		}
 	}
 
 	private File getSubtitleOutputFile(File srcFile, Stream subtitleStream) {
 		StringBuilder joiner = new StringBuilder("")
 				.append(FilenameUtils.getBaseName(srcFile.getName()));
-		subtitleStream.language().ifPresent(lg -> joiner.append('-').append(lg));
-		subtitleStream.title().ifPresent(t -> joiner.append('-').append(t));
-		joiner.append('-').append(subtitleStream.index()).append(".srt");
+		if(subtitleStream != null) {
+			subtitleStream.language().ifPresent(lg -> joiner.append('-').append(lg));
+			subtitleStream.title().ifPresent(t -> joiner.append('-').append(t));
+			joiner.append('-').append(subtitleStream.index());
+		}
+		joiner.append(".srt");
 		return new File(srcFile.getParentFile(), joiner.toString());
 	}
 
