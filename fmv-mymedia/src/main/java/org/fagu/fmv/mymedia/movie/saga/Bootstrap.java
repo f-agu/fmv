@@ -78,6 +78,7 @@ public class Bootstrap {
 					logger.log("Not similar files: " + file + " -> " + destFile);
 				}
 				existingFiles.remove(destFile);
+				createSubtitleLink(destFile, file);
 				continue;
 			}
 			createLink(destFile, file);
@@ -91,13 +92,20 @@ public class Bootstrap {
 
 	private void createLink(File linkFile, File existingFile) throws IOException {
 		Files.createLink(linkFile.toPath(), existingFile.toPath());
+		createSubtitleLink(linkFile, existingFile);
+	}
 
-		// subtitle
+	private void createSubtitleLink(File linkFile, File existingFile) throws IOException {
 		File existingSubtitleFile = getSubtitleFile(existingFile);
 		if(existingSubtitleFile.exists()) {
-			File linkSubtitleFile = getSubtitleFile(existingSubtitleFile);
-			if(linkSubtitleFile.exists() && ! linkSubtitleFile.delete()) {
-				logger.log("Unable to delete: " + linkSubtitleFile);
+			File linkSubtitleFile = getSubtitleFile(linkFile);
+			if(linkSubtitleFile.exists()) {
+				if(isSimilar(existingSubtitleFile, linkSubtitleFile)) {
+					return;
+				}
+				if( ! linkSubtitleFile.delete()) {
+					logger.log("Unable to delete: " + linkSubtitleFile);
+				}
 			}
 			Files.createLink(linkSubtitleFile.toPath(), existingSubtitleFile.toPath());
 		}
