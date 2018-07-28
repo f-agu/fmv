@@ -111,7 +111,7 @@ public class FFReducer extends AbstractReducer {
 
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
-			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\...\\....mkv"),
+			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\...\\.....mkv"),
 					"totqdf", Loggers.systemOut());
 		} catch(FMVExecuteException e) {
 			e.printStackTrace();
@@ -371,12 +371,17 @@ public class FFReducer extends AbstractReducer {
 		// subtitle
 		Collection<SubtitleStream> subtitleStreams = StreamOrder.sort(videoMetadatas.getSubtitleStreams());
 		for(Stream stream : subtitleStreams) {
-			File subtitleOutputFile = getSubtitleOutputFile(srcFile, stream);
-			logger.log("map[" + stream.index() + "] subtitle: " + stream + "  => " + subtitleOutputFile.getName());
 			outputProcessor.map().streams(stream).input(inputProcessor);
+			Optional<String> codecName = stream.codecName();
+			if(codecName.isPresent() && codecName.get().equals("subrip")) {
+				File subtitleOutputFile = getSubtitleOutputFile(srcFile, stream);
+				logger.log("map[" + stream.index() + "] subtitle: " + stream + "  => " + subtitleOutputFile.getName());
 
-			builder.addMediaOutputFile(subtitleOutputFile)
-					.map().streams(stream).input(inputProcessor);
+				builder.addMediaOutputFile(subtitleOutputFile)
+						.map().streams(stream).input(inputProcessor);
+			} else {
+				logger.log("map[" + stream.index() + "] subtitle: " + stream + " (" + stream.codecName().orElse("?") + ")");
+			}
 		}
 		// other stream (Apple... again bullshit)
 		// for (Stream stream : videoMetadatas.getStreams()) {

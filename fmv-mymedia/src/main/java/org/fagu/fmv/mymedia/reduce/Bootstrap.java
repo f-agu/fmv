@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -94,11 +95,14 @@ public class Bootstrap {
 				.filter(p -> p.toFile().isFile()) //
 				.forEach(p -> {
 					logger.log("Reduce " + p);
-					Supplier<Reducer> supplier = reducerMap.get(FilenameUtils.getExtension(p.getName(p.getNameCount() - 1).toString()).toLowerCase());
-					if(supplier != null) {
+					Optional<Supplier<Reducer>> firstSupplierReducer = reducerMap.entrySet().stream()
+							.filter(e -> e.getKey().test(p))
+							.map(Map.Entry::getValue)
+							.findFirst();
+					if(firstSupplierReducer.isPresent()) {
 						File srcFile = p.toFile();
 						Reduced reduced = null;
-						try (Reducer reducer = supplier.get()) {
+						try (Reducer reducer = firstSupplierReducer.get().get()) {
 							logger.log("Reducer found: " + reducer.getName());
 
 							try {
