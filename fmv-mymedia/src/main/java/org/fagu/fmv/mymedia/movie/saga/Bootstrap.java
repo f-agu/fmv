@@ -56,7 +56,7 @@ public class Bootstrap {
 		Set<Movie> movies = saga.getMovies();
 		int maxLength = Integer.toString(movies.size()).length();
 		File sagaRoot = new File(destFolder, saga.getName());
-		Set<File> existingFiles = filesToSet(sagaRoot.listFiles());
+		Set<File> existingFiles = filesToSet(sagaRoot.listFiles(FileTypeUtils.with(FileType.VIDEO)::verify));
 		FileUtils.forceMkdir(sagaRoot);
 		for(Movie movie : movies) {
 			++index;
