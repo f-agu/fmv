@@ -161,7 +161,7 @@ public class SourceSource extends AbstractSource {
 		if(source.getFileType() == FileType.IMAGE) {
 			// TODO
 		}
-		return null;
+		return Optional.empty();
 	}
 
 }

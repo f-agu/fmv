@@ -31,9 +31,6 @@ import org.fagu.fmv.ffmpeg.operation.OperationListener;
  */
 public class FFUtils {
 
-	/**
-	 *
-	 */
 	private FFUtils() {}
 
 	/**

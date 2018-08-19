@@ -40,6 +40,7 @@ import org.fagu.fmv.utils.media.Size;
 import org.fagu.fmv.utils.time.Duration;
 import org.fagu.fmv.utils.time.Time;
 
+
 /**
  * @author f.agu
  */
@@ -77,11 +78,10 @@ public abstract class Processor<P extends Processor<?>> {
 	}
 
 	/**
-	 * When used as an input option (before -i), limit the duration of data read
-	 * from the input file.
+	 * When used as an input option (before -i), limit the duration of data read from the input file.
 	 *
-	 * When used as an output option (before an output filename), stop writing the
-	 * output after its duration reaches duration.
+	 * When used as an output option (before an output filename), stop writing the output after its duration reaches
+	 * duration.
 	 *
 	 * duration may be a number in seconds, or in hh:mm:ss[.xxx] form.
 	 *
@@ -97,15 +97,13 @@ public abstract class Processor<P extends Processor<?>> {
 	}
 
 	/**
-	 * When used as an input option (before -i), seeks in this input file to
-	 * position. Note the in most formats it is not possible to seek exactly, so
-	 * ffmpeg will seek to the closest seek point before position. When transcoding
-	 * and -accurate_seek is enabled (the default), this extra segment between the
-	 * seek point and position will be decoded and discarded. When doing stream copy
-	 * or when -noaccurate_seek is used, it will be preserved.
+	 * When used as an input option (before -i), seeks in this input file to position. Note the in most formats it is
+	 * not possible to seek exactly, so ffmpeg will seek to the closest seek point before position. When transcoding and
+	 * -accurate_seek is enabled (the default), this extra segment between the seek point and position will be decoded
+	 * and discarded. When doing stream copy or when -noaccurate_seek is used, it will be preserved.
 	 *
-	 * When used as an output option (before an output filename), decodes but
-	 * discards input until the timestamps reach position.
+	 * When used as an output option (before an output filename), decodes but discards input until the timestamps reach
+	 * position.
 	 *
 	 * position may be either in seconds or in hh:mm:ss[.xxx] form.
 	 *
@@ -121,13 +119,11 @@ public abstract class Processor<P extends Processor<?>> {
 	/**
 	 * Set frame size.
 	 *
-	 * As an input option, this is a shortcut for the video_size private option,
-	 * recognized by some demuxers for which the frame size is either not stored in
-	 * the file or is configurable – e.g. raw video or video grabbers.
+	 * As an input option, this is a shortcut for the video_size private option, recognized by some demuxers for which
+	 * the frame size is either not stored in the file or is configurable – e.g. raw video or video grabbers.
 	 *
-	 * As an output option, this inserts the scale video filter to the end of the
-	 * corresponding filtergraph. Please use the scale filter directly to insert it
-	 * at the beginning or some other place.
+	 * As an output option, this inserts the scale video filter to the end of the corresponding filtergraph. Please use
+	 * the scale filter directly to insert it at the beginning or some other place.
 	 *
 	 * The format is ‘wxh’ (default - same as source).
 	 *
@@ -151,14 +147,11 @@ public abstract class Processor<P extends Processor<?>> {
 	/**
 	 * Set frame rate (Hz value, fraction or abbreviation).
 	 *
-	 * As an input option, ignore any timestamps stored in the file and instead
-	 * generate timestamps assuming constant frame rate fps. This is not the same as
-	 * the -framerate option used for some input formats like image2 or v4l2 (it
-	 * used to be the same in older versions of FFmpeg). If in doubt use -framerate
-	 * instead of the input option -r.
+	 * As an input option, ignore any timestamps stored in the file and instead generate timestamps assuming constant
+	 * frame rate fps. This is not the same as the -framerate option used for some input formats like image2 or v4l2 (it
+	 * used to be the same in older versions of FFmpeg). If in doubt use -framerate instead of the input option -r.
 	 *
-	 * As an output option, duplicate or drop input frames to achieve constant
-	 * output frame rate fps.
+	 * As an output option, duplicate or drop input frames to achieve constant output frame rate fps.
 	 *
 	 * @param type
 	 * @param frameRate
@@ -174,7 +167,7 @@ public abstract class Processor<P extends Processor<?>> {
 	 * @return
 	 */
 	public P format(String format) {
-		if (StringUtils.isNotBlank(format)) {
+		if(StringUtils.isNotBlank(format)) {
 			add(Parameter.before(ioEntity, "-f", format));
 		}
 		return getThis();
@@ -206,10 +199,9 @@ public abstract class Processor<P extends Processor<?>> {
 	}
 
 	/**
-	 * Select an encoder (when used before an output file) or a decoder (when used
-	 * before an input file) for one or more streams. codec is the name of a
-	 * decoder/encoder or a special value copy (output only) to indicate that the
-	 * stream is not to be re-encoded.
+	 * Select an encoder (when used before an output file) or a decoder (when used before an input file) for one or more
+	 * streams. codec is the name of a decoder/encoder or a special value copy (output only) to indicate that the stream
+	 * is not to be re-encoded.
 	 *
 	 * @param type
 	 * @param codec
@@ -225,12 +217,12 @@ public abstract class Processor<P extends Processor<?>> {
 	 * @return
 	 */
 	public P codec(Coder<?> coder) {
-		if (!coderMap.containsKeys(coder.name(), coder.type())) {
+		if( ! coderMap.containsKeys(coder.name(), coder.type())) {
 			coderMap.add(coder.name(), coder.type(), coder);
 			codec(coder.type(), coder.name());
 			coder.eventAdded(this, ioEntity);
-			if (coder instanceof LibLog) {
-				ioParameters.getOperation().add((LibLog) coder);
+			if(coder instanceof LibLog) {
+				ioParameters.getOperation().add((LibLog)coder);
 			}
 		}
 		return getThis();
@@ -252,7 +244,7 @@ public abstract class Processor<P extends Processor<?>> {
 	@SuppressWarnings("unchecked")
 	public <C extends Coder<C>> Stream<C> getCoders(Class<C> coderClass) {
 		return coderMap.values().stream().flatMap(map -> map.entrySet().stream()).map(Entry::getValue)
-				.filter(c -> coderClass.isAssignableFrom(c.getClass())).map(c -> (C) c);
+				.filter(c -> coderClass.isAssignableFrom(c.getClass())).map(c -> (C)c);
 	}
 
 	/**
@@ -275,8 +267,7 @@ public abstract class Processor<P extends Processor<?>> {
 	}
 
 	/**
-	 * Set the number of times to loop the output. Use -1 for no loop, 0 for looping
-	 * indefinitely (default).
+	 * Set the number of times to loop the output. Use -1 for no loop, 0 for looping indefinitely (default).
 	 *
 	 * @param count
 	 * @return
@@ -290,9 +281,17 @@ public abstract class Processor<P extends Processor<?>> {
 	 * @param pixelFormat
 	 * @return
 	 */
-	public P pixelFormat(PixelFormat pixelFormat) {
-		add(Parameter.before(ioEntity, "-pix_fmt", pixelFormat.toString()));
+	public P pixelFormat(String pixelFormat) {
+		add(Parameter.before(ioEntity, "-pix_fmt", pixelFormat));
 		return getThis();
+	}
+
+	/**
+	 * @param pixelFormat
+	 * @return
+	 */
+	public P pixelFormat(PixelFormat pixelFormat) {
+		return pixelFormat(pixelFormat.toString());
 	}
 
 	/**
@@ -352,6 +351,6 @@ public abstract class Processor<P extends Processor<?>> {
 	 */
 	@SuppressWarnings("unchecked")
 	private P getThis() {
-		return (P) this;
+		return (P)this;
 	}
 }
