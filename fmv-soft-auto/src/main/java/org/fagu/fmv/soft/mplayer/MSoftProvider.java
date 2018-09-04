@@ -15,6 +15,7 @@ import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
+import org.fagu.fmv.soft.utils.SearchPropertiesHelper;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.version.VersionParserManager;
 
@@ -24,6 +25,12 @@ import org.fagu.version.VersionParserManager;
  * @created 5 juin 2017 09:57:00
  */
 public abstract class MSoftProvider extends SoftProvider {
+
+	private static final String PROP_VERSION_PATTERN = "soft.mplayer.search.versionPattern";
+
+	private static final String PROP_VERSION_SOFT_PATTERN = "soft.mplayer.${soft.name}.search.versionPattern";
+
+	private static final String DEFAULT_SUFFIX_PATTERN_VERSION = "${soft.name} sherpya-r(\\d+)+.*-[\\d\\.]+ \\(C\\).*";
 
 	/**
 	 * @param name
@@ -47,7 +54,9 @@ public abstract class MSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		Pattern winPattern = Pattern.compile(getName() + " sherpya-r(\\d+)+.*-[\\d\\.]+ \\(C\\).*", Pattern.CASE_INSENSITIVE);
+		final Pattern winPattern = Pattern.compile(new SearchPropertiesHelper(searchProperties, getName())
+				.getOrDefault(DEFAULT_SUFFIX_PATTERN_VERSION, PROP_VERSION_SOFT_PATTERN, PROP_VERSION_PATTERN),
+				Pattern.CASE_INSENSITIVE);
 		return prepareSoftFoundFactory()
 				.withoutParameter()
 				.parseVersion(line -> {

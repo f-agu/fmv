@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 
 /**
- * @author Utilisateur
+ * @author f.agu
  * @created 7 avr. 2018 14:09:58
  */
 public abstract class InfoBase implements ParsableType {

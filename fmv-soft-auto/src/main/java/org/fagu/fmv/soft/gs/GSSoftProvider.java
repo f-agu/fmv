@@ -8,9 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
@@ -24,6 +23,8 @@ import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.gs.exception.GSExceptionKnownAnalyzer;
+import org.fagu.fmv.soft.utils.SearchPropertiesHelper;
+import org.fagu.fmv.soft.utils.SearchPropertiesHelper.SearchMatching;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
@@ -64,26 +65,19 @@ public class GSSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		final Pattern versionPattern = Pattern.compile(getPattern(searchProperties, PROP_VERSION_PATTERN, DEFAULT_PATTERN_VERSION));
+		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, getName())
+				.forMatching(DEFAULT_PATTERN_VERSION, PROP_VERSION_PATTERN);
 		return prepareSoftFoundFactory()
 				.withParameters("-version", "-q")
-				.parseVersionDate(line -> {
-					Matcher matcher = versionPattern.matcher(line);
-					Version version = null;
-					if(matcher.matches()) {
-						version = VersionParserManager.parse(matcher.group(1));
-						Date date = null;
-						System.out.println(matcher.groupCount());
-						for(int i = 0; i <= matcher.groupCount(); i++) {
-							System.out.println(i + " : " + matcher.group(i));
-						}
-						if(matcher.groupCount() > 1) {
-							date = parseDate(searchProperties, matcher.group(2));
-						}
-						return new VersionDate(version, date);
+				.parseVersionDate(line -> searchMatching.ifMatches(line, matcher -> {
+					Version version = VersionParserManager.parse(matcher.group(1));
+					Date date = null;
+					if(matcher.groupCount() > 1) {
+						date = parseDate(searchProperties, matcher.group(2));
 					}
-					return null;
+					return Optional.of(new VersionDate(version, date));
 				})
+						.orElse(null))
 				.build();
 	}
 
@@ -145,25 +139,19 @@ public class GSSoftProvider extends SoftProvider {
 
 	// *****************************************************
 
-	private String getPattern(Properties searchProperties, String code, String defaultValue) {
-		if(searchProperties == null) {
-			return defaultValue;
-		}
-		return (String)searchProperties.getOrDefault(code, defaultValue);
-	}
-
 	private Date parseDate(Properties searchProperties, String remainLine) {
-		Pattern pattern = Pattern.compile(getPattern(searchProperties, PROP_DATE_PATTERN, DEFAULT_PATTERN_DATE));
-		Matcher matcher = pattern.matcher(remainLine);
-		if(matcher.matches()) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				return dateFormat.parse(matcher.group(1));
-			} catch(Exception e) {
-				// ignore
-			}
-		}
-		return null;
+		return new SearchPropertiesHelper(searchProperties, getName())
+				.forMatching(DEFAULT_PATTERN_DATE, PROP_DATE_PATTERN)
+				.ifMatches(remainLine, matcher -> {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					try {
+						return Optional.ofNullable(dateFormat.parse(matcher.group(1)));
+					} catch(Exception e) {
+						// ignore
+					}
+					return Optional.empty();
+				})
+				.orElse(null);
 	}
 
 }

@@ -18,6 +18,7 @@ import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
+import org.fagu.fmv.soft.utils.SearchPropertiesHelper;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.version.VersionParserManager;
 
@@ -26,6 +27,10 @@ import org.fagu.version.VersionParserManager;
  * @author f.agu
  */
 public class JavaSoftProvider extends SoftProvider {
+
+	private static final String PROP_VERSION_PATTERN = "soft.java.search.versionPattern";
+
+	private static final String DEFAULT_PATTERN_VERSION = "(.*) version \"(.*)\"";
 
 	public static final String NAME = "java";
 
@@ -49,7 +54,8 @@ public class JavaSoftProvider extends SoftProvider {
 	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		final Pattern pattern = Pattern.compile("(.*) version \"(.*)\"");
+		final Pattern pattern = Pattern.compile(new SearchPropertiesHelper(searchProperties, getName())
+				.getOrDefault(DEFAULT_PATTERN_VERSION, PROP_VERSION_PATTERN));
 		return prepareSoftFoundFactory()
 				.withParameters("-version")
 				.parseVersion(line -> {

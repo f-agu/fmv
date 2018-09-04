@@ -4,7 +4,7 @@ import java.util.Map;
 
 
 /**
- * @author Utilisateur
+ * @author f.agu
  * @created 7 avr. 2018 14:16:16
  */
 public class TextInfo extends InfoBase {

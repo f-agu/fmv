@@ -22,7 +22,7 @@ import org.fagu.fmv.soft.exec.ReadLine;
 
 
 /**
- * @author Utilisateur
+ * @author f.agu
  * @created 7 avr. 2018 14:06:28
  */
 public class MediaInfoExtractor {

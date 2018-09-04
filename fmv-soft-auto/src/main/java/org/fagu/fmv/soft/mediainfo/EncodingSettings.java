@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 
 /**
- * @author Utilisateur
+ * @author f.agu
  * @created 7 avr. 2018 15:04:53
  */
 public class EncodingSettings implements ParsableType {

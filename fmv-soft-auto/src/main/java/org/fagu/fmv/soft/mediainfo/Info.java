@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * @author Utilisateur
+ * @author f.agu
  * @created 7 avr. 2018 14:15:55
  */
 public class Info {

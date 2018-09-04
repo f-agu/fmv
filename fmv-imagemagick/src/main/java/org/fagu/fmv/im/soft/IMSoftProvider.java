@@ -48,6 +48,8 @@ import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
+import org.fagu.fmv.soft.utils.SearchPropertiesHelper;
+import org.fagu.fmv.soft.utils.SearchPropertiesHelper.SearchMatching;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
@@ -60,7 +62,11 @@ public abstract class IMSoftProvider extends SoftProvider {
 
 	private static final String PROP_VERSION_PATTERN = "soft.im.search.versionPattern";
 
+	private static final String PROP_VERSION_SOFT_PATTERN = "soft.im.${soft.name}.search.versionPattern";
+
 	private static final String PROP_DATE_PATTERN = "soft.gs.search.datePattern";
+
+	private static final String PROP_DATE_SOFT_PATTERN = "soft.gs.${soft.name}.search.datePattern";
 
 	private static final String SOFT_MAGICK_NAME = "magick";
 
@@ -83,21 +89,19 @@ public abstract class IMSoftProvider extends SoftProvider {
 
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		Pattern versionPattern = Pattern.compile(getPattern(searchProperties, PROP_VERSION_PATTERN, DEFAULT_PATTERN_VERSION));
+		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, getName())
+				.forMatching(DEFAULT_PATTERN_VERSION, PROP_VERSION_SOFT_PATTERN, PROP_VERSION_PATTERN);
 		return prepareSoftFoundFactory()
 				.withParameters("-version")
-				.parseVersionDate(line -> {
-					Matcher matcher = versionPattern.matcher(line);
-					if(matcher.matches()) {
-						Version version = VersionParserManager.parse(matcher.group(1));
-						Date date = null;
-						if(matcher.groupCount() > 1) {
-							date = parseDate(searchProperties, matcher.group(2));
-						}
-						return new VersionDate(version, date);
+				.parseVersionDate(line -> searchMatching.ifMatches(line, matcher -> {
+					Version version = VersionParserManager.parse(matcher.group(1));
+					Date date = null;
+					if(matcher.groupCount() > 1) {
+						date = parseDate(searchProperties, matcher.group(2));
 					}
-					return null;
+					return Optional.of(new VersionDate(version, date));
 				})
+						.orElse(null))
 				.build();
 	}
 
@@ -152,15 +156,9 @@ public abstract class IMSoftProvider extends SoftProvider {
 
 	// ******************************************************
 
-	private String getPattern(Properties searchProperties, String code, String defaultValue) {
-		if(searchProperties == null) {
-			return defaultValue;
-		}
-		return (String)searchProperties.getOrDefault(code, defaultValue);
-	}
-
 	private Date parseDate(Properties searchProperties, String remainLine) {
-		Pattern pattern = Pattern.compile(getPattern(searchProperties, PROP_DATE_PATTERN, DEFAULT_PATTERN_DATE_1));
+		SearchPropertiesHelper searchPropertiesHelper = new SearchPropertiesHelper(searchProperties, getName());
+		Pattern pattern = Pattern.compile(searchPropertiesHelper.getOrDefault(DEFAULT_PATTERN_DATE_1, PROP_DATE_SOFT_PATTERN, PROP_DATE_PATTERN));
 		Matcher matcher = pattern.matcher(remainLine);
 		if(matcher.matches()) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
