@@ -32,6 +32,7 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
+import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
 import org.junit.Test;
 
@@ -41,14 +42,6 @@ import org.junit.Test;
  */
 public class IMInfoTestCase {
 
-	/**
-	 *
-	 */
-	public IMInfoTestCase() {}
-
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testParse_firstLines() throws IOException {
 		assertInfo("Version: ImageMagick 6.6.0-4 2012-05-02 Q16 http://www.imagemagick.org", new Version(6, 6, 0, 4), d(2012, 5, 2), "6.6.0.4");
@@ -58,11 +51,10 @@ public class IMInfoTestCase {
 				0), d(2015, 9, 10), "6.9.2.0");
 		assertInfo("Version: ImageMagick 6.9.2-1 Q16 x86_64 2015-09-18 http://www.imagemagick.org", new Version(6, 9, 2,
 				1), d(2015, 9, 18), "6.9.2.1");
+		assertInfo("Version: ImageMagick 6.9.7-4 Q16 x86_64 20170114 http://www.imagemagick.org", new Version(6, 9, 7, 4), d(2017, 01, 14),
+				"6.9.7.4");
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testParseOnWindows() throws IOException {
 		Parser parser = newParser();
@@ -73,9 +65,6 @@ public class IMInfoTestCase {
 		assertInfo(parser, new Version(6, 8, 7, 1), d(2013, 10, 17), "6.8.7.1");
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testParseOnMac() throws IOException {
 		Parser parser = newParser();
@@ -90,19 +79,12 @@ public class IMInfoTestCase {
 
 	// *******************************************************
 
-	/**
-	 * @return
-	 */
 	private Parser newParser() {
 		ConvertSoftProvider softProvider = new ConvertSoftProvider();
-		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory()).getParserFactory();
+		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory(ImmutableProperties.of())).getParserFactory();
 		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
-	/**
-	 * @param strDate
-	 * @return
-	 */
 	private Date d(int year, int month, int day) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(year, month - 1, day, 0, 0, 0);
@@ -110,26 +92,12 @@ public class IMInfoTestCase {
 		return calendar.getTime();
 	}
 
-	/**
-	 * @param firstLine
-	 * @param expectedVersion
-	 * @param expectedDate
-	 * @param expectedInfo
-	 * @throws IOException
-	 */
 	private void assertInfo(String firstLine, Version expectedVersion, Date expectedDate, String expectedInfo) throws IOException {
 		Parser parser = newParser();
 		parser.readLine(firstLine);
 		assertInfo(parser, expectedVersion, expectedDate, expectedInfo);
 	}
 
-	/**
-	 * @param firstLine
-	 * @param expectedVersion
-	 * @param expectedDate
-	 * @param expectedInfo
-	 * @throws IOException
-	 */
 	private void assertInfo(Parser parser, Version expectedVersion, Date expectedDate, String expectedInfo) throws IOException {
 		SoftFound softFound = parser.closeAndParse("", 0);
 		VersionDateSoftInfo imInfo = (VersionDateSoftInfo)softFound.getSoftInfo();

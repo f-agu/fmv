@@ -23,6 +23,9 @@ package org.fagu.fmv.soft.find;
 import java.util.Iterator;
 import java.util.NavigableSet;
 import java.util.Objects;
+import java.util.Properties;
+
+import org.fagu.fmv.soft.utils.ImmutableProperties;
 
 
 /**
@@ -36,15 +39,19 @@ public class Founds implements Iterable<SoftFound> {
 
 	private final SoftPolicy softPolicy;
 
+	private final Properties searchProperties;
+
 	/**
 	 * @param softName
 	 * @param founds
 	 * @param softPolicy
+	 * @param searchProperties
 	 */
-	public Founds(String softName, NavigableSet<SoftFound> founds, SoftPolicy softPolicy) {
+	public Founds(String softName, NavigableSet<SoftFound> founds, SoftPolicy softPolicy, Properties searchProperties) {
 		this.softName = Objects.requireNonNull(softName);
 		this.foundSet = Objects.requireNonNull(founds);
 		this.softPolicy = softPolicy;
+		this.searchProperties = ImmutableProperties.copyOf(searchProperties);
 	}
 
 	/**
@@ -96,6 +103,13 @@ public class Founds implements Iterable<SoftFound> {
 	 */
 	public SoftPolicy getSoftPolicy() {
 		return softPolicy;
+	}
+
+	/**
+	 * @return
+	 */
+	public Properties getSearchProperties() {
+		return searchProperties;
 	}
 
 	/**

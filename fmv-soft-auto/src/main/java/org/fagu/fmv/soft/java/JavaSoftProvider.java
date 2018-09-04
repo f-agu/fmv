@@ -5,6 +5,7 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,10 +45,10 @@ public class JavaSoftProvider extends SoftProvider {
 	}
 
 	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory()
+	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
 	 */
 	@Override
-	public SoftFoundFactory createSoftFoundFactory() {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		final Pattern pattern = Pattern.compile("(.*) version \"(.*)\"");
 		return prepareSoftFoundFactory()
 				.withParameters("-version")

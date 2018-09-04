@@ -31,6 +31,7 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
+import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -86,7 +87,7 @@ public class JavaSoftProviderTestCase {
 	 */
 	private Parser newParser() {
 		JavaSoftProvider softProvider = new JavaSoftProvider();
-		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory()).getParserFactory();
+		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory(ImmutableProperties.of())).getParserFactory();
 		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 

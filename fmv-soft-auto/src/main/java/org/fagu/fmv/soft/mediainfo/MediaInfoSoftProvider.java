@@ -2,6 +2,7 @@ package org.fagu.fmv.soft.mediainfo;
 
 import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,10 +41,10 @@ public class MediaInfoSoftProvider extends SoftProvider {
 	}
 
 	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory()
+	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
 	 */
 	@Override
-	public SoftFoundFactory createSoftFoundFactory() {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		final Pattern pattern = Pattern.compile("MediaInfoLib \\- v([0-9\\.\\-]+)");
 		return prepareSoftFoundFactory()
 				.withParameters("--Version")

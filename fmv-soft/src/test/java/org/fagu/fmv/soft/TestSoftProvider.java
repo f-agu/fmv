@@ -21,6 +21,7 @@ package org.fagu.fmv.soft;
  */
 
 import java.util.Collections;
+import java.util.Properties;
 
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
@@ -33,41 +34,26 @@ import org.fagu.fmv.soft.find.SoftProvider;
  */
 public class TestSoftProvider extends SoftProvider {
 
-	/**
-	 * @param name
-	 */
 	public TestSoftProvider(String name) {
 		super(name, null);
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory()
-	 */
 	@Override
-	public SoftFoundFactory createSoftFoundFactory() {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		return null;
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftPolicy()
-	 */
 	@Override
 	public SoftPolicy getSoftPolicy() {
 		return null;
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#search()
-	 */
 	@Override
 	public Soft search() {
 		String softName = "test";
-		return new Soft(new Founds(softName, Collections.emptyNavigableSet(), null), this);
+		return new Soft(new Founds(softName, Collections.emptyNavigableSet(), null, null), this);
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#toString()
-	 */
 	@Override
 	public String toString() {
 		return getClass().getSimpleName();

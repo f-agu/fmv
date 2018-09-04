@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -82,10 +83,10 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	}
 
 	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory()
+	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
 	 */
 	@Override
-	public SoftFoundFactory createSoftFoundFactory() {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		return prepareSoftFoundFactory()
 				.withParameters("-v")
 				.parseFactory((file, softPolicy) -> createParser(file))

@@ -31,6 +31,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,10 +73,10 @@ public abstract class FFSoftProvider extends SoftProvider {
 	}
 
 	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory()
+	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
 	 */
 	@Override
-	public SoftFoundFactory createSoftFoundFactory() {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		return prepareSoftFoundFactory()
 				.withParameters("-version")
 				.parseFactory((file, softPolicy) -> createParser(file))

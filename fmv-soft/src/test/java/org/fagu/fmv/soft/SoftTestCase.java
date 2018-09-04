@@ -42,11 +42,6 @@ import org.junit.Test;
  */
 public class SoftTestCase {
 
-	/**
-	 *
-	 */
-	public SoftTestCase() {}
-
 	@Test
 	@Ignore
 	public void test1() throws Exception {

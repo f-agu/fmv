@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -35,6 +36,7 @@ import org.fagu.fmv.soft.SoftSearch;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryPrepare;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
+import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
 
 
@@ -78,9 +80,10 @@ public abstract class SoftProvider {
 	// --------------------------------------
 
 	/**
+	 * @param searchProperties
 	 * @return
 	 */
-	public abstract SoftFoundFactory createSoftFoundFactory();
+	public abstract SoftFoundFactory createSoftFoundFactory(Properties searchProperties);
 
 	// --------------------------------------
 
@@ -100,6 +103,7 @@ public abstract class SoftProvider {
 	}
 
 	/**
+	 * @param searchProperties
 	 * @return
 	 */
 	public Soft search() {
@@ -108,6 +112,7 @@ public abstract class SoftProvider {
 
 	/**
 	 * @param minVersion
+	 * @param searchProperties
 	 * @return
 	 */
 	public Soft searchMinVersion(Version minVersion) {
@@ -123,7 +128,7 @@ public abstract class SoftProvider {
 		if(softSearchConsumer != null) {
 			softSearchConsumer.accept(softSearch);
 		}
-		return softSearch.search(createSoftFoundFactory());
+		return softSearch.search(createSoftFoundFactory(ImmutableProperties.of()));
 	}
 
 	/**

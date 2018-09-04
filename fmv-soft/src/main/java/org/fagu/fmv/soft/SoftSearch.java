@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.function.Function;
 
@@ -35,6 +36,8 @@ public class SoftSearch {
 	private List<SoftFindListener> softFindListeners;
 
 	private SoftProvider softProvider;
+
+	private Properties searchProperties;
 
 	/**
 	 * @param softProvider
@@ -109,34 +112,28 @@ public class SoftSearch {
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
+	public SoftSearch withProperties(Properties searchProperties) {
+		this.searchProperties = searchProperties;
+		return this;
+	}
+
 	public Soft search() {
 		SoftLocator locator = getLocator();
-		Founds founds = locator.find();
+		Founds founds = locator.find(searchProperties);
 		return createAndfireEventFound(founds, locator);
 	}
 
-	/**
-	 * @param softTester
-	 * @return
-	 */
 	public Soft search(SoftTester softTester) {
 		checkUsed();
 		SoftLocator locator = getLocator();
-		Founds founds = locator.find(softTester);
+		Founds founds = locator.find(searchProperties, softTester);
 		return createAndfireEventFound(founds, locator);
 	}
 
-	/**
-	 * @param softFoundFactory
-	 * @return
-	 */
 	public Soft search(SoftFoundFactory softFoundFactory) {
 		checkUsed();
 		SoftLocator locator = getLocator();
-		Founds founds = locator.find((file, loc, softPol) -> {
+		Founds founds = locator.find(searchProperties, (file, loc, softPol) -> {
 			try {
 				SoftFound softFound = softFoundFactory.create(file, loc, softPol);
 				if(softFound == null) {

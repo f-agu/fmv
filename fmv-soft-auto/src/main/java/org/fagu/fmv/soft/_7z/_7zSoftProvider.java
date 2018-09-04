@@ -2,6 +2,7 @@ package org.fagu.fmv.soft._7z;
 
 import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,10 +40,10 @@ public class _7zSoftProvider extends SoftProvider {
 	}
 
 	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory()
+	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
 	 */
 	@Override
-	public SoftFoundFactory createSoftFoundFactory() {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		// 7-Zip [64] 16.00 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-10
 		final Pattern pattern = Pattern.compile("7-Zip \\[\\d+\\] (\\d+\\.\\d+) \\:.*");
 		return prepareSoftFoundFactory()

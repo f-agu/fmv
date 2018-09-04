@@ -23,6 +23,7 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
  */
 
 import java.io.File;
+import java.util.Properties;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -58,10 +59,10 @@ public class VLCSoftProvider extends SoftProvider {
 	}
 
 	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory()
+	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
 	 */
 	@Override
-	public SoftFoundFactory createSoftFoundFactory() {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		if(SystemUtils.IS_OS_WINDOWS) {
 			return SoftOnWindows.createSoftFoundFactory(getName());
 		}

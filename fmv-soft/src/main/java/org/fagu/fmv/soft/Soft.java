@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -48,6 +49,7 @@ import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftInfo;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
+import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.fmv.utils.order.OrderComparator;
 
 
@@ -62,8 +64,11 @@ public class Soft {
 
 	private final SoftProvider softProvider;
 
+	private final Properties searchProperties;
+
 	public Soft(Founds founds, SoftProvider softProvider) {
 		this.founds = Objects.requireNonNull(founds);
+		this.searchProperties = ImmutableProperties.copyOf(founds.getSearchProperties());
 		this.softProvider = Objects.requireNonNull(softProvider);
 	}
 
@@ -108,18 +113,14 @@ public class Soft {
 		SoftProvider softProvider = new SoftProvider(file.getName(), null) {
 
 			@Override
-			public SoftFoundFactory createSoftFoundFactory() {
+			public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 				throw new RuntimeException("Not available !");
 			}
 		};
 		TreeSet<SoftFound> founds = new TreeSet<>(Collections.singleton(SoftFound.found(file)));
-		return new Soft(new Founds(softProvider.getName(), founds, null), softProvider);
+		return new Soft(new Founds(softProvider.getName(), founds, null, null), softProvider);
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static Soft search(String name) {
 		Soft soft = SOFT_NAME_CACHE.get(name);
 		if(soft != null) {
@@ -135,10 +136,6 @@ public class Soft {
 		return soft;
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static Soft search(SoftProvider softProvider) {
 		Soft soft = SOFT_NAME_CACHE.get(softProvider.getName());
 		if(soft != null) {
@@ -150,6 +147,7 @@ public class Soft {
 	}
 
 	/**
+	 * @param searchProperties
 	 * @return
 	 */
 	public static Stream<Soft> searchAll() {
@@ -158,6 +156,7 @@ public class Soft {
 
 	/**
 	 * @param softSearchConsumer
+	 * @param searchProperties
 	 * @return
 	 */
 	public static Stream<Soft> searchAll(Consumer<SoftSearch> softSearchConsumer) {
@@ -232,7 +231,7 @@ public class Soft {
 	 * @throws IOException
 	 */
 	public SoftFound reFind() throws IOException {
-		SoftFoundFactory softFoundFactory = getSoftProvider().createSoftFoundFactory();
+		SoftFoundFactory softFoundFactory = getSoftProvider().createSoftFoundFactory(searchProperties);
 		return softFoundFactory.create(getFile(), null, getSoftPolicy());
 	}
 

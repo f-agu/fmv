@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,44 +58,41 @@ import org.fagu.version.VersionParserManager;
  */
 public abstract class IMSoftProvider extends SoftProvider {
 
+	private static final String PROP_VERSION_PATTERN = "soft.im.search.versionPattern";
+
+	private static final String PROP_DATE_PATTERN = "soft.gs.search.datePattern";
+
 	private static final String SOFT_MAGICK_NAME = "magick";
+
+	private static final String DEFAULT_PATTERN_VERSION = "Version\\: ImageMagick ([0-9\\.\\-]+) (.*)";
+
+	private static final String DEFAULT_PATTERN_DATE_1 = "(?:.*)([0-9]{4}-[0-9]{2}-[0-9]{2}) .*";
+
+	private static final String DEFAULT_PATTERN_DATE_2 = "(?:.*)([0-9]{8}) .*";
 
 	private static final Version V7 = new Version(7);
 
-	/**
-	 * @param name
-	 */
 	public IMSoftProvider(String name) {
 		this(name, null);
 	}
 
-	/**
-	 * @param name
-	 * @param softPolicy
-	 */
 	public IMSoftProvider(String name, SoftPolicy softPolicy) {
 		super(name, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
 				.onAllPlatforms(minVersion(6, 6))));
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory()
-	 */
 	@Override
-	public SoftFoundFactory createSoftFoundFactory() {
-		Pattern pattern = Pattern.compile("Version\\: ImageMagick ([0-9\\.\\-]+) (?:.*)([0-9]{4}-[0-9]{2}-[0-9]{2}) .*");
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+		Pattern versionPattern = Pattern.compile(getPattern(searchProperties, PROP_VERSION_PATTERN, DEFAULT_PATTERN_VERSION));
 		return prepareSoftFoundFactory()
 				.withParameters("-version")
 				.parseVersionDate(line -> {
-					Matcher matcher = pattern.matcher(line);
+					Matcher matcher = versionPattern.matcher(line);
 					if(matcher.matches()) {
 						Version version = VersionParserManager.parse(matcher.group(1));
-						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 						Date date = null;
-						try {
-							date = dateFormat.parse(matcher.group(2));
-						} catch(Exception e) {
-							// ignore
+						if(matcher.groupCount() > 1) {
+							date = parseDate(searchProperties, matcher.group(2));
 						}
 						return new VersionDate(version, date);
 					}
@@ -103,9 +101,6 @@ public abstract class IMSoftProvider extends SoftProvider {
 				.build();
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getFileFilter()
-	 */
 	@Override
 	public FileFilter getFileFilter() {
 		return f -> {
@@ -115,9 +110,6 @@ public abstract class IMSoftProvider extends SoftProvider {
 		};
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftLocator()
-	 */
 	@Override
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = super.getSoftLocator();
@@ -131,17 +123,11 @@ public abstract class IMSoftProvider extends SoftProvider {
 		return softLocator;
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getDownloadURL()
-	 */
 	@Override
 	public String getDownloadURL() {
 		return "http://www.imagemagick.org/script/download.php";
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftExecutor(org.fagu.fmv.soft.Soft, java.io.File, java.util.List)
-	 */
 	@Override
 	public SoftExecutor createSoftExecutor(Soft soft, File execFile, List<String> parameters) {
 		if(SOFT_MAGICK_NAME.equalsIgnoreCase(FilenameUtils.getBaseName(soft.getFile().getName()))) {
@@ -159,12 +145,44 @@ public abstract class IMSoftProvider extends SoftProvider {
 		return super.createSoftExecutor(soft, execFile, parameters);
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getExceptionKnownAnalyzerClass()
-	 */
 	@Override
 	public Class<? extends ExceptionKnownAnalyzer> getExceptionKnownAnalyzerClass() {
 		return IMExceptionKnownAnalyzer.class;
+	}
+
+	// ******************************************************
+
+	private String getPattern(Properties searchProperties, String code, String defaultValue) {
+		if(searchProperties == null) {
+			return defaultValue;
+		}
+		return (String)searchProperties.getOrDefault(code, defaultValue);
+	}
+
+	private Date parseDate(Properties searchProperties, String remainLine) {
+		Pattern pattern = Pattern.compile(getPattern(searchProperties, PROP_DATE_PATTERN, DEFAULT_PATTERN_DATE_1));
+		Matcher matcher = pattern.matcher(remainLine);
+		if(matcher.matches()) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				return dateFormat.parse(matcher.group(1));
+			} catch(Exception e) {
+				// ignore
+			}
+			return null;
+		}
+
+		pattern = Pattern.compile(DEFAULT_PATTERN_DATE_2);
+		matcher = pattern.matcher(remainLine);
+		if(matcher.matches()) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+			try {
+				return dateFormat.parse(matcher.group(1));
+			} catch(Exception e) {
+				// ignore
+			}
+		}
+		return null;
 	}
 
 }
