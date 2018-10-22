@@ -2,7 +2,7 @@
 
 rem set PWD=%~dp0
 rem set PWD=D:\tmp\fmv\fmv\
-set VERSION=0.11.0
+set VERSION=0.12.0
 
 set REPO_URL=https://nexus.oodrive.net/nexus/
 set REPO_LOCAL=%USERPROFILE%\.m2\repository\org\fagu\
@@ -13,6 +13,7 @@ call:artefact fmv-ffmpeg
 call:artefact fmv-imagemagick
 call:artefact fmv-media
 call:artefact fmv-parent
+call:artefact fmv-textprogressbar
 call:artefact fmv-soft
 call:artefact fmv-soft-auto
 call:artefact fmv-soft-spring-boot-1.x

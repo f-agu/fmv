@@ -2,7 +2,7 @@
 git clone https://github.com/f-agu/fmv.git
 cd fmv
 mvn compile test
-mvn -Dtag=0.11.0 -DreleaseVersion=0.11.0 -DdevelopmentVersion=0.12.0-SNAPSHOT -U -B clean release:prepare
+mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.12.0 -DreleaseVersion=0.12.0 -DdevelopmentVersion=0.13.0-SNAPSHOT -U -B clean release:prepare
 
 git reset --hard
 git pull
@@ -11,8 +11,8 @@ svn reset --hard
 
 -- push to maven repo
 git pull
-git checkout tags/0.11.0
-mvn -U clean deploy
+git checkout tags/0.12.0
+mvn -Dmaven.test.skip=true -DskipTests -U clean deploy
 
 
 
