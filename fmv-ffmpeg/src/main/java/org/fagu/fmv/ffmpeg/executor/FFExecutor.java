@@ -55,6 +55,7 @@ import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.fagu.fmv.utils.Proxifier;
 import org.fagu.fmv.utils.collection.LimitedLastQueue;
 import org.fagu.fmv.utils.io.InputStreamSupplier;
+import org.fagu.fmv.utils.io.OutputStreamSupplier;
 
 
 /**
@@ -107,6 +108,8 @@ public class FFExecutor<R> {
 	private final List<Consumer<SoftExecutor>> customizeSoftExecutors;
 
 	private InputStreamSupplier inputStreamSupplier;
+
+	private OutputStreamSupplier outputStreamSupplier;
 
 	/**
 	 * @param operation
@@ -251,6 +254,13 @@ public class FFExecutor<R> {
 	 */
 	public void input(InputStreamSupplier inputStreamSupplier) {
 		this.inputStreamSupplier = inputStreamSupplier;
+	}
+
+	/**
+	 * @param outputStreamSupplier
+	 */
+	public void output(OutputStreamSupplier outputStreamSupplier) {
+		this.outputStreamSupplier = outputStreamSupplier;
 	}
 
 	/**
@@ -445,6 +455,14 @@ public class FFExecutor<R> {
 					throw new RuntimeException(e);
 				}
 			}
+			if(outputStreamSupplier != null) {
+				try {
+					softExecutor.output(outputStreamSupplier.getOutputStream());
+				} catch(IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+
 			// don't add exceptionKnowConsumer here
 			customizeSoftExecutors.forEach(cse -> cse.accept(softExecutor));
 			return softExecutor;

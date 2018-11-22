@@ -90,7 +90,7 @@ public class PipeInOutTest {
 			try (InputStream inputStream = new FileInputStream(srcFile);
 					OutputStream outputStream = new FileOutputStream(destFile)) {
 				convertSoft.withParameters(op.toList())
-						// .logCommandLine(System.out::println)
+						.logCommandLine(System.out::println)
 						.input(inputStream) // <--------- in
 						.output(outputStream) // <--------- out
 						.execute();
