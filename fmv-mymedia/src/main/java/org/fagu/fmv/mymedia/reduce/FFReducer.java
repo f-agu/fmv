@@ -111,7 +111,7 @@ public class FFReducer extends AbstractReducer {
 
 	public static void main(String[] args) throws IOException {
 		try (FFReducer ffReducer = new FFReducer()) {
-			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\...\\.....mkv"),
+			ffReducer.reduceMedia(new File("D:\\tmp\\movie\\Tello\\1545316054015.mp4"),
 					"totqdf", Loggers.systemOut());
 		} catch(FMVExecuteException e) {
 			e.printStackTrace();
@@ -333,7 +333,8 @@ public class FFReducer extends AbstractReducer {
 			String consolePrefixMessage, Logger logger) throws IOException {
 
 		AudioStream audioStream = metadatas.getAudioStream();
-		boolean audioCodecCopy = audioStream.isCodec(Formats.AC3);
+		boolean hasAudio = audioStream != null;
+		boolean audioCodecCopy = hasAudio && audioStream.isCodec(Formats.AC3);
 
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.hideBanner();
@@ -341,7 +342,7 @@ public class FFReducer extends AbstractReducer {
 		builder.filter(AutoRotate.create(metadatas));
 		applyScaleIfNecessary(builder, metadatas, getMaxSize(), logger);
 		VolumeDetect volumeDetect = null;
-		if( ! audioCodecCopy) {
+		if(hasAudio && ! audioCodecCopy) {
 			volumeDetect = VolumeDetect.build();
 			builder.filter(volumeDetect);
 		}
@@ -397,12 +398,14 @@ public class FFReducer extends AbstractReducer {
 		outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(crf));
 
 		// audio
-		if(audioCodecCopy) {
-			logger.log("Audio: AC3, copy");
-			outputProcessor.codecCopy(Type.AUDIO);
-		} else {
-			logger.log("Audio: force AAC");
-			outputProcessor.codecAutoSelectAAC();
+		if(hasAudio) {
+			if(audioCodecCopy) {
+				logger.log("Audio: AC3, copy");
+				outputProcessor.codecCopy(Type.AUDIO);
+			} else {
+				logger.log("Audio: force AAC");
+				outputProcessor.codecAutoSelectAAC();
+			}
 		}
 
 		// subtitle
