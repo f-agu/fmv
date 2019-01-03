@@ -45,11 +45,6 @@ import org.fagu.fmv.utils.file.FileFinder.FileFound;
 public class VolumeInfoFile implements InfoFile {
 
 	/**
-	 *
-	 */
-	public VolumeInfoFile() {}
-
-	/**
 	 * @see org.fagu.fmv.mymedia.file.InfoFile#getCode()
 	 */
 	@Override
@@ -73,6 +68,10 @@ public class VolumeInfoFile implements InfoFile {
 	public String toLine(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException {
 		Media main = infosFile.getMain();
 		MovieMetadatas metadatas = (MovieMetadatas)main.getMetadatas();
+		if(metadatas == null || metadatas.getAudioStreams().isEmpty()) {
+			return "";
+		}
+
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
 		builder.addMediaInputFile(fileFound.getFileFound());
@@ -83,24 +82,19 @@ public class VolumeInfoFile implements InfoFile {
 		builder.addMediaOutput(NullMuxer.build()).overwrite();
 
 		FFExecutor<Object> executor = builder.build();
-		if(metadatas != null) {
-			OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
-			Progress progress = executor.getProgress();
-			if(countEstimateFrames.isPresent() && progress != null) {
-				try (TextProgressBar bar = FFMpegProgressBar.with(progress)
-						.byFrame(countEstimateFrames.getAsInt())
-						.build()
-						.makeBar("Detect volume")) {
-					executor.execute();
-				}
-				System.out.println();
+		OptionalInt countEstimateFrames = metadatas.getVideoStream().countEstimateFrames();
+		Progress progress = executor.getProgress();
+		if(countEstimateFrames.isPresent() && progress != null) {
+			try (TextProgressBar bar = FFMpegProgressBar.with(progress)
+					.byFrame(countEstimateFrames.getAsInt())
+					.build()
+					.makeBar("Detect volume")) {
+				executor.execute();
 			}
-		} else {
-			executor.execute();
+			System.out.println();
 		}
 
 		VolumeDetected volumeDetected = volumeDetect.getDetected();
-
 		return volumeDetected.toString();
 	}
 

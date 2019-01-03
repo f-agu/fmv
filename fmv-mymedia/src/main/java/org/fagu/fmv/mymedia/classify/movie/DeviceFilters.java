@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.classify.movie;
  * #L%
  */
 
-
 import java.util.function.Predicate;
 
 
@@ -71,7 +70,9 @@ public class DeviceFilters {
 	 * @return
 	 */
 	public static Predicate<Movie> byHandlerName(String name) {
-		return m -> name.equals(m.getMetadatas().getVideoStream().handlerName());
+		return m -> m.getMetadatas().getVideoStream().handlerName()
+				.map(n -> name.equals(n))
+				.orElse(false);
 	}
 
 	/**
@@ -79,7 +80,9 @@ public class DeviceFilters {
 	 * @return
 	 */
 	public static Predicate<Movie> byComptableBrands(String brands) {
-		return m -> brands.equals(m.getMetadatas().getFormat().compatibleBrands());
+		return m -> m.getMetadatas().getFormat().compatibleBrands()
+				.map(n -> brands.equals(n))
+				.orElse(false);
 	}
 
 	/**
@@ -87,7 +90,9 @@ public class DeviceFilters {
 	 * @return
 	 */
 	public static Predicate<Movie> byMajorBrand(final String brand) {
-		return m -> brand.equals(m.getMetadatas().getFormat().majorBrand());
+		return m -> m.getMetadatas().getFormat().majorBrand()
+				.map(n -> brand.equals(n))
+				.orElse(false);
 	}
 
 }
