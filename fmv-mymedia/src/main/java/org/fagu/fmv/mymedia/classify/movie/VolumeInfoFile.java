@@ -93,9 +93,11 @@ public class VolumeInfoFile implements InfoFile {
 			}
 			System.out.println();
 		}
-
-		VolumeDetected volumeDetected = volumeDetect.getDetected();
-		return volumeDetected.toString();
+		if(volumeDetect.isDetected()) {
+			VolumeDetected volumeDetected = volumeDetect.getDetected();
+			return volumeDetected.toString();
+		}
+		return "";
 	}
 
 	/**
