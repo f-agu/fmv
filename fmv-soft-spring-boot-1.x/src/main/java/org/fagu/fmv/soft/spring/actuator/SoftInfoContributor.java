@@ -40,19 +40,13 @@ import org.springframework.boot.actuate.info.InfoContributor;
  */
 public class SoftInfoContributor implements InfoContributor {
 
-	/**
-	 * @see org.springframework.boot.actuate.info.InfoContributor#contribute(org.springframework.boot.actuate.info.Info.Builder)
-	 */
 	@Override
 	public void contribute(Builder builder) {
-		builder.withDetail("soft", content());
+		builder.withDetail("softs", content());
 	}
 
 	// *********************************************
 
-	/**
-	 * @return
-	 */
 	private Map<String, String> content() {
 		Map<String, String> map = new HashMap<>();
 		for(Soft soft : Softs.getInfoContributors()) {
@@ -77,7 +71,7 @@ public class SoftInfoContributor implements InfoContributor {
 					StringBuilder buf = new StringBuilder();
 					FoundReason foundReason = softFound != null ? softFound.getFoundReason() : FoundReasons.NOT_FOUND;
 					buf.append(foundReason.name());
-					String reason = softFound.getReason();
+					String reason = softFound != null ? softFound.getReason() : null;
 					if(reason != null) {
 						buf.append(": ").append(reason);
 					}

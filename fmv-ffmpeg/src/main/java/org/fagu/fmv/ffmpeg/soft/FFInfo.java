@@ -27,16 +27,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.fagu.fmv.soft.find.SoftInfo;
+import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.version.Version;
 
 
 /**
  * @author f.agu
  */
-public class FFInfo extends SoftInfo {
+public class FFInfo extends VersionDateSoftInfo {
 
 	private final Version version;
 
@@ -48,18 +50,9 @@ public class FFInfo extends SoftInfo {
 
 	private final Map<String, Version> libVersionMap;
 
-	/**
-	 * @param file
-	 * @param version
-	 * @param softName
-	 * @param builtDate
-	 * @param builtVersion
-	 * @param configSet
-	 * @param libVersionMap
-	 */
 	protected FFInfo(File file, Version version, String softName, Date builtDate, Integer builtVersion, Set<String> configSet,
 			Map<String, Version> libVersionMap) {
-		super(file, softName);
+		super(file, softName, null, null);
 		this.version = version;
 		this.builtVersion = builtVersion;
 		this.builtDate = estimateBuildDate(version, builtVersion, builtDate);
@@ -75,52 +68,36 @@ public class FFInfo extends SoftInfo {
 		}
 	}
 
-	/**
-	 * @return
-	 */
-	public Version getVersion() {
-		return version;
+	@Override
+	public Optional<Version> getVersion() {
+		return Optional.ofNullable(version);
 	}
 
-	/**
-	 * @return
-	 */
 	public Integer getBuiltVersion() {
 		return builtVersion;
 	}
 
-	/**
-	 * @return
-	 */
+	@Override
+	public Optional<Date> getDate() {
+		return Optional.ofNullable(getBuiltDate());
+	}
+
 	public Date getBuiltDate() {
 		return builtDate != null ? new Date(builtDate.getTime()) : null;
 	}
 
-	/**
-	 * @return
-	 */
 	public Set<String> getConfigs() {
 		return configSet;
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public boolean isEnable(String name) {
 		return configSet.contains("--enable-" + name);
 	}
 
-	/**
-	 * @return
-	 */
 	public Map<String, Version> getLibVersions() {
 		return libVersionMap;
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftInfo#getInfo()
-	 */
 	@Override
 	public String getInfo() {
 		if(version != null) {
@@ -136,9 +113,6 @@ public class FFInfo extends SoftInfo {
 		return "<version not found>";
 	}
 
-	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
 	@Override
 	public int compareTo(SoftInfo o) {
 		if( ! (o instanceof FFInfo)) {
@@ -146,7 +120,7 @@ public class FFInfo extends SoftInfo {
 		}
 		FFInfo off = (FFInfo)o;
 		if(version != null) {
-			Version otherVersion = off.getVersion();
+			Version otherVersion = off.getVersion().orElse(null);
 			if(otherVersion != null) {
 				return version.compareTo(otherVersion);
 			}

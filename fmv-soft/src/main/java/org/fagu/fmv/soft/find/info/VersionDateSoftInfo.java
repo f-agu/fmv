@@ -34,30 +34,17 @@ public class VersionDateSoftInfo extends VersionSoftInfo {
 
 	private final Date date;
 
-	/**
-	 * @param file
-	 * @param softName
-	 * @param version
-	 * @param date
-	 */
 	public VersionDateSoftInfo(File file, String softName, Version version, Date date) {
 		super(file, softName, version);
 		this.date = cloneDate(date);
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<Date> getDate() {
 		return Optional.ofNullable(cloneDate(date));
 	}
 
 	// ************************************
 
-	/**
-	 * @param date
-	 * @return
-	 */
 	private static Date cloneDate(Date date) {
 		return date != null ? (Date)date.clone() : null;
 	}

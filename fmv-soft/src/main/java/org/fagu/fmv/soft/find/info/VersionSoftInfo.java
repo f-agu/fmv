@@ -34,26 +34,15 @@ public class VersionSoftInfo extends SoftInfo {
 
 	private final Version version;
 
-	/**
-	 * @param file
-	 * @param softName
-	 * @param version
-	 */
 	public VersionSoftInfo(File file, String softName, Version version) {
 		super(file, softName);
 		this.version = version;
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<Version> getVersion() {
 		return Optional.ofNullable(version);
 	}
 
-	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
 	@Override
 	public int compareTo(SoftInfo o) {
 		if(o instanceof VersionSoftInfo) {
@@ -69,17 +58,11 @@ public class VersionSoftInfo extends SoftInfo {
 		throw new IllegalArgumentException("Unable to compare " + VersionSoftInfo.class.getSimpleName() + " with " + o.getClass().getName());
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftInfo#getInfo()
-	 */
 	@Override
 	public String getInfo() {
 		return version != null ? version.toString() : "";
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		Optional<Version> versionOpt = getVersion();

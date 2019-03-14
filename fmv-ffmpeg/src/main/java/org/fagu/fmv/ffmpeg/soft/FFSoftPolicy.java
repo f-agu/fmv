@@ -50,7 +50,7 @@ public class FFSoftPolicy {
 	public static SoftFound toSoftFound(FFInfo ffInfo) {
 		Objects.requireNonNull(ffInfo);
 
-		Version version = ffInfo.getVersion();
+		Version version = ffInfo.getVersion().orElse(null);
 		if(version != null) {
 			return check(version.isUpperOrEqualsThan(MIN_VERSION), ffInfo);
 		}
