@@ -34,6 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -153,35 +154,38 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 	private final long createTime;
 
-	private final TreeMap<String, String> metadatas;
+	private final NavigableMap<String, String> metadatas;
 
-	/**
-	 * @param metadatas
-	 */
 	protected ImageMetadatas(TreeMap<String, String> metadatas) {
-		this.metadatas = metadatas;
+		this.metadatas = Collections.unmodifiableNavigableMap(new TreeMap<>(metadatas));
 		createTime = System.currentTimeMillis();
 	}
 
-	/**
-	 * @see org.fagu.fmv.media.MetadataProperties#getNames()
-	 */
 	@Override
 	public NavigableSet<String> getNames() {
 		return metadatas.navigableKeySet();
 	}
 
-	/**
-	 * @see org.fagu.fmv.media.MetadataProperties#get(java.lang.String)
-	 */
 	@Override
-	public String get(String propertyName) {
+	public Object get(String propertyName) {
 		return metadatas.get(propertyName);
 	}
 
-	/**
-	 * @return
-	 */
+	public String getFirst(String... propertyNames) {
+		String value;
+		for(String propName : propertyNames) {
+			value = metadatas.get(propName);
+			if(value != null) {
+				return value;
+			}
+		}
+		return null;
+	}
+
+	public NavigableMap<String, String> getMetadatas() {
+		return metadatas;
+	}
+
 	public Date getDate() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
 
@@ -234,9 +238,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return date;
 	}
 
-	/**
-	 * @return
-	 */
 	public Size getResolution() {
 		try {
 			String resolution = metadatas.get("xy");
@@ -254,9 +255,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
 	public Size getDimension() {
 		try {
 			String dimensions = metadatas.get("wh");
@@ -275,65 +273,38 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getColorSpace() {
 		return metadatas.get("colorspace");
 	}
 
-	/**
-	 * @return
-	 */
 	public int getColorDepth() {
 		return NumberUtils.toInt(metadatas.get("cdepth"));
 	}
 
-	/**
-	 * @return
-	 */
 	public int getCompressionQuality() {
 		return NumberUtils.toInt(metadatas.get("compressionq"));
 	}
 
-	/**
-	 * @return
-	 */
 	public String getCompression() {
 		return metadatas.get("compression");
 	}
 
-	/**
-	 * @return
-	 */
 	public String getResolutionUnit() {
 		return metadatas.get("resunit");
 	}
 
-	/**
-	 * @return
-	 */
 	public String getDevice() {
 		return metadatas.get("exif:make");
 	}
 
-	/**
-	 * @return
-	 */
 	public String getDeviceModel() {
 		return metadatas.get("exif:model");
 	}
 
-	/**
-	 * @return
-	 */
 	public String getSoftware() {
 		return metadatas.get("exif:software");
 	}
 
-	/**
-	 * @return
-	 */
 	public Integer getISOSpeed() {
 		try {
 			return Integer.parseInt(metadatas.get("exif:isospeedratings").split(",")[0]);
@@ -341,9 +312,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
 	public Float getExposureTime() {
 		try {
 			String etime = metadatas.get("exif:exposuretime");
@@ -358,9 +326,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getExposureTimeFormat() {
 		Float exposure = getExposureTime();
 		if(exposure == null) {
@@ -373,9 +338,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return Float.toString(floatValue);
 	}
 
-	/**
-	 * @return
-	 */
 	public Float getAperture() {
 		try {
 			String[] fNumber = metadatas.get("exif:fnumber").split("/");
@@ -386,9 +348,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getApertureFormat() {
 		Float aperture = getAperture();
 		if(aperture == null) {
@@ -397,9 +356,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return "F/" + aperture.floatValue();
 	}
 
-	/**
-	 * @return
-	 */
 	public Float getFocalLength() {
 		try {
 			String[] focalLength = metadatas.get("exif:focallength").split("/");
@@ -410,9 +366,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
 	public Flash getFlash() {
 		try {
 			return Flash.valueOf(Integer.parseInt(metadatas.get("exif:flash")));
@@ -422,9 +375,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
 	public Coordinates getCoordinates() {
 		try {
 			Double latitude = parseCoordinate(metadatas.get("exif:gpslatitude"));
@@ -446,25 +396,16 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
-	/**
-	 * @see org.fagu.fmv.media.Metadatas#toJSON()
-	 */
 	@Override
 	public String toJSON() {
 		return JSONObject.fromObject(metadatas).toString();
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return metadatas.toString();
 	}
 
-	/**
-	 * @return
-	 */
 	public static ImageMetadatas parseJSON(String json) {
 		TreeMap<String, String> params = new TreeMap<>();
 		JSONObject jsonObject = JSONObject.fromObject(json);
@@ -476,11 +417,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return new ImageMetadatas(params);
 	}
 
-	/**
-	 * @param sourceFile
-	 * @return
-	 * @throws IOException
-	 */
 	public static synchronized ImageMetadatas extractSingleton(final File sourceFile) throws IOException {
 		Future<ImageMetadatas> future = FUTURE_HASHTABLE.get(sourceFile);
 		if(future != null) {
@@ -506,32 +442,16 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		}
 	}
 
-	/**
-	 * @param sourceFile
-	 * @return
-	 */
 	public static ImageMetadatasFileBuilder with(File sourceFile) {
 		return new ImageMetadatasFileBuilder(sourceFile);
 	}
 
-	/**
-	 * @param sourceFiles
-	 * @return
-	 */
 	public static ImageMetadatasFilesBuilder with(Collection<File> sourceFiles) {
 		return new ImageMetadatasFilesBuilder(sourceFiles);
 	}
 
 	// *****************************************
 
-	/**
-	 * @param identifySoft
-	 * @param sourceFiles
-	 * @param logger
-	 * @param customizeExecutor
-	 * @return
-	 * @throws IOException
-	 */
 	private static Map<File, ImageMetadatas> extract(Soft identifySoft, Collection<File> sourceFiles, Consumer<String> logger,
 			Consumer<SoftExecutor> customizeExecutor) throws IOException {
 		Objects.requireNonNull(identifySoft);
@@ -544,7 +464,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		IMOperation op = new IMOperation();
 		StringJoiner joiner = new StringJoiner("\n");
 		joiner.add("==%f==");
-		joiner.add("%[exif:*]%[date:*]%[xap:*]xy=%x %y");
+		joiner.add("%[exif:*]%[date:*]%[xap:*]%[*]xy=%x %y");
 		joiner.add("colorspace=%[colorspace]");
 		joiner.add("wh=%w %h");
 		joiner.add("cdepth=%z");
@@ -559,8 +479,8 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		sourceFiles.forEach(file -> op.image(file, "[0]"));
 
 		List<String> outputs = new ArrayList<>();
-		SoftExecutor softExecutor = identifySoft.withParameters(op.toList()) //
-				.addOutReadLine(outputs::add) //
+		SoftExecutor softExecutor = identifySoft.withParameters(op.toList())
+				.addOutReadLine(outputs::add)
 				.logCommandLine(logger);
 		if(customizeExecutor != null) {
 			customizeExecutor.accept(softExecutor);
@@ -606,10 +526,6 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return outMap;
 	}
 
-	/**
-	 * @param value
-	 * @return
-	 */
 	private Double parseCoordinate(String value) {
 		if(value != null && value.length() > 0) {
 			String[] valueTab = value.split(",");

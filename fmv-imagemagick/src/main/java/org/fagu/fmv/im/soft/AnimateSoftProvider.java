@@ -30,16 +30,10 @@ public class AnimateSoftProvider extends IMSoftProvider {
 
 	public static final String NAME = "animate";
 
-	/**
-	 * 
-	 */
 	public AnimateSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public AnimateSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

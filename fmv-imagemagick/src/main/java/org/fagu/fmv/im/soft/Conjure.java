@@ -35,23 +35,14 @@ import org.fagu.fmv.soft.SoftSearch;
  */
 public class Conjure {
 
-	/**
-	 * 
-	 */
 	private Conjure() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new ConjureSoftProvider());
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftSearch searchWith() {
 		return Soft.with(ConjureSoftProvider::new);
 	}

@@ -32,23 +32,14 @@ import org.fagu.fmv.soft.SoftSearch;
  */
 public class Composite {
 
-	/**
-	 * 
-	 */
 	private Composite() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new CompositeSoftProvider());
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftSearch searchWith() {
 		return Soft.with(CompositeSoftProvider::new);
 	}

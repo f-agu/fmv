@@ -30,16 +30,10 @@ public class IdentifySoftProvider extends IMSoftProvider {
 
 	public static final String NAME = "identify";
 
-	/**
-	 * 
-	 */
 	public IdentifySoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public IdentifySoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}
