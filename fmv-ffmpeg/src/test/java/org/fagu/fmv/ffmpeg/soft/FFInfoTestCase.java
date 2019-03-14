@@ -48,14 +48,6 @@ import org.junit.Test;
  */
 public class FFInfoTestCase {
 
-	/**
-	 *
-	 */
-	public FFInfoTestCase() {}
-
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	@Ignore
 	public void testFindFFMpeg() throws Exception {
@@ -70,18 +62,12 @@ public class FFInfoTestCase {
 		System.out.println(founds.getFirstFound());
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testGetVersion_OK() throws Exception {
 		String line = "1.0";
 		assertEquals(new Version(1), FFSoftProvider.getVersion(line));
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testGetConfiguration_Mark() throws Exception {
 		String s = "--prefix=/usr --libdir=/usr/lib64 --shlibdir=/usr/lib64 --mandir=/usr/share/man --incdir=/usr/include --disable-avisynth --extra-cflags='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m64 -mtune=generic -fPIC' --enable-avfilter --enable-libdc1394 --enable-libfaac --enable-libgsm --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-librtmp --enable-libschroedinger --enable-libtheora --enable-libx264 --enable-gpl --enable-nonfree --enable-postproc --enable-pthreads --enable-shared --enable-swscale --enable-vdpau --enable-version3 --enable-x11grab";
@@ -119,9 +105,6 @@ public class FFInfoTestCase {
 		assertFalse(it.hasNext());
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testFFMPEGFull_N70767() throws Exception {
 		Parser parser = newParserFFMpeg();
@@ -142,9 +125,6 @@ public class FFInfoTestCase {
 		assertFull(parser, null, date(2015, 1, 2), 70767);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testFFProbeFull_N70767() throws Exception {
 		Parser parser = newParserProbe();
@@ -192,9 +172,6 @@ public class FFInfoTestCase {
 		assertFull(parser, new Version(2, 2, 10, 2), calendar.getTime(), null);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testFFMPEGFull_N63696() throws Exception {
 		Parser parser = newParserFFMpeg();
@@ -217,9 +194,6 @@ public class FFInfoTestCase {
 		assertFull(parser, null, calendar.getTime(), 63696);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testFFMPEGFull_N65107() throws Exception {
 		Parser parser = newParserFFMpeg();
@@ -242,9 +216,6 @@ public class FFInfoTestCase {
 		assertFull(parser, null, calendar.getTime(), 65107);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testFFMPEGFull_v2_6_1() throws Exception {
 		Parser parser = newParserFFMpeg();
@@ -265,9 +236,6 @@ public class FFInfoTestCase {
 		assertFull(parser, new Version(2, 6, 1), date(2014, 12, 30), null);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testFFProbeFull_v2_6_1() throws Exception {
 		Parser parser = newParserProbe();
@@ -291,49 +259,29 @@ public class FFInfoTestCase {
 
 	// ********************************************************
 
-	/**
-	 * @param year
-	 * @param month
-	 * @param day
-	 * @return
-	 */
 	private Date date(int year, int month, int day) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(year, month - 1, day, 0, 0, 0);
 		return calendar.getTime();
 	}
 
-	/**
-	 * @return
-	 */
 	private Parser newParserProbe() {
 		FFProbeSoftProvider softProvider = new FFProbeSoftProvider();
 		return softProvider.createParser(new File("."));
 	}
 
-	/**
-	 * @return
-	 */
 	private Parser newParserFFMpeg() {
 		FFMpegSoftProvider softProvider = new FFMpegSoftProvider();
 		return softProvider.createParser(new File("."));
 	}
 
-	/**
-	 * @param parser
-	 * @param version
-	 * @param builtDate
-	 * @param builtVersion
-	 * @throws IOException
-	 * @throws ParseException
-	 */
 	private void assertFull(Parser parser, Version version, Date builtDate, Integer builtVersion) throws IOException, ParseException {
 		SoftFound softFound = parser.closeAndParse("", 0);
 		FFInfo ffInfo = (FFInfo)softFound.getSoftInfo();
 		if(version == null) {
-			assertNull(ffInfo.getVersion());
+			assertFalse(ffInfo.getVersion().isPresent());
 		} else {
-			assertTrue(Objects.equals(version, ffInfo.getVersion()));
+			assertTrue(Objects.equals(version, ffInfo.getVersion().orElse(null)));
 		}
 
 		if(builtVersion == null) {

@@ -21,6 +21,7 @@ limitations under the License.
  */
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.SoftFound;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -32,7 +33,7 @@ import org.junit.Test;
 public class ConvertSoftProviderTestCase {
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void test() {
 		Soft soft = Convert.search();
 		for(SoftFound softFound : soft.getFounds()) {
