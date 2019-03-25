@@ -30,16 +30,10 @@ public class MogrifySoftProvider extends IMSoftProvider {
 
 	public static final String NAME = "mogrify";
 
-	/**
-	 * 
-	 */
 	public MogrifySoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public MogrifySoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

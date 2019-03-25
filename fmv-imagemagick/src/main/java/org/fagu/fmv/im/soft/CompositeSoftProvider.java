@@ -30,16 +30,10 @@ public class CompositeSoftProvider extends IMSoftProvider {
 
 	public static final String NAME = "composite";
 
-	/**
-	 * 
-	 */
 	public CompositeSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public CompositeSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

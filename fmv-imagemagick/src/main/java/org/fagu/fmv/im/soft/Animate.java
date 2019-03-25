@@ -32,23 +32,14 @@ import org.fagu.fmv.soft.SoftSearch;
  */
 public class Animate {
 
-	/**
-	 * 
-	 */
 	private Animate() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new AnimateSoftProvider());
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftSearch searchWith() {
 		return Soft.with(AnimateSoftProvider::new);
 	}

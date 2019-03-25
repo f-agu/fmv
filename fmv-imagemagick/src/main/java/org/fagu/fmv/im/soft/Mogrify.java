@@ -34,23 +34,14 @@ import org.fagu.fmv.soft.SoftSearch;
  */
 public class Mogrify {
 
-	/**
-	 * 
-	 */
 	private Mogrify() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new MogrifySoftProvider());
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftSearch searchWith() {
 		return Soft.with(MogrifySoftProvider::new);
 	}

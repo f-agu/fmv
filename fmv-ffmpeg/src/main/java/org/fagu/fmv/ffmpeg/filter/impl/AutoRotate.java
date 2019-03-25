@@ -98,7 +98,7 @@ public class AutoRotate extends FilterCombined {
 		SoftFound softFound = soft.getFirstFound();
 		FFInfo ffInfo = (FFInfo)softFound.getSoftInfo();
 		// version
-		Version version = ffInfo.getVersion();
+		Version version = ffInfo.getVersion().orElse(null);
 		if(version != null) {
 			return version.isUpperOrEqualsThan(new Version(2, 7));
 		}

@@ -30,16 +30,10 @@ public class ConjureSoftProvider extends IMSoftProvider {
 
 	public static final String NAME = "conjure";
 
-	/**
-	 * 
-	 */
 	public ConjureSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public ConjureSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

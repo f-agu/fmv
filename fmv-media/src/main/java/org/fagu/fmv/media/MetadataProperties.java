@@ -20,7 +20,6 @@ package org.fagu.fmv.media;
  * #L%
  */
 
-
 import java.util.NavigableSet;
 
 
@@ -29,14 +28,7 @@ import java.util.NavigableSet;
  */
 public interface MetadataProperties {
 
-	/**
-	 * @return
-	 */
 	NavigableSet<String> getNames();
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	Object get(String name);
 }

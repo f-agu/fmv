@@ -30,16 +30,10 @@ public class MontageSoftProvider extends IMSoftProvider {
 
 	public static final String NAME = "montage";
 
-	/**
-	 * 
-	 */
 	public MontageSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public MontageSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

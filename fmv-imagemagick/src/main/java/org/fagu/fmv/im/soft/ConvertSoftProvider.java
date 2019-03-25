@@ -30,16 +30,10 @@ public class ConvertSoftProvider extends IMSoftProvider {
 
 	public static final String NAME = "convert";
 
-	/**
-	 * 
-	 */
 	public ConvertSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public ConvertSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

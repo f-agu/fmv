@@ -47,12 +47,16 @@ public class IMInfoTestCase {
 		assertInfo("Version: ImageMagick 6.6.0-4 2012-05-02 Q16 http://www.imagemagick.org", new Version(6, 6, 0, 4), d(2012, 5, 2), "6.6.0.4");
 		assertInfo("Version: ImageMagick 6.7.9-10 2012-10-08 Q16 http://www.imagemagick.org", new Version(6, 7, 9, 10), d(2012, 10, 8), "6.7.9.10");
 		assertInfo("Version: ImageMagick 6.8.7-1 2013-10-17 Q16 http://www.imagemagick.org", new Version(6, 8, 7, 1), d(2013, 10, 17), "6.8.7.1");
-		assertInfo("Version: ImageMagick 6.9.2-0 Q16 x86_64 2015-09-10 http://www.imagemagick.org", new Version(6, 9, 2,
-				0), d(2015, 9, 10), "6.9.2.0");
-		assertInfo("Version: ImageMagick 6.9.2-1 Q16 x86_64 2015-09-18 http://www.imagemagick.org", new Version(6, 9, 2,
-				1), d(2015, 9, 18), "6.9.2.1");
+		assertInfo("Version: ImageMagick 6.9.2-0 Q16 x86_64 2015-09-10 http://www.imagemagick.org", new Version(6, 9, 2, 0), d(2015, 9, 10),
+				"6.9.2.0");
+		assertInfo("Version: ImageMagick 6.9.2-1 Q16 x86_64 2015-09-18 http://www.imagemagick.org", new Version(6, 9, 2, 1), d(2015, 9, 18),
+				"6.9.2.1");
 		assertInfo("Version: ImageMagick 6.9.7-4 Q16 x86_64 20170114 http://www.imagemagick.org", new Version(6, 9, 7, 4), d(2017, 01, 14),
 				"6.9.7.4");
+		assertInfo("Version: ImageMagick 6.9.7-4 Q16 x86_64 2017-01-14 http://www.imagemagick.org", new Version(6, 9, 7, 4), d(2017, 01, 14),
+				"6.9.7.4");
+		assertInfo("Version: ImageMagick 7.0.8-28 Q16 x86_64 2019-02-17 https://imagemagick.org", new Version(7, 0, 8, 28), d(2019, 2, 17),
+				"7.0.8.28");
 	}
 
 	@Test

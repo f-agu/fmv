@@ -33,23 +33,14 @@ import org.fagu.fmv.soft.SoftSearch;
  */
 public class Montage {
 
-	/**
-	 * 
-	 */
 	private Montage() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new MontageSoftProvider());
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftSearch searchWith() {
 		return Soft.with(MontageSoftProvider::new);
 	}

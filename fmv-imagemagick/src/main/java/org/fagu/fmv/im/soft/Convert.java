@@ -33,23 +33,14 @@ import org.fagu.fmv.soft.SoftSearch;
  */
 public class Convert {
 
-	/**
-	 * 
-	 */
 	private Convert() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new ConvertSoftProvider());
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftSearch searchWith() {
 		return Soft.with(ConvertSoftProvider::new);
 	}
