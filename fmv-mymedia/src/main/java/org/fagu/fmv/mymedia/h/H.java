@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 
 /**
@@ -21,21 +22,22 @@ public class H {
 
 	private static final char TAB = '\t';
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
+	private static final Pattern DATE = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{2,4}");
+
 	public static void main(String[] args) throws IOException {
 		File file = new File("d:\\tmp\\a\\h");
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
 			String line;
 			Consumer<String> currentConsumer = null;
 			Map<Predicate<String>, Consumer<String>> switcherMap = new LinkedHashMap<>();
-			switcherMap.put("Mas"::equals, H::mas);
-			switcherMap.put("Cpl"::equals, H::cpl);
-			switcherMap.put(l -> l.startsWith("ref"), H::ref);
-			switcherMap.put(l -> l.startsWith("dat"), H::dat);
-			switcherMap.put(l -> l.startsWith("reg"), H::reg);
+			switcherMap.put("Mas"::equals, l -> containsSpace(l, H::mas));
+			switcherMap.put("Cpl"::equals, l -> containsSpace(l, H::cpl));
+			switcherMap.put(l -> l.startsWith("ref"), l -> containsSpace(l, H::dtl));
+			switcherMap.put(l -> l.startsWith("dat"), l -> containsSpace(l, H::dtl));
+			switcherMap.put(l -> l.startsWith("reg"), l -> containsSpace(l, H::reg));
+			switcherMap.put(l -> l.startsWith("vvsy"), l -> containsSpace(l, H::dtl));
+			switcherMap.put(l -> l.startsWith("jtm"), l -> containsSpace(l, H::dtl));
+			switcherMap.put(l -> l.startsWith("pen"), H::dmtl);
 
 			while((line = reader.readLine()) != null) {
 				if("".equals(line.trim())) {
@@ -49,9 +51,6 @@ public class H {
 						continue;
 					}
 				}
-				if(line.indexOf(' ') < 0) {
-					continue;
-				}
 				if(currentConsumer != null) {
 					currentConsumer.accept(line);
 				}
@@ -59,9 +58,15 @@ public class H {
 		}
 	}
 
+	private static void containsSpace(String line, Consumer<String> consumer) {
+		if(line.indexOf(' ') > 0) {
+			consumer.accept(line);
+		}
+	}
+
 	private static void mas(String line) {
-		StringBuilder buf = new StringBuilder();
-		buf.append(line.substring(0, 16)).append(TAB)
+		StringBuilder buf = new StringBuilder()
+				.append(line.substring(0, 16)).append(TAB)
 				.append(TAB)
 				.append(line.substring(17, 18)).append(TAB)
 				.append(TAB)
@@ -83,7 +88,7 @@ public class H {
 		System.out.println(buf);
 	}
 
-	private static void ref(String line) {
+	private static void dtl(String line) {
 		StringBuilder buf = new StringBuilder();
 		int p = line.indexOf(' ');
 		buf.append(line.substring(0, p)).append(TAB)
@@ -91,18 +96,20 @@ public class H {
 		System.out.println(buf);
 	}
 
-	private static void dat(String line) {
-		StringBuilder buf = new StringBuilder();
-		buf.append(line.substring(0, 10)).append(TAB)
-				.append(line.substring(11));
+	private static void reg(String line) {
+		StringBuilder buf = new StringBuilder()
+				.append(line.substring(0, 10)).append(TAB)
+				.append(line.substring(14));
 		System.out.println(buf);
 	}
 
-	private static void reg(String line) {
-		StringBuilder buf = new StringBuilder();
-		buf.append(line.substring(0, 10)).append(TAB)
-				.append(line.substring(14));
-		System.out.println(buf);
+	private static void dmtl(String line) {
+		if(DATE.matcher(line.trim()).matches()) {
+			System.out.println();
+			System.out.println(line);
+			return;
+		}
+		System.out.println(line);
 	}
 
 }
