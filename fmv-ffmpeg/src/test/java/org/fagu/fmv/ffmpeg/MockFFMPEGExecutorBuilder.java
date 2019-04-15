@@ -62,12 +62,9 @@ public class MockFFMPEGExecutorBuilder {
 				public <R> FFExecutor<R> create(Operation<R, ?> operation, FFMPEGExecutorBuilder ffmpegExecutorBuilder) {
 					return new FFExecutor<R>(operation) {
 
-						/**
-						 * @see org.fagu.fmv.ffmpeg.executor.FFExecutor#execute()
-						 */
 						@Override
 						public Executed<R> execute() throws IOException {
-							commandExecute.accept(getCommandLine());
+							commandExecute.accept(getCommandLineString());
 							return null;
 						}
 					};

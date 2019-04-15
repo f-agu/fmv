@@ -1,31 +1,19 @@
 package org.fagu.fmv.soft;
 
+import org.apache.commons.exec.CommandLine;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
+
 
 /**
  * @author f.agu
  */
 public interface ExecListener {
 
-	/**
-	 * @param cmdLineStr
-	 */
-	default void eventPrepare(String cmdLineStr) {}
+	default void eventPrepare(CommandLine commandLine) {}
 
-	/**
-	 * @param cmdLineStr
-	 */
-	default void eventExecuting(String cmdLineStr) {}
+	default void eventExecuting(CommandLine commandLine) {}
 
-	/**
-	 * @param cmdLineStr
-	 * @param exitValue
-	 * @param timeMilleseconds
-	 */
-	default void eventExecuted(String cmdLineStr, int exitValue, long timeMilleseconds) {}
+	default void eventExecuted(CommandLine commandLine, int exitValue, long timeMilleseconds) {}
 
-	/**
-	 * @param fmvExecuteException
-	 */
 	default void eventException(FMVExecuteException fmvExecuteException) {}
 }

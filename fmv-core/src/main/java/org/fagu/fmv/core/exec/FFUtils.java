@@ -49,7 +49,7 @@ public class FFUtils {
 				@Override
 				public void eventCreate(FFExecutor<?> ffExecutor) {
 					try {
-						System.out.println(ffExecutor.getCommandLine());
+						System.out.println(ffExecutor.getCommandLineString());
 					} catch(Exception e) {
 						e.printStackTrace();
 					}

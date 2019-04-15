@@ -150,7 +150,7 @@ public class DetectLogo implements Closeable {
 				.videoSync(VSync.PASSTHROUGH);
 
 		FFExecutor<Object> executor = builder.build();
-		logger.accept(executor.getCommandLine());
+		logger.accept(executor.getCommandLineString());
 		Progress progress = executor.getProgress();
 		try (TextProgressBar textProgressBar = FFMpegProgressBar.with(progress)
 				.byDuration(duration)

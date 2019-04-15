@@ -85,7 +85,7 @@ public class Reducer implements Closeable {
 		outputProcessor.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
-		logger.log(executor.getCommandLine());
+		logger.log(executor.getCommandLineString());
 
 		Progress progress = executor.getProgress();
 		try (TextProgressBar textProgressBar = FFMpegProgressBar.with(progress)

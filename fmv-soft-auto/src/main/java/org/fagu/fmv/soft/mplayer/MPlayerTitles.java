@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.fagu.fmv.soft.exec.CommandLineUtils;
 
 
 /**
@@ -69,7 +70,7 @@ public class MPlayerTitles {
 
 			MPlayer.search()
 					.withParameters(params)
-					.logCommandLine(logger)
+					.logCommandLine(cl -> logger.accept(CommandLineUtils.toLine(cl)))
 					.addOutReadLine(l -> {
 						if(l.contains("=")) {
 							String key = StringUtils.substringBefore(l, "=");

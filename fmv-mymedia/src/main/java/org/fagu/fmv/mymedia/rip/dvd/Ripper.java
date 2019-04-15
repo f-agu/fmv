@@ -32,6 +32,7 @@ import org.fagu.fmv.ffmpeg.operation.OutputProcessor;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.mymedia.utils.AppVersion;
+import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.mplayer.CmdLineConfirmSelectTitlesPolicy;
 import org.fagu.fmv.soft.mplayer.DefaultSelectTitlesPolicy;
 import org.fagu.fmv.soft.mplayer.MPlayer;
@@ -363,7 +364,7 @@ public class Ripper implements Closeable {
 		builder.progressReadLine(new FFMpegProgress(progressEncode, nbFrames));
 
 		FFExecutor<Object> executor = builder.build();
-		logger.log(executor.getCommandLine());
+		logger.log(executor.getCommandLineString());
 		ffmpegService.submit(() -> {
 			try {
 				currentEncoding.incrementAndGet();
@@ -423,11 +424,13 @@ public class Ripper implements Closeable {
 		params.add("dvd://");
 
 		MutableObject<String> volumeId = new MutableObject<>();
-		MPlayer.search().withParameters(params).logCommandLine(logger::log).addOutReadLine(l -> {
-			if(l.startsWith("ID_DVD_VOLUME_ID=")) {
-				volumeId.setValue(StringUtils.substringAfter(l, "="));
-			}
-		}).execute();
+		MPlayer.search().withParameters(params)
+				.logCommandLine(cl -> logger.log(CommandLineUtils.toLine(cl)))
+				.addOutReadLine(l -> {
+					if(l.startsWith("ID_DVD_VOLUME_ID=")) {
+						volumeId.setValue(StringUtils.substringAfter(l, "="));
+					}
+				}).execute();
 		return volumeId.getValue();
 	}
 

@@ -46,6 +46,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import org.apache.commons.exec.CommandLine;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.im.soft.Identify;
@@ -85,7 +86,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 		Soft identifySoft;
 
-		Consumer<String> logger;
+		Consumer<CommandLine> logger;
 
 		Consumer<SoftExecutor> customizeExecutor;
 
@@ -100,7 +101,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 			return getThis();
 		}
 
-		public B logger(Consumer<String> logger) {
+		public B logger(Consumer<CommandLine> logger) {
 			this.logger = logger;
 			return getThis();
 		}
@@ -452,7 +453,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 	// *****************************************
 
-	private static Map<File, ImageMetadatas> extract(Soft identifySoft, Collection<File> sourceFiles, Consumer<String> logger,
+	private static Map<File, ImageMetadatas> extract(Soft identifySoft, Collection<File> sourceFiles, Consumer<CommandLine> logger,
 			Consumer<SoftExecutor> customizeExecutor) throws IOException {
 		Objects.requireNonNull(identifySoft);
 		if(sourceFiles.isEmpty()) {

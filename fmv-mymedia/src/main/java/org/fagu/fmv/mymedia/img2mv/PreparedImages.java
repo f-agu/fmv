@@ -45,6 +45,7 @@ import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
 
+
 /**
  * @author f.agu
  */
@@ -62,24 +63,24 @@ public class PreparedImages implements Closeable {
 	 * @param files
 	 */
 	public PreparedImages(List<File> files) {
-		if (files.isEmpty()) {
+		if(files.isEmpty()) {
 			throw new IllegalArgumentException("no file !");
 		}
 		Iterator<File> iterator = files.iterator();
 		File next = iterator.next();
 		extension = FilenameUtils.getExtension(next.getName());
 		parentFolder = next.getParentFile();
-		while (iterator.hasNext()) {
+		while(iterator.hasNext()) {
 			next = iterator.next();
-			if (!parentFolder.equals(next.getParentFile())) {
+			if( ! parentFolder.equals(next.getParentFile())) {
 				throw new IllegalArgumentException("No same parent: " + parentFolder + " != " + next.getParentFile());
 			}
 			String name = next.getName();
-			if (!name.startsWith("img_")) {
+			if( ! name.startsWith("img_")) {
 				throw new IllegalArgumentException("File name not start by 'img_': " + next);
 			}
 			String curExtension = FilenameUtils.getExtension(next.getName());
-			if (!extension.equals(curExtension)) {
+			if( ! extension.equals(curExtension)) {
 				throw new IllegalArgumentException("No same extension: " + extension + " != " + curExtension);
 			}
 		}
@@ -110,11 +111,11 @@ public class PreparedImages implements Closeable {
 		outputProcessor.map().allStreams().input(filter);
 
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
-		int countEstimateFrames = (int) (files.size() * videoFrameRate.countFrameBySeconds()
+		System.out.println(executor.getCommandLineString());
+		int countEstimateFrames = (int)(files.size() * videoFrameRate.countFrameBySeconds()
 				* imageFrameRate.invert().doubleValue());
 		Progress progress = executor.getProgress();
-		if (progress != null) {
+		if(progress != null) {
 			textProgressBar = FFMpegProgressBar.with(progress).byFrame(countEstimateFrames).build().makeBar("");
 		}
 		executor.execute();
@@ -125,7 +126,7 @@ public class PreparedImages implements Closeable {
 	 */
 	@Override
 	public void close() throws IOException {
-		if (textProgressBar != null) {
+		if(textProgressBar != null) {
 			textProgressBar.close();
 		}
 	}
@@ -139,7 +140,7 @@ public class PreparedImages implements Closeable {
 		String name = files.iterator().next().getName();
 		Pattern pattern = Pattern.compile("img_([0-9]+)\\..*");
 		Matcher matcher = pattern.matcher(name);
-		if (matcher.matches()) {
+		if(matcher.matches()) {
 			return matcher.group(1).length();
 		}
 		throw new IllegalArgumentException("Unreadable file name: " + name);

@@ -14,12 +14,6 @@ import org.fagu.fmv.soft.exec.FMVExecutor;
 @FunctionalInterface
 public interface ExecuteDelegate {
 
-	/**
-	 * @param fmvExecutor
-	 * @param commandLine
-	 * @return
-	 * @throws IOException
-	 */
 	int execute(FMVExecutor fmvExecutor, CommandLine commandLine) throws IOException;
 
 }

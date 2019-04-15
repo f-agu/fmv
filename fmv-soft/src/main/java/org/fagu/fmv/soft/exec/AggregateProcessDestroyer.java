@@ -33,16 +33,10 @@ public class AggregateProcessDestroyer implements ProcessDestroyer {
 
 	private final List<ProcessDestroyer> processDestroyers;
 
-	/**
-	 * 
-	 */
 	public AggregateProcessDestroyer() {
 		processDestroyers = new ArrayList<>();
 	}
 
-	/**
-	 * @see org.apache.commons.exec.ProcessDestroyer#add(java.lang.Process)
-	 */
 	@Override
 	public boolean add(Process process) {
 		boolean b = true;
@@ -52,16 +46,10 @@ public class AggregateProcessDestroyer implements ProcessDestroyer {
 		return b;
 	}
 
-	/**
-	 * @param processDestroyer
-	 */
 	public void add(ProcessDestroyer processDestroyer) {
 		processDestroyers.add(processDestroyer);
 	}
 
-	/**
-	 * @see org.apache.commons.exec.ProcessDestroyer#remove(java.lang.Process)
-	 */
 	@Override
 	public boolean remove(Process process) {
 		boolean b = true;
@@ -71,9 +59,6 @@ public class AggregateProcessDestroyer implements ProcessDestroyer {
 		return b;
 	}
 
-	/**
-	 * @see org.apache.commons.exec.ProcessDestroyer#size()
-	 */
 	@Override
 	public int size() {
 		throw new RuntimeException("Not implemented !");

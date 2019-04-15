@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.exec.CommandLine;
 import org.fagu.fmv.soft.Soft;
 
 
@@ -42,42 +43,23 @@ public class DominantColor {
 
 	private final Soft convertSoft;
 
-	/**
-	 * @param convertSoft
-	 */
 	private DominantColor(Soft convertSoft) {
 		this.convertSoft = Objects.requireNonNull(convertSoft);
 	}
 
-	/**
-	 * @return
-	 */
 	public static DominantColor getInstance() {
 		return getInstance(org.fagu.fmv.im.soft.Convert.search());
 	}
 
-	/**
-	 * @param convertSoft
-	 * @return
-	 */
 	public static DominantColor getInstance(Soft convertSoft) {
 		return new DominantColor(convertSoft);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public Color getDominantColor(File file) throws IOException {
 		return getDominantColor(file, null);
 	}
 
-	/**
-	 * @param file
-	 * @param logger
-	 * @return
-	 */
-	public Color getDominantColor(File file, Consumer<String> logger) throws IOException {
+	public Color getDominantColor(File file, Consumer<CommandLine> logger) throws IOException {
 		IMOperation op = new IMOperation();
 		op.image(file, "[0]").scale("1x1!").format("%[pixel:u]").add("info:");
 

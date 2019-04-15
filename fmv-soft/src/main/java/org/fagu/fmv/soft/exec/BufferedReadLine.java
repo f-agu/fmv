@@ -42,38 +42,23 @@ public class BufferedReadLine implements ReadLine {
 
 	private final Collection<String> collection;
 
-	/**
-	 * 
-	 */
 	public BufferedReadLine() {
 		this(new ArrayList<>());
 	}
 
-	/**
-	 * @param collection
-	 */
 	public BufferedReadLine(Collection<String> collection) {
 		this.collection = Objects.requireNonNull(collection);
 	}
 
-	/**
-	 * @see org.fagu.fmv.utils.exec.ReadLine#read(java.lang.String)
-	 */
 	@Override
 	public void read(String line) {
 		collection.add(line);
 	}
 
-	/**
-	 * @return
-	 */
 	public Collection<String> getLines() {
 		return collection;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Buffered";

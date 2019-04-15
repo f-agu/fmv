@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.commons.exec.CommandLine;
 import org.fagu.fmv.ffmpeg.exception.FFExceptionKnownAnalyzer;
@@ -48,6 +49,7 @@ import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.soft.exec.MultiReadLine;
 import org.fagu.fmv.soft.exec.ReadLine;
+import org.fagu.fmv.soft.exec.UnmodifiableCommandLine;
 import org.fagu.fmv.soft.exec.exception.ExceptionConsumer;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownConsumer;
@@ -111,17 +113,12 @@ public class FFExecutor<R> {
 
 	private OutputStreamSupplier outputStreamSupplier;
 
-	/**
-	 * @param operation
-	 */
+	private Function<CommandLine, String> toStringCommandLine = CommandLineUtils::toLine;
+
 	public FFExecutor(Operation<R, ?> operation) {
 		this(operation, null);
 	}
 
-	/**
-	 * @param operation
-	 * @param ffmpegExecutorBuilder
-	 */
 	public FFExecutor(Operation<R, ?> operation, FFMPEGExecutorBuilder ffmpegExecutorBuilder) {
 		this.operation = Objects.requireNonNull(operation);
 		this.ffmpegExecutorBuilder = ffmpegExecutorBuilder;
@@ -160,41 +157,22 @@ public class FFExecutor<R> {
 		customizeSoftExecutors = new LinkedList<>();
 	}
 
-	/**
-	 * @return the operation
-	 */
 	public Operation<R, ?> getOperation() {
 		return operation;
 	}
 
-	/**
-	 * @return
-	 */
 	public Progress getProgress() {
 		return progressReadLine;
 	}
 
-	/**
-	 * @return
-	 */
 	public void debug() {
 		debug(true);
 	}
 
-	/**
-	 * @param debug
-	 * @return
-	 */
 	public void debug(boolean debug) {
 		debug(debug, null, null);
 	}
 
-	/**
-	 * @param debug
-	 * @param outDebugConsumer
-	 * @param errDebugConsumer
-	 * @return
-	 */
 	public void debug(boolean debug, Consumer<String> outDebugConsumer, Consumer<String> errDebugConsumer) {
 		this.debug = debug;
 		if(outDebugConsumer != null) {
@@ -205,32 +183,19 @@ public class FFExecutor<R> {
 		}
 	}
 
-	/**
-	 * @param readLine
-	 */
 	public void addReadLineOnOut(ReadLine readLine) {
 		outReadLines.add(Objects.requireNonNull(readLine));
 	}
 
-	/**
-	 * @param readLine
-	 */
 	public void addReadLineOnErr(ReadLine readLine) {
 		errReadLines.add(Objects.requireNonNull(readLine));
 	}
 
-	/**
-	 * @param readLine
-	 */
 	public void addReadLine(ReadLine readLine) {
 		readLines.add(Objects.requireNonNull(readLine));
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
-	public String getCommandLine() throws IOException {
+	public String getCommandLineString() throws IOException {
 		List<String> arguments = operation.toArguments();
 
 		File fffile = FFSoft.search(operation.getFFName()).getFile();
@@ -239,78 +204,53 @@ public class FFExecutor<R> {
 		}
 
 		arguments.add(0, fffile.getAbsolutePath());
-		return CommandLineUtils.toLine(arguments);
+		CommandLine commandLine = CommandLine.parse(fffile.getAbsolutePath());
+		arguments.forEach(commandLine::addArgument);
+		return toStringCommandLine.apply(commandLine);
 	}
 
-	/**
-	 * @return
-	 */
 	public BufferedReadLine getOutputReadLine() {
 		return outputReadLine;
 	}
 
-	/**
-	 * @param inputStreamSupplier
-	 */
 	public void input(InputStreamSupplier inputStreamSupplier) {
 		this.inputStreamSupplier = inputStreamSupplier;
 	}
 
-	/**
-	 * @param outputStreamSupplier
-	 */
 	public void output(OutputStreamSupplier outputStreamSupplier) {
 		this.outputStreamSupplier = outputStreamSupplier;
 	}
 
-	/**
-	 * @param fallback
-	 */
 	public void addFallback(FFExecFallback fallback) {
 		fallbacks.add(Objects.requireNonNull(fallback));
 	}
 
-	/**
-	 * @param fmvExecListener
-	 */
 	public void addListener(FFExecListener ffExecListener) {
 		ffExecListeners.add(Objects.requireNonNull(ffExecListener));
 	}
 
-	/**
-	 * @param exceptionKnowConsumer
-	 */
 	public void ifExceptionIsKnownDo(ExceptionKnownConsumer exceptionKnowConsumer) {
 		this.exceptionKnownConsumer = exceptionKnowConsumer;
 	}
 
-	/**
-	 * @param exceptionKnowConsumer
-	 */
 	public void ifExceptionDo(ExceptionConsumer exceptionConsumer) {
 		this.exceptionConsumer = exceptionConsumer;
 	}
 
-	/**
-	 * @param customizeSoftExecutor
-	 */
 	public void customizeSoftExecutor(Consumer<SoftExecutor> customizeSoftExecutor) {
 		if(customizeSoftExecutor != null) {
 			customizeSoftExecutors.add(customizeSoftExecutor);
 		}
 	}
 
-	/**
-	 * @param soft
-	 */
+	public void setToStringCommandLine(Function<CommandLine, String> toStringCommandLine) {
+		this.toStringCommandLine = Objects.requireNonNull(toStringCommandLine);
+	}
+
 	public void setSoft(Soft soft) {
 		this.customSoft = soft;
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	public Prepare prepare() throws IOException {
 		if(prepare != null) {
 			throw new RuntimeException("Already prepared");
@@ -319,10 +259,6 @@ public class FFExecutor<R> {
 		return prepare;
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	public Executed<R> execute() throws IOException {
 		if(prepare != null) {
 			throw new RuntimeException("Already executed");
@@ -428,16 +364,10 @@ public class FFExecutor<R> {
 
 		private final Soft soft;
 
-		/**
-		 * @throws IOException
-		 */
 		private Prepare() throws IOException {
 			soft = customSoft != null ? customSoft : FFSoft.search(operation.getFFName());
 		}
 
-		/**
-		 * @return
-		 */
 		public SoftExecutor getSoftExecutor() {
 			NoOverwriteDeblock noOverwriteDeblock = new NoOverwriteDeblock();
 			SoftExecutor softExecutor = soft.withParameters(operation.toArguments())
@@ -468,23 +398,16 @@ public class FFExecutor<R> {
 			return softExecutor;
 		}
 
-		/**
-		 * @return
-		 */
 		public CommandLine getCommandLine() {
-			return soft.withParameters(operation.toArguments()).getCommandLine();
+			return new UnmodifiableCommandLine(soft.withParameters(operation.toArguments()).getCommandLine());
 		}
 
-		/**
-		 * @return
-		 * @throws IOException
-		 */
 		public Executed<R> execute() throws IOException {
 			try {
 				return _execute();
 			} catch(IOException e) {
 				FFExecListener ffExecListener = new Proxifier<>(FFExecListener.class).addAll(ffExecListeners).proxify();
-				ffExecListener.eventExecFailed(e, getCommandLine());
+				ffExecListener.eventExecFailed(e, new UnmodifiableCommandLine(getCommandLine()));
 				Executed<R> runFallbacks = runFallbacks(e, ffExecListener);
 				if(runFallbacks != null) {
 					return runFallbacks;
@@ -496,11 +419,6 @@ public class FFExecutor<R> {
 
 		// **************************************************
 
-		/**
-		 * @param e
-		 * @param ffExecListener
-		 * @return
-		 */
 		protected Executed<R> runFallbacks(IOException originalException, FFExecListener ffExecListener) throws IOException {
 			if(fallbacks.isEmpty()) {
 				return null;
@@ -531,9 +449,8 @@ public class FFExecutor<R> {
 						ffs.add(fallback);
 					}
 				} catch(IOException fbe) {
-					throw new FMVExecuteException(FFExceptionKnownAnalyzer.class, 0, originalException, CommandLineUtils
-							.toLine(getCommandLine()),
-							outputs);
+					throw new FMVExecuteException(FFExceptionKnownAnalyzer.class, 0, originalException,
+							toStringCommandLine.apply(getCommandLine()), outputs);
 				}
 			}
 			if( ! ffs.isEmpty()) {

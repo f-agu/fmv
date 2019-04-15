@@ -18,6 +18,7 @@ import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.BitStreamFilter;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
 import org.fagu.fmv.utils.media.Rotation;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -28,7 +29,7 @@ import org.junit.Test;
 public class StreamTestCase {
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testInputPipeToFile() throws Exception {
 		File outFile = new File("c:\\tmp\\out.ts");
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
@@ -43,16 +44,16 @@ public class StreamTestCase {
 				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
+		System.out.println(executor.getCommandLineString());
 		executor.input(() -> ResourceUtils.open("mp4.mp4"));
 		executor.execute();
 
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testInputPipeToFile2() throws Exception {
-		File outFile = new File("c:\\tmp\\out.mp4");
+		File outFile = new File("d:\\tmp\\out.mp4");
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
 		builder.addMediaInput(new PipeMediaInput())
@@ -70,7 +71,7 @@ public class StreamTestCase {
 		// .overwrite();
 
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
+		System.out.println(executor.getCommandLineString());
 		executor.input(() -> ResourceUtils.open("mp4.mp4"));
 		executor.execute();
 
@@ -89,8 +90,10 @@ public class StreamTestCase {
 					.format(Formats.NUT.getName())
 					.overwrite();
 
+			// Formats.MP4 : [mp4 @ 0000022fd170ddc0] muxer does not support non seekable output
+
 			FFExecutor<Object> executor = builder.build();
-			System.out.println(executor.getCommandLine());
+			System.out.println(executor.getCommandLineString());
 			executor.output(() -> outputStream);
 			executor.execute();
 		} finally {

@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteException;
-import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.exec.BufferedReadLine;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.ExecHelper;
@@ -201,11 +200,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 	@FunctionalInterface
 	public interface ParserFactory {
 
-		/**
-		 * @param file
-		 * @param softPolicy
-		 * @return
-		 */
 		Parser create(File file, SoftPolicy softPolicy);
 	}
 
@@ -216,54 +210,25 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 	 */
 	public interface Parser {
 
-		/**
-		 * @param line
-		 */
 		void readLine(String line);
 
-		/**
-		 * @param line
-		 */
 		default void readLineOut(String line) {
 			readLine(line);
 		}
 
-		/**
-		 * @param line
-		 */
 		default void readLineErr(String line) {
 			readLine(line);
 		}
 
-		/**
-		 * @param cmdLineStr
-		 * @param exitValue
-		 * @return
-		 * @throws IOException
-		 */
 		SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException;
 
-		/**
-		 * @param ioException
-		 * @param cmdLineStr
-		 * @param allLines
-		 * @return
-		 * @throws IOException
-		 */
 		default SoftFound closeAndParse(IOException ioException, String cmdLineStr, List<String> allLines) throws IOException {
-			String msg = cmdLineStr + SystemUtils.LINE_SEPARATOR + allLines.stream().collect(Collectors.joining(SystemUtils.LINE_SEPARATOR));
+			String msg = cmdLineStr + System.lineSeparator() + allLines.stream().collect(Collectors.joining(System.lineSeparator()));
 			throw new IOException(msg, ioException);
 		}
 
-		/**
-		 * @param executeException
-		 * @param cmdLineStr
-		 * @param allLines
-		 * @return
-		 * @throws IOException
-		 */
 		default SoftFound closeAndParse(ExecuteException executeException, String cmdLineStr, List<String> allLines) throws ExecuteException {
-			String msg = cmdLineStr + SystemUtils.LINE_SEPARATOR + allLines.stream().collect(Collectors.joining(SystemUtils.LINE_SEPARATOR));
+			String msg = cmdLineStr + System.lineSeparator() + allLines.stream().collect(Collectors.joining(System.lineSeparator()));
 			throw new ExecuteException(msg, executeException.getExitValue(), executeException);
 		}
 
@@ -277,10 +242,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 	@FunctionalInterface
 	public interface ParseVersion {
 
-		/**
-		 * @param line
-		 * @return
-		 */
 		Version readLineAndParse(String line);
 	}
 
@@ -292,10 +253,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 	@FunctionalInterface
 	public interface ParseVersionDate {
 
-		/**
-		 * @param line
-		 * @return
-		 */
 		VersionDate readLineAndParse(String line);
 	}
 
@@ -334,18 +291,10 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 	}
 
 	// ------------------------------------------------------------
-	/**
-	 * @author fagu
-	 */
+
 	@FunctionalInterface
 	public interface ExecutorFactory {
 
-		/**
-		 * @param file
-		 * @param parser
-		 * @param readLine
-		 * @return
-		 */
 		FMVExecutor create(File file, Parser parser, ReadLine readLine);
 	}
 
@@ -359,12 +308,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	private final Supplier<List<String>> bufferedReadLineSupplier;
 
-	/**
-	 * @param executorFactory
-	 * @param parameters
-	 * @param parserFactory
-	 * @param bufferedReadLineSupplier
-	 */
 	private ExecSoftFoundFactory(ExecutorFactory executorFactory, List<String> parameters, ParserFactory parserFactory,
 			Supplier<List<String>> bufferedReadLineSupplier) {
 		this.executorFactory = Objects.requireNonNull(executorFactory);
@@ -373,24 +316,14 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 		this.bufferedReadLineSupplier = bufferedReadLineSupplier;
 	}
 
-	/**
-	 * @param softProvider
-	 * @return
-	 */
 	public static ExecSoftFoundFactoryPrepare forProvider(SoftProvider softProvider) {
 		return new ExecSoftFoundFactoryPrepare(softProvider);
 	}
 
-	/**
-	 * @return
-	 */
 	public ParserFactory getParserFactory() {
 		return parserFactory;
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftFoundFactory#create(java.io.File, Locator, SoftPolicy)
-	 */
 	@Override
 	public final SoftFound create(File file, Locator locator, SoftPolicy softPolicy) throws IOException {
 		Parser parser = parserFactory.create(file, softPolicy);

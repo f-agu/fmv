@@ -189,6 +189,6 @@ public class Reduce {
 		// outputProcessor.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
+		System.out.println(executor.getCommandLineString());
 	}
 }

@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.fagu.fmv.soft.SoftExecutor;
+import org.fagu.fmv.soft.exec.CommandLineUtils;
 
 
 /**
@@ -22,9 +23,6 @@ import org.fagu.fmv.soft.SoftExecutor;
  */
 public class MPlayerDump {
 
-	/**
-	 * @author fagu
-	 */
 	public static class MPlayerDumpBuilder {
 
 		private final File dvdDrive;
@@ -37,19 +35,11 @@ public class MPlayerDump {
 			this.dvdDrive = Objects.requireNonNull(dvdDrive);
 		}
 
-		/**
-		 * @param progress
-		 * @return
-		 */
 		public MPlayerDumpBuilder progress(IntConsumer progress) {
 			this.progress = progress;
 			return this;
 		}
 
-		/**
-		 * @param logger
-		 * @return
-		 */
 		public MPlayerDumpBuilder logger(Consumer<String> logger) {
 			if(logger != null) {
 				this.logger = logger;
@@ -57,12 +47,6 @@ public class MPlayerDump {
 			return this;
 		}
 
-		/**
-		 * @param titleNum
-		 * @param outFile
-		 * @return
-		 * @throws IOException
-		 */
 		public MPlayerDump dump(int titleNum, File outFile) throws IOException {
 			List<String> params = new ArrayList<>();
 			params.add("-dumpstream");
@@ -75,7 +59,7 @@ public class MPlayerDump {
 			List<Stream> streams = new ArrayList<>();
 			SoftExecutor softExecutor = MPlayer.search()
 					.withParameters(params)
-					.logCommandLine(logger)
+					.logCommandLine(cl -> logger.accept(CommandLineUtils.toLine(cl)))
 					.addOutReadLine(l -> {
 						if(l.startsWith("audio stream:")) {
 							Map<String, String> parse = parse(l.substring(0, l.length() - 1));

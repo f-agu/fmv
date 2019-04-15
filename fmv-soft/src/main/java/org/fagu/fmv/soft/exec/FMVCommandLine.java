@@ -31,67 +31,34 @@ import org.apache.commons.exec.CommandLine;
  */
 public class FMVCommandLine extends CommandLine {
 
-	/**
-	 * @param executable
-	 * @param args
-	 * @return
-	 */
 	public static FMVCommandLine create(String executable, Collection<String> args) {
 		return new FMVCommandLine(executable).addArgs(args);
 	}
 
-	/**
-	 * @param executable
-	 * @param args
-	 * @return
-	 */
 	public static FMVCommandLine create(String executable, String... args) {
 		return new FMVCommandLine(executable).addArgs(args);
 	}
 
-	/**
-	 * @param executable
-	 * @param args
-	 * @return
-	 */
 	public static FMVCommandLine create(File executable, Collection<String> args) {
 		return new FMVCommandLine(executable).addArgs(args);
 	}
 
-	/**
-	 * @param executable
-	 * @param args
-	 * @return
-	 */
 	public static FMVCommandLine create(File executable, String... args) {
 		return new FMVCommandLine(executable).addArgs(args);
 	}
 
-	/**
-	 * @param executable
-	 */
 	public FMVCommandLine(String executable) {
 		super(executable);
 	}
 
-	/**
-	 * @param executable
-	 */
 	public FMVCommandLine(File executable) {
 		super(executable);
 	}
 
-	/**
-	 * @param other
-	 */
 	public FMVCommandLine(CommandLine other) {
 		super(other);
 	}
 
-	/**
-	 * @param args
-	 * @return
-	 */
 	public FMVCommandLine addArgs(Collection<String> args) {
 		for(String arg : args) {
 			addArgument(arg);
@@ -99,10 +66,6 @@ public class FMVCommandLine extends CommandLine {
 		return this;
 	}
 
-	/**
-	 * @param args
-	 * @return
-	 */
 	public FMVCommandLine addArgs(String... args) {
 		for(String arg : args) {
 			addArgument(arg);
@@ -110,17 +73,11 @@ public class FMVCommandLine extends CommandLine {
 		return this;
 	}
 
-	/**
-	 * @see org.apache.commons.exec.CommandLine#addArgument(java.lang.String)
-	 */
 	@Override
 	public CommandLine addArgument(String argument) {
 		return super.addArgument(argument, false);
 	}
 
-	/**
-	 * @see org.apache.commons.exec.CommandLine#addArguments(java.lang.String[])
-	 */
 	@Override
 	public CommandLine addArguments(String[] addArguments) {
 		return super.addArguments(addArguments, false);

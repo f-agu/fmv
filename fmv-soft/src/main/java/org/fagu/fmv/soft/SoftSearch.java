@@ -39,59 +39,33 @@ public class SoftSearch {
 
 	private Properties searchProperties;
 
-	/**
-	 * @param softProvider
-	 */
 	SoftSearch(SoftProvider softProvider) {
 		this(sp -> softProvider);
 	}
 
-	/**
-	 * @param softProvider
-	 */
 	SoftSearch(Function<SoftPolicy, SoftProvider> softProviderSupplier) {
 		this.softProviderSupplier = Objects.requireNonNull(softProviderSupplier);
 		softFindListeners = new ArrayList<>();
 	}
 
-	/**
-	 * @param softPolicy
-	 * @return
-	 */
 	public SoftSearch withPolicy(SoftPolicy softPolicy) {
 		this.softPolicy = softPolicy;
 		return this;
 	}
 
-	/**
-	 * @param version
-	 * @return
-	 */
 	public SoftSearch withMinVersion(Version version) {
 		return withPolicy(new VersionSoftPolicy().onAllPlatforms(VersionSoftPolicy.minVersion(version)));
 	}
 
-	/**
-	 * @param values
-	 * @return
-	 */
 	public SoftSearch withMinVersion(int... values) {
 		return withPolicy(new VersionSoftPolicy().onAllPlatforms(VersionSoftPolicy.minVersion(values)));
 	}
 
-	/**
-	 * @param softLocator
-	 * @return
-	 */
 	public SoftSearch withLocator(SoftLocator softLocator) {
 		this.softLocator = softLocator;
 		return this;
 	}
 
-	/**
-	 * @param softFindListener
-	 * @return
-	 */
 	public SoftSearch withListener(SoftFindListener softFindListener) {
 		if(softFindListener != null) {
 			softFindListeners.add(softFindListener);
@@ -99,10 +73,6 @@ public class SoftSearch {
 		return this;
 	}
 
-	/**
-	 * @param softFindListeners
-	 * @return
-	 */
 	public SoftSearch withListeners(Collection<SoftFindListener> softFindListeners) {
 		if(softFindListeners != null) {
 			softFindListeners.stream()
@@ -149,18 +119,12 @@ public class SoftSearch {
 
 	// *****************
 
-	/**
-	 * 
-	 */
 	private void checkUsed() {
 		if(softProvider != null) {
 			throw new IllegalStateException("Already used");
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	private SoftProvider getProvider() {
 		if(softProvider == null) {
 			softProvider = softProviderSupplier.apply(softPolicy);
@@ -168,9 +132,6 @@ public class SoftSearch {
 		return softProvider;
 	}
 
-	/**
-	 * 
-	 */
 	private SoftLocator getLocator() {
 		SoftLocator myLoc = softLocator;
 		if(myLoc == null) {
@@ -184,11 +145,6 @@ public class SoftSearch {
 		return myLoc;
 	}
 
-	/**
-	 * @param founds
-	 * @param softLocator
-	 * @return
-	 */
 	private Soft createAndfireEventFound(Founds founds, SoftLocator softLocator) {
 		Soft soft = getProvider().createSoft(founds);
 

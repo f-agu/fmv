@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.executor;
  * #L%
  */
 
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -36,22 +35,10 @@ import org.fagu.fmv.soft.exec.FMVExecListener;
  */
 public interface FFExecListener extends FMVExecListener {
 
-	/**
-	 * @param e
-	 * @param command
-	 */
 	default void eventExecFailed(IOException e, CommandLine command) {}
 
-	/**
-	 * @param command
-	 * @param fallbacks
-	 */
 	default void eventPreExecFallbacks(CommandLine command, Collection<FFExecFallback> fallbacks) {}
 
-	/**
-	 * @param command
-	 * @param outputs
-	 */
 	default void eventFallbackNotFound(CommandLine command, List<String> outputs) {}
 
 }

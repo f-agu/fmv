@@ -74,11 +74,6 @@ public class Soft {
 
 	// =============
 
-	/**
-	 * @param execFile
-	 * @return
-	 * @throws IOException
-	 */
 	public static Soft withExecFile(String execFile) throws IOException {
 		File file = new File(execFile);
 		if( ! execFile.contains("/") && ! execFile.contains("\\") && ! file.exists()) {
@@ -95,10 +90,6 @@ public class Soft {
 		return withExecFile(file);
 	}
 
-	/**
-	 * @param softName
-	 * @return
-	 */
 	public static Soft withExecFile(File file) throws IOException {
 		if( ! file.exists()) {
 			throw new FileNotFoundException(file.getAbsolutePath());
@@ -146,65 +137,36 @@ public class Soft {
 		return soft;
 	}
 
-	/**
-	 * @param searchProperties
-	 * @return
-	 */
 	public static Stream<Soft> searchAll() {
 		return SoftProvider.getSoftProviders().map(SoftProvider::search);
 	}
 
-	/**
-	 * @param softSearchConsumer
-	 * @param searchProperties
-	 * @return
-	 */
 	public static Stream<Soft> searchAll(Consumer<SoftSearch> softSearchConsumer) {
 		return SoftProvider.getSoftProviders().map(sp -> sp.searchConfigurable(softSearchConsumer));
 	}
 
-	/**
-	 * @param softProvider
-	 * @return
-	 */
 	public static SoftSearch with(SoftProvider softProvider) {
 		return new SoftSearch(softProvider);
 	}
 
-	/**
-	 * @param softProviderSupplier
-	 * @return
-	 */
 	public static SoftSearch with(Function<SoftPolicy, SoftProvider> softProviderSupplier) {
 		return new SoftSearch(softProviderSupplier);
 	}
 
 	// =============
 
-	/**
-	 * @return
-	 */
 	public String getName() {
 		return founds.getSoftName();
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isFound() {
 		return founds.isFound();
 	}
 
-	/**
-	 * @return
-	 */
 	public Founds getFounds() {
 		return founds;
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftFound getFirstFound() {
 		if( ! founds.isFound()) {
 			throw new IllegalStateException("Soft " + getName() + " not found");
@@ -212,41 +174,23 @@ public class Soft {
 		return founds.getFirstFound();
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftInfo getFirstInfo() {
 		return getFirstFound().getSoftInfo();
 	}
 
-	/**
-	 * @return
-	 */
 	public File getFile() {
 		return getFirstFound().getFile();
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	public SoftFound reFind() throws IOException {
 		SoftFoundFactory softFoundFactory = getSoftProvider().createSoftFoundFactory(searchProperties);
 		return softFoundFactory.create(getFile(), null, getSoftPolicy());
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftExecutor withoutParameter() {
 		return withParameters(Collections.emptyList());
 	}
 
-	/**
-	 * @param param1
-	 * @param otherPparameters
-	 * @return
-	 */
 	public SoftExecutor withParameters(String param1, String... otherPparameters) {
 		List<String> params = new ArrayList<>(1 + otherPparameters.length);
 		params.add(param1);
@@ -254,40 +198,23 @@ public class Soft {
 		return withParameters(params);
 	}
 
-	/**
-	 * @param parameters
-	 * @return
-	 */
 	public SoftExecutor withParameters(List<String> parameters) {
 		return softProvider.createSoftExecutor(this, getFile(), parameters);
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	public Executed execute() throws IOException {
 		return withoutParameter().execute();
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftProvider getSoftProvider() {
 		return softProvider;
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftPolicy getSoftPolicy() {
 		SoftPolicy softPolicy = founds.getSoftPolicy();
 		return softPolicy != null ? softPolicy : softProvider.getSoftPolicy();
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder();

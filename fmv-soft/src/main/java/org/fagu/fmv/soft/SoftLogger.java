@@ -42,26 +42,16 @@ public class SoftLogger {
 
 	private final List<Soft> softs;
 
-	/**
-	 * @param softs
-	 */
 	public SoftLogger(List<Soft> softs) {
 		this.softs = new ArrayList<>(softs);
 		Collections.sort(this.softs, (s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
 	}
 
-	/**
-	 * @param formatConsumer
-	 * @return
-	 */
 	public boolean log(Consumer<String> formatConsumer) {
 		logDetails(formatConsumer);
 		return logConclusion(formatConsumer);
 	}
 
-	/**
-	 * @param formatConsumer
-	 */
 	public SoftLogger logDetails(Consumer<String> formatConsumer) {
 		int maxLength = getNameMaxLength() + 3;
 		for(Soft soft : softs) {
@@ -91,26 +81,16 @@ public class SoftLogger {
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftLogger supplyInfoContributor() {
 		softs.forEach(Softs::contributeInfo);
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftLogger supplyHealthIndicator() {
 		softs.forEach(Softs::indicateHealth);
 		return this;
 	}
 
-	/**
-	 * @param formatConsumer
-	 * @return
-	 */
 	public boolean logConclusion(Consumer<String> formatConsumer) {
 		int countNotFound = (int)softs.stream().map(Soft::isFound).filter(b -> ! b).count();
 		if(countNotFound <= 0) {
@@ -127,7 +107,7 @@ public class SoftLogger {
 		String pathEnv = System.getenv("PATH");
 		formatConsumer.accept("PATH: " + pathEnv);
 		if(pathEnv.contains("eclipse")) {
-			formatConsumer.accept("AND RESTART YOUR ECLIPSE");
+			formatConsumer.accept("AND STOP & START YOUR IDE");
 		}
 		formatConsumer.accept("=====================================================================");
 		return false;
@@ -135,42 +115,21 @@ public class SoftLogger {
 
 	// *************************************************
 
-	/**
-	 * @return
-	 */
 	private int getNameMaxLength() {
 		return softs.stream().mapToInt(soft -> soft.getName().length()).max().orElse(0);
 	}
 
-	/**
-	 * @param softFound
-	 * @return
-	 */
 	private String getReasonName(SoftFound softFound) {
 		FoundReason foundReason = softFound != null ? softFound.getFoundReason() : FoundReasons.NOT_FOUND;
 		return StringUtils.center(foundReason.name(), 11);
 	}
 
-	/**
-	 * @param maxLength
-	 * @param name
-	 * @param softFound
-	 * @return
-	 */
 	private StringBuilder startLine(int maxLength, String name, SoftFound softFound) {
-		StringBuilder line = new StringBuilder();
-		line.append(StringUtils.rightPad(name != null ? name : "", maxLength));
-		line.append('[').append(getReasonName(softFound)).append(']');
-		return line;
-
+		return new StringBuilder()
+				.append(StringUtils.rightPad(name != null ? name : "", maxLength))
+				.append('[').append(getReasonName(softFound)).append(']');
 	}
 
-	/**
-	 * @param line
-	 * @param softProvider
-	 * @param softFound
-	 * @param formatConsumer
-	 */
 	private void toLine(StringBuilder line, SoftProvider softProvider, SoftFound softFound, Consumer<String> formatConsumer) {
 		if(softFound != null) {
 			String info = softFound.getInfo();
@@ -210,10 +169,6 @@ public class SoftLogger {
 
 	}
 
-	/**
-	 * @param line
-	 * @param softFound
-	 */
 	private void appendFile(StringBuilder line, SoftFound softFound) {
 		File file = softFound.getFile();
 		if(file != null) {

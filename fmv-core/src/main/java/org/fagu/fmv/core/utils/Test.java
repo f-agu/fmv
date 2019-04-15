@@ -102,7 +102,7 @@ public class Test {
 		outputProcessor.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
+		System.out.println(executor.getCommandLineString());
 
 		FilterGraphUI.show(builder.getFFMPEGOperation());
 		// executor.execute();
@@ -169,7 +169,7 @@ public class Test {
 		outputProcessor.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
+		System.out.println(executor.getCommandLineString());
 
 		FilterGraphUI.show(builder.getFFMPEGOperation());
 		// executor.execute();

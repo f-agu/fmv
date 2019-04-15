@@ -65,7 +65,7 @@ public class Rotate {
 		outputProcessor.format("mp4");
 
 		FFExecutor<Object> executor = builder.build();
-		logger.log(executor.getCommandLine());
+		logger.log(executor.getCommandLineString());
 	}
 
 }

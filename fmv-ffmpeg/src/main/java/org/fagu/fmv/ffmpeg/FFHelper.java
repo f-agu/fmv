@@ -140,7 +140,7 @@ public class FFHelper {
 				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
+		System.out.println(executor.getCommandLineString());
 		long startTime = System.currentTimeMillis();
 		executor.execute();
 		long endTime = System.currentTimeMillis();
@@ -610,7 +610,7 @@ public class FFHelper {
 		builder.addMediaOutput(NullMuxer.build()).overwrite();
 
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
+		System.out.println(executor.getCommandLineString());
 		executor.execute();
 
 		return cropDetect.getCropSizeDetected();
@@ -984,7 +984,7 @@ public class FFHelper {
 		outputProcessor.map().allStreams().input(filter);
 
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
+		System.out.println(executor.getCommandLineString());
 		// Integer numberOfFrames =
 		// movieMetadatas.getAudioStream().countEstimateFrames();
 		// prepareProgressBar(numberOfFrames, executor, consolePrefixMessage);
@@ -1007,7 +1007,7 @@ public class FFHelper {
 
 		builder.addMediaOutputFile(outImage).numberOfVideoFrameToRecord(1);
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
+		System.out.println(executor.getCommandLineString());
 		executor.execute();
 	}
 
@@ -1027,7 +1027,7 @@ public class FFHelper {
 
 		builder.addMediaOutputFile(outImage).numberOfVideoFrameToRecord(1);
 		FFExecutor<Object> executor = builder.build();
-		System.out.println(executor.getCommandLine());
+		System.out.println(executor.getCommandLineString());
 		executor.execute();
 	}
 

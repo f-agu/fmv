@@ -42,14 +42,6 @@ public class PipeInOutTest {
 
 	private static final String EXPECTED_SHA1 = "29f7fb4a25165a54354044a0960b380257daa81f";
 
-	/**
-	 * 
-	 */
-	public PipeInOutTest() {}
-
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testPipe_no() throws Exception {
 		File srcFile = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
@@ -72,9 +64,6 @@ public class PipeInOutTest {
 		}
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testPipeInOut() throws Exception {
 		File srcFile = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
@@ -102,9 +91,6 @@ public class PipeInOutTest {
 		}
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testPipeIn() throws Exception {
 		File srcFile = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
@@ -130,9 +116,6 @@ public class PipeInOutTest {
 		}
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testPipeOut() throws Exception {
 		File srcFile = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
@@ -160,11 +143,6 @@ public class PipeInOutTest {
 
 	// *********************************************************
 
-	/**
-	 * @param file
-	 * @return
-	 * @throws Exception
-	 */
 	private static String sha1Of(File file) throws Exception {
 		MessageDigest digest = MessageDigest.getInstance("SHA-1");
 		try (InputStream inputStream = new FileInputStream(file)) {

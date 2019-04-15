@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.commons.exec.CommandLine;
@@ -26,6 +27,7 @@ import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.soft.exec.LookReader;
 import org.fagu.fmv.soft.exec.PIDProcessOperator;
 import org.fagu.fmv.soft.exec.ReadLine;
+import org.fagu.fmv.soft.exec.UnmodifiableCommandLine;
 import org.fagu.fmv.soft.exec.WrapFuture;
 import org.fagu.fmv.soft.exec.exception.ExceptionConsumer;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzers;
@@ -59,11 +61,8 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 
 	private Supplier<List<String>> bufferedReadLineSupplier = () -> new LimitedLastQueue<>(500);
 
-	/**
-	 * @param softProvider
-	 * @param execFile
-	 * @param parameters
-	 */
+	private Function<CommandLine, String> toStringCommandLine = CommandLineUtils::toLine;
+
 	public SoftExecutor(SoftProvider softProvider, File execFile, List<String> parameters) {
 		this.softProvider = Objects.requireNonNull(softProvider);
 		this.execFile = Objects.requireNonNull(execFile);
@@ -72,35 +71,23 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		environmentMap = new HashMap<>();
 	}
 
-	/**
-	 * @param execListener
-	 * @return
-	 */
 	public SoftExecutor addListener(ExecListener execListener) {
 		execListeners.add(Objects.requireNonNull(execListener));
 		return this;
 	}
 
-	/**
-	 * @param commandLineConsumer
-	 * @return
-	 */
-	public SoftExecutor logCommandLine(Consumer<String> commandLineConsumer) {
+	public SoftExecutor logCommandLine(Consumer<CommandLine> commandLineConsumer) {
 		return addListener(new ExecListener() {
 
 			@Override
-			public void eventPrepare(String cmdLineStr) {
+			public void eventPrepare(CommandLine commandLine) {
 				if(commandLineConsumer != null) {
-					commandLineConsumer.accept(cmdLineStr);
+					commandLineConsumer.accept(commandLine);
 				}
 			}
 		});
 	}
 
-	/**
-	 * @param exceptionKnowConsumer
-	 * @return
-	 */
 	public SoftExecutor ifExceptionIsKnownDo(ExceptionKnownConsumer exceptionKnowConsumer) {
 		if(softProvider.getExceptionKnownAnalyzerClass() != null) {
 			this.exceptionKnowConsumer = exceptionKnowConsumer;
@@ -108,87 +95,61 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		return this;
 	}
 
-	/**
-	 * @param exceptionConsumer
-	 * @return
-	 */
 	public SoftExecutor ifExceptionDo(ExceptionConsumer exceptionConsumer) {
 		this.exceptionConsumer = exceptionConsumer;
 		return this;
 	}
 
-	/**
-	 * @param bufferedReadLineSupplier
-	 * @return
-	 */
 	public SoftExecutor setBufferedReadLineSupplier(Supplier<List<String>> bufferedReadLineSupplier) {
 		this.bufferedReadLineSupplier = Objects.requireNonNull(bufferedReadLineSupplier);
 		return this;
 	}
 
-	/**
-	 * @param lookReader
-	 * @return
-	 */
 	@Override
 	public SoftExecutor lookReader(LookReader lookReader) {
 		this.lookReader = lookReader;
 		return this;
 	}
 
-	/**
-	 * @param key
-	 * @param value
-	 * @return
-	 */
 	public SoftExecutor addEnv(String key, String value) {
 		environmentMap.put(key, value);
 		return this;
 	}
 
-	/**
-	 * @param map
-	 * @return
-	 */
 	public SoftExecutor addEnvs(Map<String, String> map) {
 		environmentMap.putAll(map);
 		return this;
 	}
 
-	/**
-	 * @param executeDelegate
-	 * @return
-	 */
 	public SoftExecutor setExecuteDelegate(ExecuteDelegate executeDelegate) {
 		this.executeDelegate = Objects.requireNonNull(executeDelegate);
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
+	public SoftExecutor setToStringCommandLine(Function<CommandLine, String> toStringCommandLine) {
+		this.toStringCommandLine = Objects.requireNonNull(toStringCommandLine);
+		return this;
+	}
+
 	public CommandLine getCommandLine() {
 		return FMVCommandLine.create(execFile, parameters);
 	}
 
-	/**
-	 * @return Executed time in milliseconds
-	 * @throws IOException
-	 */
 	public SoftExecutor.Executed execute() throws IOException {
 		return execute((fmvExecutor, commandLine, execListener, readLineList) -> {
-			final String cmdLineStr = CommandLineUtils.toLine(commandLine);
+
 			long startTime = System.currentTimeMillis();
 			long time = 0;
 			int exitValue = 0;
 			PIDProcessOperator pidProcessOperator = new PIDProcessOperator();
 			fmvExecutor.addProcessOperator(pidProcessOperator);
 			try {
-				execListener.eventExecuting(cmdLineStr);
+				execListener.eventExecuting(commandLine);
 				exitValue = geExecuteDelegate().execute(fmvExecutor, commandLine);
 				time = System.currentTimeMillis() - startTime;
-				execListener.eventExecuted(cmdLineStr, exitValue, time);
+				execListener.eventExecuted(commandLine, exitValue, time);
 			} catch(ExecuteException e) {
+				final String cmdLineStr = toStringCommandLine.apply(commandLine);
 				FMVExecuteException fmvExecuteException = new FMVExecuteException(softProvider.getExceptionKnownAnalyzerClass(), e, cmdLineStr,
 						readLineList);
 				execListener.eventException(fmvExecuteException);
@@ -199,14 +160,8 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		});
 	}
 
-	/**
-	 * @param executorService
-	 * @return
-	 * @throws IOException
-	 */
 	public Future<SoftExecutor.Executed> executeInBackground(ExecutorService executorService) throws IOException {
 		return execute((fmvExecutor, commandLine, execListener, readLineList) -> {
-			final String cmdLineStr = CommandLineUtils.toLine(commandLine);
 			final AtomicLong startTime = new AtomicLong();
 			final AtomicLong time = new AtomicLong();
 			final PIDProcessOperator pidProcessOperator = new PIDProcessOperator();
@@ -215,17 +170,18 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 					// before
 					() -> {
 						startTime.set(System.currentTimeMillis());
-						execListener.eventExecuting(cmdLineStr);
+						execListener.eventExecuting(commandLine);
 					},
 					// after
 					exitValue -> {
 						time.set(System.currentTimeMillis() - startTime.get());
-						execListener.eventExecuted(cmdLineStr, exitValue, time.get());
+						execListener.eventExecuted(commandLine, exitValue, time.get());
 					},
 					// exception
 					exception -> {
 						if(exception instanceof ExecuteException) {
 							ExecuteException e = (ExecuteException)exception;
+							final String cmdLineStr = toStringCommandLine.apply(commandLine);
 							FMVExecuteException fmvExecuteException = new FMVExecuteException(softProvider.getExceptionKnownAnalyzerClass(), e,
 									cmdLineStr, readLineList);
 							execListener.eventException(fmvExecuteException);
@@ -282,17 +238,11 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 
 	// -------------------------------------------------------------
 
-	/**
-	 * @param executorService
-	 * @return
-	 * @throws IOException
-	 */
 	private <R> R execute(SoftExecutor.ForExec<R> forExec) throws IOException {
 		ExecListener execListener = new Proxifier<>(ExecListener.class).addAll(execListeners).proxify();
 
-		CommandLine commandLine = getCommandLine();
-		String cmdLineStr = CommandLineUtils.toLine(commandLine);
-		execListener.eventPrepare(cmdLineStr);
+		CommandLine commandLine = new UnmodifiableCommandLine(getCommandLine());
+		execListener.eventPrepare(commandLine);
 
 		List<String> readLineList = Objects.requireNonNull(bufferedReadLineSupplier.get());
 		ReadLine bufferedReadLine = new BufferedReadLine(readLineList);
@@ -302,9 +252,6 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		return forExec.exec(fmvExecutor, commandLine, execListener, readLineList);
 	}
 
-	/**
-	 * @return
-	 */
 	private ExecuteDelegate geExecuteDelegate() {
 		if(executeDelegate != null) {
 			return executeDelegate;
@@ -325,14 +272,6 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 	 */
 	private static interface ForExec<R> {
 
-		/**
-		 * @param fmvExecutor
-		 * @param commandLine
-		 * @param execListener
-		 * @param readLineList
-		 * @return
-		 * @throws IOException
-		 */
 		R exec(FMVExecutor fmvExecutor, CommandLine commandLine, ExecListener execListener, List<String> readLineList) throws IOException;
 	}
 

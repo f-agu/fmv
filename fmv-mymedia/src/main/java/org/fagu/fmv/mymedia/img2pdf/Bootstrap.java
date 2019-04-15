@@ -33,10 +33,12 @@ import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+import org.apache.commons.exec.CommandLine;
 import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.im.soft.Convert;
 import org.fagu.fmv.soft.ExecListener;
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.gs.GS;
 import org.fagu.fmv.utils.ByteSize;
 
@@ -193,8 +195,8 @@ public class Bootstrap {
 				.addListener(new ExecListener() {
 
 					@Override
-					public void eventPrepare(String cmdLineStr) {
-						System.out.println(cmdLineStr);
+					public void eventPrepare(CommandLine commandLine) {
+						System.out.println(CommandLineUtils.toLine(commandLine));
 					}
 				})
 				.execute();

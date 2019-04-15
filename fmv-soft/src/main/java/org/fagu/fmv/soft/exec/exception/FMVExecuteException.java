@@ -46,24 +46,11 @@ public class FMVExecuteException extends ExecuteException {
 
 	private ExceptionKnown exceptionKnown;
 
-	/**
-	 * @param exceptionKnownAnalyzerClass
-	 * @param executeException
-	 * @param commandLine
-	 * @param outputLines
-	 */
 	public FMVExecuteException(Class<? extends ExceptionKnownAnalyzer> exceptionKnownAnalyzerClass, ExecuteException executeException,
 			String commandLine, List<String> outputLines) {
 		this(exceptionKnownAnalyzerClass, executeException.getExitValue(), executeException, commandLine, outputLines);
 	}
 
-	/**
-	 * @param exceptionKnownAnalyzerClass
-	 * @param exitValue
-	 * @param exception
-	 * @param commandLine
-	 * @param outputLines
-	 */
 	public FMVExecuteException(Class<? extends ExceptionKnownAnalyzer> exceptionKnownAnalyzerClass, int exitValue, Exception exception,
 			String commandLine, List<String> outputLines) {
 		super(concat(exception.getMessage(), commandLine, outputLines), exitValue(exitValue, exception), exception);
@@ -72,23 +59,14 @@ public class FMVExecuteException extends ExecuteException {
 		this.outputLines = outputLines != null ? Collections.unmodifiableList(outputLines) : null;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getCommandLine() {
 		return commandLine;
 	}
 
-	/**
-	 * @return
-	 */
 	public List<String> getOutputLines() {
 		return outputLines;
 	}
 
-	/**
-	 * @return
-	 */
 	public ExceptionKnown getExceptionKnown() {
 		if(exceptionKnown == null && exceptionKnownAnalyzerClass != null) {
 			exceptionKnown = ExceptionKnownAnalyzers.getKnown(exceptionKnownAnalyzerClass, this).orElse(null);
@@ -96,21 +74,12 @@ public class FMVExecuteException extends ExecuteException {
 		return exceptionKnown;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isKnown() {
 		return getExceptionKnown() != null;
 	}
 
 	// *****************************************************
 
-	/**
-	 * @param message
-	 * @param commandLine
-	 * @param outputLines
-	 * @return
-	 */
 	private static String concat(String message, String commandLine, List<String> outputLines) {
 		StringBuilder msg = new StringBuilder(message);
 		if(StringUtils.isNotEmpty(commandLine)) {
@@ -122,11 +91,6 @@ public class FMVExecuteException extends ExecuteException {
 		return msg.toString();
 	}
 
-	/**
-	 * @param exitValue
-	 * @param exception
-	 * @return
-	 */
 	private static int exitValue(int exitValue, Exception exception) {
 		if(exception instanceof ExecuteException) {
 			ExecuteException executeException = (ExecuteException)exception;
