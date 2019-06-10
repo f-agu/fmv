@@ -197,15 +197,12 @@ public class FFExecutor<R> {
 
 	public String getCommandLineString() throws IOException {
 		List<String> arguments = operation.toArguments();
-
 		File fffile = FFSoft.search(operation.getFFName()).getFile();
 		if(fffile == null) {
 			throw new IOException("FFName " + operation.getFFName() + " not found or not declared. Use FFLocator.");
 		}
-
-		arguments.add(0, fffile.getAbsolutePath());
-		CommandLine commandLine = CommandLine.parse(fffile.getAbsolutePath());
-		arguments.forEach(commandLine::addArgument);
+		CommandLine commandLine = CommandLine.parse("\"" + fffile.getAbsolutePath() + "\"");
+		arguments.forEach(arg -> commandLine.addArgument(arg, false));
 		return toStringCommandLine.apply(commandLine);
 	}
 
