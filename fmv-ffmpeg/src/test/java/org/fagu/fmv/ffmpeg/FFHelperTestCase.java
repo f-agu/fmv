@@ -58,19 +58,11 @@ public class FFHelperTestCase {
 
 	private static Function<String, MovieMetadatas> movieMetadatasSupplier;
 
-	/**
-	 *
-	 */
 	@Before
 	public void setUp() {
 		movieMetadatasSupplier = null;
 		MockFFMPEGExecutorBuilder.mock(() -> movieMetadatasSupplier, cmd -> commandRan = cmd);
 	}
-
-	/**
-	 *
-	 */
-	public FFHelperTestCase() {}
 
 	/**
 	 * @throws Exception

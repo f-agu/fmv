@@ -365,7 +365,8 @@ public class FFHelper {
 		}
 
 		// filter
-		SelectVideo selectVideo = SelectVideo.build().countFrame(videoStream, countFrame);
+		SelectVideo selectVideo = SelectVideo.build().countFrame(videoStream, countFrame)
+				.orElseGet(() -> SelectVideo.build().everyFrame(1));
 		builder.filter(selectVideo);
 
 		// output
@@ -404,7 +405,8 @@ public class FFHelper {
 		VideoStream videoStream = movieMetadatas.getVideoStream();
 
 		// filter
-		SelectVideo selectVideo = SelectVideo.build().countFrame(videoStream, countFrame);
+		SelectVideo selectVideo = SelectVideo.build().countFrame(videoStream, countFrame)
+				.orElseGet(() -> SelectVideo.build().everyFrame(1));
 		builder.filter(selectVideo);
 
 		// necessary ?

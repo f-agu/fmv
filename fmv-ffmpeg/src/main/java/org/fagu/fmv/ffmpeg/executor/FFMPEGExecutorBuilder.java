@@ -74,8 +74,9 @@ public class FFMPEGExecutorBuilder {
 	 */
 	protected FFMPEGExecutorBuilder(FFExecutorFactory ffExecutorFactory, DefaultFFMPEGOperation<?> defaultFFMPEGOperation) {
 		this.ffExecutorFactory = ffExecutorFactory != null ? ffExecutorFactory : new FFExecutorFactoryImpl();
-		this.defaultFFMPEGOperation = defaultFFMPEGOperation != null ? defaultFFMPEGOperation : new DefaultFFMPEGOperation<>(new FilterNaming(),
-				new Require());
+		this.defaultFFMPEGOperation = defaultFFMPEGOperation != null ? defaultFFMPEGOperation
+				: new DefaultFFMPEGOperation<>(new FilterNaming(),
+						new Require());
 	}
 
 	/**
@@ -114,7 +115,9 @@ public class FFMPEGExecutorBuilder {
 	 * @return
 	 */
 	public FFMPEGExecutorBuilder filter(Filter filter) {
-		filter.beforeAdd(defaultFFMPEGOperation);
+		if(filter != null) {
+			filter.beforeAdd(defaultFFMPEGOperation);
+		}
 		return this;
 	}
 
