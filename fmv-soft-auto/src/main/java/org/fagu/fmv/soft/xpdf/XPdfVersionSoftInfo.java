@@ -34,19 +34,11 @@ public class XPdfVersionSoftInfo extends VersionSoftInfo {
 
 	private final Provider provider;
 
-	/**
-	 * @param file
-	 * @param softName
-	 * @param version
-	 */
 	public XPdfVersionSoftInfo(File file, String softName, Version version, Provider provider) {
 		super(file, softName, version);
 		this.provider = provider;
 	}
 
-	/**
-	 * @return
-	 */
 	public Provider getProvider() {
 		return provider;
 	}

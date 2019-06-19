@@ -30,16 +30,10 @@ public class PdfToPpmSoftProvider extends PdfSoftProvider {
 
 	public static final String NAME = "pdftoppm";
 
-	/**
-	 * 
-	 */
 	public PdfToPpmSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public PdfToPpmSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

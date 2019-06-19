@@ -1,4 +1,4 @@
-package org.fagu.fmv.soft.java;
+package org.fagu.fmv.soft.gpac;
 
 /*-
  * #%L
@@ -27,18 +27,18 @@ import org.fagu.fmv.soft.SoftSearch;
 /**
  * @author f.agu
  */
-public class Java {
+public class MP4Box {
 
-	private Java() {
+	private MP4Box() {
 		throw new AssertionError("No instances for you!");
 	}
 
 	public static Soft search() {
-		return Soft.search(new JavaSoftProvider());
+		return Soft.search(new MP4BoxSoftProvider());
 	}
 
 	public static SoftSearch searchWith() {
-		return Soft.with(JavaSoftProvider::new);
+		return Soft.with(MP4BoxSoftProvider::new);
 	}
 
 }

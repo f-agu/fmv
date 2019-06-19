@@ -30,16 +30,10 @@ public class PdfFontsSoftProvider extends PdfSoftProvider {
 
 	public static final String NAME = "pdffonts";
 
-	/**
-	 * 
-	 */
 	public PdfFontsSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public PdfFontsSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

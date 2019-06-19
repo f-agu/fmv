@@ -18,9 +18,6 @@ public class DefaultSelectTitlesPolicy implements SelectTitlesPolicy {
 
 	private static final Duration MIN_LENTGH_UNATARY = Duration.ofHours(1);
 
-	/**
-	 * @see org.fagu.fmv.soft.mplayer.SelectTitlesPolicy#select(java.util.Collection)
-	 */
 	@Override
 	public Collection<MPlayerTitle> select(Collection<MPlayerTitle> titles) {
 		SortedSet<MPlayerTitle> set = new TreeSet<>((t1, t2) -> t2.getLength().compareTo(t1.getLength())); // reverse

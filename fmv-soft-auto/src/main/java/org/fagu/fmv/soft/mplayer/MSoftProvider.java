@@ -32,26 +32,16 @@ public abstract class MSoftProvider extends SoftProvider {
 
 	private static final String DEFAULT_SUFFIX_PATTERN_VERSION = "${soft.name} sherpya-r(\\d+)+.*-[\\d\\.]+ \\(C\\).*";
 
-	/**
-	 * @param name
-	 */
 	public MSoftProvider(String name) {
 		this(name, new VersionSoftPolicy()
 				.onWindows(minVersion(37905))
 				.onLinux(minVersion(1, 3)));
 	}
 
-	/**
-	 * @param name
-	 * @param softPolicy
-	 */
 	public MSoftProvider(String name, SoftPolicy softPolicy) {
 		super(name, softPolicy);
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
-	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		final Pattern winPattern = Pattern.compile(new SearchPropertiesHelper(searchProperties, getName())
@@ -67,9 +57,6 @@ public abstract class MSoftProvider extends SoftProvider {
 				.build();
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftLocator()
-	 */
 	@Override
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = super.getSoftLocator();
@@ -86,9 +73,6 @@ public abstract class MSoftProvider extends SoftProvider {
 
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getDownloadURL()
-	 */
 	@Override
 	public String getDownloadURL() {
 		if(SystemUtils.IS_OS_WINDOWS) {

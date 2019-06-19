@@ -30,16 +30,10 @@ public class PdfToHtmlSoftProvider extends PdfSoftProvider {
 
 	public static final String NAME = "pdftohtml";
 
-	/**
-	 * 
-	 */
 	public PdfToHtmlSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public PdfToHtmlSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

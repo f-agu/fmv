@@ -42,9 +42,6 @@ limitations under the License.
  */
 public class UndefinedFormatExceptionKnownAnalyzer extends GSExceptionKnownAnalyzer {
 
-	/**
-	 * 
-	 */
 	public UndefinedFormatExceptionKnownAnalyzer() {
 		super("Undefined format", "Error: /undefined in ");
 	}

@@ -29,23 +29,14 @@ import org.fagu.fmv.soft.SoftSearch;
  */
 public class PdfToPpm {
 
-	/**
-	 * 
-	 */
 	private PdfToPpm() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new PdfToPpmSoftProvider());
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftSearch searchWith() {
 		return Soft.with(PdfToPpmSoftProvider::new);
 	}

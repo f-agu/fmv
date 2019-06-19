@@ -34,24 +34,15 @@ public class JavaSoftProvider extends SoftProvider {
 
 	public static final String NAME = "java";
 
-	/**
-	 * 
-	 */
 	public JavaSoftProvider() {
 		this(null);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public JavaSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
 				.onAllPlatforms(minVersion(1, 1))));
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
-	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		final Pattern pattern = Pattern.compile(new SearchPropertiesHelper(searchProperties, getName())
@@ -65,17 +56,10 @@ public class JavaSoftProvider extends SoftProvider {
 				.build();
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftLocator()
-	 */
 	@Override
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = new SoftLocator(getName()) {
 
-			/**
-			 * @see org.fagu.fmv.soft.find.SoftLocator#getLocators(java.lang.String, org.fagu.fmv.soft.find.Locators,
-			 *      java.io.FileFilter)
-			 */
 			@Override
 			protected List<Locator> getLocators(Locators loc) {
 				List<Locator> list = super.getLocators(loc);
@@ -109,9 +93,6 @@ public class JavaSoftProvider extends SoftProvider {
 		return softLocator;
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getDownloadURL()
-	 */
 	@Override
 	public String getDownloadURL() {
 		return "https://www.java.com/download/";

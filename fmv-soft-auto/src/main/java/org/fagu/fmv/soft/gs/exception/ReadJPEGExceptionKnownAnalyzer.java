@@ -24,9 +24,6 @@ limitations under the License.
  */
 public class ReadJPEGExceptionKnownAnalyzer extends GSExceptionKnownAnalyzer {
 
-	/**
-	 * 
-	 */
 	public ReadJPEGExceptionKnownAnalyzer() {
 		super("Read error JPEG", "Read error in ViewJPEG");
 	}

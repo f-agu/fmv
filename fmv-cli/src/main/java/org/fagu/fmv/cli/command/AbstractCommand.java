@@ -55,14 +55,6 @@ public abstract class AbstractCommand implements Command {
 
 	private Printer printer;
 
-	/**
-	 *
-	 */
-	public AbstractCommand() {}
-
-	/**
-	 * @return
-	 */
 	@Override
 	public Options getOptions() {
 		Options options = new Options();
@@ -70,9 +62,6 @@ public abstract class AbstractCommand implements Command {
 		return options;
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.Command#help()
-	 */
 	@Override
 	public void help() {
 		getHelpFormatter().printHelp(getSyntax(), getOptions());
@@ -80,10 +69,6 @@ public abstract class AbstractCommand implements Command {
 
 	// *******************************************
 
-	/**
-	 * @param args
-	 * @return
-	 */
 	protected CommandLine parse(String[] args) {
 		Options options = getOptions();
 		if(options == null) {
@@ -99,23 +84,14 @@ public abstract class AbstractCommand implements Command {
 		return null;
 	}
 
-	/**
-	 * @param msg
-	 */
 	protected void print(String msg) {
 		getPrinter().print(msg);
 	}
 
-	/**
-	 * @param msg
-	 */
 	protected void println(String msg) {
 		getPrinter().println(msg);
 	}
 
-	/**
-	 * @return
-	 */
 	protected Printer getPrinter() {
 		if(printer == null) {
 			printer = new Printer(consoleReader);
@@ -123,9 +99,6 @@ public abstract class AbstractCommand implements Command {
 		return printer;
 	}
 
-	/**
-	 * @return
-	 */
 	protected HelpFormatter getHelpFormatter() {
 		return new FMVHelpFormatter(consoleReader);
 	}

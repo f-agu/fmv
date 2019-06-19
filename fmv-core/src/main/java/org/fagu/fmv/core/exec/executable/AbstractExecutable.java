@@ -51,8 +51,7 @@ public abstract class AbstractExecutable extends Attributable implements Executa
 	/**
 	 *
 	 */
-	public AbstractExecutable() {
-	}
+	public AbstractExecutable() {}
 
 	/**
 	 * @param project

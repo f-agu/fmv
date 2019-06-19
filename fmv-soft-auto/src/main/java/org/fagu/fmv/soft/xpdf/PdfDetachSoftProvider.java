@@ -30,16 +30,10 @@ public class PdfDetachSoftProvider extends PdfSoftProvider {
 
 	public static final String NAME = "pdfdetach";
 
-	/**
-	 * 
-	 */
 	public PdfDetachSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public PdfDetachSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

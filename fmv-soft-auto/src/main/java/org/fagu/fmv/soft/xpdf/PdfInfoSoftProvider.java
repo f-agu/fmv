@@ -30,16 +30,10 @@ public class PdfInfoSoftProvider extends PdfSoftProvider {
 
 	public static final String NAME = "pdfinfo";
 
-	/**
-	 * 
-	 */
 	public PdfInfoSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public PdfInfoSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

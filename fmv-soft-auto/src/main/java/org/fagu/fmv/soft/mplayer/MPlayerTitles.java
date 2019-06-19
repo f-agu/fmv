@@ -113,40 +113,23 @@ public class MPlayerTitles {
 
 	private final NavigableMap<Integer, MPlayerTitle> mPlayerTitlesMap;
 
-	/**
-	 * @param properties
-	 * @param mPlayerTitleMap
-	 */
 	public MPlayerTitles(Map<String, String> properties, NavigableMap<Integer, MPlayerTitle> mPlayerTitleMap) {
 		this.properties = Collections.unmodifiableMap(properties);
 		this.mPlayerTitlesMap = Collections.unmodifiableNavigableMap(mPlayerTitleMap);
 	}
 
-	/**
-	 * @param dvdDrive
-	 * @return
-	 */
 	public static MPlayerTitlesBuilder fromDVDDrive(File dvdDrive) {
 		return new MPlayerTitlesBuilder(dvdDrive);
 	}
 
-	/**
-	 * @return
-	 */
 	public Map<String, String> getProperties() {
 		return properties;
 	}
 
-	/**
-	 * @return
-	 */
 	public Collection<MPlayerTitle> getTitles() {
 		return mPlayerTitlesMap.values();
 	}
 
-	/**
-	 * @return
-	 */
 	public NavigableMap<Integer, MPlayerTitle> getTitlesMap() {
 		return mPlayerTitlesMap;
 	}

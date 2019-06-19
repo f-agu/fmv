@@ -25,9 +25,6 @@ limitations under the License.
  */
 public class MayNotBeAPDFFileExceptionKnownAnalyzer extends XpdfExceptionKnownAnalyzer {
 
-	/**
-	 * 
-	 */
 	public MayNotBeAPDFFileExceptionKnownAnalyzer() {
 		super("May not be a PDF file", "Syntax Warning: May not be a PDF file");
 	}

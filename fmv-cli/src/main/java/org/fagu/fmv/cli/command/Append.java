@@ -44,16 +44,6 @@ import org.fagu.fmv.utils.time.Time;
 @Alias("+")
 public class Append extends AbstractCommand {
 
-	/**
-	 * 
-	 */
-	public Append() {
-		super();
-	}
-
-	/**
-	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
-	 */
 	@Override
 	public void run(String[] args) {
 		if(args.length == 0) {
@@ -72,17 +62,11 @@ public class Append extends AbstractCommand {
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.Command#getShortDescription()
-	 */
 	@Override
 	public String getShortDescription() {
 		return "Append a media in the timeline";
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.Command#getSyntax()
-	 */
 	@Override
 	public String getSyntax() {
 		return "append <media-num> <time start> <duration>";
@@ -90,9 +74,6 @@ public class Append extends AbstractCommand {
 
 	// ********************************************
 
-	/**
-	 * @return
-	 */
 	private ConcatExecutable getConcatExecutable() {
 		Executable currentExecutable = environnement.getCurrentExecutable();
 		if(currentExecutable != null && currentExecutable instanceof ConcatExecutable) {
@@ -119,10 +100,6 @@ public class Append extends AbstractCommand {
 		return null;
 	}
 
-	/**
-	 * @param sourceNum
-	 * @param args
-	 */
 	private void appendAudioOrVideo(int sourceNum, String[] args) {
 		if(args.length != 3) {
 			getPrinter().println("usage: append <num-source> <start-time> <duration>");
@@ -147,16 +124,12 @@ public class Append extends AbstractCommand {
 		}
 	}
 
-	/**
-	 * @param sourceNum
-	 * @param args
-	 */
 	private void appendImage(int sourceNum, String[] args) {
 		if(args.length != 3) {
 			getPrinter().println("usage: append <num-source> <duration>");
 			return;
 		}
-		Duration duration = Duration.parse(args[1]);
+		Duration duration = Duration.parse(args[1]); // TODO
 
 		ConcatExecutable concatExecutable = getConcatExecutable();
 		if(concatExecutable == null) {

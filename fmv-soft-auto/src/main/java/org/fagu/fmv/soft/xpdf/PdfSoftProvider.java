@@ -59,32 +59,19 @@ import org.fagu.version.VersionParserManager;
  */
 public abstract class PdfSoftProvider extends SoftProvider {
 
-	/**
-	 * @param name
-	 */
 	public PdfSoftProvider(String name) {
 		this(name, null);
 	}
 
-	/**
-	 * @param name
-	 * @param softPolicy
-	 */
 	public PdfSoftProvider(String name, SoftPolicy softPolicy) {
 		super(name, ObjectUtils.firstNonNull(softPolicy, getDefaultSoftPolicy()));
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getGroupName()
-	 */
 	@Override
 	public String getGroupName() {
 		return "pdf";
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
-	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		return prepareSoftFoundFactory()
@@ -95,9 +82,6 @@ public abstract class PdfSoftProvider extends SoftProvider {
 				.build();
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getDownloadURL()
-	 */
 	@Override
 	public String getDownloadURL() {
 		final String DEFAULT_URL = "http://www.foolabs.com/xpdf/download.html";
@@ -107,9 +91,6 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		return DEFAULT_URL + " (or http://poppler.freedesktop.org)";
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftExecutor(org.fagu.fmv.soft.Soft, java.io.File, java.util.List)
-	 */
 	@Override
 	public SoftExecutor createSoftExecutor(Soft soft, File execFile, List<String> parameters) {
 		XPdfVersionSoftInfo softInfo = (XPdfVersionSoftInfo)soft.getFirstInfo();
@@ -138,9 +119,6 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		return super.createSoftExecutor(soft, execFile, parameters);
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftLocator()
-	 */
 	@Override
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = super.getSoftLocator();
@@ -162,9 +140,6 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		return softLocator;
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getExceptionKnownAnalyzerClass()
-	 */
 	@Override
 	public Class<? extends ExceptionKnownAnalyzer> getExceptionKnownAnalyzerClass() {
 		return XpdfExceptionKnownAnalyzer.class;
@@ -172,27 +147,18 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 	// ***********************************************************************
 
-	/**
-	 * @return
-	 */
 	protected int[] exitValues() {
 		return new int[] {0, 99};
 	}
 
 	// ---------------------------------
-	/**
-	 * @author f.agu
-	 */
+
 	protected enum Provider {
 		XPDF, POPPLER
 	}
 
 	// ---------------------------------
 
-	/**
-	 * @param provider
-	 * @return
-	 */
 	protected SoftPolicy getVersionPolicy(Provider provider) {
 		Version minVer = null;
 		if(Provider.POPPLER.equals(provider)) {
@@ -207,10 +173,6 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 	// ***********************************************************************
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	Parser createParser(File file) {
 		return new Parser() {
 
@@ -240,9 +202,6 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 	// ***********************************************************************
 
-	/**
-	 * @return
-	 */
 	private static SoftPolicy getDefaultSoftPolicy() {
 		Version v012 = new Version(0, 12);
 		BiPredicate<SoftInfo, Provider> isProvider = (s, p) -> s instanceof XPdfVersionSoftInfo && ((XPdfVersionSoftInfo)s).getProvider() == p;

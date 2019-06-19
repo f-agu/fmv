@@ -34,32 +34,18 @@ import org.fagu.fmv.soft.SoftSearch;
  */
 public class _7z {
 
-	/**
-	 * 
-	 */
 	private _7z() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new _7zSoftProvider());
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftSearch searchWith() {
 		return Soft.with(_7zSoftProvider::new);
 	}
 
-	/**
-	 * @param zipFile
-	 * @param destinationFolder
-	 * @throws IOException
-	 */
 	public static void extract(File zipFile, File destinationFolder) throws IOException {
 		FileUtils.forceMkdir(destinationFolder);
 		search().withParameters("x", zipFile.getAbsolutePath(), "-o" + destinationFolder.getAbsolutePath())

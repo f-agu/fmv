@@ -34,25 +34,14 @@ import org.fagu.fmv.soft.exec.exception.SimpleExceptionKnownAnalyzer;
  */
 public abstract class GSExceptionKnownAnalyzer extends SimpleExceptionKnownAnalyzer {
 
-	/**
-	 * @param title
-	 * @param strToFind
-	 */
 	public GSExceptionKnownAnalyzer(String title, String strToFind) {
 		super(title, strToFind);
 	}
 
-	/**
-	 * @return
-	 */
 	public static List<ExceptionKnownAnalyzer> getAnalyzers() {
 		return ExceptionKnownAnalyzers.getExceptionKnownAnalyzers(GSExceptionKnownAnalyzer.class);
 	}
 
-	/**
-	 * @param e
-	 * @return
-	 */
 	public static Optional<ExceptionKnown> getKnown(IOException e) {
 		return ExceptionKnownAnalyzers.getKnown(GSExceptionKnownAnalyzer.class, e);
 	}

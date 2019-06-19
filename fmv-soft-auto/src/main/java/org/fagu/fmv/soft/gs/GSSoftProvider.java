@@ -45,24 +45,15 @@ public class GSSoftProvider extends SoftProvider {
 
 	public static final String NAME = "gs";
 
-	/**
-	 * 
-	 */
 	public GSSoftProvider() {
 		this(null);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public GSSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
 				.onAllPlatforms(minVersion(9, 15))));
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
-	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, getName())
@@ -81,9 +72,6 @@ public class GSSoftProvider extends SoftProvider {
 				.build();
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftLocator()
-	 */
 	@Override
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = super.getSoftLocator();
@@ -106,9 +94,6 @@ public class GSSoftProvider extends SoftProvider {
 		return softLocator;
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getFileFilter()
-	 */
 	@Override
 	public FileFilter getFileFilter() {
 		if(SystemUtils.IS_OS_WINDOWS) {
@@ -121,17 +106,11 @@ public class GSSoftProvider extends SoftProvider {
 		return super.getFileFilter();
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getDownloadURL()
-	 */
 	@Override
 	public String getDownloadURL() {
 		return "http://ghostscript.com/download/";
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getExceptionKnownAnalyzerClass()
-	 */
 	@Override
 	public Class<? extends ExceptionKnownAnalyzer> getExceptionKnownAnalyzerClass() {
 		return GSExceptionKnownAnalyzer.class;

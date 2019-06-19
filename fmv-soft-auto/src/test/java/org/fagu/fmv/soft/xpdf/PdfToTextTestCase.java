@@ -67,9 +67,6 @@ public class PdfToTextTestCase {
 
 	// ******************************************
 
-	/**
-	 * @return
-	 */
 	private List<String> getParameters(String... parameters) {
 		List<String> params = new ArrayList<>(4);
 		if(SystemUtils.IS_OS_WINDOWS) {
@@ -82,12 +79,6 @@ public class PdfToTextTestCase {
 		return params;
 	}
 
-	/**
-	 * @param tmpFolder
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
 	private File extractResource(File tmpFolder, String resource) throws IOException {
 		File file = File.createTempFile(FilenameUtils.getBaseName(resource), "." + FilenameUtils.getExtension(resource), tmpFolder);
 		try (InputStream inputStream = SoftTestCase.class.getResourceAsStream(resource);

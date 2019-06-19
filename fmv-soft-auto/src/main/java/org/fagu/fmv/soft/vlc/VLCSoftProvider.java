@@ -43,24 +43,15 @@ public class VLCSoftProvider extends SoftProvider {
 
 	public static final String NAME = "vlc";
 
-	/**
-	 * 
-	 */
 	public VLCSoftProvider() {
 		this(null);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public VLCSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
 				.onAllPlatforms(minVersion(2, 2))));
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
-	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		if(SystemUtils.IS_OS_WINDOWS) {
@@ -69,17 +60,11 @@ public class VLCSoftProvider extends SoftProvider {
 		throw new RuntimeException("Not implemented"); // TODO
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getDownloadURL()
-	 */
 	@Override
 	public String getDownloadURL() {
 		return "http://www.videolan.org/";
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftLocator()
-	 */
 	@Override
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = super.getSoftLocator();

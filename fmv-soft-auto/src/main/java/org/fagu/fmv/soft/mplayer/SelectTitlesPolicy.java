@@ -8,9 +8,5 @@ import java.util.Collection;
  */
 public interface SelectTitlesPolicy {
 
-	/**
-	 * @param titles
-	 * @return
-	 */
 	Collection<MPlayerTitle> select(Collection<MPlayerTitle> titles);
 }

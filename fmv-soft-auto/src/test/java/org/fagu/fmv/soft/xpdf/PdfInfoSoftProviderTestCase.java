@@ -37,9 +37,6 @@ import org.junit.Test;
  */
 public class PdfInfoSoftProviderTestCase {
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testParseOnLinux_original() throws IOException {
 		Parser parser = newParser();
@@ -48,9 +45,6 @@ public class PdfInfoSoftProviderTestCase {
 		assertInfo(parser, new Version(3, 4));
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testParseOnLinux_popplers() throws IOException {
 		Parser parser = newParser();
@@ -60,9 +54,6 @@ public class PdfInfoSoftProviderTestCase {
 		assertInfo(parser, new Version(0, 12, 4));
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testParseOnWindows_original() throws IOException {
 		Parser parser = newParser();
@@ -71,9 +62,6 @@ public class PdfInfoSoftProviderTestCase {
 		assertInfo(parser, new Version(3, 4));
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testSoftPolicy() throws IOException {
 		PdfInfoSoftProvider softProvider = new PdfInfoSoftProvider();
@@ -82,19 +70,11 @@ public class PdfInfoSoftProviderTestCase {
 
 	// *******************************************************
 
-	/**
-	 * @return
-	 */
 	private Parser newParser() {
 		PdfInfoSoftProvider softProvider = new PdfInfoSoftProvider();
 		return softProvider.createParser(new File("."));
 	}
 
-	/**
-	 * @param parser
-	 * @param expectedVersion
-	 * @throws IOException
-	 */
 	private void assertInfo(Parser parser, Version expectedVersion) throws IOException {
 		SoftFound softFound = parser.closeAndParse("", 0);
 		VersionSoftInfo softInfo = (VersionSoftInfo)softFound.getSoftInfo();

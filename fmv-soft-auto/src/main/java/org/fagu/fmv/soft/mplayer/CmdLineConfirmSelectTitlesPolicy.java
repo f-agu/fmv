@@ -22,16 +22,10 @@ public class CmdLineConfirmSelectTitlesPolicy implements SelectTitlesPolicy {
 
 	private final SelectTitlesPolicy delegated;
 
-	/**
-	 * @param delegated
-	 */
 	public CmdLineConfirmSelectTitlesPolicy(SelectTitlesPolicy delegated) {
 		this.delegated = Objects.requireNonNull(delegated);
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.mplayer.SelectTitlesPolicy#select(java.util.Collection)
-	 */
 	@Override
 	public Collection<MPlayerTitle> select(Collection<MPlayerTitle> titles) {
 		Collection<MPlayerTitle> select = delegated.select(titles);
@@ -58,11 +52,6 @@ public class CmdLineConfirmSelectTitlesPolicy implements SelectTitlesPolicy {
 		return select;
 	}
 
-	/**
-	 * @param line
-	 * @param titles
-	 * @return
-	 */
 	private Collection<MPlayerTitle> parseLine(String line, Collection<MPlayerTitle> titles) {
 		StringTokenizer tokenizer = new StringTokenizer(line, ",");
 		Set<Integer> nums = new HashSet<>();

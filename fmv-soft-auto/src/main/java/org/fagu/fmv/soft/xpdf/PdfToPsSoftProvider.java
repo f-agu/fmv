@@ -30,25 +30,16 @@ public class PdfToPsSoftProvider extends PdfSoftProvider {
 
 	public static final String NAME = "pdftops";
 
-	/**
-	 * 
-	 */
 	public PdfToPsSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public PdfToPsSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}
 
 	// *************************************************************
 
-	/**
-	 * @see org.fagu.fmv.soft.xpdf.PdfSoftProvider#exitValues()
-	 */
 	@Override
 	protected int[] exitValues() {
 		return new int[] {1};

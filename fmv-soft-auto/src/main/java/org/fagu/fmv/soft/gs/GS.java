@@ -29,23 +29,14 @@ import org.fagu.fmv.soft.SoftSearch;
  */
 public class GS {
 
-	/**
-	 * 
-	 */
 	private GS() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new GSSoftProvider());
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftSearch searchWith() {
 		return Soft.with(GSSoftProvider::new);
 	}

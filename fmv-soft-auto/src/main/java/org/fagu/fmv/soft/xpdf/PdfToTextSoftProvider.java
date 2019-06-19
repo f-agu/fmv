@@ -30,16 +30,10 @@ public class PdfToTextSoftProvider extends PdfSoftProvider {
 
 	public static final String NAME = "pdftotext";
 
-	/**
-	 * 
-	 */
 	public PdfToTextSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public PdfToTextSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

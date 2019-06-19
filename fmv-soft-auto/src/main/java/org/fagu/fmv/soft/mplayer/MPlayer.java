@@ -9,23 +9,14 @@ import org.fagu.fmv.soft.SoftSearch;
  */
 public class MPlayer {
 
-	/**
-	 * 
-	 */
 	private MPlayer() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new MPlayerSoftProvider());
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftSearch searchWith() {
 		return Soft.with(MPlayerSoftProvider::new);
 	}

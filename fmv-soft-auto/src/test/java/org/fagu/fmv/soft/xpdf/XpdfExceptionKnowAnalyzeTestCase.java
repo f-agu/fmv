@@ -43,9 +43,6 @@ import org.junit.Test;
  */
 public class XpdfExceptionKnowAnalyzeTestCase {
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testInfo() throws IOException {
 		extract(null, "Couldn't open file");
@@ -55,10 +52,6 @@ public class XpdfExceptionKnowAnalyzeTestCase {
 
 	// *************************************
 
-	/**
-	 * @param srcResource
-	 * @throws IOException
-	 */
 	private void extract(String srcResource, String expectedMessage) throws IOException {
 		File folder = new File(System.getProperty("java.io.tmpdir"), "xpdf-info-test");
 		try {

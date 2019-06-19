@@ -42,9 +42,6 @@ import org.junit.Test;
  */
 public class GSSoftProviderTestCase {
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testParseOnWindows() throws IOException {
 		Parser parser = newParser();
@@ -53,9 +50,6 @@ public class GSSoftProviderTestCase {
 		assertInfo(parser, new Version(9, 16), d(2015, 03, 30));
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testParseOnMac() throws IOException {
 		Parser parser = newParser();
@@ -66,19 +60,12 @@ public class GSSoftProviderTestCase {
 
 	// *******************************************************
 
-	/**
-	 * @return
-	 */
 	private Parser newParser() {
 		GSSoftProvider softProvider = new GSSoftProvider();
 		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory(ImmutableProperties.of())).getParserFactory();
 		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
-	/**
-	 * @param strDate
-	 * @return
-	 */
 	private Date d(int year, int month, int day) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(year, month - 1, day, 0, 0, 0);
@@ -86,12 +73,6 @@ public class GSSoftProviderTestCase {
 		return calendar.getTime();
 	}
 
-	/**
-	 * @param parser
-	 * @param expectedVersion
-	 * @param expectedDate
-	 * @throws IOException
-	 */
 	private void assertInfo(Parser parser, Version expectedVersion, Date expectedDate) throws IOException {
 		SoftFound softFound = parser.closeAndParse("", 0);
 		VersionDateSoftInfo softInfo = (VersionDateSoftInfo)softFound.getSoftInfo();

@@ -22,15 +22,8 @@ public class Resource {
 
 	private static final String PDF_KENWOOD = "kenwood.pdf";
 
-	/**
-	 * 
-	 */
 	private Resource() {}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	public static File tmpFolder() throws IOException {
 		File folder = new File(System.getProperty("java.io.tmpdir"), "gs-test");
 		FileUtils.deleteDirectory(folder);
@@ -38,45 +31,22 @@ public class Resource {
 		return folder;
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	public static File extract_Pdf_Pdf() throws IOException {
 		return extract(PDF_PDF);
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	public static File extract_Salut_Pdf() throws IOException {
 		return extract(PDF_SALUT);
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	public static File extract_kenwood_Pdf() throws IOException {
 		return extract(PDF_KENWOOD);
 	}
 
-	/**
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
 	public static File extract(String resource) throws IOException {
 		return extract(tmpFolder(), resource);
 	}
 
-	/**
-	 * @param tmpFolder
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
 	public static File extract(File tmpFolder, String resource) throws IOException {
 		File file = File.createTempFile(FilenameUtils.getBaseName(resource), "." + FilenameUtils.getExtension(resource), tmpFolder);
 		try (InputStream inputStream = open(resource);
@@ -86,27 +56,14 @@ public class Resource {
 		return file;
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	public static InputStream open_Salut_Pdf() throws IOException {
 		return open(PDF_SALUT);
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	public static InputStream open_kenwood_Pdf() throws IOException {
 		return open(PDF_KENWOOD);
 	}
 
-	/**
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
 	public static InputStream open(String resource) throws IOException {
 		return Resource.class.getResourceAsStream(resource);
 	}

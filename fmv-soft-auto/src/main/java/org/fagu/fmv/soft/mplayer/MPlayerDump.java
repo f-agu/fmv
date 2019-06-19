@@ -97,10 +97,6 @@ public class MPlayerDump {
 
 		// --------------------------------------------
 
-		/**
-		 * @param line
-		 * @return
-		 */
 		static Map<String, String> parse(String line) {
 			Map<String, String> map = new HashMap<>();
 			String key = null;
@@ -128,24 +124,14 @@ public class MPlayerDump {
 
 	private final List<Stream> streams;
 
-	/**
-	 * @param streams
-	 */
 	public MPlayerDump(List<Stream> streams) {
 		this.streams = streams;
 	}
 
-	/**
-	 * @param dvdDrive
-	 * @return
-	 */
 	public static MPlayerDumpBuilder fromDVDDrive(File dvdDrive) {
 		return new MPlayerDumpBuilder(dvdDrive);
 	}
 
-	/**
-	 * @return
-	 */
 	public List<AudioStream> getAudioStreams() {
 		return streams.stream()
 				.filter(s -> s instanceof AudioStream)
@@ -153,9 +139,6 @@ public class MPlayerDump {
 				.collect(Collectors.toList());
 	}
 
-	/**
-	 * @return
-	 */
 	public List<Subtitle> getSubtitles() {
 		return streams.stream()
 				.filter(s -> s instanceof Subtitle)

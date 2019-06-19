@@ -43,9 +43,6 @@ limitations under the License.
  */
 public class PermissionDeniedExceptionKnownAnalyzer extends GSExceptionKnownAnalyzer {
 
-	/**
-	 * 
-	 */
 	public PermissionDeniedExceptionKnownAnalyzer() {
 		super("Permission denied", ": Permission denied");
 	}

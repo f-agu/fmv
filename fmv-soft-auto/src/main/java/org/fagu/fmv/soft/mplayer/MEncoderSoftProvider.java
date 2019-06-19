@@ -10,16 +10,10 @@ public class MEncoderSoftProvider extends MSoftProvider {
 
 	public static final String NAME = "mencoder";
 
-	/**
-	 * 
-	 */
 	public MEncoderSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public MEncoderSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}

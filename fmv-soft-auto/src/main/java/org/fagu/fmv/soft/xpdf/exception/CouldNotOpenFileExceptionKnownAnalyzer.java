@@ -25,9 +25,6 @@ limitations under the License.
  */
 public class CouldNotOpenFileExceptionKnownAnalyzer extends XpdfExceptionKnownAnalyzer {
 
-	/**
-	 * 
-	 */
 	public CouldNotOpenFileExceptionKnownAnalyzer() {
 		super("Couldn't open file", "I/O Error: Couldn't open file");
 	}

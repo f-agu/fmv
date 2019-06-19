@@ -1,7 +1,10 @@
-package org.fagu.fmv.soft._7z;
+package org.fagu.fmv.soft.gpac;
 
 import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 
+import java.io.File;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,25 +23,22 @@ import org.fagu.version.VersionParserManager;
 /**
  * @author f.agu
  */
-public class _7zSoftProvider extends SoftProvider {
+public abstract class GPACSoftProvider extends SoftProvider {
 
-	public static final String NAME = "7z";
+	private final String foundParameter;
 
-	public _7zSoftProvider() {
-		this(null);
-	}
-
-	public _7zSoftProvider(SoftPolicy softPolicy) {
-		super(NAME, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(16))));
+	public GPACSoftProvider(String name, SoftPolicy softPolicy, String foundParameter) {
+		super(name, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(0, 7))));
+		this.foundParameter = Objects.requireNonNull(foundParameter);
 	}
 
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		// 7-Zip [64] 16.00 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-10
-		final Pattern pattern = Pattern.compile("7-Zip \\[\\d+\\] (\\d+\\.\\d+) \\:.*");
+		// GPAC version 0.7.2-DEV-rev1143-g1c540fec-master
+		final Pattern pattern = Pattern.compile(".*GPAC version ([\\d+\\.]+).*");
 		return prepareSoftFoundFactory()
-				.withParameters("-version", "-h")
+				.withParameters(foundParameter)
 				.parseVersion(line -> {
 					Matcher matcher = pattern.matcher(line);
 					if(matcher.matches()) {
@@ -54,16 +54,20 @@ public class _7zSoftProvider extends SoftProvider {
 		SoftLocator softLocator = super.getSoftLocator();
 		if(SystemUtils.IS_OS_WINDOWS) {
 			ProgramFilesLocatorSupplier.with(softLocator)
-					.findFolder("7-Zip")
+					.find(programFile -> {
+						File gpacFolder = new File(programFile, "GPAC");
+						return gpacFolder.exists() ? Collections.singleton(gpacFolder) : Collections.emptyList();
+					})
 					.supplyIn();
 			softLocator.addDefaultLocator();
 		}
 		return softLocator;
+
 	}
 
 	@Override
 	public String getDownloadURL() {
-		return "http://www.7-zip.org/download.html";
+		return "https://gpac.wp.imt.fr/downloads/gpac-nightly-builds/";
 	}
 
 }

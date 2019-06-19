@@ -30,16 +30,10 @@ public class PdfToPngSoftProvider extends PdfSoftProvider {
 
 	public static final String NAME = "pdftopng";
 
-	/**
-	 * 
-	 */
 	public PdfToPngSoftProvider() {
 		super(NAME);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public PdfToPngSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}
