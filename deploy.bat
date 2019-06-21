@@ -2,10 +2,16 @@
 
 rem set PWD=%~dp0
 rem set PWD=D:\tmp\fmv\fmv\
-set VERSION=0.14.0
+set VERSION=0.15.0-SNAPSHOT
 
 set REPO_URL=https://nexus.oodrive.net/nexus/
 set REPO_LOCAL=%USERPROFILE%\.m2\repository\org\fagu\
+set REPO_NAME=releases
+
+
+if "%VERSION:~-8%" == "SNAPSHOT" (
+  set REPO_NAME=snapshots
+)
 
 
 call:artefact fmv-dependencies
@@ -39,7 +45,7 @@ rem ---------------------
 :push_artefact
 if exist %1 (
   echo "Send %1"
-  curl --upload-file %1 %REPO_URL%content/repositories/releases/org/fagu/%2/%VERSION%/%~nx1
+  curl --upload-file %1 %REPO_URL%content/repositories/%REPO_NAME%/org/fagu/%2/%VERSION%/%~nx1
 ) 
 goto:eof
 
