@@ -1,5 +1,7 @@
 package org.fagu.fmv.media;
 
+import java.util.Map;
+
 /*
  * #%L
  * fmv-media
@@ -26,8 +28,7 @@ package org.fagu.fmv.media;
  */
 public interface Metadatas {
 
-	/**
-	 * @return
-	 */
 	String toJSON();
+
+	Map<String, Object> getData();
 }

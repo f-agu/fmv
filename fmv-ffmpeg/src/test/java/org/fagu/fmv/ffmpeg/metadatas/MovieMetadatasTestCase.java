@@ -37,14 +37,6 @@ import org.junit.Test;
  */
 public class MovieMetadatasTestCase {
 
-	/**
-	 * 
-	 */
-	public MovieMetadatasTestCase() {}
-
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void test() throws IOException {
 		File file = null;

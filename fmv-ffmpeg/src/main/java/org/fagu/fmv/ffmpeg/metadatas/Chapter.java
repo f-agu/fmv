@@ -53,6 +53,11 @@ public class Chapter extends InfoBase {
 		return new Chapter(movieMetadatas, map);
 	}
 
+	@Override
+	public String getName() {
+		return "chapter";
+	}
+
 	/**
 	 * @return
 	 */

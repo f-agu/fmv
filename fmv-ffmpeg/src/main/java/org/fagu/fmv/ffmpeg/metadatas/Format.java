@@ -51,6 +51,11 @@ public class Format extends InfoBase {
 		return new Format(movieMetadatas, MovieMetadatas.createMap(jsonObject));
 	}
 
+	@Override
+	public String getName() {
+		return "format";
+	}
+
 	/**
 	 * @return
 	 */

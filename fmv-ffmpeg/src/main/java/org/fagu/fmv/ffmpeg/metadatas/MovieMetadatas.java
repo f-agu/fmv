@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -199,6 +200,15 @@ public class MovieMetadatas implements Metadatas, Serializable {
 	 */
 	public static void setFactory(String type, Factory<?> factory) {
 		FACTORY_MAP.put(type, factory);
+	}
+
+	@Override
+	public Map<String, Object> getData() {
+		Map<String, Object> main = new LinkedHashMap<>();
+		for(InfoBase infoBase : infoBaseList) {
+			main.put(infoBase.getName(), infoBase.getData());
+		}
+		return main;
 	}
 
 	/**

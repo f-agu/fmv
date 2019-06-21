@@ -22,6 +22,7 @@ package org.fagu.fmv.im;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.lang.math.NumberUtils;
@@ -80,9 +82,10 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 	// --------------------------------------------------------
 
-	public abstract static class ImageMetadatasBuilder<B extends ImageMetadatasBuilder<?>> implements MetadatasBuilder<ImageMetadatas, B> {
+	public abstract static class ImageMetadatasSourcesBuilder<B extends ImageMetadatasSourcesBuilder<?, T>, T>
+			implements MetadatasBuilder<ImageMetadatas, B> {
 
-		final Collection<File> sourceFiles;
+		final Sources<T> sources;
 
 		Soft identifySoft;
 
@@ -90,8 +93,8 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 		Consumer<SoftExecutor> customizeExecutor;
 
-		private ImageMetadatasBuilder(Collection<File> sourceFiles) {
-			this.sourceFiles = sourceFiles;
+		private ImageMetadatasSourcesBuilder(Sources<T> sources) {
+			this.sources = sources;
 			identifySoft = Identify.search();
 		}
 
@@ -114,8 +117,8 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 		@Override
 		public ImageMetadatas extract() throws IOException {
-			Map<File, ImageMetadatas> extract = ImageMetadatas.extract(identifySoft, sourceFiles, logger, customizeExecutor);
-			return extract.get(sourceFiles.iterator().next());
+			Map<T, ImageMetadatas> extract = ImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
+			return extract.values().iterator().next();
 		}
 
 		// ********************************
@@ -129,24 +132,34 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 	// --------------------------------------------------------
 
-	public static class ImageMetadatasFileBuilder extends ImageMetadatasBuilder<ImageMetadatasFileBuilder> {
+	public static class ImageMetadatasFileBuilder extends ImageMetadatasSourcesBuilder<ImageMetadatasFileBuilder, File> {
 
 		private ImageMetadatasFileBuilder(File sourceFile) {
-			super(Collections.singletonList(sourceFile));
+			super(new FilesSources(Collections.singletonList(sourceFile)));
 		}
 
 	}
 
 	// --------------------------------------------------------
 
-	public static class ImageMetadatasFilesBuilder extends ImageMetadatasBuilder<ImageMetadatasFilesBuilder> {
+	public static class ImageMetadatasFilesBuilder extends ImageMetadatasSourcesBuilder<ImageMetadatasFilesBuilder, File> {
 
 		private ImageMetadatasFilesBuilder(Collection<File> sourceFiles) {
-			super(new ArrayList<>(sourceFiles)); // defensive copy
+			super(new FilesSources(new ArrayList<>(sourceFiles))); // defensive copy
 		}
 
 		public Map<File, ImageMetadatas> extractAll() throws IOException {
-			return ImageMetadatas.extract(identifySoft, sourceFiles, logger, customizeExecutor);
+			return ImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
+		}
+
+	}
+
+	// --------------------------------------------------------
+
+	public static class ImageMetadatasInputStreamBuilder extends ImageMetadatasSourcesBuilder<ImageMetadatasInputStreamBuilder, Object> {
+
+		private ImageMetadatasInputStreamBuilder(InputStream inputStream) {
+			super(new InputStreamSources(inputStream));
 		}
 
 	}
@@ -194,7 +207,8 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		// exif
 		try {
 			date = dateFormat.parse(metadatas.get("exif:datetimeoriginal"));
-		} catch(Exception ignored) {}
+		} catch(Exception ignored) { // ignore
+		}
 
 		// psd
 		if(date == null) {
@@ -203,7 +217,8 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 				int lastIndex = line.lastIndexOf(':');
 				String xapDate = line.substring(0, lastIndex) + line.substring(lastIndex + 1, line.length());
 				return dateFormat.parse(xapDate);
-			} catch(Exception ignored) {}
+			} catch(Exception ignored) { // ignore
+			}
 		}
 
 		// other
@@ -214,13 +229,11 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 			Date dateModify = null;
 			try {
 				dateCreate = iso8601DateFormat.parse(metadatas.get("date:create"));
-			} catch(Exception ignored) {
-				// ignore
+			} catch(Exception ignored) {// ignore
 			}
 			try {
 				dateModify = iso8601DateFormat.parse(metadatas.get("date:modify"));
-			} catch(Exception ignored) {
-				// ignore
+			} catch(Exception ignored) {// ignore
 			}
 
 			// work around bug ImageMagick
@@ -233,9 +246,9 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 				date = dateModify;
 			}
 		}
-		if(Math.abs(createTime - date.getTime()) < 4000) { // 4s
-			return null;
-		}
+		// if(Math.abs(createTime - date.getTime()) < 4000) { // 4s
+		// return null;
+		// }
 		return date;
 	}
 
@@ -309,7 +322,8 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 	public Integer getISOSpeed() {
 		try {
 			return Integer.parseInt(metadatas.get("exif:isospeedratings").split(",")[0]);
-		} catch(Exception ignored) {}
+		} catch(Exception ignored) { // ignore
+		}
 		return null;
 	}
 
@@ -403,6 +417,11 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 	}
 
 	@Override
+	public Map<String, Object> getData() {
+		return Collections.unmodifiableMap(metadatas);
+	}
+
+	@Override
 	public String toString() {
 		return metadatas.toString();
 	}
@@ -418,7 +437,11 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return new ImageMetadatas(params);
 	}
 
-	public static synchronized ImageMetadatas extractSingleton(final File sourceFile) throws IOException {
+	public static ImageMetadatas extract(InputStream inputStream) throws IOException {
+		return with(inputStream).extract();
+	}
+
+	public static synchronized ImageMetadatas extractSingleton(final File sourceFile) {
 		Future<ImageMetadatas> future = FUTURE_HASHTABLE.get(sourceFile);
 		if(future != null) {
 			try {
@@ -451,19 +474,28 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return new ImageMetadatasFilesBuilder(sourceFiles);
 	}
 
+	public static ImageMetadatasInputStreamBuilder with(InputStream inputStream) {
+		return new ImageMetadatasInputStreamBuilder(inputStream);
+	}
+
 	// *****************************************
 
-	private static Map<File, ImageMetadatas> extract(Soft identifySoft, Collection<File> sourceFiles, Consumer<CommandLine> logger,
-			Consumer<SoftExecutor> customizeExecutor) throws IOException {
+	private static <T> Map<T, ImageMetadatas> extract(
+			Soft identifySoft,
+			Sources<T> sources,
+			Consumer<CommandLine> logger,
+			Consumer<SoftExecutor> customizeExecutor)
+			throws IOException {
+
 		Objects.requireNonNull(identifySoft);
-		if(sourceFiles.isEmpty()) {
+		if( ! sources.has()) {
 			return Collections.emptyMap();
 		}
 
 		final String boundary = "BOUNDARY";
 		// prepare
 		IMOperation op = new IMOperation();
-		StringJoiner joiner = new StringJoiner("\n");
+		StringJoiner joiner = new StringJoiner("\n", "", "\n");
 		joiner.add("==%f==");
 		joiner.add("%[exif:*]%[date:*]%[xap:*]%[*]xy=%x %y");
 		joiner.add("colorspace=%[colorspace]");
@@ -474,10 +506,9 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		joiner.add("resunit=%U");
 		joiner.add(boundary);
 
-		op.ping().format(joiner.toString() + "\n");
+		op.ping().format(joiner.toString());
 
-		int size = sourceFiles.size();
-		sourceFiles.forEach(file -> op.image(file, "[0]"));
+		sources.addImages(op);
 
 		List<String> outputs = new ArrayList<>();
 		SoftExecutor softExecutor = identifySoft.withParameters(op.toList())
@@ -486,29 +517,30 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		if(customizeExecutor != null) {
 			customizeExecutor.accept(softExecutor);
 		}
+		sources.getSoftExecutor().accept(softExecutor);
 		softExecutor.execute();
 
 		// parse output
-		Map<File, ImageMetadatas> outMap = new LinkedHashMap<>(size);
-		Iterator<File> srcFileIterator = sourceFiles.iterator();
+		Map<T, ImageMetadatas> outMap = new LinkedHashMap<>();
+		Iterator<Source<T>> sourceIterator = sources.iterator();
 		TreeMap<String, String> params = null;
-		File currentFile = null;
+		Source<T> currentSource = null;
 		for(String line : outputs) {
 			if(StringUtils.isBlank(line) || boundary.equals(line)) {
 				continue;
 			}
 			if((line.startsWith("==") || line.startsWith(boundary + "==")) && line.endsWith("==")) {
-				if(currentFile != null) {
-					outMap.put(currentFile, new ImageMetadatas(params));
+				if(currentSource != null) {
+					outMap.put(currentSource.value, new ImageMetadatas(params));
 				}
-				currentFile = srcFileIterator.next();
-				if(StringUtils.substringBetween(line, "==").equals(currentFile.getName())) {
+				currentSource = sourceIterator.next();
+				if(StringUtils.substringBetween(line, "==").equals(currentSource.name)) {
 					params = new TreeMap<>();
-					params.put("filename", currentFile.getName());
+					params.put("filename", currentSource.name);
 					continue;
 				} else {
 					params = null;
-					currentFile = null;
+					currentSource = null;
 				}
 			}
 			if(params == null) {
@@ -521,8 +553,8 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 				params.put(key.toLowerCase(), value);
 			}
 		}
-		if(currentFile != null) {
-			outMap.put(currentFile, new ImageMetadatas(params));
+		if(currentSource != null) {
+			outMap.put(currentSource.value, new ImageMetadatas(params));
 		}
 		return outMap;
 	}
@@ -544,6 +576,98 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 			}
 		}
 		return null;
+	}
+
+	// --------------------------------------------
+
+	private static interface Sources<T> extends Iterable<Source<T>> {
+
+		boolean has();
+
+		void addImages(IMOperation imOperation);
+
+		default Consumer<SoftExecutor> getSoftExecutor() {
+			return c -> {};
+		}
+
+	}
+
+	// --------------------------------------------
+
+	private static class Source<T> {
+
+		private final T value;
+
+		private final String name;
+
+		private Source(T t, String name) {
+			this.value = t;
+			this.name = name;
+		}
+
+	}
+
+	// --------------------------------------------
+
+	private static class FilesSources implements Sources<File> {
+
+		private final Collection<File> sourceFiles;
+
+		private FilesSources(Collection<File> sourceFiles) {
+			this.sourceFiles = Objects.requireNonNull(sourceFiles);
+		}
+
+		@Override
+		public boolean has() {
+			return ! sourceFiles.isEmpty();
+		}
+
+		@Override
+		public void addImages(IMOperation imOperation) {
+			sourceFiles.forEach(file -> imOperation.image(file, "[0]"));
+		}
+
+		@Override
+		public Iterator<Source<File>> iterator() {
+			return sourceFiles.stream()
+					.map(f -> new Source<>(f, f.getName()))
+					.iterator();
+		}
+
+	}
+
+	// --------------------------------------------
+
+	private static class InputStreamSources implements Sources<Object> {
+
+		private final InputStream inputStream;
+
+		private InputStreamSources(InputStream inputStream) {
+			this.inputStream = Objects.requireNonNull(inputStream);
+		}
+
+		@Override
+		public boolean has() {
+			return true;
+		}
+
+		@Override
+		public void addImages(IMOperation imOperation) {
+			// - : standard input
+			// [0] : first page of the image
+			imOperation.image("-[0]");
+		}
+
+		@Override
+		public Iterator<Source<Object>> iterator() {
+			return Stream.of(new Source<>(new Object(), "-")).iterator();
+		}
+
+		@Override
+		public Consumer<SoftExecutor> getSoftExecutor() {
+			return se -> se.input(inputStream);
+		}
+
 	}
 
 }

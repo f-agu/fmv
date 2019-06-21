@@ -26,6 +26,7 @@ import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.fagu.fmv.ffmpeg.format.Formats;
 import org.fagu.fmv.ffmpeg.operation.Type;
@@ -76,6 +77,11 @@ public abstract class Stream extends InfoBase {
 	 */
 	public static void setFactory(String type, StreamFactory streamFactory) {
 		STREAM_FACTORY_MAP.put(type, streamFactory);
+	}
+
+	@Override
+	public String getName() {
+		return StringUtils.capitalize(type().name().toLowerCase()) + "Stream-" + index();
 	}
 
 	/**

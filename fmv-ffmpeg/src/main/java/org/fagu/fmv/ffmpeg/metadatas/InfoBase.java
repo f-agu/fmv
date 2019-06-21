@@ -71,6 +71,12 @@ public abstract class InfoBase implements MetadataProperties {
 		this.map = map;
 	}
 
+	public abstract String getName();
+
+	public Map<String, Object> getData() {
+		return Collections.unmodifiableMap(map);
+	}
+
 	/**
 	 * @see org.fagu.fmv.media.MetadataProperties#getNames()
 	 */
