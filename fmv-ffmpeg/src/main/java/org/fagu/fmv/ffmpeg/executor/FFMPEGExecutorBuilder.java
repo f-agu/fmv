@@ -209,80 +209,47 @@ public class FFMPEGExecutorBuilder {
 
 	// ===========
 
-	/**
-	 * @param listener
-	 * @return
-	 */
 	public FFMPEGExecutorBuilder addListener(OperationListener listener) {
 		defaultFFMPEGOperation.addListener(listener);
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	public <R> FFExecutor<R> build() {
 		return ffExecutorFactory.create((Operation<R, ?>)defaultFFMPEGOperation, this);
 	}
 
-	/**
-	 * @return
-	 */
 	public FFMPEGOperation<?> getFFMPEGOperation() {
 		return defaultFFMPEGOperation;
 	}
 
 	// =======================================
 
-	/**
-	 * @return
-	 */
 	public FFMPEGExecutorBuilder hideBanner() {
 		defaultFFMPEGOperation.hideBanner();
 		return this;
 	}
 
-	/**
-	 * @param logLevel
-	 * @return
-	 */
 	public FFMPEGExecutorBuilder logLevel(LogLevel logLevel) {
 		defaultFFMPEGOperation.logLevel(logLevel);
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	public FFMPEGExecutorBuilder noStats() {
 		defaultFFMPEGOperation.noStats();
 		return this;
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public FFMPEGExecutorBuilder parameter(String name) {
 		defaultFFMPEGOperation.addParameter(name);
 		return this;
 	}
 
-	/**
-	 * @param name
-	 * @param value
-	 * @return
-	 */
 	public FFMPEGExecutorBuilder parameter(String name, String value) {
 		defaultFFMPEGOperation.addParameter(name, value);
 		return this;
 	}
 
-	/**
-	 * @param progressReadLine
-	 * @return
-	 */
 	public FFMPEGExecutorBuilder progressReadLine(ProgressReadLine progressReadLine) {
 		defaultFFMPEGOperation.setProgressReadLine(progressReadLine);
 		return this;

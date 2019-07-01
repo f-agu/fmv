@@ -108,9 +108,6 @@ import org.fagu.fmv.utils.time.Time;
  */
 public class FFHelper {
 
-	/**
-	 *
-	 */
 	private FFHelper() {}
 
 	/**

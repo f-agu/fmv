@@ -21,6 +21,8 @@ package org.fagu.fmv.ffmpeg;
  */
 
 import java.util.OptionalInt;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.fagu.fmv.ffmpeg.metadatas.AudioStream;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
@@ -31,10 +33,29 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
  */
 public class FFMpegUtils {
 
-	/**
-	 * 
-	 */
+	private static final Pattern DIGIT_UNIT = Pattern.compile("([0-9]+)(k|m)");
+
 	private FFMpegUtils() {}
+
+	public static OptionalInt toInt(String value) {
+		Matcher matcher = DIGIT_UNIT.matcher(value);
+		if(matcher.matches()) {
+			int base = Integer.parseInt(matcher.group(1));
+			String unit = matcher.group(2);
+			int unitScale = 1;
+			if("k".equals(unit)) {
+				unitScale = 1_000;
+			} else if("m".equals(unit)) {
+				unitScale = 1_000_000;
+			}
+			return OptionalInt.of(base * unitScale);
+		}
+		try {
+			return OptionalInt.of(Integer.parseInt(value));
+		} catch(NumberFormatException e) {
+			return OptionalInt.empty();
+		}
+	}
 
 	// **** audio sampleRate
 

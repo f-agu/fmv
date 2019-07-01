@@ -28,9 +28,6 @@ import java.util.Iterator;
  */
 public class StringJoin {
 
-	/**
-	 * 
-	 */
 	private StringJoin() {}
 
 	/**

@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FilenameUtils;
-import org.fagu.fmv.im.ImageMetadatas;
 import org.fagu.fmv.utils.Resources;
 
 
@@ -32,9 +31,6 @@ import org.fagu.fmv.utils.Resources;
  */
 class ImageResourceUtils {
 
-	/**
-	 * 
-	 */
 	private ImageResourceUtils() {}
 
 	/**

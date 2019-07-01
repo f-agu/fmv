@@ -60,8 +60,9 @@ public class SoftTestCase {
 		soft.getFounds().forEach(sf -> {
 			System.out.println(sf.getFoundReason() + "  " + sf.getFile() + "  " + sf.getReason());
 		});
-		SoftLogger softLogger = new SoftLogger(Collections.singletonList(soft));
-		softLogger.log(System.out::println);
+
+		SoftLogger softChecker = new SoftLogger(Collections.singletonList(soft));
+		softChecker.log(System.out::println);
 		// System.out.println(soft);
 	}
 

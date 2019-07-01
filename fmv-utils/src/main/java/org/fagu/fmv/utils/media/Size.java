@@ -116,7 +116,7 @@ public class Size implements Serializable {
 
 	public static final Size EGA = new Size(640, 350, "ega");
 
-	public static final Size HD480 = new Size(852, 480, "hd480");
+	public static final Size HD480 = new Size(852, 480, "hd480"); // should be 853 but libx264 need an even number
 
 	public static final Size HD720 = new Size(1280, 720, "hd720");
 
@@ -149,6 +149,14 @@ public class Size implements Serializable {
 	public static final Size HVGA = new Size(480, 320, "hvga");
 
 	public static final Size QHD = new Size(960, 540, "qhd");
+
+	public static final Size _2KDCI = new Size(2048, 1080, "2kdci");
+
+	public static final Size _4KDCI = new Size(4096, 2160, "4kdci");
+
+	public static final Size UHD2160 = new Size(3840, 2160, "uhd2160");
+
+	public static final Size UHD4320 = new Size(7680, 4320, "uhd4320");
 
 	public static final Size _1M_Pixels = new Size(1280, 960, "1Mpixels");
 

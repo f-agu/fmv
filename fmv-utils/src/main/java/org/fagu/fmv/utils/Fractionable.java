@@ -38,121 +38,70 @@ public abstract class Fractionable<F extends Fractionable<F>> extends Number imp
 
 	private final Fraction fraction;
 
-	/**
-	 * @param fraction
-	 */
 	protected Fractionable(Fraction fraction) {
 		this.fraction = fraction;
 	}
 
-	/**
-	 * @param numerator
-	 * @param denominator
-	 */
 	protected Fractionable(int numerator, int denominator) {
 		this(Fraction.getFraction(numerator, denominator));
 	}
 
-	/**
-	 * @return
-	 */
 	public int getNumerator() {
 		return fraction.getNumerator();
 	}
 
-	/**
-	 * @return
-	 */
 	public int getDenominator() {
 		return fraction.getDenominator();
 	}
 
-	/**
-	 * @return
-	 */
 	public int getProperNumerator() {
 		return fraction.getProperNumerator();
 	}
 
-	/**
-	 * @return
-	 */
 	public int getProperWhole() {
 		return fraction.getProperWhole();
 	}
 
-	/**
-	 * @return
-	 */
 	public F reduce() {
 		return create(fraction.reduce());
 	}
 
-	/**
-	 * @return
-	 */
 	public F invert() {
 		return create(fraction.invert());
 	}
 
-	/**
-	 * @return
-	 */
 	public F negate() {
 		return create(fraction.negate());
 	}
 
-	/**
-	 * @return
-	 */
 	public F abs() {
 		return create(fraction.abs());
 	}
 
-	/**
-	 * @param power
-	 * @return
-	 */
 	public F pow(int power) {
 		return create(fraction.pow(power));
 	}
 
-	/**
-	 * @see java.lang.Number#intValue()
-	 */
 	@Override
 	public int intValue() {
 		return fraction.intValue();
 	}
 
-	/**
-	 * @see java.lang.Number#longValue()
-	 */
 	@Override
 	public long longValue() {
 		return fraction.longValue();
 	}
 
-	/**
-	 * @see java.lang.Number#floatValue()
-	 */
 	@Override
 	public float floatValue() {
 		return fraction.floatValue();
 	}
 
-	/**
-	 * @see java.lang.Number#doubleValue()
-	 */
 	@Override
 	public double doubleValue() {
 		return fraction.doubleValue();
 	}
 
-	/**
-	 * @param fraction
-	 * @return
-	 */
 	public F multiplyBy(F f) {
 		return create(fraction.multiplyBy(f.toFraction()));
 	}
@@ -172,24 +121,15 @@ public abstract class Fractionable<F extends Fractionable<F>> extends Number imp
 		return create(fraction.divideBy(f.toFraction()));
 	}
 
-	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
 	@Override
 	public int compareTo(F other) {
 		return fraction.compareTo(other.toFraction());
 	}
 
-	/**
-	 * @return
-	 */
 	public Fraction toFraction() {
 		return fraction;
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(final Object obj) {
 		if(obj == this) {
@@ -203,17 +143,11 @@ public abstract class Fractionable<F extends Fractionable<F>> extends Number imp
 		return fraction.equals(other.toFraction());
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		return fraction.hashCode();
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		int numerator = fraction.getNumerator();
@@ -226,51 +160,27 @@ public abstract class Fractionable<F extends Fractionable<F>> extends Number imp
 
 	// ****************************************************
 
-	/**
-	 * @param numerator
-	 * @param denominator
-	 * @return
-	 */
-	abstract protected F create(int numerator, int denominator);
+	protected abstract F create(int numerator, int denominator);
 
 	// ****************************************************
 
-	/**
-	 * @param numerator
-	 * @param denominator
-	 * @return
-	 */
 	protected F create(Fraction fraction) {
 		return create(fraction.getNumerator(), fraction.getDenominator());
 	}
 
-	/**
-	 * @return
-	 */
 	protected F preFunction() {
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
 	protected F createZero() {
 		return create(0, 1);
 	}
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	protected F getFThis() {
 		return (F)this;
 	}
 
-	/**
-	 * @param numerator
-	 * @param denominator
-	 * @return
-	 */
 	protected static String getKey(int numerator, int denominator) {
 		return new StringBuilder().append(numerator).append('/').append(denominator).toString();
 	}

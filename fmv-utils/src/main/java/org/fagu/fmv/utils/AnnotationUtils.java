@@ -20,7 +20,6 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-
 import java.lang.annotation.Annotation;
 import java.util.Objects;
 
@@ -30,9 +29,6 @@ import java.util.Objects;
  */
 public class AnnotationUtils {
 
-	/**
-	 * 
-	 */
 	private AnnotationUtils() {}
 
 	/**

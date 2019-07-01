@@ -36,9 +36,6 @@ public class Softs {
 
 	private static final Map<String, Soft> healthIndicators = new HashMap<>();
 
-	/**
-	 * 
-	 */
 	private Softs() {}
 
 	/**

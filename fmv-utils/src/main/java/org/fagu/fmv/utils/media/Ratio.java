@@ -77,34 +77,23 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 
 	private final boolean isFraction;
 
-	private final double ratio;
+	private final double value;
 
 	private int countFractionDigits;
 
 	private final boolean custom;
 
-	/**
-	 * @param ratio
-	 */
 	private Ratio(double ratio) {
 		this(ratio, false);
 	}
 
-	/**
-	 * @param numerator
-	 * @param denominator
-	 */
 	private Ratio(int numerator, int denominator) {
 		this(numerator, denominator, false);
 	}
 
-	/**
-	 * @param ratio
-	 * @param custom
-	 */
 	protected Ratio(double ratio, boolean custom) {
 		super( - 1, - 1);
-		this.ratio = ratio;
+		this.value = ratio;
 		this.custom = custom;
 		isFraction = false;
 		countFractionDigits = 3;
@@ -112,11 +101,6 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 		addMe(getKey(getNumerator(), getDenominator(), ratio));
 	}
 
-	/**
-	 * @param numerator
-	 * @param denominator
-	 * @param custom
-	 */
 	protected Ratio(int numerator, int denominator, boolean custom) {
 		super(numerator, denominator);
 		if(numerator < 0) {
@@ -125,19 +109,14 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 		if(denominator <= 0) {
 			throw new IllegalArgumentException("Denominator must be positive");
 		}
-		this.ratio = (float)numerator / (float)denominator;
+		this.value = (float)numerator / (float)denominator;
 		this.custom = custom;
 		isFraction = true;
 		countFractionDigits = 0;
 
-		addMe(getKey(numerator, denominator, ratio));
+		addMe(getKey(numerator, denominator, value));
 	}
 
-	/**
-	 * @param numerator
-	 * @param denominator
-	 * @return
-	 */
 	public static Ratio valueOf(int numerator, int denominator) {
 		double r = (float)numerator / (float)denominator;
 		String key = getKey(numerator, denominator, r);
@@ -148,19 +127,11 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 		return new Ratio(numerator, denominator, true);
 	}
 
-	/**
-	 * @param ratioValue
-	 * @return
-	 */
 	public static Ratio valueOf(double ratioValue) {
 		Ratio ratio = RATIO_VALUE_MAP.get(ratioValue);
 		return ratio != null ? ratio : new Ratio(ratioValue, true);
 	}
 
-	/**
-	 * @param str
-	 * @return
-	 */
 	public static Ratio parse(String str) {
 		// a:b or a/b
 		Matcher matcher = RATIO_SEP_PATTERN.matcher(str);
@@ -186,47 +157,32 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 		throw new IllegalArgumentException("Unable to parse '" + str + '\'');
 	}
 
-	/**
-	 * @return
-	 */
 	public Ratio approximate() {
 		return approximate(0.04);
 	}
 
-	/**
-	 * @param delta
-	 * @return
-	 */
 	public Ratio approximate(double delta) {
 		if(delta >= 1 || delta <= 0) {
 			throw new IllegalArgumentException("Delta must be between 0 and 1 (both excluded)");
 		}
 		Optional<Ratio> first = RATIO_ND_MAP.values().stream()//
-		.filter(r -> NumberUtils.equals(this.toDouble(), r.toDouble(), delta))//
-		.findFirst();
+				.filter(r -> NumberUtils.equals(this.toDouble(), r.toDouble(), delta))//
+				.findFirst();
 
 		if(first.isPresent()) {
 			return first.get();
 		}
 
 		int count = (int)Math.ceil( - Math.log10(delta));
-		Ratio ratio = valueOf(NumberUtils.round(toDouble(), count));
-		ratio.countFractionDigits = count;
-		return ratio;
+		Ratio r = valueOf(NumberUtils.round(toDouble(), count));
+		r.countFractionDigits = count;
+		return r;
 	}
 
-	/**
-	 * @param size
-	 * @return
-	 */
 	public int calculateWidth(Size size) {
 		return calculateWidth(size.getHeight());
 	}
 
-	/**
-	 * @param height
-	 * @return
-	 */
 	public int calculateWidth(int height) {
 		if(isFraction) {
 			return height * getNumerator() / getDenominator();
@@ -234,18 +190,10 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 		return (int)(height * toDouble());
 	}
 
-	/**
-	 * @param size
-	 * @return
-	 */
 	public int calculateHeight(Size size) {
 		return calculateHeight(size.getWidth());
 	}
 
-	/**
-	 * @param width
-	 * @return
-	 */
 	public int calculateHeight(int width) {
 		if(isFraction) {
 			return width * getDenominator() / getNumerator();
@@ -253,59 +201,36 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 		return (int)(width / toDouble());
 	}
 
-	/**
-	 * @param height
-	 * @return
-	 */
 	public Size getSizeByHeight(int height) {
 		return Size.valueOf(calculateWidth(height), height);
 	}
 
-	/**
-	 * @param width
-	 * @return
-	 */
 	public Size getSizeByWidth(int width) {
 		return Size.valueOf(width, calculateHeight(width));
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isVertical() {
 		return toDouble() < 1D;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isHorizontal() {
 		return toDouble() > 1D;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isSquare() {
 		return Double.compare(toDouble(), 1D) == 0;
 	}
 
-	/**
-	 * @return
-	 */
 	public double toDouble() {
-		return ratio;
+		return value;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public Ratio invert() {
 		if(isFraction) {
 			return super.invert();
 		}
-		return Ratio.valueOf(1 / ratio);
+		return Ratio.valueOf(1 / value);
 	}
 
 	/**
@@ -352,7 +277,7 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 			return false;
 		}
 		Ratio other = (Ratio)obj;
-		return super.equals(obj) && NumberUtils.equals(ratio, other.ratio, 0.00001);
+		return super.equals(obj) && NumberUtils.equals(value, other.value, 0.00001);
 	}
 
 	/**
@@ -373,7 +298,7 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 		DecimalFormat decimalFormat = new DecimalFormat();
 		decimalFormat.setMinimumFractionDigits(countFractionDigits);
 		decimalFormat.setMaximumFractionDigits(countFractionDigits);
-		return decimalFormat.format(ratio);
+		return decimalFormat.format(value);
 	}
 
 	/**
@@ -387,14 +312,11 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 		DecimalFormat decimalFormat = new DecimalFormat();
 		decimalFormat.setMinimumFractionDigits(countFractionDigits);
 		decimalFormat.setMaximumFractionDigits(countFractionDigits);
-		return new StringBuilder().append(decimalFormat.format(ratio)).append(":1").toString();
+		return new StringBuilder().append(decimalFormat.format(value)).append(":1").toString();
 	}
 
 	// *****************************************
 
-	/**
-	 * @see org.fagu.fmv.utils.Fractionable#create(int, int)
-	 */
 	@Override
 	protected Ratio create(int numerator, int denominator) {
 		return valueOf(numerator, denominator);
@@ -402,9 +324,6 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 
 	// *****************************************
 
-	/**
-	 * @param key
-	 */
 	private void addMe(String key) {
 		if( ! custom) {
 			RATIO_ND_MAP.put(key, this);
@@ -412,12 +331,6 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 		}
 	}
 
-	/**
-	 * @param numerator
-	 * @param denominator
-	 * @param ratio
-	 * @return
-	 */
 	private static String getKey(int numerator, int denominator, double ratio) {
 		return new StringBuilder(20).append(numerator).append(':').append(denominator).append('_').append(ratio).toString();
 	}

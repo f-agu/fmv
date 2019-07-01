@@ -21,7 +21,7 @@ package org.fagu.fmv.soft;
  */
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -85,9 +85,10 @@ public class SoftTestCase {
 		// Soft ffprobeSoft = Soft.with("ffprobe").search(ffSoftFoundFactory);
 		// Soft identifySoft = Soft.withName("identify").search(identifyFoundFactory);
 
-		SoftLogger softFormatter = new SoftLogger(Arrays.asList(soft));
+		SoftLogger softChecker = new SoftLogger(Collections.singletonList(soft));
+
 		// SoftLogger softFormatter = new SoftLogger(Arrays.asList(ffprobeSoft, identifySoft, ffmpegSoft));
-		softFormatter.logDetails(System.out::println);
+		softChecker.logDetails(System.out::println);
 		// System.out.println(soft.getFounds());
 		// System.out.println(soft.getFile());
 		soft.withParameters("")

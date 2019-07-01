@@ -115,6 +115,14 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return this;
 	}
 
+	public OutputProcessor blockAllAudioStreams() {
+		return add(Parameter.before(output, "-an"));
+	}
+
+	public OutputProcessor blockAllVideoStreams() {
+		return add(Parameter.before(output, "-vn"));
+	}
+
 	/**
 	 * @param rate
 	 * @return
@@ -357,6 +365,10 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 			resampler.eventAdded(this, output);
 		}
 		return this;
+	}
+
+	public OutputProcessor dash() {
+		return add("-dash", "1");
 	}
 
 	/**
