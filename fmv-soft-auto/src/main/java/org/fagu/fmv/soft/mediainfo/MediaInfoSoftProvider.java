@@ -2,6 +2,9 @@ package org.fagu.fmv.soft.mediainfo;
 
 import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,9 +33,6 @@ public class MediaInfoSoftProvider extends SoftProvider {
 
 	public static final String NAME = "mediainfo";
 
-	/**
-	 * 
-	 */
 	public MediaInfoSoftProvider() {
 		this(null);
 	}
@@ -80,7 +80,19 @@ public class MediaInfoSoftProvider extends SoftProvider {
 		SoftLocator softLocator = super.getSoftLocator();
 		if(SystemUtils.IS_OS_WINDOWS) {
 			ProgramFilesLocatorSupplier.with(softLocator)
-					.findFolder("MediaInfo")
+					.find(programFile -> {
+						List<File> files = new ArrayList<>();
+						File[] folders = programFile.listFiles(f -> f.getName().toLowerCase().startsWith("mediainfo"));
+						if(folders != null) {
+							for(File folder : folders) {
+								File f = new File(folder, "MediaInfo.dll");
+								if( ! f.exists()) {
+									files.add(folder);
+								}
+							}
+						}
+						return files;
+					})
 					.supplyIn();
 			softLocator.addDefaultLocator();
 		}

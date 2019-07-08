@@ -25,6 +25,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
+import org.fagu.fmv.soft.io.StreamLog;
+import org.fagu.fmv.soft.io.StreamLogConsumer;
+
 
 /**
  * @author f.agu
@@ -74,7 +77,7 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 	 */
 	@Override
 	public void setProcessOutputStream(InputStream is) {
-		createProcessOutputPump(new ReadLineInputStream(is, outReadLine), null);
+		createProcessOutputPump(new ReadLineInputStream(StreamLog.wrap(is, StreamLogConsumer.out()), outReadLine), null);
 	}
 
 	/**
@@ -82,7 +85,7 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 	 */
 	@Override
 	public void setProcessErrorStream(InputStream is) {
-		createProcessErrorPump(new ReadLineInputStream(is, errReadLine), null);
+		createProcessErrorPump(new ReadLineInputStream(StreamLog.wrap(is, StreamLogConsumer.err()), errReadLine), null);
 	}
 
 	/**
@@ -112,6 +115,11 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 		final Thread result = new Thread(new ReadLineStreamPumper(is, readLine, charset, lookReader), "ReadLineStreamPumper");
 		result.setDaemon(true);
 		return result;
+	}
+
+	@Override
+	protected Thread createPump(InputStream is, OutputStream os, boolean closeWhenExhausted) {
+		return super.createPump(is, os, false);
 	}
 
 	// -------------------------------------

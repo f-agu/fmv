@@ -36,16 +36,8 @@ import org.junit.Test;
  */
 public class DominantColorTestCase {
 
-	/**
-	 * 
-	 */
-	public DominantColorTestCase() {}
-
-	/**
-	 * @throws IOException
-	 */
 	@Test
-	public void testRealImageRGB() throws IOException {
+	public void testRealImageRGB_File() throws IOException {
 		Package pkg = DominantColor.class.getPackage();
 		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), ImageMetadatasTestCase.class
 				.getSimpleName(), ".jpg");
@@ -59,17 +51,23 @@ public class DominantColorTestCase {
 		}
 	}
 
-	/**
-	 * @throws IOException
-	 */
+	@Test
+	public void testRealImageRGB_InputStream() throws IOException {
+		Package pkg = DominantColor.class.getPackage();
+		String resourcePath = Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg");
+
+		Color dominantColor = DominantColor.getInstance()
+				.getDominantColor(
+						() -> Resources.getResourceInputStream(resourcePath),
+						s -> {});
+		assertEquals(new Color(85, 70, 70), dominantColor);
+	}
+
 	@Test
 	public void testParseRGB() throws IOException {
 		assertColor(DominantColor.parse("srgb(130,125,119)"), 130, 125, 119);
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testParseCMYK() throws IOException {
 		assertColor("black", DominantColor.parse("cmyk(0,0,0,255)"), 0, 0, 0);

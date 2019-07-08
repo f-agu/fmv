@@ -31,23 +31,14 @@ import org.fagu.fmv.utils.time.Duration;
  */
 public class PipeMediaInput extends AbstractPipeMedia<PipeMediaInput> implements MediaInput {
 
-	/**
-	 * 
-	 */
 	public PipeMediaInput() {
 		super(Pipe.IN);
 	}
 
-	/**
-	 * @param pipe
-	 */
 	public PipeMediaInput(Pipe pipe) {
 		super(pipe);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.MediaInput#getDuration()
-	 */
 	@Override
 	public Optional<Duration> getDuration() {
 		return Optional.empty();

@@ -1,10 +1,12 @@
 package org.fagu.fmv.ffmpeg;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import org.fagu.fmv.ffmpeg.coder.Libx264;
+import org.fagu.fmv.ffmpeg.executor.Executed;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
 import org.fagu.fmv.ffmpeg.filter.impl.Rotate;
@@ -14,9 +16,12 @@ import org.fagu.fmv.ffmpeg.format.MP4Muxer;
 import org.fagu.fmv.ffmpeg.ioe.Pipe;
 import org.fagu.fmv.ffmpeg.ioe.PipeMediaInput;
 import org.fagu.fmv.ffmpeg.ioe.PipeMediaOutput;
+import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.ffmpeg.operation.InfoOperation;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.BitStreamFilter;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
+import org.fagu.fmv.soft.io.StreamLog;
 import org.fagu.fmv.utils.media.Rotation;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -51,12 +56,33 @@ public class StreamTestCase {
 	}
 
 	@Test
-	@Ignore
-	public void testInputPipeToFile2() throws Exception {
-		File outFile = new File("d:\\tmp\\out.mp4");
-		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
+	// @Ignore
+	public void testInputPipeForInfo() throws Exception {
+		StreamLog.debug(true);
+		extractInfoWithInputPipe("3gp.3gp");
+		extractInfoWithInputPipe("avi.avi");
+		extractInfoWithInputPipe("flv.flv");
+		extractInfoWithInputPipe("melt.mpg");
+		extractInfoWithInputPipe("mp4.mp4");
+		extractInfoWithInputPipe("mpeg.mpeg");
+	}
 
-		builder.addMediaInput(new PipeMediaInput())
+	private void extractInfoWithInputPipe(String resource) throws Exception {
+		InfoOperation infoOperation = new InfoOperation(new PipeMediaInput());
+		FFExecutor<MovieMetadatas> executor = new FFExecutor<>(infoOperation);
+		System.out.println(executor.getCommandLineString());
+		executor.input(() -> ResourceUtils.open(resource));
+		Executed<MovieMetadatas> execute = executor.execute();
+		// System.out.println(execute.getResult());
+	}
+
+	@Test
+	// @Ignore
+	public void testInputPipeToFile2() throws Exception {
+		File outFile = new File("C:\\Oodrive\\video\\mp4-2\\video_320x180_500k-piped.mp4");
+		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
+		// new PipeMediaInput().parameter("-movflags", "faststart");
+		builder.addMediaInput(new PipeMediaInput()).add("-movflags", "faststart")
 				// .add("-analyzeduration", Integer.toString(Integer.MAX_VALUE))
 				// .add("-probesize", Integer.toString(Integer.MAX_VALUE))
 
@@ -72,7 +98,7 @@ public class StreamTestCase {
 
 		FFExecutor<Object> executor = builder.build();
 		System.out.println(executor.getCommandLineString());
-		executor.input(() -> ResourceUtils.open("mp4.mp4"));
+		executor.input(() -> new FileInputStream("C:\\Oodrive\\video\\mp4-2\\video_320x180_500k.mp4"));
 		executor.execute();
 
 	}

@@ -4,6 +4,8 @@ import java.io.OutputStream;
 
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.output.NullOutputStream;
+import org.fagu.fmv.soft.io.StreamLog;
+import org.fagu.fmv.soft.io.StreamLogConsumer;
 
 
 /**
@@ -25,7 +27,7 @@ public class WritablePumpStreamHandler extends PumpStreamHandler {
 	 */
 	@Override
 	public void setProcessInputStream(OutputStream outputStream) {
-		this.outputStream = outputStream;
+		this.outputStream = StreamLog.wrap(outputStream, StreamLogConsumer.in());
 	}
 
 	/**

@@ -32,7 +32,6 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.apache.commons.exec.ExecuteStreamHandler;
-import org.apache.commons.exec.PumpStreamHandler;
 
 
 /**
@@ -338,7 +337,7 @@ public class ExecHelper<T extends ExecHelper<?>> {
 		if(input != null || out != null || err != null) { // input & whatever
 			ReadLineOutputStream outRL = new ReadLineOutputStream(out, getOutReadLine(defaultReadLine));
 			ReadLineOutputStream errRL = new ReadLineOutputStream(err, getErrReadLine(defaultReadLine));
-			ExecuteStreamHandler customExecuteStreamHandler = new PumpStreamHandler(outRL, errRL, input);
+			ExecuteStreamHandler customExecuteStreamHandler = new MyPumpStreamHandler(outRL, errRL, input);
 
 			return FMVExecutor.with(workingFolder)
 					.executeStreamHandler(customExecuteStreamHandler)

@@ -29,23 +29,14 @@ import org.fagu.fmv.soft.SoftSearch;
  */
 public class MediaInfo {
 
-	/**
-	 * 
-	 */
 	private MediaInfo() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new MediaInfoSoftProvider());
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftSearch searchWith() {
 		return Soft.with(MediaInfoSoftProvider::new);
 	}

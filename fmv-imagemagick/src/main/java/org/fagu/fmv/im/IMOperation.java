@@ -40,11 +40,6 @@ public class IMOperation {
 	private final LinkedList<String> arguments = new LinkedList<>();
 
 	/**
-	 * 
-	 */
-	public IMOperation() {}
-
-	/**
 	 * @param arg0
 	 * @param args
 	 * @return

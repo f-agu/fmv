@@ -320,7 +320,6 @@ public class FMVExecutor extends DefaultExecutor {
 	// -------------------------------------------
 
 	/**
-	 * @author Oodrive
 	 * @author f.agu
 	 * @created 21 avr. 2017 10:45:12
 	 */

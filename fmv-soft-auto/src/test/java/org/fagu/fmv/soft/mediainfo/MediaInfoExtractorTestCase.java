@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -15,11 +14,12 @@ import org.junit.Test;
 public class MediaInfoExtractorTestCase {
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void test1() throws IOException {
 		MediaInfoExtractor extractor = new MediaInfoExtractor();
 		Map<File, Info> map = extractor.extractAll(
-				new File("..0."));
+				new File("C:\\Projects\\fmv\\fmv-soft-auto\\src\\test\\resources\\org\\fagu\\fmv\\soft\\mp4.mp4"),
+				new File("C:\\Oodrive\\video\\mp4-2\\a.mp4"));
 
 		map.forEach((file, info) -> {
 			System.out.println();

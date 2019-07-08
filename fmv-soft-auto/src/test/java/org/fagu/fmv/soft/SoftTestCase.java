@@ -36,7 +36,7 @@ import org.junit.Test;
 public class SoftTestCase {
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testFindAll() throws Exception {
 		// System.getProperties().forEach((k, v) -> System.out.println(k + " : " + v));
 		Soft.searchAll().forEach(s -> {

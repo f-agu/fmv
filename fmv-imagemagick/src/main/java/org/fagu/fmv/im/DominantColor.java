@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.awt.color.ColorSpace;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +33,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.exec.CommandLine;
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.utils.io.InputStreamSupplier;
 
 
 /**
@@ -80,13 +82,32 @@ public class DominantColor {
 		return parse(value);
 	}
 
+	public Color getDominantColor(InputStreamSupplier inputStreamSupplier, Consumer<CommandLine> logger) throws IOException {
+		IMOperation op = new IMOperation();
+		op.image("-", "[0]").scale("1x1!").format("%[pixel:u]").add("info:");
+
+		List<String> outputs = new ArrayList<>();
+		try (InputStream inputStream = inputStreamSupplier.getInputStream()) {
+			convertSoft.withParameters(op.toList())
+					.addCommonReadLine(outputs::add)
+					.logCommandLine(logger)
+					.input(inputStream)
+					.execute();
+		}
+
+		if(outputs.isEmpty()) {
+			throw new IOException("Data not found");
+		}
+		String value = outputs.get(0);
+		Matcher matcher = PATTERN.matcher(value);
+		if( ! matcher.find()) {
+			throw new IOException("Data not matches a RGB pattern: " + value);
+		}
+		return parse(value);
+	}
+
 	// ***************************************************
 
-	/**
-	 * @param value
-	 * @return
-	 * @throws IOException
-	 */
 	static Color parse(String value) throws IOException {
 		Matcher matcher = PATTERN.matcher(value);
 		if( ! matcher.find()) {
@@ -105,10 +126,6 @@ public class DominantColor {
 
 	// ***************************************************
 
-	/**
-	 * @param colorSpace
-	 * @return
-	 */
 	private static ColorSpace parseColorSpace(String colorSpace) {
 		int type = 0; // any space
 		if(colorSpace.equals("srgb")) {

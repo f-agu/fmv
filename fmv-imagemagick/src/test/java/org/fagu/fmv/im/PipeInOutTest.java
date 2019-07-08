@@ -105,7 +105,7 @@ public class PipeInOutTest {
 					.image(destFile);
 			try (InputStream inputStream = new FileInputStream(srcFile)) {
 				convertSoft.withParameters(op.toList())
-						// .logCommandLine(System.out::println)
+						.logCommandLine(System.out::println)
 						.input(inputStream) // <--------- in
 						.execute();
 			}

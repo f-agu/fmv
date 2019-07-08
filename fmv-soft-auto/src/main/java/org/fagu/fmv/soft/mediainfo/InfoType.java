@@ -5,6 +5,6 @@ package org.fagu.fmv.soft.mediainfo;
  */
 public enum InfoType {
 
-	GENERAL, AUDIO, VIDEO, TEXT, MENU;
+	GENERAL, AUDIO, VIDEO, TEXT, MENU, IMAGE, OTHER;
 
 }
