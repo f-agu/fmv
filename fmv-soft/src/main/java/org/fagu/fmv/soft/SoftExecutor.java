@@ -77,13 +77,14 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 	}
 
 	public SoftExecutor logCommandLine(Consumer<CommandLine> commandLineConsumer) {
+		if(commandLineConsumer == null) {
+			return this;
+		}
 		return addListener(new ExecListener() {
 
 			@Override
 			public void eventPrepare(CommandLine commandLine) {
-				if(commandLineConsumer != null) {
-					commandLineConsumer.accept(commandLine);
-				}
+				commandLineConsumer.accept(commandLine);
 			}
 		});
 	}

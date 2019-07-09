@@ -53,6 +53,7 @@ public class DominantColorTestCase {
 
 	@Test
 	public void testRealImageRGB_InputStream() throws IOException {
+		// StreamLog.debug(true);
 		Package pkg = DominantColor.class.getPackage();
 		String resourcePath = Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg");
 
@@ -82,23 +83,10 @@ public class DominantColorTestCase {
 
 	// ***********************************************
 
-	/**
-	 * @param color
-	 * @param expectedRed
-	 * @param expectedGreen
-	 * @param expectedBlue
-	 */
 	private void assertColor(Color color, int expectedRed, int expectedGreen, int expectedBlue) {
 		assertColor(null, color, expectedRed, expectedGreen, expectedBlue);
 	}
 
-	/**
-	 * @param title
-	 * @param color
-	 * @param expectedRed
-	 * @param expectedGreen
-	 * @param expectedBlue
-	 */
 	private void assertColor(String title, Color color, int expectedRed, int expectedGreen, int expectedBlue) {
 		assertEquals(title, expectedRed, color.getRed());
 		assertEquals(title, expectedGreen, color.getGreen());

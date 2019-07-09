@@ -62,30 +62,17 @@ public class DominantColor {
 	}
 
 	public Color getDominantColor(File file, Consumer<CommandLine> logger) throws IOException {
-		IMOperation op = new IMOperation();
-		op.image(file, "[0]").scale("1x1!").format("%[pixel:u]").add("info:");
-
+		IMOperation op = createIMOperation(o -> o.image(file, "[0]"));
 		List<String> outputs = new ArrayList<>();
 		convertSoft.withParameters(op.toList())
 				.addCommonReadLine(outputs::add)
 				.logCommandLine(logger)
 				.execute();
-
-		if(outputs.isEmpty()) {
-			throw new IOException("Data not found for " + file);
-		}
-		String value = outputs.get(0);
-		Matcher matcher = PATTERN.matcher(value);
-		if( ! matcher.find()) {
-			throw new IOException("Data not matches a RGB pattern: " + value);
-		}
-		return parse(value);
+		return parseColor(outputs);
 	}
 
 	public Color getDominantColor(InputStreamSupplier inputStreamSupplier, Consumer<CommandLine> logger) throws IOException {
-		IMOperation op = new IMOperation();
-		op.image("-", "[0]").scale("1x1!").format("%[pixel:u]").add("info:");
-
+		IMOperation op = createIMOperation(o -> o.image("-", "[0]"));
 		List<String> outputs = new ArrayList<>();
 		try (InputStream inputStream = inputStreamSupplier.getInputStream()) {
 			convertSoft.withParameters(op.toList())
@@ -94,16 +81,7 @@ public class DominantColor {
 					.input(inputStream)
 					.execute();
 		}
-
-		if(outputs.isEmpty()) {
-			throw new IOException("Data not found");
-		}
-		String value = outputs.get(0);
-		Matcher matcher = PATTERN.matcher(value);
-		if( ! matcher.find()) {
-			throw new IOException("Data not matches a RGB pattern: " + value);
-		}
-		return parse(value);
+		return parseColor(outputs);
 	}
 
 	// ***************************************************
@@ -125,6 +103,26 @@ public class DominantColor {
 	}
 
 	// ***************************************************
+
+	private static IMOperation createIMOperation(Consumer<IMOperation> imOpCons) {
+		IMOperation op = new IMOperation();
+		imOpCons.accept(op);
+		op.scale("1x1!").format("%[pixel:u]").add("info:");
+		return op;
+	}
+
+	private static Color parseColor(List<String> outputs) throws IOException {
+		if(outputs.isEmpty()) {
+			throw new IOException("Data not found");
+		}
+		String value = outputs.get(0);
+		Matcher matcher = PATTERN.matcher(value);
+		if( ! matcher.find()) {
+			throw new IOException("Data not matches a RGB pattern: " + value);
+		}
+		return parse(value);
+
+	}
 
 	private static ColorSpace parseColorSpace(String colorSpace) {
 		int type = 0; // any space
