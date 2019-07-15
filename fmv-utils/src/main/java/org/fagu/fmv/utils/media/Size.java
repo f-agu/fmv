@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * @author f.agu
  */
@@ -206,20 +205,20 @@ public class Size implements Serializable {
 	 * @param names
 	 */
 	protected Size(int width, int height, boolean custom, String... names) {
-		if(names == null || names.length == 0) {
+		if (names == null || names.length == 0) {
 			throw new NullPointerException("name");
 		}
-		if(width <= 0) {
+		if (width <= 0) {
 			throw new IllegalArgumentException("Width must be positive");
 		}
-		if(height <= 0) {
+		if (height <= 0) {
 			throw new IllegalArgumentException("Height must be positive");
 		}
 		this.names = Collections.unmodifiableList(Arrays.asList(names));
 		this.width = width;
 		this.height = height;
 		this.custom = custom;
-		synchronized(this) {
+		synchronized (this) {
 			init();
 		}
 	}
@@ -232,11 +231,11 @@ public class Size implements Serializable {
 		String v = value.trim().toLowerCase();
 		Pattern pattern = Pattern.compile("(\\d+)(?:[ \\t]*)x(?:[ \\t]*)(\\d+)");
 		Matcher matcher = pattern.matcher(v);
-		if(matcher.matches()) {
+		if (matcher.matches()) {
 			return valueOf(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
 		}
 		Size size = NAME_MAP.get(v);
-		if(size != null) {
+		if (size != null) {
 			return size;
 		}
 		throw new IllegalArgumentException("Unable to parse: '" + value + '\'');
@@ -250,7 +249,7 @@ public class Size implements Serializable {
 	public static Size valueOf(int width, int height) {
 		String sizeKey = getKey(width, height);
 		Size size = SIZE_MAP.get(sizeKey);
-		if(size != null) {
+		if (size != null) {
 			return size;
 		}
 		return new Size(width, height, true, CUSTOM_PREFIX + sizeKey);
@@ -269,8 +268,8 @@ public class Size implements Serializable {
 	 */
 	public static List<Size> byRatio(Ratio ratio) {
 		List<Size> list = new ArrayList<>();
-		for(Size size : values()) {
-			if(size.getRatio().equals(ratio)) {
+		for (Size size : values()) {
+			if (size.getRatio().equals(ratio)) {
 				list.add(size);
 			}
 		}
@@ -331,7 +330,7 @@ public class Size implements Serializable {
 	 * @return
 	 */
 	public Ratio getRatio() {
-		int pgcd = (int)org.fagu.fmv.utils.Math.greatestCommonDivisor(width, height);
+		int pgcd = (int) org.fagu.fmv.utils.Math.greatestCommonDivisor(width, height);
 		return Ratio.valueOf(width / pgcd, height / pgcd);
 	}
 
@@ -349,7 +348,7 @@ public class Size implements Serializable {
 	public Size fitAndKeepRatioTo(Size size) {
 		Ratio ratio = getRatio();
 		Ratio otherRatio = size.getRatio();
-		if(ratio.toDouble() < otherRatio.toDouble()) {
+		if (ratio.toDouble() < otherRatio.toDouble()) {
 			return ratio.getSizeByHeight(size.getHeight());
 		}
 		return ratio.getSizeByWidth(size.getWidth());
@@ -405,15 +404,27 @@ public class Size implements Serializable {
 		return width == height;
 	}
 
+	public boolean isInside(Size other) {
+		return width <= other.width && height <= other.height;
+	}
+
+	public boolean isOutside(Size other) {
+		return width > other.width && height > other.height;
+	}
+
+	public boolean isPartialOutside(Size other) {
+		return width > other.width ^ height > other.height;
+	}
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if( ! (obj instanceof Size)) {
+		if (!(obj instanceof Size)) {
 			return false;
 		}
-		Size other = (Size)obj;
+		Size other = (Size) obj;
 		return width == other.width && height == other.height;
 	}
 
@@ -430,7 +441,7 @@ public class Size implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		if(custom) {
+		if (custom) {
 			return getKey(width, height);
 		}
 		return getName();
@@ -479,10 +490,10 @@ public class Size implements Serializable {
 	 *
 	 */
 	private void init() {
-		if(custom) {
+		if (custom) {
 			return;
 		}
-		for(String name : names) {
+		for (String name : names) {
 			String lcname = name.toLowerCase();
 			NAME_MAP.put(lcname, this);
 			NAME_MAP.put(lcname.replaceAll("_", ""), this);
@@ -492,14 +503,15 @@ public class Size implements Serializable {
 	}
 
 	/**
-	 * Serialization magic to prevent "doppelgangers". This is a performance optimization.
+	 * Serialization magic to prevent "doppelgangers". This is a performance
+	 * optimization.
 	 *
 	 * @return
 	 */
 	private Object readResolve() {
-		synchronized(Size.class) {
+		synchronized (Size.class) {
 			Size type = SIZE_MAP.get(getStringSize());
-			if(type != null) {
+			if (type != null) {
 				return type;
 			}
 		}

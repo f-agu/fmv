@@ -23,6 +23,7 @@ package org.fagu.fmv.utils.media;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 import java.util.SortedSet;
@@ -30,7 +31,6 @@ import java.util.TreeSet;
 
 import org.junit.Ignore;
 import org.junit.Test;
-
 
 /**
  * @author f.agu
@@ -40,7 +40,8 @@ public class SizeTestCase {
 	/**
 	 * 
 	 */
-	public SizeTestCase() {}
+	public SizeTestCase() {
+	}
 
 	/**
 	 * 
@@ -48,8 +49,8 @@ public class SizeTestCase {
 	@Test
 	@Ignore
 	public void testLoad() {
-		for(int w = 1; w < 100000; w++) {
-			for(int h = 1; h < 100000; h++) {
+		for (int w = 1; w < 100000; w++) {
+			for (int h = 1; h < 100000; h++) {
 				Size.valueOf(w, h);
 			}
 		}
@@ -136,6 +137,45 @@ public class SizeTestCase {
 		assertSame(Size.HD720, iterator.next());
 		assertSame(Size.HD1080, iterator.next());
 		assertFalse(iterator.hasNext());
+	}
+
+	@Test
+	public void testIsInside() {
+		assertTrue(Size.HD720.isInside(Size.HD1080));
+		assertFalse(Size.valueOf(4, 4).isInside(Size.valueOf(2, 6)));
+		assertFalse(Size.valueOf(4, 4).isInside(Size.valueOf(6, 2)));
+		assertTrue(Size.HD720.isInside(Size.HD720));
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testIsInside_NPE() {
+		Size.HD720.isInside(null);
+	}
+
+	@Test
+	public void testIsOutside() {
+		assertFalse(Size.HD720.isOutside(Size.HD1080));
+		assertFalse(Size.valueOf(4, 4).isOutside(Size.valueOf(2, 6)));
+		assertFalse(Size.valueOf(4, 4).isOutside(Size.valueOf(6, 2)));
+		assertFalse(Size.HD720.isOutside(Size.HD720));
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testIsOutside_NPE() {
+		Size.HD720.isOutside(null);
+	}
+
+	@Test
+	public void testIsPartialOutside() {
+		assertFalse(Size.HD720.isPartialOutside(Size.HD1080));
+		assertTrue(Size.valueOf(4, 4).isPartialOutside(Size.valueOf(2, 6)));
+		assertTrue(Size.valueOf(4, 4).isPartialOutside(Size.valueOf(6, 2)));
+		assertFalse(Size.HD720.isPartialOutside(Size.HD720));
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testIsPartialOutside_NPE() {
+		Size.HD720.isPartialOutside(null);
 	}
 
 	/**

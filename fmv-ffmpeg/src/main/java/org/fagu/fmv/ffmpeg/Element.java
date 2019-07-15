@@ -33,6 +33,8 @@ import org.fagu.fmv.ffmpeg.operation.Processor;
 
 
 /**
+ * 
+ * qhdhdfsryqeyreq
  * @author f.agu
  */
 public abstract class Element<M> {
