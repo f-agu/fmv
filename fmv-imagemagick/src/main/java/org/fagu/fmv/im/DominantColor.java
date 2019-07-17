@@ -42,7 +42,7 @@ import org.fagu.fmv.utils.io.InputStreamSupplier;
  */
 public class DominantColor {
 
-	private static final Pattern PATTERN = Pattern.compile("(\\w+)\\((\\d+(?:,\\d+)*)\\)");
+	private static final Pattern PATTERN = Pattern.compile("(\\w+)\\((\\d+(?:,[\\d\\.]+)*)\\)");
 
 	private final Soft convertSoft;
 
