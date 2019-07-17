@@ -182,6 +182,7 @@ public class ImageMetadatasTestCase {
 		assertEquals("ExposureTimeFormat", "", metadatas.getExposureTimeFormat());
 		assertNull("Flash", metadatas.getFlash());
 		assertNull("FocalLength", metadatas.getFlash());
+		assertEquals("Format", "JPEG", metadatas.getFormat());
 		assertNull("ISOSpeed", metadatas.getISOSpeed());
 		assertEquals("Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		assertEquals("Software", "Adobe Photoshop CS3 Windows", metadatas.getSoftware());
@@ -208,6 +209,7 @@ public class ImageMetadatasTestCase {
 		assertEquals("ExposureTimeFormat", "", metadatas.getExposureTimeFormat());
 		assertNull("Flash", metadatas.getFlash());
 		assertNull("FocalLength", metadatas.getFlash());
+		assertEquals("Format", "JPEG", metadatas.getFormat());
 		assertNull("ISOSpeed", metadatas.getISOSpeed());
 		assertEquals("Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		assertEquals("ResolutionUnit", "Undefined", metadatas.getResolutionUnit());
@@ -238,6 +240,7 @@ public class ImageMetadatasTestCase {
 		assertEquals("ExposureTimeFormat", "", metadatas.getExposureTimeFormat());
 		assertNull("Flash", metadatas.getFlash());
 		assertNull("FocalLength", metadatas.getFlash());
+		assertEquals("Format", "PNG", metadatas.getFormat());
 		assertNull("ISOSpeed", metadatas.getISOSpeed());
 		assertEquals("Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		assertEquals("ResolutionUnit", "Undefined", metadatas.getResolutionUnit());
@@ -275,6 +278,7 @@ public class ImageMetadatasTestCase {
 		assertEquals("ExposureTimeFormat", "", metadatas.getExposureTimeFormat());
 		assertNull("Flash", metadatas.getFlash());
 		assertNull("FocalLength", metadatas.getFlash());
+		assertEquals("Format", "TIFF", metadatas.getFormat());
 		assertNull("ISOSpeed", metadatas.getISOSpeed());
 		assertEquals("Resolution", Size.valueOf(600, 600), metadatas.getResolution());
 		assertEquals("ResolutionUnit", "PixelsPerInch", metadatas.getResolutionUnit());
@@ -310,6 +314,7 @@ public class ImageMetadatasTestCase {
 		assertEquals("ExposureTimeFormat", "", metadatas.getExposureTimeFormat());
 		assertNull("Flash", metadatas.getFlash());
 		assertNull("FocalLength", metadatas.getFlash());
+		assertEquals("Format", "TIFF", metadatas.getFormat());
 		assertNull("ISOSpeed", metadatas.getISOSpeed());
 		assertEquals("Resolution", Size.valueOf(96, 96), metadatas.getResolution());
 		assertEquals("ResolutionUnit", "PixelsPerInch", metadatas.getResolutionUnit());

@@ -200,6 +200,10 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return metadatas;
 	}
 
+	public String getFormat() {
+		return metadatas.get("format");
+	}
+
 	public Date getDate() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
 
@@ -494,9 +498,11 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 		final String boundary = "BOUNDARY";
 		// prepare
+		// https://imagemagick.org/script/escape.php
 		IMOperation op = new IMOperation();
 		StringJoiner joiner = new StringJoiner("\n", "", "\n");
 		joiner.add("==%f==");
+		joiner.add("format=%m");
 		joiner.add("%[exif:*]%[date:*]%[xap:*]%[*]xy=%x %y");
 		joiner.add("colorspace=%[colorspace]");
 		joiner.add("wh=%w %h");
