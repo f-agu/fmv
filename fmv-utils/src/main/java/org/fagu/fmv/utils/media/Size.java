@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 /**
  * @author f.agu
  */
@@ -44,6 +45,8 @@ public class Size implements Serializable {
 	private static final Map<String, Size> SIZE_MAP = new HashMap<>(64);
 
 	private static final String CUSTOM_PREFIX = "custom-";
+
+	public static final Size _1x1 = new Size(1, 1, "1x1");
 
 	public static final Size NTSC = new Size(720, 480, "ntsc");
 
@@ -205,20 +208,20 @@ public class Size implements Serializable {
 	 * @param names
 	 */
 	protected Size(int width, int height, boolean custom, String... names) {
-		if (names == null || names.length == 0) {
+		if(names == null || names.length == 0) {
 			throw new NullPointerException("name");
 		}
-		if (width <= 0) {
-			throw new IllegalArgumentException("Width must be positive");
+		if(width <= 0) {
+			throw new IllegalArgumentException("Width must be positive: " + width);
 		}
-		if (height <= 0) {
-			throw new IllegalArgumentException("Height must be positive");
+		if(height <= 0) {
+			throw new IllegalArgumentException("Height must be positive: " + height);
 		}
 		this.names = Collections.unmodifiableList(Arrays.asList(names));
 		this.width = width;
 		this.height = height;
 		this.custom = custom;
-		synchronized (this) {
+		synchronized(this) {
 			init();
 		}
 	}
@@ -231,11 +234,11 @@ public class Size implements Serializable {
 		String v = value.trim().toLowerCase();
 		Pattern pattern = Pattern.compile("(\\d+)(?:[ \\t]*)x(?:[ \\t]*)(\\d+)");
 		Matcher matcher = pattern.matcher(v);
-		if (matcher.matches()) {
+		if(matcher.matches()) {
 			return valueOf(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
 		}
 		Size size = NAME_MAP.get(v);
-		if (size != null) {
+		if(size != null) {
 			return size;
 		}
 		throw new IllegalArgumentException("Unable to parse: '" + value + '\'');
@@ -249,10 +252,14 @@ public class Size implements Serializable {
 	public static Size valueOf(int width, int height) {
 		String sizeKey = getKey(width, height);
 		Size size = SIZE_MAP.get(sizeKey);
-		if (size != null) {
+		if(size != null) {
 			return size;
 		}
 		return new Size(width, height, true, CUSTOM_PREFIX + sizeKey);
+	}
+
+	public static Size squareOf(int side) {
+		return valueOf(side, side);
 	}
 
 	/**
@@ -268,8 +275,8 @@ public class Size implements Serializable {
 	 */
 	public static List<Size> byRatio(Ratio ratio) {
 		List<Size> list = new ArrayList<>();
-		for (Size size : values()) {
-			if (size.getRatio().equals(ratio)) {
+		for(Size size : values()) {
+			if(size.getRatio().equals(ratio)) {
 				list.add(size);
 			}
 		}
@@ -330,7 +337,7 @@ public class Size implements Serializable {
 	 * @return
 	 */
 	public Ratio getRatio() {
-		int pgcd = (int) org.fagu.fmv.utils.Math.greatestCommonDivisor(width, height);
+		int pgcd = (int)org.fagu.fmv.utils.Math.greatestCommonDivisor(width, height);
 		return Ratio.valueOf(width / pgcd, height / pgcd);
 	}
 
@@ -346,12 +353,7 @@ public class Size implements Serializable {
 	 * @return
 	 */
 	public Size fitAndKeepRatioTo(Size size) {
-		Ratio ratio = getRatio();
-		Ratio otherRatio = size.getRatio();
-		if (ratio.toDouble() < otherRatio.toDouble()) {
-			return ratio.getSizeByHeight(size.getHeight());
-		}
-		return ratio.getSizeByWidth(size.getWidth());
+		return getRatio().getSizeIn(size);
 	}
 
 	/**
@@ -421,10 +423,10 @@ public class Size implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Size)) {
+		if( ! (obj instanceof Size)) {
 			return false;
 		}
-		Size other = (Size) obj;
+		Size other = (Size)obj;
 		return width == other.width && height == other.height;
 	}
 
@@ -441,7 +443,7 @@ public class Size implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		if (custom) {
+		if(custom) {
 			return getKey(width, height);
 		}
 		return getName();
@@ -490,10 +492,10 @@ public class Size implements Serializable {
 	 *
 	 */
 	private void init() {
-		if (custom) {
+		if(custom) {
 			return;
 		}
-		for (String name : names) {
+		for(String name : names) {
 			String lcname = name.toLowerCase();
 			NAME_MAP.put(lcname, this);
 			NAME_MAP.put(lcname.replaceAll("_", ""), this);
@@ -503,15 +505,14 @@ public class Size implements Serializable {
 	}
 
 	/**
-	 * Serialization magic to prevent "doppelgangers". This is a performance
-	 * optimization.
+	 * Serialization magic to prevent "doppelgangers". This is a performance optimization.
 	 *
 	 * @return
 	 */
 	private Object readResolve() {
-		synchronized (Size.class) {
+		synchronized(Size.class) {
 			Size type = SIZE_MAP.get(getStringSize());
-			if (type != null) {
+			if(type != null) {
 				return type;
 			}
 		}

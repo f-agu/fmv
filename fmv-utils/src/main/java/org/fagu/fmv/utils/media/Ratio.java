@@ -184,10 +184,13 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 	}
 
 	public int calculateWidth(int height) {
-		if(isFraction) {
-			return height * getNumerator() / getDenominator();
+		if(height <= 0) {
+			throw new IllegalArgumentException("Height must be positive: " + height);
 		}
-		return (int)(height * toDouble());
+		if(isFraction) {
+			return (int)Math.round((double)height * getNumerator() / getDenominator());
+		}
+		return (int)Math.round(height * toDouble());
 	}
 
 	public int calculateHeight(Size size) {
@@ -195,18 +198,28 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 	}
 
 	public int calculateHeight(int width) {
-		if(isFraction) {
-			return width * getDenominator() / getNumerator();
+		if(width <= 0) {
+			throw new IllegalArgumentException("Width must be positive: " + width);
 		}
-		return (int)(width / toDouble());
+		if(isFraction) {
+			return (int)Math.round((double)width * getDenominator() / getNumerator());
+		}
+		return (int)Math.round(width / toDouble());
 	}
 
 	public Size getSizeByHeight(int height) {
-		return Size.valueOf(calculateWidth(height), height);
+		return Size.valueOf(Math.max(1, calculateWidth(height)), height);
 	}
 
 	public Size getSizeByWidth(int width) {
-		return Size.valueOf(width, calculateHeight(width));
+		return Size.valueOf(Math.max(1, calculateHeight(width)), width);
+	}
+
+	public Size getSizeIn(Size size) {
+		if(size.getRatio().value < value) {
+			return getSizeByWidth(size.getWidth());
+		}
+		return getSizeByHeight(size.getHeight());
 	}
 
 	public boolean isVertical() {
@@ -225,6 +238,9 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 		return value;
 	}
 
+	/**
+	 * @see org.fagu.fmv.utils.Fractionable#invert()
+	 */
 	@Override
 	public Ratio invert() {
 		if(isFraction) {

@@ -32,6 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.exec.CommandLine;
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.utils.io.InputStreamSupplier;
 
@@ -121,17 +122,11 @@ public class DominantColor {
 			throw new IOException("Data not matches a RGB pattern: " + value);
 		}
 		return parse(value);
-
 	}
 
 	private static ColorSpace parseColorSpace(String colorSpace) {
-		int type = 0; // any space
-		if(colorSpace.equals("srgb")) {
-			type = ColorSpace.CS_sRGB;
-		} else if(colorSpace.endsWith("cmyk")) {
-			return new ColorSpaceCMYK();
-		}
-		return ColorSpace.getInstance(type);
+		String v = StringUtils.substringBefore(colorSpace, "(");
+		return ColorSpaces.parse(v).orElse(ColorSpace.getInstance(ColorSpace.CS_sRGB));
 	}
 
 }

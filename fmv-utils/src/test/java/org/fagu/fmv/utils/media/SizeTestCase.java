@@ -32,6 +32,7 @@ import java.util.TreeSet;
 import org.junit.Ignore;
 import org.junit.Test;
 
+
 /**
  * @author f.agu
  */
@@ -40,8 +41,7 @@ public class SizeTestCase {
 	/**
 	 * 
 	 */
-	public SizeTestCase() {
-	}
+	public SizeTestCase() {}
 
 	/**
 	 * 
@@ -49,8 +49,8 @@ public class SizeTestCase {
 	@Test
 	@Ignore
 	public void testLoad() {
-		for (int w = 1; w < 100000; w++) {
-			for (int h = 1; h < 100000; h++) {
+		for(int w = 1; w < 100000; w++) {
+			for(int h = 1; h < 100000; h++) {
 				Size.valueOf(w, h);
 			}
 		}

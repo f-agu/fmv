@@ -47,12 +47,12 @@ public class SoftLogger {
 		Collections.sort(this.softs, (s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
 	}
 
-	public boolean log(Consumer<String> formatConsumer) {
-		logDetails(formatConsumer);
-		return logConclusion(formatConsumer);
+	public boolean log(Consumer<String> logger) {
+		logDetails(logger);
+		return logConclusion(logger);
 	}
 
-	public SoftLogger logDetails(Consumer<String> formatConsumer) {
+	public SoftLogger logDetails(Consumer<String> logger) {
 		int maxLength = getNameMaxLength() + 3;
 		for(Soft soft : softs) {
 			Founds founds = soft.getFounds();
@@ -61,20 +61,20 @@ public class SoftLogger {
 			SoftFound firstFound = founds.getFirstFound();
 			SoftProvider softProvider = soft.getSoftProvider();
 			if(founds.isFound()) {
-				toLine(startLine(maxLength, name, firstFound), softProvider, firstFound, formatConsumer);
+				toLine(startLine(maxLength, name, firstFound), softProvider, firstFound, logger);
 			} else {
 				if(founds.isEmpty()) {
-					toLine(startLine(maxLength, name, firstFound), softProvider, SoftFound.notFound(), formatConsumer);
+					toLine(startLine(maxLength, name, firstFound), softProvider, SoftFound.notFound(), logger);
 				} else {
 					int index = 0;
 					for(SoftFound softFound : founds) {
-						toLine(startLine(maxLength, 0 == index++ ? name : null, softFound), softProvider, softFound, formatConsumer);
+						toLine(startLine(maxLength, 0 == index++ ? name : null, softFound), softProvider, softFound, logger);
 					}
 				}
 
 				String downloadURL = softProvider.getDownloadURL();
 				if(downloadURL != null && ! "".equals(downloadURL.trim())) {
-					formatConsumer.accept("    Download " + name + " at " + downloadURL + " and add the path in your system environment PATH");
+					logger.accept("    Download " + name + " at " + downloadURL + " and add the path in your system environment PATH");
 				}
 			}
 		}
@@ -91,25 +91,25 @@ public class SoftLogger {
 		return this;
 	}
 
-	public boolean logConclusion(Consumer<String> formatConsumer) {
+	public boolean logConclusion(Consumer<String> logger) {
 		int countNotFound = (int)softs.stream().map(Soft::isFound).filter(b -> ! b).count();
 		if(countNotFound <= 0) {
 			return true;
 		}
 
-		formatConsumer.accept("=====================================================================");
+		logger.accept("=====================================================================");
 		if(countNotFound == 1) {
-			formatConsumer.accept("A software is missing");
+			logger.accept("A software is missing");
 		} else {
-			formatConsumer.accept(countNotFound + " softwares (on " + softs.size() + ") are missing");
+			logger.accept(countNotFound + " softwares (on " + softs.size() + ") are missing");
 		}
-		formatConsumer.accept("Don't forget the PATH env");
+		logger.accept("Don't forget the PATH env");
 		String pathEnv = System.getenv("PATH");
-		formatConsumer.accept("PATH: " + pathEnv);
+		logger.accept("PATH: " + pathEnv);
 		if(pathEnv.contains("eclipse")) {
-			formatConsumer.accept("AND STOP & START YOUR IDE");
+			logger.accept("AND STOP & START YOUR IDE");
 		}
-		formatConsumer.accept("=====================================================================");
+		logger.accept("=====================================================================");
 		return false;
 	}
 
