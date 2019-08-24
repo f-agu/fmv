@@ -48,7 +48,7 @@ public abstract class ImageDemuxer<M> extends Demuxer<M> {
 	 * @return
 	 */
 	public M frameRate(FrameRate framerate) {
-		parameter("-framerate", framerate.toString());
+		parameter("-r", framerate.toString());
 		return getMThis();
 	}
 
