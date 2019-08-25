@@ -41,6 +41,7 @@ import org.fagu.fmv.core.project.OutputInfos;
 import org.fagu.fmv.core.project.Project;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
+import org.fagu.fmv.ffmpeg.filter.impl.SetDAR;
 import org.fagu.fmv.ffmpeg.flags.AvoidNegativeTs;
 import org.fagu.fmv.ffmpeg.format.BasicStreamMuxer;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
@@ -185,6 +186,9 @@ public class CutExecutable extends AbstractExecutable {
 		// FilterComplex audioSetPTSComplex = FilterComplex.createWith(audioSetPTS);
 		// audioSetPTSComplex.addInput(inputProcessor, Type.AUDIO);
 		// builder.add(audioSetPTSComplex);
+
+		SetDAR setDAR = SetDAR.build().ratio(getProject().getOutputInfos().getSize().getRatio().toFraction().toString());
+		builder.filter(setDAR);
 
 		BasicStreamMuxer muxer = BasicStreamMuxer.to(toFile, outputInfos.getFormat()).avoidNegativeTs(AvoidNegativeTs.MAKE_NON_NEGATIVE);
 		OutputProcessor outputProcessor = builder.mux(muxer);

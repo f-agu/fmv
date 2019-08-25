@@ -75,14 +75,27 @@ public class ConcatExecutable extends GenericExecutable {
 		return opts;
 	}
 
+	// @Override
+	// public List<FilterExec> getFilters() {
+	// FilterExec fe = new GenericFilterExec() {
+	//
+	// @Override
+	// public org.fagu.fmv.ffmpeg.filter.Filter getFilter() {
+	// return SetDAR.build().ratio("0:1");
+	// }
+	//
+	// };
+	// return Arrays.asList(fe);
+	// }
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder(100);
-		buf.append(getCode()).append(' ').append(executables.size()).append(' ').append("sources");
-		return buf.toString();
+		return new StringBuilder(100)
+				.append(getCode()).append(' ').append(executables.size()).append(' ').append("sources")
+				.toString();
 	}
 
 	// *****************************************************
