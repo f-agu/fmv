@@ -20,9 +20,9 @@ public class Bootstrap {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		color();
+		// color();
 		// basicProgress();
-		// spinner();
+		spinner();
 	}
 
 	// *********************************************

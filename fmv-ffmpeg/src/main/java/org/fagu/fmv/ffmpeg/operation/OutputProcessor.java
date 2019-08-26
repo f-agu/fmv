@@ -123,6 +123,14 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return add(Parameter.before(output, "-vn"));
 	}
 
+	public OutputProcessor blockAllSubtitleStreams() {
+		return add(Parameter.before(output, "-sn"));
+	}
+
+	public OutputProcessor blockAllDataStreams() {
+		return add(Parameter.before(output, "-dn"));
+	}
+
 	/**
 	 * @param rate
 	 * @return
