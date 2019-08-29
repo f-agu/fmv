@@ -123,7 +123,8 @@ public abstract class AbstractImageConverter extends Converter<Image> {
 			op.image(destFile);
 
 			try {
-				convertSoft.withParameters(op.toList()).execute();
+				convertSoft.withParameters(op.toList())
+						.execute();
 			} catch(Exception e) {
 				throw new RuntimeException(e);
 			}

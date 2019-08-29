@@ -21,7 +21,9 @@ package org.fagu.fmv.mymedia.classify.image;
  */
 
 import java.io.File;
+import java.util.Objects;
 
+import org.fagu.fmv.im.Gravity;
 import org.fagu.fmv.im.IMOperation;
 import org.fagu.fmv.utils.media.Size;
 
@@ -31,7 +33,15 @@ import org.fagu.fmv.utils.media.Size;
  */
 public class ReduceImageConverter extends AbstractImageConverter {
 
+	public enum Reduce {
+		BOX, WIDTH, HEIGHT
+	}
+
+	private Reduce reduce = Reduce.BOX;
+
 	private Size size;
+
+	private double quality = 65D;
 
 	/**
 	 * @param destFolder
@@ -56,27 +66,55 @@ public class ReduceImageConverter extends AbstractImageConverter {
 		return "Organiser & reduire la taille des images";
 	}
 
-	/**
-	 * @param size the size to set
-	 */
+	public Size getSize() {
+		return size;
+	}
+
 	public void setSize(Size size) {
 		this.size = size;
 	}
 
+	public Reduce getReduce() {
+		return reduce;
+	}
+
+	public void setReduce(Reduce reduce) {
+		this.reduce = Objects.requireNonNull(reduce);
+	}
+
+	public double getQuality() {
+		return quality;
+	}
+
+	public void setQuality(double quality) {
+		if(quality < 0 || quality > 100D) {
+			throw new IllegalArgumentException("Quality must be between 0 and 100: " + quality);
+		}
+		this.quality = quality;
+	}
+
 	// **********************************************************
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.image.AbstractImageConverter#populateOperation(org.fagu.fmv.im.IMOperation)
-	 */
 	@Override
 	protected void populateOperation(IMOperation op) {
 		op.autoOrient();
 		if(size != null) {
-			op.scale(size.getWidth(), size.getHeight());
-			op.background("black");
-			op.gravity("center");
-			op.extent(size.getWidth(), size.getHeight());
+			switch(reduce) {
+				case BOX:
+					op.scale(size.getWidth(), size.getHeight());
+					break;
+				case WIDTH:
+					op.scaleByWidth(size.getWidth());
+					break;
+				case HEIGHT:
+					op.scaleByHeight(size.getHeight());
+					break;
+				default:
+			}
+			op.background("black")
+					.gravity(Gravity.CENTER)
+					.extent(size.getWidth(), size.getHeight());
 		}
-		op.quality(65D);
+		op.quality(quality);
 	}
 }
