@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.classify;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.media.Media;
@@ -31,15 +30,7 @@ import org.fagu.fmv.media.Media;
  */
 public interface ConverterListener<M extends Media> {
 
-	/**
-	 * @param srcMedia
-	 * @param destFile
-	 */
 	default void eventPreConvert(M srcMedia, File destFile) {}
 
-	/**
-	 * @param srcMedia
-	 * @param destFile
-	 */
 	default void eventPostConvert(M srcMedia, File destFile) {}
 }

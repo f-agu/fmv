@@ -32,6 +32,7 @@ import org.fagu.fmv.mymedia.classify.Classifier;
 import org.fagu.fmv.mymedia.classify.ClassifierFactories;
 import org.fagu.fmv.mymedia.classify.ConverterListener;
 import org.fagu.fmv.mymedia.classify.image.ReduceImageConverter;
+import org.fagu.fmv.mymedia.classify.image.ReduceImageConverter.Reduce;
 import org.fagu.fmv.mymedia.file.ImageFinder;
 import org.fagu.fmv.utils.file.FileFinder;
 import org.fagu.fmv.utils.media.Size;
@@ -101,6 +102,7 @@ public class Images {
 
 		try (ReduceImageConverter converter = new ReduceImageConverter(destFolder)) {
 			converter.setSize(size);
+			converter.setReduce(Reduce.WIDTH);
 			try (Classifier<ImageFinder, Image> classifier = ClassifierFactories.imagesToMovie().create(imageFinder, destFolder)) {
 				return new PreparedImages(classifier.classify(converter, converterListener));
 			}

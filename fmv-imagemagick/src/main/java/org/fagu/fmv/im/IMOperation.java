@@ -1265,6 +1265,11 @@ public class IMOperation {
 		return add("-gravity");
 	}
 
+	public IMOperation gravity(Gravity gravity) {
+		Objects.requireNonNull(gravity);
+		return gravity().add(gravity.name().toLowerCase());
+	}
+
 	public IMOperation gravity(String type) {
 		gravity();
 		if(StringUtils.isNotEmpty(type)) {
@@ -2208,8 +2213,12 @@ public class IMOperation {
 		return add("-scale");
 	}
 
-	public IMOperation scale(int width) {
-		return scale().add(Integer.toString(width));
+	public IMOperation scaleByWidth(int width) {
+		return scale().add(Integer.toString(width) + "x");
+	}
+
+	public IMOperation scaleByHeight(int height) {
+		return scale().add("x" + Integer.toString(height));
 	}
 
 	public IMOperation scale(int width, int height) {

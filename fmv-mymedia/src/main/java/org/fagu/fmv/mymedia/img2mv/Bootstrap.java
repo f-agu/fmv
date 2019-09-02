@@ -28,6 +28,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.utils.FPS;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.utils.io.UnclosedInputStream;
@@ -81,7 +82,7 @@ public class Bootstrap {
 			size = askSomethings("Size [hd720]?", Size.HD720, Size::parse);
 		}
 		if(imageFrameRate == null) {
-			imageFrameRate = askSomethings("Image frame rate ?", null, FrameRate::parse);
+			imageFrameRate = askSomethings("Image frame rate [25]?", FrameRate.PAL, FrameRate::parse);
 		}
 		if(videoFrameRate == null) {
 			videoFrameRate = askSomethings("Video frame rate ?", null, Integer::parseInt);
@@ -99,7 +100,7 @@ public class Bootstrap {
 		while(true) {
 			try {
 				String line = nextLine();
-				if(defaultValue == null && "".equals(line)) {
+				if(defaultValue != null && StringUtils.isBlank(line)) {
 					return defaultValue;
 				}
 				return parser.apply(line);
