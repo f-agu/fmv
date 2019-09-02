@@ -197,7 +197,7 @@ public class FFExecutor<R> {
 
 	public String getCommandLineString() throws IOException {
 		List<String> arguments = operation.toArguments();
-		File fffile = FFSoft.search(operation.getFFName()).getFile();
+		File fffile = findSoft().getFile();
 		if(fffile == null) {
 			throw new IOException("FFName " + operation.getFFName() + " not found or not declared. Use FFLocator.");
 		}
@@ -352,6 +352,12 @@ public class FFExecutor<R> {
 		};
 	}
 
+	// *****************************************************
+
+	private Soft findSoft() {
+		return customSoft != null ? customSoft : FFSoft.search(operation.getFFName());
+	}
+
 	// ---------------------------------------------------------
 
 	/**
@@ -361,8 +367,8 @@ public class FFExecutor<R> {
 
 		private final Soft soft;
 
-		private Prepare() throws IOException {
-			soft = customSoft != null ? customSoft : FFSoft.search(operation.getFFName());
+		private Prepare() {
+			soft = findSoft();
 		}
 
 		public SoftExecutor getSoftExecutor() {
