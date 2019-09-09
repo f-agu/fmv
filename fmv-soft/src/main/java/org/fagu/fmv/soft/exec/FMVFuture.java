@@ -69,7 +69,7 @@ public class FMVFuture<V> extends UnaryWrapFuture<V> {
 	 */
 	public void write(byte[] b, int off, int len) throws IOException {
 		if(processInputStream != null) {
-			processInputStream.write(b, 0, b.length);
+			processInputStream.write(b, off, len);
 		}
 	}
 

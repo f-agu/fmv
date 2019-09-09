@@ -22,6 +22,7 @@ package org.fagu.fmv.soft.java;
 
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftSearch;
+import org.fagu.fmv.soft.find.SoftLocator;
 
 
 /**
@@ -35,6 +36,19 @@ public class Java {
 
 	public static Soft search() {
 		return Soft.search(new JavaSoftProvider());
+	}
+
+	public static Soft current() {
+		return Soft.search(new JavaSoftProvider() {
+
+			@Override
+			public SoftLocator getSoftLocator() {
+				SoftLocator softLocator = new SoftLocator(getName());
+				softLocator.setSoftPolicy(getSoftPolicy());
+				softLocator.setEnvName("JAVA_HOME");
+				return softLocator;
+			}
+		});
 	}
 
 	public static SoftSearch searchWith() {

@@ -228,11 +228,11 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		@Override
 		public String toString() {
 			Duration duration = Duration.ofMillis(executeTime);
-			StringBuilder buf = new StringBuilder();
-			buf.append("Executed[");
+			StringBuilder buf = new StringBuilder()
+					.append("Executed[");
 			pid.ifPresent(id -> buf.append("pid:").append(id).append(" ; "));
-			buf.append("exit: ").append(exitValue).append(" ; time: ").append(duration.toString()).append(']');
-			return buf.toString();
+			return buf.append("exit: ").append(exitValue).append(" ; time: ").append(duration.toString()).append(']')
+					.toString();
 		}
 
 	}

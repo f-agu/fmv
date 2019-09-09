@@ -15,14 +15,8 @@ import org.fagu.fmv.utils.order.Order;
 @Order(0)
 public class IgnoreNullOutputStreamProcessOperator implements ProcessOperator {
 
-	/**
-	 * @see org.fagu.fmv.soft.exec.ProcessOperator#operate(java.lang.Process)
-	 */
 	@Override
 	public Process operate(Process process) {
-		if( ! SystemUtils.IS_OS_UNIX) {
-			return process;
-		}
 		return new WrapProcess(process) {
 
 			@Override
@@ -76,12 +70,18 @@ public class IgnoreNullOutputStreamProcessOperator implements ProcessOperator {
 
 					// **********************************
 
-					/**
-					 * @param e
-					 * @throws IOException
-					 */
 					private void manageIOException(IOException e) throws IOException {
-						if("java.lang.ProcessBuilder$NullOutputStream".equals(e.getStackTrace()[0].getClassName())
+
+						// Windows
+						if(SystemUtils.IS_OS_WINDOWS
+								&& "java.io.FileOutputStream".equals(e.getStackTrace()[0].getClassName())
+								&& e.getClass().equals(IOException.class)) {
+							return;
+						}
+
+						// Unix like
+						if(SystemUtils.IS_OS_UNIX
+								&& "java.lang.ProcessBuilder$NullOutputStream".equals(e.getStackTrace()[0].getClassName())
 								&& "Stream closed".equals(e.getMessage())) {
 							// ignore
 							return;

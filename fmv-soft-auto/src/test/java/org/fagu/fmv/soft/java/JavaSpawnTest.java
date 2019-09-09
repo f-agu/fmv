@@ -24,9 +24,6 @@ import org.junit.Test;
  */
 public class JavaSpawnTest {
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testExit0to3() throws IOException {
 		// new TreeMap<>(System.getProperties()).forEach((k, v) -> System.out.println(k + " = " + v));
@@ -40,9 +37,6 @@ public class JavaSpawnTest {
 		}
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testExitUndefined() throws IOException {
 		try {
@@ -52,9 +46,6 @@ public class JavaSpawnTest {
 		}
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testReadLineOutputErr() throws IOException {
 		AtomicReference<String> out = new AtomicReference<>();
@@ -67,9 +58,6 @@ public class JavaSpawnTest {
 		assertEquals("err", err.get());
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testOutputToOutputStream() throws IOException {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -79,9 +67,6 @@ public class JavaSpawnTest {
 		assertEquals("out" + System.getProperty("line.separator"), os.toString());
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testOutputToOutputStreamAndErrToReadLine() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -94,9 +79,6 @@ public class JavaSpawnTest {
 		assertEquals("err", err.get());
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testOutputReadLineToAndErrToOutputStream() throws IOException {
 		AtomicReference<String> out = new AtomicReference<>();
@@ -109,9 +91,6 @@ public class JavaSpawnTest {
 		assertEquals("err" + System.getProperty("line.separator"), err.toString());
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	@Ignore
 	public void testCommon() throws IOException {
@@ -122,9 +101,6 @@ public class JavaSpawnTest {
 		System.out.println(common);
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testException_err_size0() throws IOException {
 		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
@@ -142,9 +118,6 @@ public class JavaSpawnTest {
 		assertEquals("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:43)", err.get(1));
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testException_err_size10() throws IOException {
 		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
@@ -161,9 +134,6 @@ public class JavaSpawnTest {
 		assertTrue(errCountingOutputStream.getByteCount() > (size + 115) && errCountingOutputStream.getByteCount() < (size + 125));
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testException_err_size100M() throws IOException {
 		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
@@ -180,9 +150,6 @@ public class JavaSpawnTest {
 		assertTrue(errCountingOutputStream.getByteCount() > (size + 115) && errCountingOutputStream.getByteCount() < (size + 125));
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testException_out_size0() throws IOException {
 		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
@@ -200,9 +167,6 @@ public class JavaSpawnTest {
 		assertEquals("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:43)", err.get(1));
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testException_out_size10() throws IOException {
 		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
@@ -220,9 +184,6 @@ public class JavaSpawnTest {
 		assertEquals("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:43)", err.get(1));
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testException_out_size100M() throws IOException {
 		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
@@ -242,28 +203,14 @@ public class JavaSpawnTest {
 
 	// ***************************************
 
-	/**
-	 * @param exitValue
-	 * @return
-	 */
 	private SoftExecutor javaSimpleMain(int exitValue) {
 		return javaMain(SimpleMain.class, Integer.toString(exitValue));
 	}
 
-	/**
-	 * @param writeType
-	 * @param lenght
-	 * @return
-	 */
 	private SoftExecutor javaExceptionMain(String writeType, long lenght) {
 		return javaMain(ExceptionMain.class, writeType, Long.toString(lenght));
 	}
 
-	/**
-	 * @param cls
-	 * @param args
-	 * @return
-	 */
 	private SoftExecutor javaMain(Class<?> cls, String... args) {
 		List<String> params = new ArrayList<>();
 		params.add("-cp");
