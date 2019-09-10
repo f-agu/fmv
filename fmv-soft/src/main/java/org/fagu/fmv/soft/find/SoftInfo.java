@@ -35,10 +35,6 @@ public abstract class SoftInfo implements Comparable<SoftInfo> {
 
 	private final String softName;
 
-	/**
-	 * @param file
-	 * @param softName
-	 */
 	public SoftInfo(File file, String softName) {
 		this.file = Objects.requireNonNull(file);
 		this.softName = Objects.requireNonNull(softName);
@@ -46,34 +42,22 @@ public abstract class SoftInfo implements Comparable<SoftInfo> {
 
 	// ***************************************
 
-	/**
-	 * @return
-	 */
 	public abstract String getInfo();
 
 	// ***************************************
 
-	/**
-	 * @return
-	 */
 	public String getName() {
 		return softName;
 	}
 
-	/**
-	 * @return
-	 */
 	public File getFile() {
 		return file;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder(80);
-		buf.append(getName()).append('[');
+		StringBuilder buf = new StringBuilder(80)
+				.append(getName()).append('[');
 		File f = getFile();
 		if(f != null) {
 			buf.append(f.getAbsolutePath());
@@ -87,7 +71,7 @@ public abstract class SoftInfo implements Comparable<SoftInfo> {
 		if(StringUtils.isNotBlank(info)) {
 			buf.append(", ").append(info);
 		}
-		buf.append(']');
-		return buf.toString();
+		return buf.append(']')
+				.toString();
 	}
 }

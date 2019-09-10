@@ -49,9 +49,4 @@ class MyPumpStreamHandler extends PumpStreamHandler {
 		super.setProcessErrorStream(StreamLog.wrap(is, StreamLogConsumer.err()));
 	}
 
-	@Override
-	protected Thread createPump(InputStream is, OutputStream os, boolean closeWhenExhausted) {
-		return super.createPump(is, os, false);
-	}
-
 }

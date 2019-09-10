@@ -43,6 +43,11 @@ public class JavaSoftProvider extends SoftProvider {
 				.onAllPlatforms(minVersion(1, 1))));
 	}
 
+	JavaSoftProvider(String name, SoftPolicy softPolicy) {
+		super(name, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
+				.onAllPlatforms(minVersion(1, 1))));
+	}
+
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		final Pattern pattern = Pattern.compile(new SearchPropertiesHelper(searchProperties, getName())

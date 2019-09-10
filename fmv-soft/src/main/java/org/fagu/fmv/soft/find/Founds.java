@@ -41,12 +41,6 @@ public class Founds implements Iterable<SoftFound> {
 
 	private final Properties searchProperties;
 
-	/**
-	 * @param softName
-	 * @param founds
-	 * @param softPolicy
-	 * @param searchProperties
-	 */
 	public Founds(String softName, NavigableSet<SoftFound> founds, SoftPolicy softPolicy, Properties searchProperties) {
 		this.softName = Objects.requireNonNull(softName);
 		this.foundSet = Objects.requireNonNull(founds);
@@ -54,16 +48,14 @@ public class Founds implements Iterable<SoftFound> {
 		this.searchProperties = ImmutableProperties.copyOf(searchProperties);
 	}
 
-	/**
-	 * @return
-	 */
 	public String getSoftName() {
 		return softName;
 	}
 
-	/**
-	 * @return
-	 */
+	public NavigableSet<SoftFound> getFounds() {
+		return foundSet;
+	}
+
 	public boolean isFound() {
 		return foundSet.stream()
 				.map(SoftFound::isFound)
@@ -72,24 +64,14 @@ public class Founds implements Iterable<SoftFound> {
 				.orElse(false);
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isEmpty() {
 		return foundSet.isEmpty();
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftFound getFirstFound() {
 		return getFirstFound(null);
 	}
 
-	/**
-	 * @param defaultValue
-	 * @return
-	 */
 	public SoftFound getFirstFound(SoftFound defaultValue) {
 		return foundSet.descendingSet()
 				.stream()
@@ -98,31 +80,19 @@ public class Founds implements Iterable<SoftFound> {
 				.orElse(defaultValue);
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftPolicy getSoftPolicy() {
 		return softPolicy;
 	}
 
-	/**
-	 * @return
-	 */
 	public Properties getSearchProperties() {
 		return searchProperties;
 	}
 
-	/**
-	 * @see java.lang.Iterable#iterator()
-	 */
 	@Override
 	public Iterator<SoftFound> iterator() {
 		return foundSet.iterator();
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return foundSet.toString();
