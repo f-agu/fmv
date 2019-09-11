@@ -5,6 +5,7 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 import java.io.File;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +32,11 @@ public abstract class GPACSoftProvider extends SoftProvider {
 		super(name, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
 				.onAllPlatforms(minVersion(0, 7))));
 		this.foundParameter = Objects.requireNonNull(foundParameter);
+	}
+
+	@Override
+	public Optional<String> getGroupTitle() {
+		return Optional.of("GPAC");
 	}
 
 	@Override

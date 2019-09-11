@@ -5,6 +5,7 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,6 +41,11 @@ public abstract class MSoftProvider extends SoftProvider {
 
 	public MSoftProvider(String name, SoftPolicy softPolicy) {
 		super(name, softPolicy);
+	}
+
+	@Override
+	public Optional<String> getGroupTitle() {
+		return Optional.of("MPlayer");
 	}
 
 	@Override

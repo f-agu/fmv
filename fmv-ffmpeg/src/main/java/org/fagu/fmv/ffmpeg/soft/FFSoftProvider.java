@@ -31,6 +31,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -72,9 +73,11 @@ public abstract class FFSoftProvider extends SoftProvider {
 		super(name, null);
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
-	 */
+	@Override
+	public Optional<String> getGroupTitle() {
+		return Optional.of("FFmpeg");
+	}
+
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		return prepareSoftFoundFactory()
@@ -83,9 +86,6 @@ public abstract class FFSoftProvider extends SoftProvider {
 				.build();
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftLocator()
-	 */
 	@Override
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = super.getSoftLocator();
@@ -109,17 +109,11 @@ public abstract class FFSoftProvider extends SoftProvider {
 		return softLocator;
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getDownloadURL()
-	 */
 	@Override
 	public String getDownloadURL() {
 		return "http://ffmpeg.org/download.html";
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getMinVersion()
-	 */
 	@Override
 	public String getMinVersion() {
 		StringBuilder buf = new StringBuilder();
@@ -127,9 +121,6 @@ public abstract class FFSoftProvider extends SoftProvider {
 		return buf.toString();
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getExceptionKnownAnalyzerClass()
-	 */
 	@Override
 	public Class<? extends ExceptionKnownAnalyzer> getExceptionKnownAnalyzerClass() {
 		return FFExceptionKnownAnalyzer.class;
@@ -137,10 +128,6 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 	// ***********************************************************************
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	Parser createParser(File file) {
 		return new Parser() {
 
@@ -218,10 +205,6 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 	}
 
-	/**
-	 * @param matcher
-	 * @return
-	 */
 	static Date getBuiltDate(Matcher matcher) {
 		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss", Locale.ENGLISH);
 		String strDate = matcher.group(1);
@@ -233,10 +216,6 @@ public abstract class FFSoftProvider extends SoftProvider {
 		return null;
 	}
 
-	/**
-	 * @param line
-	 * @return
-	 */
 	static Version getVersion(String line) {
 		String sver = StringUtils.substringBefore(line, " ");
 		Matcher matcher = NVERSION_PATTERN.matcher(sver);
@@ -251,10 +230,6 @@ public abstract class FFSoftProvider extends SoftProvider {
 		return null;
 	}
 
-	/**
-	 * @param line
-	 * @return
-	 */
 	static Set<String> getConfiguration(String line) {
 		Set<String> set = new LinkedHashSet<>(32);
 
@@ -285,10 +260,6 @@ public abstract class FFSoftProvider extends SoftProvider {
 		return set;
 	}
 
-	/**
-	 * @param map
-	 * @param matcher
-	 */
 	static void addLibVersions(Map<String, Version> map, Matcher matcher) {
 		String sver = matcher.group(2).replaceAll(" ", "");
 		try {

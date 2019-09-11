@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
@@ -70,6 +71,11 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	@Override
 	public String getGroupName() {
 		return "pdf";
+	}
+
+	@Override
+	public Optional<String> getGroupTitle() {
+		return Optional.of("Xpdf");
 	}
 
 	@Override

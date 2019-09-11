@@ -88,6 +88,11 @@ public abstract class IMSoftProvider extends SoftProvider {
 	}
 
 	@Override
+	public Optional<String> getGroupTitle() {
+		return Optional.of("ImageMagick");
+	}
+
+	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, getName())
 				.forMatching(DEFAULT_PATTERN_VERSION, PROP_VERSION_SOFT_PATTERN, PROP_VERSION_PATTERN);

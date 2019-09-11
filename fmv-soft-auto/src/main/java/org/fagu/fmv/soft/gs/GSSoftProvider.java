@@ -55,6 +55,11 @@ public class GSSoftProvider extends SoftProvider {
 	}
 
 	@Override
+	public Optional<String> getGroupTitle() {
+		return Optional.of("Ghostscript");
+	}
+
+	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, getName())
 				.forMatching(DEFAULT_PATTERN_VERSION, PROP_VERSION_PATTERN);
