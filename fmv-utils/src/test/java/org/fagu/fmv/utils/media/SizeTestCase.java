@@ -38,14 +38,6 @@ import org.junit.Test;
  */
 public class SizeTestCase {
 
-	/**
-	 * 
-	 */
-	public SizeTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
 	@Ignore
 	public void testLoad() {
@@ -56,9 +48,6 @@ public class SizeTestCase {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void testRatio() {
 		Size size = Size.HD720.getRatio().getSizeByHeight(720 / 2);
@@ -66,9 +55,6 @@ public class SizeTestCase {
 		assertEquals(408960, Size.HD480.countPixel());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void testFitTo() {
 		Size size = Size.HD1080;
@@ -76,9 +62,6 @@ public class SizeTestCase {
 		assertEquals(Size.valueOf(100, 56), size.fitAndKeepRatioTo(maxSize));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void testFitToAround() {
 		// System.out.println(1080 * 9 / 16);
@@ -88,12 +71,9 @@ public class SizeTestCase {
 
 		Size size = Size.HD720.rotate();
 		Size maxSize = Size.HD1080;
-		assertEquals(Size.valueOf(607, 1080), size.fitAndKeepRatioTo(maxSize));
+		assertEquals(Size.valueOf(608, 1080), size.fitAndKeepRatioTo(maxSize));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void testParse() {
 		assertEquals(Size.valueOf(1280, 43), Size.parse("1280x43"));
@@ -105,9 +85,6 @@ public class SizeTestCase {
 		assertSame(Size._2K, Size.parse("2k    "));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void testComparatorByCountPixel() {
 		SortedSet<Size> set = new TreeSet<Size>(Size.comparatorByCountPixel());
@@ -122,9 +99,6 @@ public class SizeTestCase {
 		assertFalse(iterator.hasNext());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void testComparatorByDiagonal() {
 		SortedSet<Size> set = new TreeSet<Size>(Size.comparatorByDiagonal());
@@ -177,14 +151,5 @@ public class SizeTestCase {
 	public void testIsPartialOutside_NPE() {
 		Size.HD720.isPartialOutside(null);
 	}
-
-	/**
-	 * 
-	 */
-	// @Test
-	// public void testShrink() throws ParseException {
-	// Size size = Size.HD1080.rotate90();
-	// size.
-	// }
 
 }

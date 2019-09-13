@@ -212,7 +212,7 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 	}
 
 	public Size getSizeByWidth(int width) {
-		return Size.valueOf(Math.max(1, calculateHeight(width)), width);
+		return Size.valueOf(width, Math.max(1, calculateHeight(width)));
 	}
 
 	public Size getSizeIn(Size size) {

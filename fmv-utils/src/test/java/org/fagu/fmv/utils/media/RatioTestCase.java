@@ -71,7 +71,7 @@ public class RatioTestCase {
 	@Test
 	public void testCalculateHeight() {
 		assertEquals(1080, Ratio._16_9.calculateHeight(1920));
-		assertEquals(1066, Ratio._16_9.calculateWidth(Size.SVGA));
+		assertEquals(1067, Ratio._16_9.calculateWidth(Size.SVGA));
 	}
 
 	@Test

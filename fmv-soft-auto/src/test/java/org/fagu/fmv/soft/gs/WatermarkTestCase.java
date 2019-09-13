@@ -59,11 +59,11 @@ public class WatermarkTestCase {
 			GS.search()
 					.withParameters(getParameters(text, "-_", "-"))
 					.input(inputStream)
-					.out(outputStream)
+					.output(outputStream)
 					.execute();
 
 		}
-		System.out.println(System.currentTimeMillis() - startTime + " ms");
+		// System.out.println(System.currentTimeMillis() - startTime + " ms");
 	}
 
 	// **********************************************

@@ -2,6 +2,7 @@ package org.fagu.fmv.soft.mediainfo;
 
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -13,6 +14,7 @@ import org.junit.Test;
 public class MediaInfoParametersTestCase {
 
 	@Test
+	@Ignore
 	public void testParameters() throws IOException {
 		Info info = new MediaInfoParameters().getAllParameters();
 		for(InfoBase infoBase : info.getInfos()) {

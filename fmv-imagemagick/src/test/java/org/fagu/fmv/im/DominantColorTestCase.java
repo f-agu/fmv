@@ -88,9 +88,9 @@ public class DominantColorTestCase {
 	}
 
 	private void assertColor(String title, Color color, int expectedRed, int expectedGreen, int expectedBlue) {
-		assertEquals(title, expectedRed, color.getRed());
-		assertEquals(title, expectedGreen, color.getGreen());
-		assertEquals(title, expectedBlue, color.getBlue());
+		assertEquals(title + "[red]", expectedRed, color.getRed());
+		assertEquals(title + "[green]", expectedGreen, color.getGreen());
+		assertEquals(title + "[blue]", expectedBlue, color.getBlue());
 	}
 
 }

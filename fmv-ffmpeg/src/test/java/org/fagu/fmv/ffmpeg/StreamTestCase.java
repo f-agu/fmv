@@ -56,7 +56,7 @@ public class StreamTestCase {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testInputPipeForInfo() throws Exception {
 		StreamLog.debug(true);
 		extractInfoWithInputPipe("3gp.3gp");
@@ -77,7 +77,7 @@ public class StreamTestCase {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testInputPipeToFile2() throws Exception {
 		File outFile = new File("C:\\Oodrive\\video\\mp4-2\\video_320x180_500k-piped.mp4");
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
@@ -104,6 +104,7 @@ public class StreamTestCase {
 	}
 
 	@Test
+	@Ignore
 	public void testOutputPipeFromFile() throws Exception {
 		File inFile = ResourceUtils.extract("mp4.mp4");
 		File outFile = new File("c:\\tmp\\mp4-3.mp4");

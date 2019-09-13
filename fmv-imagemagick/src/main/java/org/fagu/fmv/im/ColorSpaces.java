@@ -31,7 +31,7 @@ public class ColorSpaces {
 				throw new RuntimeException(e);
 			}
 		}
-		CS_MAP.put("cymk", new ColorSpaceCMYK());
+		CS_MAP.put("cmyk", new ColorSpaceCMYK());
 	}
 
 	private ColorSpaces() {}

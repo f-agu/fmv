@@ -69,26 +69,28 @@ public class JavaSpawnTest {
 
 	@Test
 	public void testOutputToOutputStreamAndErrToReadLine() throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		AtomicReference<String> err = new AtomicReference<>();
-		javaSimpleMain(0)
-				.output(out)
-				.addErrReadLine(err::set)
-				.execute();
-		assertEquals("out" + System.getProperty("line.separator"), out.toString());
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			javaSimpleMain(0)
+					.output(out)
+					.addErrReadLine(l -> err.compareAndSet(null, l))
+					.execute();
+			assertEquals("out" + System.getProperty("line.separator"), out.toString());
+		}
 		assertEquals("err", err.get());
 	}
 
 	@Test
 	public void testOutputReadLineToAndErrToOutputStream() throws IOException {
 		AtomicReference<String> out = new AtomicReference<>();
-		ByteArrayOutputStream err = new ByteArrayOutputStream();
-		javaSimpleMain(0)
-				.addOutReadLine(out::set)
-				.err(err)
-				.execute();
+		try (ByteArrayOutputStream err = new ByteArrayOutputStream()) {
+			javaSimpleMain(0)
+					.addOutReadLine(l -> out.compareAndSet(null, l))
+					.err(err)
+					.execute();
+			assertEquals("err" + System.getProperty("line.separator"), err.toString());
+		}
 		assertEquals("out", out.get());
-		assertEquals("err" + System.getProperty("line.separator"), err.toString());
 	}
 
 	@Test
@@ -113,9 +115,10 @@ public class JavaSpawnTest {
 				.execute();
 
 		assertEquals(0, outCountingOutputStream.getByteCount());
-		assertEquals(2, err.size());
+		assertEquals(3, err.size());
 		assertEquals("Exception in thread \"main\" java.lang.Exception", err.get(0));
 		assertEquals("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:43)", err.get(1));
+		assertEquals("", err.get(2));
 	}
 
 	@Test
@@ -152,19 +155,21 @@ public class JavaSpawnTest {
 
 	@Test
 	public void testException_out_size0() throws IOException {
-		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
-		List<String> err = new ArrayList<>();
+		try (CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM)) {
+			List<String> err = new ArrayList<>();
 
-		javaExceptionMain("out", 0)
-				.output(outCountingOutputStream)
-				.addErrReadLine(err::add)
-				.exitValues(1)
-				.execute();
+			javaExceptionMain("out", 0)
+					.output(outCountingOutputStream)
+					.addErrReadLine(err::add)
+					.exitValues(1)
+					.execute();
 
-		assertEquals(0, outCountingOutputStream.getByteCount());
-		assertEquals(2, err.size());
-		assertEquals("xException in thread \"main\" java.lang.Exception", err.get(0)); // start with 'x'
-		assertEquals("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:43)", err.get(1));
+			assertEquals(0, outCountingOutputStream.getByteCount());
+			assertEquals(3, err.size());
+			assertEquals("xException in thread \"main\" java.lang.Exception", err.get(0)); // start with 'x'
+			assertEquals("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:43)", err.get(1));
+			assertEquals("", err.get(2));
+		}
 	}
 
 	@Test
