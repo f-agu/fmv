@@ -118,7 +118,8 @@ public class Size implements Serializable {
 
 	public static final Size EGA = new Size(640, 350, "ega");
 
-	public static final Size HD480 = new Size(852, 480, "hd480"); // should be 853 but libx264 need an even number
+	public static final Size HD480 = new Size(852, 480, "hd480"); // should be 853 but libx264 need an even number,
+																	// BECAREFUL it's not a 16/9 ratio
 
 	public static final Size HD720 = new Size(1280, 720, "hd720");
 
