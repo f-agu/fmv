@@ -24,30 +24,13 @@ public class IgnoreNullOutputStreamProcessOperator implements ProcessOperator {
 				return new FilterOutputStream(super.getOutputStream()) {
 
 					@Override
-					public void write(int b) throws IOException {
-						try {
-							super.write(b);
-						} catch(IOException e) {
-							manageIOException(e);
-						}
-					}
-
-					@Override
 					public void write(byte[] b) throws IOException {
-						try {
-							super.write(b);
-						} catch(IOException e) {
-							manageIOException(e);
-						}
+						out.write(b);
 					}
 
 					@Override
 					public void write(byte[] b, int off, int len) throws IOException {
-						try {
-							super.write(b, off, len);
-						} catch(IOException e) {
-							manageIOException(e);
-						}
+						out.write(b, off, len);
 					}
 
 					@Override

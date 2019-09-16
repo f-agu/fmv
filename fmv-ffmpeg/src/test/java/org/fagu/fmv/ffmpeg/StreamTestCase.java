@@ -21,7 +21,6 @@ import org.fagu.fmv.ffmpeg.operation.InfoOperation;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.BitStreamFilter;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
-import org.fagu.fmv.soft.io.StreamLog;
 import org.fagu.fmv.utils.media.Rotation;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -56,9 +55,9 @@ public class StreamTestCase {
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testInputPipeForInfo() throws Exception {
-		StreamLog.debug(true);
+		// StreamLog.debug(true);
 		extractInfoWithInputPipe("3gp.3gp");
 		extractInfoWithInputPipe("avi.avi");
 		extractInfoWithInputPipe("flv.flv");
@@ -73,7 +72,7 @@ public class StreamTestCase {
 		System.out.println(executor.getCommandLineString());
 		executor.input(() -> ResourceUtils.open(resource));
 		Executed<MovieMetadatas> execute = executor.execute();
-		// System.out.println(execute.getResult());
+		System.out.println(execute.getResult());
 	}
 
 	@Test

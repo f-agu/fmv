@@ -1,5 +1,6 @@
 package org.fagu.fmv.soft;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
@@ -53,6 +54,8 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 
 	private final Map<String, String> environmentMap;
 
+	private final List<Closeable> closeables;
+
 	private ExceptionKnownConsumer exceptionKnowConsumer;
 
 	private ExceptionConsumer exceptionConsumer;
@@ -69,6 +72,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		this.parameters = Collections.unmodifiableList(new ArrayList<>(parameters)); // defensive copy
 		execListeners = new ArrayList<>();
 		environmentMap = new HashMap<>();
+		closeables = new ArrayList<>();
 	}
 
 	public SoftExecutor addListener(ExecListener execListener) {
@@ -122,6 +126,13 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		return this;
 	}
 
+	public SoftExecutor addCloseable(Closeable closeable) {
+		if(closeable != null) {
+			closeables.add(closeable);
+		}
+		return this;
+	}
+
 	public SoftExecutor setExecuteDelegate(ExecuteDelegate executeDelegate) {
 		this.executeDelegate = Objects.requireNonNull(executeDelegate);
 		return this;
@@ -156,6 +167,8 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 				execListener.eventException(fmvExecuteException);
 				ExceptionKnownAnalyzers.doOrThrows(softProvider
 						.getExceptionKnownAnalyzerClass(), fmvExecuteException, exceptionKnowConsumer, exceptionConsumer);
+			} finally {
+				closeCloseables();
 			}
 			return new Executed(pidProcessOperator.getPID(), exitValue, time);
 		});
@@ -177,6 +190,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 					exitValue -> {
 						time.set(System.currentTimeMillis() - startTime.get());
 						execListener.eventExecuted(commandLine, exitValue, time.get());
+						closeCloseables();
 					},
 					// exception
 					exception -> {
@@ -261,6 +275,16 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 			return BasicExecuteDelegate.INSTANCE;
 		}
 		return new EnvironmentExecuteDelegate(environmentMap);
+	}
+
+	private void closeCloseables() {
+		closeables.forEach(c -> {
+			try {
+				c.close();
+			} catch(IOException e) {
+				// ignore
+			}
+		});
 	}
 
 	// --------------------------------------------------

@@ -22,6 +22,8 @@ package org.fagu.fmv.ffmpeg.executor;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -383,14 +385,18 @@ public class FFExecutor<R> {
 
 			if(inputStreamSupplier != null) {
 				try {
-					softExecutor.input(inputStreamSupplier.getInputStream());
+					InputStream inputStream = inputStreamSupplier.getInputStream();
+					softExecutor.input(inputStream);
+					softExecutor.addCloseable(inputStream);
 				} catch(IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
 			if(outputStreamSupplier != null) {
 				try {
-					softExecutor.output(outputStreamSupplier.getOutputStream());
+					OutputStream outputStream = outputStreamSupplier.getOutputStream();
+					softExecutor.output(outputStream);
+					softExecutor.addCloseable(outputStream);
 				} catch(IOException e) {
 					throw new RuntimeException(e);
 				}
