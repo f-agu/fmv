@@ -20,6 +20,7 @@ limitations under the License.
  * #L%
  */
 import java.io.FileFilter;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,39 +33,33 @@ import org.apache.commons.lang3.SystemUtils;
  */
 public class PlateformFileFilter {
 
-	/**
-	 * 
-	 */
 	private PlateformFileFilter() {}
 
-	/**
-	 * @param softName
-	 * @return
-	 */
 	public static FileFilter getFileFilter(String softName) {
 		return getFileFilter(f -> softName.equalsIgnoreCase(FilenameUtils.getBaseName(f.getName())));
 	}
 
-	/**
-	 * @param subFileFilter
-	 * @return
-	 */
 	public static FileFilter getFileFilter(FileFilter subFileFilter) {
 		if(SystemUtils.IS_OS_WINDOWS) {
-			Set<String> defaultExtensions = new HashSet<>(4);
-			defaultExtensions.add("exe");
-			defaultExtensions.add("com");
-			defaultExtensions.add("cmd");
-			defaultExtensions.add("bat");
-			return f -> {
-				if( ! subFileFilter.accept(f)) {
-					return false;
-				}
-				String extension = FilenameUtils.getExtension(f.getName());
-				return extension != null ? defaultExtensions.contains(extension.toLowerCase()) : false;
-			};
+			FileFilter extensionFilter = extensions("exe", "com", "cmd", "bat");
+			return f -> subFileFilter.accept(f) && extensionFilter.accept(f);
 		}
 		return subFileFilter;
+	}
+
+	public static FileFilter baseName(String softName) {
+		return f -> softName.equalsIgnoreCase(FilenameUtils.getBaseName(f.getName()));
+	}
+
+	public static FileFilter extensions(String... extensions) {
+		Set<String> set = new HashSet<>(extensions.length);
+		Arrays.stream(extensions)
+				.map(String::toLowerCase)
+				.forEach(set::add);
+		return f -> {
+			String extension = FilenameUtils.getExtension(f.getName());
+			return extension != null && set.contains(extension.toLowerCase());
+		};
 	}
 
 }
