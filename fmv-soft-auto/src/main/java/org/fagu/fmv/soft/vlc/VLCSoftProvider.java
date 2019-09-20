@@ -23,6 +23,7 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
  */
 
 import java.io.File;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -50,6 +51,11 @@ public class VLCSoftProvider extends SoftProvider {
 	public VLCSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
 				.onAllPlatforms(minVersion(2, 2))));
+	}
+
+	@Override
+	public Optional<String> getGroupTitle() {
+		return Optional.of("VLC");
 	}
 
 	@Override

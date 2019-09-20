@@ -63,6 +63,20 @@ public class FFInfoTestCase {
 	}
 
 	@Test
+	// @Ignore
+	public void testFindFFProbe() throws Exception {
+		Founds founds = FFProbe.search().getFounds();
+		founds.forEach(softFound -> {
+			FFInfo ffInfo = (FFInfo)softFound.getSoftInfo();
+			System.out.println(softFound);
+			System.out.println(softFound.getFile() + "  " + ffInfo);
+			System.out.println("    " + softFound.getLocalizedBy());
+			System.out.println();
+		});
+		System.out.println(founds.getFirstFound());
+	}
+
+	@Test
 	public void testGetVersion_OK() throws Exception {
 		String line = "1.0";
 		assertEquals(new Version(1), FFSoftProvider.getVersion(line));

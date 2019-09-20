@@ -5,6 +5,7 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,17 +38,11 @@ public class MediaInfoSoftProvider extends SoftProvider {
 		this(null);
 	}
 
-	/**
-	 * @param softPolicy
-	 */
 	public MediaInfoSoftProvider(SoftPolicy softPolicy) {
 		super(NAME,
 				ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy().onAllPlatforms(minVersion(18))));
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#createSoftFoundFactory(java.util.Properties)
-	 */
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		final Pattern pattern = Pattern.compile(new SearchPropertiesHelper(searchProperties, getName())
@@ -64,17 +59,16 @@ public class MediaInfoSoftProvider extends SoftProvider {
 				.build();
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getDownloadURL()
-	 */
+	@Override
+	public Optional<String> getGroupTitle() {
+		return Optional.of("MediaArea");
+	}
+
 	@Override
 	public String getDownloadURL() {
 		return "https://mediaarea.net/fr/MediaInfo/Download";
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftProvider#getSoftLocator()
-	 */
 	@Override
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = super.getSoftLocator();

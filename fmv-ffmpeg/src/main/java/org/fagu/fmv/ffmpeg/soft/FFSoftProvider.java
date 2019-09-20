@@ -116,9 +116,9 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 	@Override
 	public String getMinVersion() {
-		StringBuilder buf = new StringBuilder();
-		buf.append('v').append(FFSoftPolicy.MIN_VERSION).append(" or built ").append(FFSoftPolicy.MIN_BUILD_VERSION);
-		return buf.toString();
+		return new StringBuilder()
+				.append('v').append(FFSoftPolicy.MIN_VERSION).append(" or built ").append(FFSoftPolicy.MIN_BUILD_VERSION)
+				.toString();
 	}
 
 	@Override
