@@ -31,9 +31,6 @@ import org.fagu.version.Version;
  */
 public class SoftOnWindows {
 
-	/**
-	 * 
-	 */
 	private SoftOnWindows() {}
 
 	/**
