@@ -262,7 +262,7 @@ public class SoftFound implements Comparable<SoftFound> {
 	 * @return
 	 */
 	public String getInfo() {
-		return softInfo != null ? softInfo.getInfo() : "<version not found>";
+		return softInfo != null ? softInfo.getInfo() : "<version undefined>";
 	}
 
 	/**
