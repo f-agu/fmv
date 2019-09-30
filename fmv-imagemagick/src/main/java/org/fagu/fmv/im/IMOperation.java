@@ -39,11 +39,6 @@ public class IMOperation {
 
 	private final LinkedList<String> arguments = new LinkedList<>();
 
-	/**
-	 * @param arg0
-	 * @param args
-	 * @return
-	 */
 	public IMOperation add(String arg0, String... args) {
 		arguments.add(Objects.requireNonNull(arg0));
 		for(String arg : args) {
@@ -52,10 +47,6 @@ public class IMOperation {
 		return this;
 	}
 
-	/**
-	 * @param args
-	 * @return
-	 */
 	public IMOperation addAll(Collection<String> args) {
 		arguments.addAll(Objects.requireNonNull(args));
 		return this;
@@ -116,7 +107,7 @@ public class IMOperation {
 	public IMOperation adaptiveResize(int width, int height, String special) {
 		adaptiveResize(width, height);
 		if(StringUtils.isNotEmpty(special)) {
-			add(special.toString());
+			add(special);
 		}
 		return this;
 	}
@@ -149,9 +140,8 @@ public class IMOperation {
 	}
 
 	public IMOperation alpha(String type) {
-		alpha();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			alpha().add(type);
 		}
 		return this;
 	}
@@ -189,9 +179,8 @@ public class IMOperation {
 	}
 
 	public IMOperation authenticate(String password) {
-		authenticate();
 		if(StringUtils.isNotEmpty(password)) {
-			add(password);
+			authenticate().add(password);
 		}
 		return this;
 	}
@@ -222,9 +211,8 @@ public class IMOperation {
 	}
 
 	public IMOperation backdrop(String color) {
-		backdrop();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			backdrop().add(color);
 		}
 		return this;
 	}
@@ -235,9 +223,8 @@ public class IMOperation {
 	}
 
 	public IMOperation background(String color) {
-		background();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			background().add(color);
 		}
 		return this;
 	}
@@ -336,9 +323,8 @@ public class IMOperation {
 	}
 
 	public IMOperation bordercolor(String color) {
-		bordercolor();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			bordercolor().add(color);
 		}
 		return this;
 	}
@@ -410,9 +396,8 @@ public class IMOperation {
 	}
 
 	public IMOperation caption(String text) {
-		caption();
 		if(StringUtils.isNotEmpty(text)) {
-			add(text);
+			caption().add(text);
 		}
 		return this;
 	}
@@ -423,9 +408,8 @@ public class IMOperation {
 	}
 
 	public IMOperation cdl(String filename) {
-		cdl();
 		if(StringUtils.isNotEmpty(filename)) {
-			add(filename);
+			cdl().add(filename);
 		}
 		return this;
 	}
@@ -436,9 +420,8 @@ public class IMOperation {
 	}
 
 	public IMOperation channel(String type) {
-		channel();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			channel().add(type);
 		}
 		return this;
 	}
@@ -477,9 +460,8 @@ public class IMOperation {
 	}
 
 	public IMOperation clipPath(String id) {
-		clipPath();
 		if(StringUtils.isNotEmpty(id)) {
-			add(id);
+			clipPath().add(id);
 		}
 		return this;
 	}
@@ -489,9 +471,8 @@ public class IMOperation {
 	}
 
 	public IMOperation p_clipPath(String id) {
-		p_clipPath();
 		if(StringUtils.isNotEmpty(id)) {
-			add(id);
+			p_clipPath().add(id);
 		}
 		return this;
 	}
@@ -529,9 +510,8 @@ public class IMOperation {
 	}
 
 	public IMOperation colormap(String type) {
-		colormap();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			colormap().add(type);
 		}
 		return this;
 	}
@@ -542,9 +522,8 @@ public class IMOperation {
 	}
 
 	public IMOperation colorMatrix(String matrix) {
-		colorMatrix();
 		if(StringUtils.isNotEmpty(matrix)) {
-			add(matrix);
+			colorMatrix().add(matrix);
 		}
 		return this;
 	}
@@ -564,9 +543,8 @@ public class IMOperation {
 	}
 
 	public IMOperation colorspace(String value) {
-		colorspace();
 		if(StringUtils.isNotEmpty(value)) {
-			add(value);
+			colorspace().add(value);
 		}
 		return this;
 	}
@@ -582,9 +560,8 @@ public class IMOperation {
 	}
 
 	public IMOperation comment(String text) {
-		comment();
 		if(StringUtils.isNotEmpty(text)) {
-			add(text);
+			comment().add(text);
 		}
 		return this;
 	}
@@ -595,9 +572,8 @@ public class IMOperation {
 	}
 
 	public IMOperation compose(String operator) {
-		compose();
 		if(StringUtils.isNotEmpty(operator)) {
-			add(operator);
+			compose().add(operator);
 		}
 		return this;
 	}
@@ -613,9 +589,8 @@ public class IMOperation {
 	}
 
 	public IMOperation compress(String type) {
-		compress();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			compress().add(type);
 		}
 		return this;
 	}
@@ -648,9 +623,8 @@ public class IMOperation {
 	}
 
 	public IMOperation debug(String events) {
-		debug();
 		if(StringUtils.isNotEmpty(events)) {
-			add(events);
+			debug().add(events);
 		}
 		return this;
 	}
@@ -665,9 +639,8 @@ public class IMOperation {
 	}
 
 	public IMOperation decipher(String filename) {
-		decipher();
 		if(StringUtils.isNotEmpty(filename)) {
-			add(filename);
+			decipher().add(filename);
 		}
 		return this;
 	}
@@ -683,9 +656,8 @@ public class IMOperation {
 	}
 
 	public IMOperation define(String keyValue) {
-		define();
 		if(StringUtils.isNotEmpty(keyValue)) {
-			add(keyValue);
+			define().add(keyValue);
 		}
 		return this;
 	}
@@ -695,9 +667,8 @@ public class IMOperation {
 	}
 
 	public IMOperation p_define(String key) {
-		p_define();
 		if(StringUtils.isNotEmpty(key)) {
-			add(key);
+			p_define().add(key);
 		}
 		return this;
 	}
@@ -749,9 +720,8 @@ public class IMOperation {
 	}
 
 	public IMOperation direction(String type) {
-		direction();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			direction().add(type);
 		}
 		return this;
 	}
@@ -775,9 +745,8 @@ public class IMOperation {
 	}
 
 	public IMOperation dispose(String method) {
-		dispose();
 		if(StringUtils.isNotEmpty(method)) {
-			add(method);
+			dispose().add(method);
 		}
 		return this;
 	}
@@ -810,9 +779,8 @@ public class IMOperation {
 	}
 
 	public IMOperation distort(String method) {
-		distort();
 		if(StringUtils.isNotEmpty(method)) {
-			add(method);
+			distort().add(method);
 		}
 		return this;
 	}
@@ -821,14 +789,14 @@ public class IMOperation {
 		distort();
 		StringBuilder buf = new StringBuilder();
 		if(method != null) {
-			buf.append(method.toString());
+			buf.append(method);
 		}
 		if(method != null || arguments != null) {
 			add(buf.toString());
 			buf.setLength(0);
 		}
 		if(arguments != null) {
-			buf.append(arguments.toString());
+			buf.append(arguments);
 		}
 		if(buf.length() > 0) {
 			add(buf.toString());
@@ -841,9 +809,8 @@ public class IMOperation {
 	}
 
 	public IMOperation p_distort(String method) {
-		p_distort();
 		if(StringUtils.isNotEmpty(method)) {
-			add(method);
+			p_distort().add(method);
 		}
 		return this;
 	}
@@ -852,14 +819,14 @@ public class IMOperation {
 		p_distort();
 		StringBuilder buf = new StringBuilder();
 		if(method != null) {
-			buf.append(method.toString());
+			buf.append(method);
 		}
 		if(method != null || arguments != null) {
 			add(buf.toString());
 			buf.setLength(0);
 		}
 		if(arguments != null) {
-			buf.append(arguments.toString());
+			buf.append(arguments);
 		}
 		if(buf.length() > 0) {
 			add(buf.toString());
@@ -873,9 +840,8 @@ public class IMOperation {
 	}
 
 	public IMOperation dither(String method) {
-		dither();
 		if(StringUtils.isNotEmpty(method)) {
-			add(method);
+			dither().add(method);
 		}
 		return this;
 	}
@@ -890,9 +856,8 @@ public class IMOperation {
 	}
 
 	public IMOperation draw(String string) {
-		draw();
 		if(StringUtils.isNotEmpty(string)) {
-			add(string);
+			draw().add(string);
 		}
 		return this;
 	}
@@ -938,9 +903,8 @@ public class IMOperation {
 	}
 
 	public IMOperation encipher(String filename) {
-		encipher();
 		if(StringUtils.isNotEmpty(filename)) {
-			add(filename);
+			encipher().add(filename);
 		}
 		return this;
 	}
@@ -951,9 +915,8 @@ public class IMOperation {
 	}
 
 	public IMOperation encoding(String type) {
-		encoding();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			encoding().add(type);
 		}
 		return this;
 	}
@@ -964,9 +927,8 @@ public class IMOperation {
 	}
 
 	public IMOperation endian(String type) {
-		endian();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			endian().add(type);
 		}
 		return this;
 	}
@@ -991,9 +953,8 @@ public class IMOperation {
 	}
 
 	public IMOperation evaluate(String operator) {
-		evaluate();
 		if(StringUtils.isNotEmpty(operator)) {
-			add(operator);
+			evaluate().add(operator);
 		}
 		return this;
 	}
@@ -1002,14 +963,14 @@ public class IMOperation {
 		evaluate();
 		StringBuilder buf = new StringBuilder();
 		if(operator != null) {
-			buf.append(operator.toString());
+			buf.append(operator);
 		}
 		if(operator != null || constant != null) {
 			add(buf.toString());
 			buf.setLength(0);
 		}
 		if(constant != null) {
-			buf.append(constant.toString());
+			buf.append(constant);
 		}
 		if(buf.length() > 0) {
 			add(buf.toString());
@@ -1023,9 +984,8 @@ public class IMOperation {
 	}
 
 	public IMOperation evaluateSequence(String operator) {
-		evaluateSequence();
 		if(StringUtils.isNotEmpty(operator)) {
-			add(operator);
+			evaluateSequence().add(operator);
 		}
 		return this;
 	}
@@ -1058,9 +1018,8 @@ public class IMOperation {
 	}
 
 	public IMOperation family(String fontFamily) {
-		family();
 		if(StringUtils.isNotEmpty(fontFamily)) {
-			add(fontFamily);
+			family().add(fontFamily);
 		}
 		return this;
 	}
@@ -1071,9 +1030,8 @@ public class IMOperation {
 	}
 
 	public IMOperation features(String distance) {
-		features();
 		if(StringUtils.isNotEmpty(distance)) {
-			add(distance);
+			features().add(distance);
 		}
 		return this;
 	}
@@ -1089,9 +1047,8 @@ public class IMOperation {
 	}
 
 	public IMOperation fill(String color) {
-		fill();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			fill().add(color);
 		}
 		return this;
 	}
@@ -1102,9 +1059,8 @@ public class IMOperation {
 	}
 
 	public IMOperation filter(String type) {
-		filter();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			filter().add(type);
 		}
 		return this;
 	}
@@ -1130,9 +1086,8 @@ public class IMOperation {
 	}
 
 	public IMOperation font(String name) {
-		font();
 		if(StringUtils.isNotEmpty(name)) {
-			add(name);
+			font().add(name);
 		}
 		return this;
 	}
@@ -1143,9 +1098,8 @@ public class IMOperation {
 	}
 
 	public IMOperation foreground(String color) {
-		foreground();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			foreground().add(color);
 		}
 		return this;
 	}
@@ -1156,9 +1110,8 @@ public class IMOperation {
 	}
 
 	public IMOperation format(String type) {
-		format();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			format().add(type);
 		}
 		return this;
 	}
@@ -1178,9 +1131,8 @@ public class IMOperation {
 	}
 
 	public IMOperation function(String name) {
-		function();
 		if(StringUtils.isNotEmpty(name)) {
-			add(name);
+			function().add(name);
 		}
 		return this;
 	}
@@ -1189,14 +1141,14 @@ public class IMOperation {
 		function();
 		StringBuilder buf = new StringBuilder(); // local buffer for option-args
 		if(name != null) {
-			buf.append(name.toString());
+			buf.append(name);
 		}
 		if(name != null || parameter != null) {
 			add(buf.toString());
 			buf.setLength(0);
 		}
 		if(parameter != null) {
-			buf.append(parameter.toString());
+			buf.append(parameter);
 		}
 		if(buf.length() > 0) {
 			add(buf.toString());
@@ -1223,9 +1175,8 @@ public class IMOperation {
 	}
 
 	public IMOperation fx(String expression) {
-		fx();
 		if(StringUtils.isNotEmpty(expression)) {
-			add(expression);
+			fx().add(expression);
 		}
 		return this;
 	}
@@ -1271,9 +1222,8 @@ public class IMOperation {
 	}
 
 	public IMOperation gravity(String type) {
-		gravity();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			gravity().add(type);
 		}
 		return this;
 	}
@@ -1307,9 +1257,8 @@ public class IMOperation {
 	}
 
 	public IMOperation highlightColor(String color) {
-		highlightColor();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			highlightColor().add(color);
 		}
 		return this;
 	}
@@ -1358,9 +1307,8 @@ public class IMOperation {
 	}
 
 	public IMOperation intent(String type) {
-		intent();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			intent().add(type);
 		}
 		return this;
 	}
@@ -1371,9 +1319,8 @@ public class IMOperation {
 	}
 
 	public IMOperation interlace(String type) {
-		interlace();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			interlace().add(type);
 		}
 		return this;
 	}
@@ -1393,9 +1340,8 @@ public class IMOperation {
 	}
 
 	public IMOperation interpolate(String type) {
-		interpolate();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			interpolate().add(type);
 		}
 		return this;
 	}
@@ -1429,9 +1375,8 @@ public class IMOperation {
 	}
 
 	public IMOperation label(String name) {
-		label();
 		if(StringUtils.isNotEmpty(name)) {
-			add(name);
+			label().add(name);
 		}
 		return this;
 	}
@@ -1442,9 +1387,8 @@ public class IMOperation {
 	}
 
 	public IMOperation layers(String method) {
-		layers();
 		if(StringUtils.isNotEmpty(method)) {
-			add(method);
+			layers().add(method);
 		}
 		return this;
 	}
@@ -1455,9 +1399,8 @@ public class IMOperation {
 	}
 
 	public IMOperation limit(String type) {
-		limit();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			limit().add(type);
 		}
 		return this;
 	}
@@ -1473,9 +1416,8 @@ public class IMOperation {
 	}
 
 	public IMOperation log(String text) {
-		log();
 		if(StringUtils.isNotEmpty(text)) {
-			add(text);
+			log().add(text);
 		}
 		return this;
 	}
@@ -1504,9 +1446,8 @@ public class IMOperation {
 	}
 
 	public IMOperation map(String components) {
-		map();
 		if(StringUtils.isNotEmpty(components)) {
-			add(components);
+			map().add(components);
 		}
 		return this;
 	}
@@ -1521,9 +1462,8 @@ public class IMOperation {
 	}
 
 	public IMOperation mask(String filename) {
-		mask();
 		if(StringUtils.isNotEmpty(filename)) {
-			add(filename);
+			mask().add(filename);
 		}
 		return this;
 	}
@@ -1538,9 +1478,8 @@ public class IMOperation {
 	}
 
 	public IMOperation mattecolor(String color) {
-		mattecolor();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			mattecolor().add(color);
 		}
 		return this;
 	}
@@ -1560,9 +1499,8 @@ public class IMOperation {
 	}
 
 	public IMOperation metric(String type) {
-		metric();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			metric().add(type);
 		}
 		return this;
 	}
@@ -1573,9 +1511,8 @@ public class IMOperation {
 	}
 
 	public IMOperation mode(String value) {
-		mode();
 		if(StringUtils.isNotEmpty(value)) {
-			add(value);
+			mode().add(value);
 		}
 		return this;
 	}
@@ -1605,9 +1542,8 @@ public class IMOperation {
 	}
 
 	public IMOperation morphology(String method) {
-		morphology();
 		if(StringUtils.isNotEmpty(method)) {
-			add(method);
+			morphology().add(method);
 		}
 		return this;
 	}
@@ -1616,14 +1552,14 @@ public class IMOperation {
 		morphology();
 		StringBuilder buf = new StringBuilder(); // local buffer for option-args
 		if(method != null) {
-			buf.append(method.toString());
+			buf.append(method);
 		}
 		if(method != null || kernel != null) {
 			add(buf.toString());
 			buf.setLength(0);
 		}
 		if(kernel != null) {
-			buf.append(kernel.toString());
+			buf.append(kernel);
 		}
 		if(buf.length() > 0) {
 			add(buf.toString());
@@ -1665,9 +1601,8 @@ public class IMOperation {
 	}
 
 	public IMOperation p_noise(String type) {
-		p_noise();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			p_noise().add(type);
 		}
 		return this;
 	}
@@ -1683,9 +1618,8 @@ public class IMOperation {
 	}
 
 	public IMOperation opaque(String color) {
-		opaque();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			opaque().add(color);
 		}
 		return this;
 	}
@@ -1695,9 +1629,8 @@ public class IMOperation {
 	}
 
 	public IMOperation p_opaque(String color) {
-		p_opaque();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			p_opaque().add(color);
 		}
 		return this;
 	}
@@ -1707,25 +1640,24 @@ public class IMOperation {
 		return add("-ordered-dither");
 	}
 
-	public IMOperation orderedDither(String threshold_map) {
-		orderedDither();
-		if(StringUtils.isNotEmpty(threshold_map)) {
-			add(threshold_map);
+	public IMOperation orderedDither(String thresholdMap) {
+		if(StringUtils.isNotEmpty(thresholdMap)) {
+			orderedDither().add(thresholdMap);
 		}
 		return this;
 	}
 
-	public IMOperation orderedDither(String threshold_map, String level) {
+	public IMOperation orderedDither(String thresholdMap, String level) {
 		orderedDither();
 		StringBuilder buf = new StringBuilder(); // local buffer for option-args
-		if(threshold_map != null) {
-			buf.append(threshold_map.toString());
+		if(thresholdMap != null) {
+			buf.append(thresholdMap);
 		}
-		if(threshold_map != null || level != null) {
-			buf.append(",");
+		if(thresholdMap != null || level != null) {
+			buf.append(',');
 		}
 		if(level != null) {
-			buf.append(level.toString());
+			buf.append(level);
 		}
 		if(buf.length() > 0) {
 			add(buf.toString());
@@ -1739,9 +1671,8 @@ public class IMOperation {
 	}
 
 	public IMOperation orient(String imageOrientation) {
-		orient();
 		if(StringUtils.isNotEmpty(imageOrientation)) {
-			add(imageOrientation);
+			orient().add(imageOrientation);
 		}
 		return this;
 	}
@@ -1761,9 +1692,8 @@ public class IMOperation {
 	}
 
 	public IMOperation path(String path) {
-		path();
 		if(StringUtils.isNotEmpty(path)) {
-			add(path);
+			path().add(path);
 		}
 		return this;
 	}
@@ -1774,9 +1704,8 @@ public class IMOperation {
 	}
 
 	public IMOperation passphrase(String filename) {
-		passphrase();
 		if(StringUtils.isNotEmpty(filename)) {
-			add(filename);
+			passphrase().add(filename);
 		}
 		return this;
 	}
@@ -1832,9 +1761,8 @@ public class IMOperation {
 	}
 
 	public IMOperation poly(String args) {
-		poly();
 		if(StringUtils.isNotEmpty(args)) {
-			add(args);
+			poly().add(args);
 		}
 		return this;
 	}
@@ -1863,9 +1791,8 @@ public class IMOperation {
 	}
 
 	public IMOperation preview(String type) {
-		preview();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			preview().add(type);
 		}
 		return this;
 	}
@@ -1876,9 +1803,8 @@ public class IMOperation {
 	}
 
 	public IMOperation print(String text) {
-		print();
 		if(StringUtils.isNotEmpty(text)) {
-			add(text);
+			print().add(text);
 		}
 		return this;
 	}
@@ -1889,9 +1815,8 @@ public class IMOperation {
 	}
 
 	public IMOperation process(String command) {
-		process();
 		if(StringUtils.isNotEmpty(command)) {
-			add(command);
+			process().add(command);
 		}
 		return this;
 	}
@@ -1902,9 +1827,8 @@ public class IMOperation {
 	}
 
 	public IMOperation profile(String filename) {
-		profile();
 		if(StringUtils.isNotEmpty(filename)) {
-			add(filename);
+			profile().add(filename);
 		}
 		return this;
 	}
@@ -1915,9 +1839,8 @@ public class IMOperation {
 	}
 
 	public IMOperation p_profile(String profileName) {
-		p_profile();
 		if(StringUtils.isNotEmpty(profileName)) {
-			add(profileName);
+			p_profile().add(profileName);
 		}
 		return this;
 	}
@@ -1937,9 +1860,8 @@ public class IMOperation {
 	}
 
 	public IMOperation quantize(String colorspace) {
-		quantize();
 		if(StringUtils.isNotEmpty(colorspace)) {
-			add(colorspace);
+			quantize().add(colorspace);
 		}
 		return this;
 	}
@@ -1989,8 +1911,8 @@ public class IMOperation {
 	}
 
 	public IMOperation recolor(String matrix) {
-		recolor();
 		if(StringUtils.isNotEmpty(matrix)) {
+			recolor();
 			add(matrix);
 		}
 		return this;
@@ -2041,9 +1963,8 @@ public class IMOperation {
 	}
 
 	public IMOperation remap(String filename) {
-		remap();
 		if(StringUtils.isNotEmpty(filename)) {
-			add(filename);
+			remap().add(filename);
 		}
 		return this;
 	}
@@ -2182,9 +2103,8 @@ public class IMOperation {
 	}
 
 	public IMOperation sparseColor(String method) {
-		sparseColor();
 		if(StringUtils.isNotEmpty(method)) {
-			add(method);
+			sparseColor().add(method);
 		}
 		return this;
 	}
@@ -2193,14 +2113,14 @@ public class IMOperation {
 		sparseColor();
 		StringBuilder buf = new StringBuilder(); // local buffer for option-args
 		if(method != null) {
-			buf.append(method.toString());
+			buf.append(method);
 		}
 		if(method != null || cinfo != null) {
 			add(buf.toString());
 			buf.setLength(0);
 		}
 		if(cinfo != null) {
-			buf.append(cinfo.toString());
+			buf.append(cinfo);
 		}
 		if(buf.length() > 0) {
 			add(buf.toString());
@@ -2235,9 +2155,8 @@ public class IMOperation {
 	}
 
 	public IMOperation scale(String value) {
-		scale();
 		if(StringUtils.isNotEmpty(value)) {
-			add(value);
+			scale().add(value);
 		}
 		return this;
 	}
@@ -2294,28 +2213,15 @@ public class IMOperation {
 	}
 
 	public IMOperation set(String attribute) {
-		set();
 		if(StringUtils.isNotEmpty(attribute)) {
-			add(attribute);
+			set().add(attribute);
 		}
 		return this;
 	}
 
 	public IMOperation set(String attribute, String value) {
-		set();
-		StringBuilder buf = new StringBuilder(); // local buffer for option-args
-		if(attribute != null) {
-			buf.append(attribute.toString());
-		}
-		if(attribute != null || value != null) {
-			add(buf.toString());
-			buf.setLength(0);
-		}
-		if(value != null) {
-			buf.append(value.toString());
-		}
-		if(buf.length() > 0) {
-			add(buf.toString());
+		if(attribute != null && value != null) {
+			set().add(attribute, value);
 		}
 		return this;
 	}
@@ -2449,9 +2355,8 @@ public class IMOperation {
 	}
 
 	public IMOperation storageType(String type) {
-		storageType();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			storageType().add(type);
 		}
 		return this;
 	}
@@ -2462,9 +2367,8 @@ public class IMOperation {
 	}
 
 	public IMOperation stretch(String fontStretchType) {
-		stretch();
 		if(StringUtils.isNotEmpty(fontStretchType)) {
-			add(fontStretchType);
+			stretch().add(fontStretchType);
 		}
 		return this;
 	}
@@ -2480,9 +2384,8 @@ public class IMOperation {
 	}
 
 	public IMOperation stroke(String color) {
-		stroke();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			stroke().add(color);
 		}
 		return this;
 	}
@@ -2502,9 +2405,8 @@ public class IMOperation {
 	}
 
 	public IMOperation style(String fontStyle) {
-		style();
 		if(StringUtils.isNotEmpty(fontStyle)) {
-			add(fontStyle);
+			style().add(fontStyle);
 		}
 		return this;
 	}
@@ -2557,9 +2459,8 @@ public class IMOperation {
 	}
 
 	public IMOperation textFont(String name) {
-		textFont();
 		if(StringUtils.isNotEmpty(name)) {
-			add(name);
+			textFont().add(name);
 		}
 		return this;
 	}
@@ -2570,9 +2471,8 @@ public class IMOperation {
 	}
 
 	public IMOperation texture(String filename) {
-		texture();
 		if(StringUtils.isNotEmpty(filename)) {
-			add(filename);
+			texture().add(filename);
 		}
 		return this;
 	}
@@ -2621,9 +2521,8 @@ public class IMOperation {
 	}
 
 	public IMOperation tile(String filename) {
-		tile();
 		if(StringUtils.isNotEmpty(filename)) {
-			add(filename);
+			tile().add(filename);
 		}
 		return this;
 	}
@@ -2656,9 +2555,8 @@ public class IMOperation {
 	}
 
 	public IMOperation title(String text) {
-		title();
 		if(StringUtils.isNotEmpty(text)) {
-			add(text);
+			title().add(text);
 		}
 		return this;
 	}
@@ -2674,9 +2572,8 @@ public class IMOperation {
 	}
 
 	public IMOperation transparentColor(String color) {
-		transparentColor();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			transparentColor().add(color);
 		}
 		return this;
 	}
@@ -2687,9 +2584,8 @@ public class IMOperation {
 	}
 
 	public IMOperation transparent(String color) {
-		transparent();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			transparent().add(color);
 		}
 		return this;
 	}
@@ -2724,9 +2620,8 @@ public class IMOperation {
 	}
 
 	public IMOperation type(String type) {
-		type();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			type().add(type);
 		}
 		return this;
 	}
@@ -2737,9 +2632,8 @@ public class IMOperation {
 	}
 
 	public IMOperation undercolor(String color) {
-		undercolor();
 		if(StringUtils.isNotEmpty(color)) {
-			add(color);
+			undercolor().add(color);
 		}
 		return this;
 	}
@@ -2755,9 +2649,8 @@ public class IMOperation {
 	}
 
 	public IMOperation units(String type) {
-		units();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			units().add(type);
 		}
 		return this;
 	}
@@ -2787,9 +2680,8 @@ public class IMOperation {
 	}
 
 	public IMOperation view(String text) {
-		view();
 		if(StringUtils.isNotEmpty(text)) {
-			add(text);
+			view().add(text);
 		}
 		return this;
 	}
@@ -2800,9 +2692,8 @@ public class IMOperation {
 	}
 
 	public IMOperation virtualPixel(String method) {
-		virtualPixel();
 		if(StringUtils.isNotEmpty(method)) {
-			add(method);
+			virtualPixel().add(method);
 		}
 		return this;
 	}
@@ -2813,9 +2704,8 @@ public class IMOperation {
 	}
 
 	public IMOperation visual(String type) {
-		visual();
 		if(StringUtils.isNotEmpty(type)) {
-			add(type);
+			visual().add(type);
 		}
 		return this;
 	}
@@ -2848,9 +2738,8 @@ public class IMOperation {
 	}
 
 	public IMOperation weight(String fontWeight) {
-		weight();
 		if(StringUtils.isNotEmpty(fontWeight)) {
-			add(fontWeight);
+			weight().add(fontWeight);
 		}
 		return this;
 	}
@@ -2896,9 +2785,8 @@ public class IMOperation {
 	}
 
 	public IMOperation window(String id) {
-		window();
 		if(StringUtils.isNotEmpty(id)) {
-			add(id);
+			window().add(id);
 		}
 		return this;
 	}
@@ -2909,9 +2797,8 @@ public class IMOperation {
 	}
 
 	public IMOperation write(String filename) {
-		write();
 		if(StringUtils.isNotEmpty(filename)) {
-			add(filename);
+			write().add(filename);
 		}
 		return this;
 	}
@@ -2921,24 +2808,17 @@ public class IMOperation {
 	}
 
 	public IMOperation p_write(String filename) {
-		p_write();
 		if(StringUtils.isNotEmpty(filename)) {
-			add(filename);
+			p_write().add(filename);
 		}
 		return this;
 	}
 	// =======
 
-	/**
-	 * @return
-	 */
 	public List<String> toList() {
 		return Collections.unmodifiableList(arguments);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return CommandLineUtils.toLine(arguments);

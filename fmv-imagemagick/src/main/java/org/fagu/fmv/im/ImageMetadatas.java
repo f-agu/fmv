@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
@@ -204,6 +205,10 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return metadatas.get("format");
 	}
 
+	public long getCreateTime() {
+		return createTime;
+	}
+
 	public Date getDate() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
 
@@ -293,6 +298,10 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 	public String getColorSpace() {
 		return metadatas.get("colorspace");
+	}
+
+	public Optional<String> getICCProfile() {
+		return Optional.ofNullable(metadatas.get("icc:description"));
 	}
 
 	public int getColorDepth() {
@@ -503,7 +512,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		StringJoiner joiner = new StringJoiner("\n", "", "\n");
 		joiner.add("==%f==");
 		joiner.add("format=%m");
-		joiner.add("%[exif:*]%[date:*]%[xap:*]%[*]xy=%x %y");
+		joiner.add("%[exif:*]%[date:*]%[xap:*]%[icc:*]%[*]xy=%x %y");
 		joiner.add("colorspace=%[colorspace]");
 		joiner.add("wh=%w %h");
 		joiner.add("cdepth=%z");

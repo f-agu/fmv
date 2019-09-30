@@ -73,7 +73,15 @@ public class DominantColor {
 	}
 
 	public Color getDominantColor(InputStreamSupplier inputStreamSupplier, Consumer<CommandLine> logger) throws IOException {
+		return getDominantColor(inputStreamSupplier, logger, null);
+	}
+
+	public Color getDominantColor(InputStreamSupplier inputStreamSupplier, Consumer<CommandLine> logger, Consumer<IMOperation> imOpCons)
+			throws IOException {
 		IMOperation op = createIMOperation(o -> o.image("-", "[0]"));
+		if(imOpCons != null) {
+			imOpCons.accept(op);
+		}
 		List<String> outputs = new ArrayList<>();
 		try (InputStream inputStream = inputStreamSupplier.getInputStream()) {
 			convertSoft.withParameters(op.toList())
