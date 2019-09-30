@@ -84,7 +84,7 @@ public abstract class IMSoftProvider extends SoftProvider {
 
 	public IMSoftProvider(String name, SoftPolicy softPolicy) {
 		super(name, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(6, 6))));
+				.onAllPlatforms(minVersion(7, 0, 8, 50))));
 	}
 
 	@Override
