@@ -38,14 +38,6 @@ import org.junit.Test;
  */
 public class DecodersTestCase {
 
-	/**
-	 * 
-	 */
-	public DecodersTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
 	@Ignore
 	public void generator() {
@@ -64,9 +56,6 @@ public class DecodersTestCase {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void testCache() {
 		assertFalse(Decoders.H264.isCodecExperimental());

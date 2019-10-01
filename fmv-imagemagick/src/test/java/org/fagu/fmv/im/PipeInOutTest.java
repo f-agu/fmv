@@ -40,7 +40,7 @@ import org.junit.Test;
  */
 public class PipeInOutTest {
 
-	private static final String EXPECTED_SHA1 = "29f7fb4a25165a54354044a0960b380257daa81f";
+	private static final String EXPECTED_SHA1 = "a9d6644b49a3f9c660a702f46bd44640967999ae";
 
 	@Test
 	public void testPipe_no() throws Exception {

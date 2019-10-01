@@ -55,7 +55,7 @@ public class StreamTestCase {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testInputPipeForInfo() throws Exception {
 		// StreamLog.debug(true);
 		extractInfoWithInputPipe("3gp.3gp");

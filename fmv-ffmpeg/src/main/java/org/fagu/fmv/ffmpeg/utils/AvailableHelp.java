@@ -247,29 +247,14 @@ public class AvailableHelp<H extends Help> {
 	 */
 	protected static class ValuesReader<H extends Help> implements Reader {
 
-		/**
-		 * 
-		 */
-		private static final Pattern VALUES_PATTERN = Pattern.compile("([\\w\\-,]+)\\s+(.*)");
+		private static final Pattern VALUES_PATTERN = Pattern.compile("([\\w\\-,]+)[\\s\\.]+(.*)");
 
-		/**
-		 * 
-		 */
 		private LegendReader legendReader;
 
-		/**
-		 * 
-		 */
 		private Function<String, H> factory;
 
-		/**
-		 * 
-		 */
 		private Consumer<H> consumer;
 
-		/**
-		 * 
-		 */
 		private int count = 0;
 
 		/**
@@ -439,7 +424,7 @@ public class AvailableHelp<H extends Help> {
 			while( ! currentReader.read(line)) {
 				if( ! readerIterator.hasNext()) {
 					for(int i = Math.max(0, number - 8); i < Math.min(help.size(), number + 8); ++i) {
-						System.err.println(i + ": " + help.get(i));
+						System.err.println((i + 1) + ": " + help.get(i));
 					}
 
 					throw new IllegalArgumentException("No enough reader (line " + number + ") : " + line);

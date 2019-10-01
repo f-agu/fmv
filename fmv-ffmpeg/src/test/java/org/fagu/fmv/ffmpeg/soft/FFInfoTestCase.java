@@ -247,7 +247,7 @@ public class FFInfoTestCase {
 		parser.readLine("libswscale      3.  1.101 /  3.  1.101");
 		parser.readLine("libswresample   1.  1.100 /  1.  1.100");
 
-		assertFull(parser, new Version(2, 6, 1), date(2014, 12, 30), null);
+		assertFull(parser, new Version(2, 6, 1), date(2015, 3, 7), null);
 	}
 
 	@Test
@@ -268,7 +268,7 @@ public class FFInfoTestCase {
 		parser.readLine("libswresample   1.  1.100 /  1.  1.100");
 		parser.readLine("libpostproc    53.  3.100 / 53.  3.100");
 
-		assertFull(parser, new Version(2, 6, 1), date(2014, 12, 30), null);
+		assertFull(parser, new Version(2, 6, 1), date(2015, 3, 7), null);
 	}
 
 	// ********************************************************

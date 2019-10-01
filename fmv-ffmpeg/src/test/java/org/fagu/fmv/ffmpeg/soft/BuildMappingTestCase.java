@@ -38,8 +38,8 @@ public class BuildMappingTestCase {
 
 	@Test
 	public void testDate() {
-		assertEquals(LocalDate.of(2011, 6, 23), BuildMapping.versionToLocalDate(new Version(0, 0, 0)));
-		assertEquals(date(2011, 6, 23), BuildMapping.versionToDate(new Version(0, 0, 0)));
+		assertEquals(LocalDate.of(2010, 3, 2), BuildMapping.versionToLocalDate(new Version(0, 0, 0)));
+		assertEquals(date(2010, 3, 2), BuildMapping.versionToDate(new Version(0, 0, 0)));
 	}
 
 	// ********************************************
