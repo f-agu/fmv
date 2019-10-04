@@ -73,8 +73,12 @@ public class SoftLogger {
 				}
 
 				String downloadURL = softProvider.getDownloadURL();
-				if(downloadURL != null && ! "".equals(downloadURL.trim())) {
-					logger.accept("    Download " + name + " at " + downloadURL + " and add the path in your system environment PATH");
+				if(StringUtils.isNotBlank(downloadURL)) {
+					logger.accept("    Download at: " + downloadURL);
+				}
+				String logMessageIfNotFound = softProvider.getLogMessageIfNotFound();
+				if(StringUtils.isNotBlank(logMessageIfNotFound)) {
+					logger.accept("    " + logMessageIfNotFound);
 				}
 			}
 		}
@@ -157,10 +161,6 @@ public class SoftLogger {
 
 			formatConsumer.accept(line.toString());
 
-			String downloadURL = softProvider.getDownloadURL();
-			if(StringUtils.isNotBlank(downloadURL)) {
-				formatConsumer.accept("   Download at: " + downloadURL);
-			}
 			String minVersion = softProvider.getMinVersion();
 			if(StringUtils.isNotBlank(minVersion)) {
 				formatConsumer.accept("   Minimum version: " + minVersion);

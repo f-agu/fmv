@@ -106,6 +106,10 @@ public abstract class SoftProvider {
 		return null;
 	}
 
+	public String getLogMessageIfNotFound() {
+		return "Add the path in your system environment PATH";
+	}
+
 	public String getMinVersion() {
 		SoftPolicy sPolicy = getSoftPolicy();
 		return sPolicy != null ? sPolicy.toString() : "";

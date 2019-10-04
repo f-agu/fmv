@@ -13,11 +13,11 @@ import org.fagu.version.Version;
  * @author f.agu
  * @created 16 sept. 2019 17:03:27
  */
-public class BasicSoftFoundFactory implements SoftFoundFactory {
+public class ParentFileSoftFoundFactory implements SoftFoundFactory {
 
 	private final String softName;
 
-	public BasicSoftFoundFactory(String softName) {
+	public ParentFileSoftFoundFactory(String softName) {
 		this.softName = Objects.requireNonNull(softName);
 	}
 

@@ -5,11 +5,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParseException;
 
@@ -23,6 +25,10 @@ public class BinaryVersionInfo {
 	private BinaryVersionInfo() {}
 
 	public static Optional<Map<String, String>> getInfo(File file) {
+		return getInfo(file, null);
+	}
+
+	public static Optional<Map<String, String>> getInfo(File file, Consumer<String> logger) {
 		if( ! SystemUtils.IS_OS_WINDOWS) {
 			return Optional.empty();
 		}
@@ -33,7 +39,11 @@ public class BinaryVersionInfo {
 					.withParameters("-nologo",
 							"-command",
 							"(Get-Item '\"" + file.getAbsoluteFile() + "\"').VersionInfo | format-list")
-					// .logCommandLine(cmdLine -> LOGGER.debug(CommandLineUtils.toLine(cmdLine)))
+					.logCommandLine(cmdLine -> {
+						if(logger != null) {
+							logger.accept(CommandLineUtils.toLine(cmdLine));
+						}
+					})
 					.addOutReadLine(l -> {
 						Matcher matcher = pattern.matcher(l);
 						if(matcher.matches()) {
@@ -47,7 +57,11 @@ public class BinaryVersionInfo {
 	}
 
 	public static Optional<Version> getFileVersion(File file) {
-		return getInfo(file)
+		return getFileVersion(file, null);
+	}
+
+	public static Optional<Version> getFileVersion(File file, Consumer<String> logger) {
+		return getInfo(file, logger)
 				.map(m -> m.get("FileVersion"))
 				.map(v -> {
 					try {

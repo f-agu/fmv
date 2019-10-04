@@ -209,10 +209,10 @@ public class Rectangle {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder(50);
-		sb.append(getClass().getName()).append("[x=").append(x).append(",y=").append(y)
-				.append(",width=").append(width).append(",height=").append(height).append(']');
-		return sb.toString();
+		return new StringBuilder(50)
+				.append(getClass().getName()).append("[x=").append(x).append(",y=").append(y)
+				.append(",width=").append(width).append(",height=").append(height).append(']')
+				.toString();
 	}
 
 	// **************************************************
