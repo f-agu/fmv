@@ -103,7 +103,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 		// On Windows & Eclipse, file.encoding=UTF-8 -> fix encoding
 		// On Windows & DOS, file.encoding=cp1252 -> do nothing
-		if(softInfo != null && Provider.XPDF.equals(softInfo.getProvider()) && SystemUtils.IS_OS_WINDOWS && "UTF-8".equals(System
+		if(hasEncParameter() && softInfo != null && Provider.XPDF.equals(softInfo.getProvider()) && SystemUtils.IS_OS_WINDOWS && "UTF-8".equals(System
 				.getProperty("file.encoding"))) {
 			List<String> newParams = new ArrayList<>(parameters);
 			if( ! parameters.contains("-enc")) {
@@ -155,6 +155,10 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 	protected int[] exitValues() {
 		return new int[] {0, 99};
+	}
+
+	protected boolean hasEncParameter() {
+		return false;
 	}
 
 	// ---------------------------------

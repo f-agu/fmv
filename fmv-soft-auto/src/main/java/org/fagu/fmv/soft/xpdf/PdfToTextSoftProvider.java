@@ -38,4 +38,9 @@ public class PdfToTextSoftProvider extends PdfSoftProvider {
 		super(NAME, softPolicy);
 	}
 
+	@Override
+	protected boolean hasEncParameter() {
+		return true;
+	}
+
 }

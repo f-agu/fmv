@@ -1,7 +1,5 @@
 package org.fagu.fmv.soft.xpdf;
 
-import org.fagu.fmv.soft.find.SoftPolicy;
-
 /*-
  * #%L
  * fmv-soft-auto
@@ -22,25 +20,25 @@ import org.fagu.fmv.soft.find.SoftPolicy;
  * #L%
  */
 
+import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.SoftSearch;
+
 
 /**
  * @author f.agu
  */
-public class PdfDetachSoftProvider extends PdfSoftProvider {
+public class PdfImages {
 
-	public static final String NAME = "pdfdetach";
-
-	public PdfDetachSoftProvider() {
-		super(NAME);
+	private PdfImages() {
+		throw new AssertionError("No instances for you!");
 	}
 
-	public PdfDetachSoftProvider(SoftPolicy softPolicy) {
-		super(NAME, softPolicy);
+	public static Soft search() {
+		return Soft.search(new PdfImagesSoftProvider());
 	}
 
-	@Override
-	protected boolean hasEncParameter() {
-		return true;
+	public static SoftSearch searchWith() {
+		return Soft.with(PdfImagesSoftProvider::new);
 	}
 
 }

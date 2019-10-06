@@ -26,21 +26,21 @@ import org.fagu.fmv.soft.find.SoftPolicy;
 /**
  * @author f.agu
  */
-public class PdfDetachSoftProvider extends PdfSoftProvider {
+public class PdfImagesSoftProvider extends PdfSoftProvider {
 
-	public static final String NAME = "pdfdetach";
+	public static final String NAME = "pdfimages";
 
-	public PdfDetachSoftProvider() {
+	public PdfImagesSoftProvider() {
 		super(NAME);
 	}
 
-	public PdfDetachSoftProvider(SoftPolicy softPolicy) {
+	public PdfImagesSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, softPolicy);
 	}
 
 	@Override
 	protected boolean hasEncParameter() {
-		return true;
+		return false;
 	}
 
 }

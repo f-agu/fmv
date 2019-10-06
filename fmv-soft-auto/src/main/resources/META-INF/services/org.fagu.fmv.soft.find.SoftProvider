@@ -8,6 +8,7 @@ org.fagu.fmv.soft.mplayer.MPlayerSoftProvider
 org.fagu.fmv.soft.vlc.VLCSoftProvider
 org.fagu.fmv.soft.xpdf.PdfDetachSoftProvider
 org.fagu.fmv.soft.xpdf.PdfFontsSoftProvider
+org.fagu.fmv.soft.xpdf.PdfImagesSoftProvider
 org.fagu.fmv.soft.xpdf.PdfInfoSoftProvider
 org.fagu.fmv.soft.xpdf.PdfToHtmlSoftProvider
 org.fagu.fmv.soft.xpdf.PdfToPngSoftProvider
