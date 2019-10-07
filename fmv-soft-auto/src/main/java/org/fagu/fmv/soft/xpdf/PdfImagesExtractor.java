@@ -2,6 +2,7 @@ package org.fagu.fmv.soft.xpdf;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -70,11 +71,38 @@ public class PdfImagesExtractor {
 		return new Builder().build();
 	}
 
+	public Soft getPdfImagesSoft() {
+		return pdfImagesSoft;
+	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public File getExtractFolder() {
+		return extractFolder;
+	}
+
+	public List<File> extract(InputStream inputStream) throws IOException {
+		FileUtils.forceMkdir(extractFolder);
+		SoftExecutor softExecutor = pdfImagesSoft.withParameters(
+				"-",
+				extractFolder.getAbsolutePath() + File.separatorChar + prefix)
+				.input(inputStream);
+		return extract(softExecutor);
+	}
+
 	public List<File> extract(File pdfFile) throws IOException {
 		FileUtils.forceMkdir(extractFolder);
 		SoftExecutor softExecutor = pdfImagesSoft.withParameters(
 				pdfFile.getAbsolutePath(),
 				extractFolder.getAbsolutePath() + File.separatorChar + prefix);
+		return extract(softExecutor);
+	}
+
+	// **************************************************
+
+	private List<File> extract(SoftExecutor softExecutor) throws IOException {
 		if(executorConsumer != null) {
 			executorConsumer.accept(softExecutor);
 		}
@@ -90,8 +118,6 @@ public class PdfImagesExtractor {
 		Collections.sort(list);
 		return list;
 	}
-
-	// **************************************************
 
 	private static File getExtractFolder(File folder) {
 		if(folder != null) {
