@@ -2,7 +2,7 @@
 
 rem set PWD=%~dp0
 rem set PWD=D:\tmp\fmv\fmv\
-set VERSION=0.15.0-SNAPSHOT
+set VERSION=0.16.0-SNAPSHOT
 
 set REPO_URL=https://nexus.oodrive.net/nexus/
 set REPO_LOCAL=%USERPROFILE%\.m2\repository\org\fagu\
