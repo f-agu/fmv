@@ -103,6 +103,13 @@ public class RectangleTestCase {
 	}
 
 	@Test
+	public void testIntersect() {
+		Rectangle r1 = new Rectangle(285, 285, 95, 95);
+		Rectangle r2 = new Rectangle(386, 236, 103, 103);
+		draw("Intersect", r1, r2);
+	}
+
+	@Test
 	@Ignore
 	public void testSample() {
 		Rectangle r1 = new Rectangle(912, 658, 361, 55);
@@ -147,6 +154,7 @@ public class RectangleTestCase {
 		if(rectangles.size() == 2) {
 			Rectangle r1 = rectangles.get(0);
 			Rectangle r2 = rectangles.get(1);
+			assertEquals(r1.intersection(r2), r2.intersection(r1));
 			r1.intersection(r2).ifPresent(r -> drawRectangle(r, graphics, Color.WHITE));
 			r1.union(r2).ifPresent(r -> drawRectangle(r, graphics, Color.YELLOW));
 			boolean glued = r1.isGlued(r2);

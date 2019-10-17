@@ -335,8 +335,8 @@ public class ExecHelper<T extends ExecHelper<?>> {
 
 		// input/out/err
 		if(input != null || out != null || err != null) { // input & whatever
-			ReadLineOutputStream outRL = new ReadLineOutputStream(out, getOutReadLine(defaultReadLine));
-			ReadLineOutputStream errRL = new ReadLineOutputStream(err, getErrReadLine(defaultReadLine));
+			ReadLineOutputStream outRL = new ReadLineOutputStream(out, getOutReadLine(defaultReadLine), charset);
+			ReadLineOutputStream errRL = new ReadLineOutputStream(err, getErrReadLine(defaultReadLine), charset);
 			ExecuteStreamHandler customExecuteStreamHandler = new MyPumpStreamHandler(outRL, errRL, input);
 
 			return FMVExecutor.with(workingFolder)
@@ -355,9 +355,6 @@ public class ExecHelper<T extends ExecHelper<?>> {
 
 	// *******************************************************
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	private T getThis() {
 		return (T)this;

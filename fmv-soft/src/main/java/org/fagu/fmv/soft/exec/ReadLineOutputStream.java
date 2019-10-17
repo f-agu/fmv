@@ -1,5 +1,6 @@
 package org.fagu.fmv.soft.exec;
 
+import java.io.ByteArrayOutputStream;
 /*-
  * #%L
  * fmv-soft
@@ -21,6 +22,7 @@ limitations under the License.
  */
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.output.NullOutputStream;
 
@@ -30,35 +32,33 @@ import org.apache.commons.io.output.NullOutputStream;
  */
 public class ReadLineOutputStream extends OutputStream {
 
-	private final StringBuilder buffer = new StringBuilder();
-
 	private final ReadLine readLine;
 
 	private final OutputStream outputStream;
+
+	private final ByteArrayOutputStream byteArrayOutputStream;
+
+	private final Charset charsets;
 
 	private long count;
 
 	private boolean skipLF = false;
 
-	/**
-	 * @param readLine
-	 */
 	public ReadLineOutputStream(ReadLine readLine) {
-		this(null, readLine);
+		this(null, readLine, null);
 	}
 
-	/**
-	 * @param outputStream
-	 * @param readLine
-	 */
 	public ReadLineOutputStream(OutputStream outputStream, ReadLine readLine) {
+		this(outputStream, readLine, null);
+	}
+
+	public ReadLineOutputStream(OutputStream outputStream, ReadLine readLine, Charset charsets) {
 		this.outputStream = outputStream != null ? outputStream : NullOutputStream.NULL_OUTPUT_STREAM;
 		this.readLine = readLine;
+		this.charsets = charsets != null ? charsets : Charset.defaultCharset();
+		this.byteArrayOutputStream = new ByteArrayOutputStream(200);
 	}
 
-	/**
-	 * @see java.io.OutputStream#write(int)
-	 */
 	@Override
 	public void write(int b) throws IOException {
 		outputStream.write(b);
@@ -76,12 +76,9 @@ public class ReadLineOutputStream extends OutputStream {
 			flushBuffer();
 			return;
 		}
-		buffer.append((char)b);
+		byteArrayOutputStream.write(b);
 	}
 
-	/**
-	 * @see java.io.OutputStream#close()
-	 */
 	@Override
 	public void close() throws IOException {
 		try {
@@ -93,13 +90,11 @@ public class ReadLineOutputStream extends OutputStream {
 
 	// *********************************************
 
-	/**
-	 * 
-	 */
 	private void flushBuffer() {
 		if(count > 0) {
-			readLine.read(buffer.toString());
-			buffer.setLength(0);
+			String s = new String(byteArrayOutputStream.toByteArray(), charsets);
+			readLine.read(s);
+			byteArrayOutputStream.reset();
 			count = 0;
 		}
 	}
