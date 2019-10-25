@@ -40,6 +40,11 @@ public abstract class SoftInfo implements Comparable<SoftInfo> {
 		this.softName = Objects.requireNonNull(softName);
 	}
 
+	@Override
+	public int compareTo(SoftInfo other) {
+		return file.compareTo(other.getFile());
+	}
+
 	// ***************************************
 
 	public abstract String getInfo();

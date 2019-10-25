@@ -35,11 +35,11 @@ public class PlateformFileFilter {
 
 	private PlateformFileFilter() {}
 
-	public static FileFilter getFileFilter(String softName) {
-		return getFileFilter(f -> softName.equalsIgnoreCase(FilenameUtils.getBaseName(f.getName())));
+	public static FileFilter plateformAndBasename(String softName) {
+		return plateform(f -> softName.equalsIgnoreCase(FilenameUtils.getBaseName(f.getName())));
 	}
 
-	public static FileFilter getFileFilter(FileFilter subFileFilter) {
+	public static FileFilter plateform(FileFilter subFileFilter) {
 		if(SystemUtils.IS_OS_WINDOWS) {
 			FileFilter extensionFilter = extensions("exe", "com", "cmd", "bat");
 			return f -> subFileFilter.accept(f) && extensionFilter.accept(f);

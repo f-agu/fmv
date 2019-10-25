@@ -53,7 +53,8 @@ public class VersionSoftInfo extends SoftInfo {
 				}
 				return version == null ? - 1 : 1;
 			}
-			return version.compareTo(other.version);
+			int compare = version.compareTo(other.version);
+			return compare == 0 ? super.compareTo(o) : compare;
 		}
 		throw new IllegalArgumentException("Unable to compare " + VersionSoftInfo.class.getSimpleName() + " with " + o.getClass().getName());
 	}

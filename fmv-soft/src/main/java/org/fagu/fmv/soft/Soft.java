@@ -78,7 +78,7 @@ public class Soft {
 		File file = new File(execFile);
 		if( ! execFile.contains("/") && ! execFile.contains("\\") && ! file.exists()) {
 			// search in ENV PATH
-			Locators locators = new Locators(PlateformFileFilter.getFileFilter(execFile));
+			Locators locators = new Locators(PlateformFileFilter.plateformAndBasename(execFile));
 			Locator locator = locators.byEnvPath();
 			List<File> locatedFiles = locator.locate(null);
 			if(locatedFiles.isEmpty()) {

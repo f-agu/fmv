@@ -86,7 +86,7 @@ public class SoftLocator {
 		this.softName = Objects.requireNonNull(softName);
 		definedLocators = new ArrayList<>();
 		this.sorter = sorter != null ? sorter : new HighestPrecedenceSorter();
-		this.fileFilter = fileFilter != null ? fileFilter : PlateformFileFilter.getFileFilter(softName);
+		this.fileFilter = fileFilter != null ? fileFilter : PlateformFileFilter.plateformAndBasename(softName);
 	}
 
 	public String getSoftPath() {
