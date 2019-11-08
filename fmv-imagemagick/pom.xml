@@ -15,8 +15,15 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.fagu</groupId>
-			<artifactId>fmv-media</artifactId>
+			<artifactId>fmv-image</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.fagu</groupId>
+			<artifactId>fmv-image</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+			<classifier>tests</classifier>
 		</dependency>
 
 		<dependency>

@@ -25,7 +25,7 @@ import java.io.IOException;
 
 import org.fagu.fmv.ffmpeg.FFHelper;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.fagu.fmv.im.ImageMetadatas;
+import org.fagu.fmv.im.IMImageMetadatas;
 import org.fagu.fmv.media.FileType;
 import org.fagu.fmv.media.Metadatas;
 
@@ -43,7 +43,7 @@ public class FileSource implements Comparable<FileSource> {
 
 	private MovieMetadatas videoMetadatas;
 
-	private ImageMetadatas imageMetadatas;
+	private IMImageMetadatas imageMetadatas;
 
 	/**
 	 * @param fileType
@@ -137,10 +137,10 @@ public class FileSource implements Comparable<FileSource> {
 	/**
 	 * @return
 	 */
-	public ImageMetadatas getImageMetadatas() {
+	public IMImageMetadatas getImageMetadatas() {
 		if(imageMetadatas == null && isImage()) {
 			try {
-				imageMetadatas = ImageMetadatas.with(file).extract();
+				imageMetadatas = IMImageMetadatas.with(file).extract();
 			} catch(IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -181,7 +181,7 @@ public class FileSource implements Comparable<FileSource> {
 	/**
 	 * @param imageMetadatas
 	 */
-	void setImageMetadatas(ImageMetadatas imageMetadatas) {
+	void setImageMetadatas(IMImageMetadatas imageMetadatas) {
 		this.imageMetadatas = imageMetadatas;
 	}
 

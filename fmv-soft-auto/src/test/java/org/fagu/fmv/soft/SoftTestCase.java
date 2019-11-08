@@ -3,7 +3,10 @@ package org.fagu.fmv.soft;
 import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.maxVersion;
 
 import java.util.Collections;
+import java.util.NavigableSet;
 
+import org.fagu.fmv.soft.find.FoundReasons;
+import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.gs.GSSoftProvider;
 import org.fagu.version.Version;
@@ -44,7 +47,14 @@ public class SoftTestCase {
 			if(s.isFound()) {
 				System.out.println(prefix + s.getFirstInfo());
 			} else {
-				System.out.println(prefix + " ==== NOT FOUND ====. " + s.getSoftProvider().getDownloadURL());
+				NavigableSet<SoftFound> founds = s.getFounds().getFounds();
+				if(founds.isEmpty() || (founds.size() == 1 && FoundReasons.NOT_FOUND == founds.first().getFoundReason())) {
+					System.out.println(prefix + " ==== NOT FOUND ==== " + s.getSoftProvider().getDownloadURL());
+				} else {
+					for(SoftFound softFound : founds) {
+						System.out.println("    " + softFound);
+					}
+				}
 			}
 		});
 

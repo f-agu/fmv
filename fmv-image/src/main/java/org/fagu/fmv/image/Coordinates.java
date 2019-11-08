@@ -1,4 +1,4 @@
-package org.fagu.fmv.im;
+package org.fagu.fmv.image;
 
 /*
  * #%L

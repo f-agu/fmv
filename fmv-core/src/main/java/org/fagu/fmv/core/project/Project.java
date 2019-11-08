@@ -54,7 +54,7 @@ import org.fagu.fmv.core.exec.Executable;
 import org.fagu.fmv.core.exec.ExecutableFactory;
 import org.fagu.fmv.core.exec.FileCache;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.fagu.fmv.im.ImageMetadatas;
+import org.fagu.fmv.im.IMImageMetadatas;
 import org.fagu.fmv.media.FileType;
 import org.fagu.fmv.media.Metadatas;
 import org.fagu.fmv.utils.PropertyValue;
@@ -520,7 +520,7 @@ public class Project {
 			// metadatas
 			String metadatas = element.element("metadatas").getTextTrim();
 			if(fileSource.isImage()) {
-				fileSource.setImageMetadatas(ImageMetadatas.parseJSON(metadatas));
+				fileSource.setImageMetadatas(IMImageMetadatas.parseJSON(metadatas));
 			} else if(fileSource.isAudioOrVideo()) {
 				fileSource.setVideoMetadatas(MovieMetadatas.parseJSON(metadatas));
 			}

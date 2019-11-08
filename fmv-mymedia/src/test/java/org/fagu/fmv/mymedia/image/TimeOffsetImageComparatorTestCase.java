@@ -32,7 +32,7 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 import org.fagu.fmv.im.Image;
-import org.fagu.fmv.im.ImageMetadatas;
+import org.fagu.fmv.im.IMImageMetadatas;
 import org.fagu.fmv.mymedia.classify.image.TimeOffsetImageComparator;
 import org.fagu.fmv.utils.file.FileFinder;
 import org.fagu.fmv.utils.file.FileFinder.InfosFile;
@@ -109,7 +109,7 @@ public class TimeOffsetImageComparatorTestCase {
 	 */
 	private FileFinder<Image>.InfosFile mockImage(long time, String device, String model, String fileName) {
 		Image image = mock(Image.class);
-		ImageMetadatas imageMetadatas = mock(ImageMetadatas.class);
+		IMImageMetadatas imageMetadatas = mock(IMImageMetadatas.class);
 		File file = mock(File.class);
 		doReturn(time).when(image).getTime();
 		doReturn(imageMetadatas).when(image).getMetadatas();

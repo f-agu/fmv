@@ -14,6 +14,11 @@
 	
 	<dependencies>
 		<dependency>
+			<groupId>org.fagu</groupId>
+			<artifactId>fmv-media</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<type>jar</type>

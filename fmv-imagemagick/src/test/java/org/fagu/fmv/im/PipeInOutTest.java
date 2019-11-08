@@ -30,6 +30,7 @@ import java.security.MessageDigest;
 
 import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.im.soft.Convert;
+import org.fagu.fmv.image.ImageResourceUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.utils.StringUtils;
 import org.junit.Test;

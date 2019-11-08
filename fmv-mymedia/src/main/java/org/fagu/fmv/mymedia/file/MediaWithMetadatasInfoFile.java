@@ -32,7 +32,7 @@ import org.apache.commons.io.IOUtils;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatasFactory;
 import org.fagu.fmv.im.Image;
-import org.fagu.fmv.im.ImageMetadatas;
+import org.fagu.fmv.im.IMImageMetadatas;
 import org.fagu.fmv.im.ImageMetadatasFactory;
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.media.Metadatas;
@@ -67,7 +67,7 @@ public class MediaWithMetadatasInfoFile implements InfoFile {
 	 * @return
 	 */
 	public static MediaWithMetadatasInfoFile image() {
-		return new MediaWithMetadatasInfoFile(new ImageMetadatasFactory(), (file, metadatas) -> new Image(file, (ImageMetadatas)metadatas));
+		return new MediaWithMetadatasInfoFile(new ImageMetadatasFactory(), (file, metadatas) -> new Image(file, (IMImageMetadatas)metadatas));
 	}
 
 	/**

@@ -39,7 +39,7 @@ public class DominantColorTestCase {
 	@Test
 	public void testRealImageRGB_File() throws IOException {
 		Package pkg = DominantColor.class.getPackage();
-		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), ImageMetadatasTestCase.class
+		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), IMImageMetadatasTestCase.class
 				.getSimpleName(), ".jpg");
 		try {
 			Color dominantColor = DominantColor.getInstance().getDominantColor(file, s -> {});

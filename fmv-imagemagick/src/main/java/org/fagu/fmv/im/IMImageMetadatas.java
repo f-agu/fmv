@@ -25,6 +25,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,10 +37,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.NavigableMap;
-import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -53,8 +54,10 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.im.soft.Identify;
-import org.fagu.fmv.media.MetadataProperties;
-import org.fagu.fmv.media.Metadatas;
+import org.fagu.fmv.image.Coordinates;
+import org.fagu.fmv.image.Flash;
+import org.fagu.fmv.image.ImageMetadatas;
+import org.fagu.fmv.image.MapImageMetadatas;
 import org.fagu.fmv.media.MetadatasBuilder;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
@@ -72,19 +75,22 @@ import net.sf.json.JSONObject;
  * identify -ping -format "%[exif:*]%[date:*]%[xap:*]xy=%x %y\ncolorspace=%[colorspace]\nwh=%w %h" 0.jpg
  * </pre>
  * 
+ * <pre>
+ * magick identify -ping -format "==%f==\nformat=%m\n%[exif:*]%[date:*]%[xap:*]%[icc:*]%[*]xy=%x %y\ncolorspace=%[colorspace]\nwh=%w %h\ncdepth=%z\ncompression=%C\ncompressionq=%Q\nresunit=%U\n" "C:\Personnel\Pictures\Phone3\08.jpg"
+ * </pre>
  * 
  * @author f.agu
  */
-public class ImageMetadatas implements Metadatas, MetadataProperties, Serializable {
+public class IMImageMetadatas extends MapImageMetadatas implements Serializable {
 
 	private static final long serialVersionUID = - 3899723797675922936L;
 
-	private static final Hashtable<File, Future<ImageMetadatas>> FUTURE_HASHTABLE = new Hashtable<>();
+	private static final Hashtable<File, Future<IMImageMetadatas>> FUTURE_HASHTABLE = new Hashtable<>();
 
 	// --------------------------------------------------------
 
 	public abstract static class ImageMetadatasSourcesBuilder<B extends ImageMetadatasSourcesBuilder<?, T>, T>
-			implements MetadatasBuilder<ImageMetadatas, B> {
+			implements MetadatasBuilder<IMImageMetadatas, B> {
 
 		final Sources<T> sources;
 
@@ -117,8 +123,8 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		}
 
 		@Override
-		public ImageMetadatas extract() throws IOException {
-			Map<T, ImageMetadatas> extract = ImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
+		public IMImageMetadatas extract() throws IOException {
+			Map<T, IMImageMetadatas> extract = IMImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
 			return extract.values().iterator().next();
 		}
 
@@ -149,8 +155,8 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 			super(new FilesSources(new ArrayList<>(sourceFiles))); // defensive copy
 		}
 
-		public Map<File, ImageMetadatas> extractAll() throws IOException {
-			return ImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
+		public Map<File, IMImageMetadatas> extractAll() throws IOException {
+			return IMImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
 		}
 
 	}
@@ -167,81 +173,63 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 	// --------------------------------------------------------
 
-	private final long createTime;
-
-	private final NavigableMap<String, String> metadatas;
-
-	protected ImageMetadatas(TreeMap<String, String> metadatas) {
-		this.metadatas = Collections.unmodifiableNavigableMap(new TreeMap<>(metadatas));
-		createTime = System.currentTimeMillis();
+	protected IMImageMetadatas(TreeMap<String, String> metadatas) {
+		super(metadatas);
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getFormat()
+	 */
 	@Override
-	public NavigableSet<String> getNames() {
-		return metadatas.navigableKeySet();
-	}
-
-	@Override
-	public Object get(String propertyName) {
-		return metadatas.get(propertyName);
-	}
-
-	public String getFirst(String... propertyNames) {
-		String value;
-		for(String propName : propertyNames) {
-			value = metadatas.get(propName);
-			if(value != null) {
-				return value;
-			}
-		}
-		return null;
-	}
-
-	public NavigableMap<String, String> getMetadatas() {
-		return metadatas;
-	}
-
 	public String getFormat() {
 		return metadatas.get("format");
 	}
 
-	public long getCreateTime() {
-		return createTime;
-	}
-
-	public Date getDate() {
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getDate()
+	 */
+	@Override
+	public OffsetDateTime getDate() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
 
-		Date date = null;
 		// exif
-		try {
-			date = dateFormat.parse(metadatas.get("exif:datetimeoriginal"));
-		} catch(Exception ignored) { // ignore
+		OffsetDateTime date = Stream.of("exif:datetime", "exif:datetimeoriginal")
+				.map(prop -> {
+					try {
+						Date parse = dateFormat.parse(metadatas.get(prop));
+						Instant instant = parse.toInstant();
+						ZoneOffset offset = OffsetDateTime.ofInstant(instant, ZoneId.systemDefault()).getOffset();
+						return instant.atOffset(offset);
+					} catch(Exception ignored) { // ignore
+						return null;
+					}
+				})
+				.filter(Objects::nonNull)
+				.findFirst()
+				.orElse(null);
+		if(date != null) {
+			return date;
 		}
-
 		// psd
-		if(date == null) {
-			try {
-				String line = metadatas.get("xap:createdate");
-				int lastIndex = line.lastIndexOf(':');
-				String xapDate = line.substring(0, lastIndex) + line.substring(lastIndex + 1, line.length());
-				return dateFormat.parse(xapDate);
-			} catch(Exception ignored) { // ignore
-			}
+		try {
+			String line = metadatas.get("xap:createdate");
+			int lastIndex = line.lastIndexOf(':');
+			String xapDate = line.substring(0, lastIndex) + line.substring(lastIndex + 1, line.length());
+			Date parse = dateFormat.parse(xapDate);
+			return parse.toInstant().atOffset(OffsetDateTime.now().getOffset());
+		} catch(Exception ignored) { // ignore
 		}
 
 		// other
 		if(date == null) {
-			SimpleDateFormat iso8601DateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.ENGLISH);
-
-			Date dateCreate = null;
-			Date dateModify = null;
+			OffsetDateTime dateCreate = null;
+			OffsetDateTime dateModify = null;
 			try {
-				dateCreate = iso8601DateFormat.parse(metadatas.get("date:create"));
+				dateCreate = OffsetDateTime.parse(metadatas.get("date:create"));
 			} catch(Exception ignored) {// ignore
 			}
 			try {
-				dateModify = iso8601DateFormat.parse(metadatas.get("date:modify"));
+				dateModify = OffsetDateTime.parse(metadatas.get("date:modify"));
 			} catch(Exception ignored) {// ignore
 			}
 
@@ -255,12 +243,13 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 				date = dateModify;
 			}
 		}
-		// if(Math.abs(createTime - date.getTime()) < 4000) { // 4s
-		// return null;
-		// }
 		return date;
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getResolution()
+	 */
+	@Override
 	public Size getResolution() {
 		try {
 			String resolution = metadatas.get("xy");
@@ -278,6 +267,10 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getDimension()
+	 */
+	@Override
 	public Size getDimension() {
 		try {
 			String dimensions = metadatas.get("wh");
@@ -296,94 +289,94 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getColorSpace()
+	 */
+	@Override
 	public String getColorSpace() {
 		return metadatas.get("colorspace");
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getICCProfile()
+	 */
+	@Override
 	public Optional<String> getICCProfile() {
 		return Optional.ofNullable(metadatas.get("icc:description"));
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getColorDepth()
+	 */
+	@Override
 	public int getColorDepth() {
 		return NumberUtils.toInt(metadatas.get("cdepth"));
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getCompressionQuality()
+	 */
+	@Override
 	public int getCompressionQuality() {
 		return NumberUtils.toInt(metadatas.get("compressionq"));
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getCompression()
+	 */
+	@Override
 	public String getCompression() {
 		return metadatas.get("compression");
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getResolutionUnit()
+	 */
+	@Override
 	public String getResolutionUnit() {
 		return metadatas.get("resunit");
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getDevice()
+	 */
+	@Override
 	public String getDevice() {
 		return metadatas.get("exif:make");
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getDeviceModel()
+	 */
+	@Override
 	public String getDeviceModel() {
 		return metadatas.get("exif:model");
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getSoftware()
+	 */
+	@Override
 	public String getSoftware() {
 		return metadatas.get("exif:software");
 	}
 
+	@Override
 	public Integer getISOSpeed() {
-		try {
-			return Integer.parseInt(metadatas.get("exif:isospeedratings").split(",")[0]);
-		} catch(Exception ignored) { // ignore
-		}
-		return null;
+		return getISOSpeed("exif:isospeedratings");
 	}
 
+	@Override
 	public Float getExposureTime() {
-		try {
-			String etime = metadatas.get("exif:exposuretime");
-			if(etime.contains("/")) {
-				String[] exposure = etime.split("/");
-				return Float.valueOf(Float.parseFloat(exposure[0]) / Float.parseFloat(exposure[1]));
-			}
-			return Float.parseFloat(etime);
-		} catch(Exception ignored) {
-			// ignore
-		}
-		return null;
+		return getExposureTime("exif:exposuretime");
 	}
 
-	public String getExposureTimeFormat() {
-		Float exposure = getExposureTime();
-		if(exposure == null) {
-			return StringUtils.EMPTY;
-		}
-		float floatValue = exposure.floatValue();
-		if(floatValue < 1) {
-			return "1/" + Math.round(1F / floatValue);
-		}
-		return Float.toString(floatValue);
-	}
-
+	@Override
 	public Float getAperture() {
-		try {
-			String[] fNumber = metadatas.get("exif:fnumber").split("/");
-			return Float.valueOf(Float.parseFloat(fNumber[0]) / Float.parseFloat(fNumber[1]));
-		} catch(Exception ignored) {
-			// ignore
-		}
-		return null;
+		return getAperture("exif:fnumber");
 	}
 
-	public String getApertureFormat() {
-		Float aperture = getAperture();
-		if(aperture == null) {
-			return StringUtils.EMPTY;
-		}
-		return "F/" + aperture.floatValue();
-	}
-
+	@Override
 	public Float getFocalLength() {
 		try {
 			String[] focalLength = metadatas.get("exif:focallength").split("/");
@@ -394,15 +387,19 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
+	@Override
 	public Flash getFlash() {
 		try {
 			return Flash.valueOf(Integer.parseInt(metadatas.get("exif:flash")));
-		} catch(Exception ignored) {
-			// ignore
+		} catch(Exception ignored) { // ignore
 		}
 		return null;
 	}
 
+	/**
+	 * @see org.fagu.fmv.image.ImageMetadatas#getCoordinates()
+	 */
+	@Override
 	public Coordinates getCoordinates() {
 		try {
 			Double latitude = parseCoordinate(metadatas.get("exif:gpslatitude"));
@@ -424,22 +421,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		return null;
 	}
 
-	@Override
-	public String toJSON() {
-		return JSONObject.fromObject(metadatas).toString();
-	}
-
-	@Override
-	public Map<String, Object> getData() {
-		return Collections.unmodifiableMap(metadatas);
-	}
-
-	@Override
-	public String toString() {
-		return metadatas.toString();
-	}
-
-	public static ImageMetadatas parseJSON(String json) {
+	public static IMImageMetadatas parseJSON(String json) {
 		TreeMap<String, String> params = new TreeMap<>();
 		JSONObject jsonObject = JSONObject.fromObject(json);
 		Iterator<?> keys = jsonObject.keys();
@@ -447,15 +429,15 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 			String key = (String)keys.next();
 			params.put(key, jsonObject.getString(key));
 		}
-		return new ImageMetadatas(params);
+		return new IMImageMetadatas(params);
 	}
 
 	public static ImageMetadatas extract(InputStream inputStream) throws IOException {
 		return with(inputStream).extract();
 	}
 
-	public static synchronized ImageMetadatas extractSingleton(final File sourceFile) {
-		Future<ImageMetadatas> future = FUTURE_HASHTABLE.get(sourceFile);
+	public static synchronized IMImageMetadatas extractSingleton(final File sourceFile) {
+		Future<IMImageMetadatas> future = FUTURE_HASHTABLE.get(sourceFile);
 		if(future != null) {
 			try {
 				return future.get();
@@ -493,7 +475,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 
 	// *****************************************
 
-	private static <T> Map<T, ImageMetadatas> extract(
+	private static <T> Map<T, IMImageMetadatas> extract(
 			Soft identifySoft,
 			Sources<T> sources,
 			Consumer<CommandLine> logger,
@@ -536,7 +518,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 		softExecutor.execute();
 
 		// parse output
-		Map<T, ImageMetadatas> outMap = new LinkedHashMap<>();
+		Map<T, IMImageMetadatas> outMap = new LinkedHashMap<>();
 		Iterator<Source<T>> sourceIterator = sources.iterator();
 		TreeMap<String, String> params = null;
 		Source<T> currentSource = null;
@@ -546,7 +528,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 			}
 			if((line.startsWith("==") || line.startsWith(boundary + "==")) && line.endsWith("==")) {
 				if(currentSource != null) {
-					outMap.put(currentSource.value, new ImageMetadatas(params));
+					outMap.put(currentSource.value, new IMImageMetadatas(params));
 				}
 				currentSource = sourceIterator.next();
 				if(StringUtils.substringBetween(line, "==").equals(currentSource.name)) {
@@ -569,7 +551,7 @@ public class ImageMetadatas implements Metadatas, MetadataProperties, Serializab
 			}
 		}
 		if(currentSource != null) {
-			outMap.put(currentSource.value, new ImageMetadatas(params));
+			outMap.put(currentSource.value, new IMImageMetadatas(params));
 		}
 		return outMap;
 	}

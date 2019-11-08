@@ -1,4 +1,4 @@
-package org.fagu.fmv.im;
+package org.fagu.fmv.image;
 
 /*-
  * #%L
@@ -29,28 +29,33 @@ import org.fagu.fmv.utils.Resources;
 /**
  * @author f.agu
  */
-class ImageResourceUtils {
+public class ImageResourceUtils {
+
+	public static final String _104 = "104.jpg";
+
+	public static final String _203 = "203.jpg";
+
+	public static final String BAD_ASS_TOTTOO_FAIL = "bad-ass-tattoo-fail.jpg";
+
+	public static final String MULTIPAGE_TIFF = "multipage_tiff.tif";
+
+	public static final String NO_IMAGE = "no-image";
+
+	public static final String PLAN4_550MPIXELS = "plan4-550Mpixels.tif";
+
+	public static final String RABBITMQ = "rabbitmq.png";
+
+	public static final String WEI_ASS = "wei-ass.jpg";
 
 	private ImageResourceUtils() {}
 
-	/**
-	 * @param filename
-	 * @return
-	 * @throws IOException
-	 */
-	static File extractFile(String filename) throws IOException {
+	public static File extractFile(String filename) throws IOException {
 		return extractFile(filename, FilenameUtils.getExtension(filename));
 	}
 
-	/**
-	 * @param filename
-	 * @param extension
-	 * @return
-	 * @throws IOException
-	 */
-	static File extractFile(String filename, String extension) throws IOException {
+	public static File extractFile(String filename, String extension) throws IOException {
 		Package pkg = ImageMetadatas.class.getPackage();
-		return Resources.extractToTempFile(Resources.getResourcePath(pkg, filename), ImageMetadatasTestCase.class
+		return Resources.extractToTempFile(Resources.getResourcePath(pkg, filename), AbstractImageMetadatasTest.class
 				.getSimpleName(), "." + extension);
 	}
 

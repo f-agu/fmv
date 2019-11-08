@@ -18,6 +18,7 @@ if "%VERSION:~-8%" == "SNAPSHOT" (
 call:artefact fmv-dependencies
 call:artefact fmv-ffmpeg
 call:artefact fmv-image
+call:artefact fmv-imageexiftool
 call:artefact fmv-imagemagick
 call:artefact fmv-media
 call:artefact fmv-parent

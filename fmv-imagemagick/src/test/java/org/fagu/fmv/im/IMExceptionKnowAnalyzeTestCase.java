@@ -70,7 +70,7 @@ public class IMExceptionKnowAnalyzeTestCase {
 			folder.mkdirs();
 			File file = resource != null ? extractResource(folder, resource) : folder;
 			try {
-				ImageMetadatas extract = ImageMetadatas.with(file).extract();
+				IMImageMetadatas extract = IMImageMetadatas.with(file).extract();
 				fail(extract.toJSON());
 			} catch(FMVExecuteException e) {
 				if(e.isKnown()) {
