@@ -1,14 +1,13 @@
 package org.fagu.fmv.im;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 import org.fagu.fmv.image.ImageMetadatas;
 import org.fagu.fmv.image.ImageResourceUtils;
@@ -38,22 +37,6 @@ public class IMImageMetadatasTestCase extends TestAllImageMetadatasTest {
 			}
 			if(file2 != null) {
 				file2.delete();
-			}
-		}
-	}
-
-	@Test
-	public void testFailed() throws Exception {
-		File file = ImageResourceUtils.extractFile("no-image", "jpg");
-		try {
-			IMImageMetadatas.with(file).extract();
-			fail();
-		} catch(IOException e) {
-			String message = e.getMessage();
-			assertTrue(message.contains("Not a JPEG file") || message.contains("insufficient image data"));
-		} finally {
-			if(file != null) {
-				file.delete();
 			}
 		}
 	}
@@ -104,6 +87,24 @@ public class IMImageMetadatasTestCase extends TestAllImageMetadatasTest {
 	@Override
 	protected ImageMetadatas with(InputStream inputStream) throws IOException {
 		return IMImageMetadatas.with(inputStream).extract();
+	}
+
+	private static final List<String> MULTIPAGE_TIFF_EXCLUDE_PROPERTIES = Arrays.asList("Software");
+
+	private static final List<String> PLAN4_550MPIXELS_EXCLUDE_PROPERTIES = Arrays.asList("Software");
+
+	@Override
+	protected BiPredicate<String, String> assertFilter() {
+		return (fileName, property) -> {
+			if(ImageResourceUtils.MULTIPAGE_TIFF.equals(fileName) && MULTIPAGE_TIFF_EXCLUDE_PROPERTIES.contains(property)) {
+				return false;
+			}
+			if(ImageResourceUtils.PLAN4_550MPIXELS.equals(fileName) && PLAN4_550MPIXELS_EXCLUDE_PROPERTIES.contains(property)) {
+				return false;
+			}
+
+			return true;
+		};
 	}
 
 }

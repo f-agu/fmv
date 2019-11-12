@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.io.IOException;
 
 
 /**
@@ -13,18 +12,9 @@ import java.io.IOException;
  */
 public class Blur {
 
-	/**
-	 * 
-	 */
 	private Blur() {}
 
-	/**
-	 * @param src
-	 * @param distor
-	 * @return
-	 * @throws IOException
-	 */
-	public static BufferedImage blur(BufferedImage src, float distor) throws IOException {
+	public static BufferedImage blur(BufferedImage src, float distor) {
 		float[] matrix = {
 				distor, distor, distor,
 				distor, distor, distor,

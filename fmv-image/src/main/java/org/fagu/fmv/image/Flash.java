@@ -35,10 +35,10 @@ import java.util.StringJoiner;
 public class Flash {
 
 	public enum ReturnedLight {
-		NO_STROBE_RETURN_DETECTION_FUNCTION(null),
-		RESERVED(null),
-		STROBE_RETURN_LIGHT_NOT_DETECTED("Return not detected"),
-		STROBE_RETURN_LIGHT_DETECTED("Return detected");
+		NO_STROBE_RETURN_DETECTION_FUNCTION(null), // 00b
+		RESERVED(null), // 01b
+		STROBE_RETURN_LIGHT_NOT_DETECTED("Return not detected"), // 10b
+		STROBE_RETURN_LIGHT_DETECTED("Return detected");// 11b
 
 		private final String text;
 

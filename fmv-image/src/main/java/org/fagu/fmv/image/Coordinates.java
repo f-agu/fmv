@@ -52,40 +52,22 @@ public class Coordinates {
 		this.longitude = longitude;
 	}
 
-	/**
-	 * @return
-	 */
 	public double getLatitude() {
 		return latitude;
 	}
 
-	/**
-	 * @return
-	 */
 	public double getLongitude() {
 		return longitude;
 	}
 
-	/**
-	 * @param maximumFractionDigitsSeconds
-	 * @return
-	 */
 	public String getLatitudeDMS(int maximumFractionDigitsSeconds) {
 		return toDMS(latitude, maximumFractionDigitsSeconds, 'S', 'N');
 	}
 
-	/**
-	 * @param maximumFractionDigitsSeconds
-	 * @return
-	 */
 	public String getLongitudeDMS(int maximumFractionDigitsSeconds) {
 		return toDMS(longitude, maximumFractionDigitsSeconds, 'W', 'E');
 	}
 
-	/**
-	 * @param to
-	 * @return
-	 */
 	public float distance(Coordinates to) {
 		// Haversine Formula (from R.W. Sinnott, "Virtues of the Haversine", Sky
 		// and Telescope, vol. 68, no. 2, 1984, p.
@@ -112,9 +94,6 @@ public class Coordinates {
 		return (float)(km * 1000F);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return getLatitudeDMS(3) + ',' + getLongitudeDMS(3);
@@ -122,16 +101,8 @@ public class Coordinates {
 
 	// **********************************
 
-	/**
-	 * @param coord
-	 * @param maxFraction
-	 * @param negative
-	 * @param positive
-	 * @return
-	 */
 	private String toDMS(double inCoord, int maxFraction, char negative, char positive) {
 		double coord = inCoord;
-		String degrees, minutes, seconds;
 
 		// gets the modulus the coordinate divided by one (MOD1).
 		// in other words gets all the numbers after the decimal point.
@@ -145,7 +116,7 @@ public class Coordinates {
 		// set degrees to the value of intPart
 		// e.g. degrees = "87"
 
-		degrees = Integer.toString(Math.abs((int)coord));
+		String degrees = Integer.toString(Math.abs((int)coord));
 
 		// next times the MOD1 of degrees by 60 so we can find the integer part
 		// for minutes.
@@ -161,7 +132,7 @@ public class Coordinates {
 
 		// set minutes to the value of intPart.
 		// e.g. minutes = "43"
-		minutes = Integer.toString(Math.abs((int)coord));
+		String minutes = Integer.toString(Math.abs((int)coord));
 
 		// do the same again for minutes
 		// e.g. coord = 0.68336 * 60 == 40.0016
@@ -176,7 +147,7 @@ public class Coordinates {
 		DecimalFormatSymbols decimalFormatSymbols = decimalFormat.getDecimalFormatSymbols();
 		decimalFormatSymbols.setDecimalSeparator('.');
 		decimalFormat.setDecimalFormatSymbols(decimalFormatSymbols);
-		seconds = decimalFormat.format(Math.abs(coord));
+		String seconds = decimalFormat.format(Math.abs(coord));
 
 		// I used this format for android but you can change it
 		// to return in whatever format you like

@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.Optional;
-import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,17 +39,17 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 		String value = getFirst(propertyName);
 		try {
 			return OptionalInt.of(Integer.parseInt(value));
-		} catch(NumberFormatException e) {
+		} catch(Exception e) {
 			return OptionalInt.empty();
 		}
 	}
 
-	default OptionalDouble getDouble(String propertyName) {
+	default Optional<Double> getDouble(String propertyName) {
 		String value = getFirst(propertyName);
 		try {
-			return OptionalDouble.of(Double.parseDouble(value));
-		} catch(NumberFormatException e) {
-			return OptionalDouble.empty();
+			return Optional.of(Double.parseDouble(value));
+		} catch(Exception e) {
+			return Optional.empty();
 		}
 	}
 
@@ -91,6 +90,8 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 		}
 		return null;
 	}
+
+	Optional<String> getLensModel();
 
 	Float getExposureTime();
 
@@ -191,19 +192,37 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 
 	public static class LTude {
 
-		private int degrees;
+		private final int degrees;
 
-		private int minutes;
+		private final int minutes;
 
-		private float secondes;
+		private final float secondes;
 
-		private String ref;
+		private final double value;
+
+		private final String ref;
+
+		public LTude(double value, String ref) {
+			this.degrees = 0;
+			this.minutes = 0;
+			this.secondes = 0;
+			this.value = value;
+			this.ref = ref;
+		}
 
 		public LTude(int degrees, int minutes, float secondes, String ref) {
 			this.degrees = degrees;
 			this.minutes = minutes;
 			this.secondes = secondes;
+			this.value = toDouble(degrees, minutes, secondes);
 			this.ref = ref;
+		}
+
+		public static LTude of(Double latitude, String ref) {
+			if(latitude == null || ref == null) {
+				return null;
+			}
+			return new LTude(latitude, ref);
 		}
 
 		public int getDegrees() {
@@ -222,7 +241,31 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 			return ref;
 		}
 
+		public double getValue() {
+			return value;
+		}
+
+		public boolean isOver() {
+			return value > 90D || value < - 90D;
+		}
+
 		public double toDouble() {
+			if("S".equalsIgnoreCase(ref) || "W".equalsIgnoreCase(ref)) {
+				return - value;
+			}
+			return value;
+		}
+
+		public static Coordinates toCoordinates(LTude latitude, LTude longitude) {
+			if(latitude != null && longitude != null && ! (latitude.isOver() || longitude.isOver())) {
+				return new Coordinates(latitude.toDouble(), longitude.toDouble());
+			}
+			return null;
+		}
+
+		// ***********************
+
+		private static double toDouble(int degrees, int minutes, float secondes) {
 			double value = degrees;
 			value += minutes / 60D;
 			value += secondes / 3600D;

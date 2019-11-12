@@ -177,17 +177,11 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 		super(metadatas);
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getFormat()
-	 */
 	@Override
 	public String getFormat() {
 		return metadatas.get("format");
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getDate()
-	 */
 	@Override
 	public OffsetDateTime getDate() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
@@ -221,34 +215,29 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 		}
 
 		// other
-		if(date == null) {
-			OffsetDateTime dateCreate = null;
-			OffsetDateTime dateModify = null;
-			try {
-				dateCreate = OffsetDateTime.parse(metadatas.get("date:create"));
-			} catch(Exception ignored) {// ignore
-			}
-			try {
-				dateModify = OffsetDateTime.parse(metadatas.get("date:modify"));
-			} catch(Exception ignored) {// ignore
-			}
+		OffsetDateTime dateCreate = null;
+		OffsetDateTime dateModify = null;
+		try {
+			dateCreate = OffsetDateTime.parse(metadatas.get("date:create"));
+		} catch(Exception ignored) {// ignore
+		}
+		try {
+			dateModify = OffsetDateTime.parse(metadatas.get("date:modify"));
+		} catch(Exception ignored) {// ignore
+		}
 
-			// work around bug ImageMagick
-			if(dateCreate != null && dateModify != null) {
-				int compare = dateCreate.compareTo(dateModify);
-				date = compare < 0 ? dateCreate : dateModify;
-			} else if(dateCreate != null) {
-				date = dateCreate;
-			} else if(dateModify != null) {
-				date = dateModify;
-			}
+		// work around bug ImageMagick
+		if(dateCreate != null && dateModify != null) {
+			int compare = dateCreate.compareTo(dateModify);
+			date = compare < 0 ? dateCreate : dateModify;
+		} else if(dateCreate != null) {
+			date = dateCreate;
+		} else if(dateModify != null) {
+			date = dateModify;
 		}
 		return date;
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getResolution()
-	 */
 	@Override
 	public Size getResolution() {
 		try {
@@ -267,9 +256,6 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 		return null;
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getDimension()
-	 */
 	@Override
 	public Size getDimension() {
 		try {
@@ -289,73 +275,46 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 		return null;
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getColorSpace()
-	 */
 	@Override
 	public String getColorSpace() {
 		return metadatas.get("colorspace");
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getICCProfile()
-	 */
 	@Override
 	public Optional<String> getICCProfile() {
 		return Optional.ofNullable(metadatas.get("icc:description"));
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getColorDepth()
-	 */
 	@Override
 	public int getColorDepth() {
 		return NumberUtils.toInt(metadatas.get("cdepth"));
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getCompressionQuality()
-	 */
 	@Override
 	public int getCompressionQuality() {
 		return NumberUtils.toInt(metadatas.get("compressionq"));
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getCompression()
-	 */
 	@Override
 	public String getCompression() {
 		return metadatas.get("compression");
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getResolutionUnit()
-	 */
 	@Override
 	public String getResolutionUnit() {
 		return metadatas.get("resunit");
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getDevice()
-	 */
 	@Override
 	public String getDevice() {
 		return metadatas.get("exif:make");
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getDeviceModel()
-	 */
 	@Override
 	public String getDeviceModel() {
 		return metadatas.get("exif:model");
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getSoftware()
-	 */
 	@Override
 	public String getSoftware() {
 		return metadatas.get("exif:software");
@@ -369,6 +328,11 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 	@Override
 	public Float getExposureTime() {
 		return getExposureTime("exif:exposuretime");
+	}
+
+	@Override
+	public Optional<String> getLensModel() {
+		return Optional.empty();
 	}
 
 	@Override
@@ -396,25 +360,12 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 		return null;
 	}
 
-	/**
-	 * @see org.fagu.fmv.image.ImageMetadatas#getCoordinates()
-	 */
 	@Override
 	public Coordinates getCoordinates() {
 		try {
-			Double latitude = parseCoordinate(metadatas.get("exif:gpslatitude"));
-			String latitudeRef = metadatas.get("exif:gpslatituderef");
-			if(latitude != null && ! "N".equalsIgnoreCase(latitudeRef)) {
-				latitude = - latitude;
-			}
-			Double longitude = parseCoordinate(metadatas.get("exif:gpslongitude"));
-			String longitudeRef = metadatas.get("exif:gpslongituderef");
-			if(longitude != null && ! "E".equalsIgnoreCase(longitudeRef)) {
-				longitude = - longitude;
-			}
-			if(latitude != null && longitude != null && ! (latitude > 90 || latitude < - 90 || longitude > 90 || longitude < - 90)) {
-				return new Coordinates(latitude, longitude);
-			}
+			LTude latitude = LTude.of(parseCoordinate(metadatas.get("exif:gpslatitude")), metadatas.get("exif:gpslatituderef"));
+			LTude longitude = LTude.of(parseCoordinate(metadatas.get("exif:gpslongitude")), metadatas.get("exif:gpslongituderef"));
+			return LTude.toCoordinates(latitude, longitude);
 		} catch(Exception ignored) {
 			// ignore
 		}

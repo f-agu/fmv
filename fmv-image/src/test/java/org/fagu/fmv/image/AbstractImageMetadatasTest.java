@@ -69,6 +69,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * @param metadatas
 	 */
 	protected void assertMetadatas_203(ImageMetadatas metadatas) {
+		// display(metadatas);
 		final String fileName = ImageResourceUtils._203;
 		mdAssertEquals(fileName, "Aperture", Float.valueOf(2.8F), metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "F/2.8", metadatas.getApertureFormat());
@@ -83,7 +84,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "Dimension", Size.valueOf(4752, 3168), metadatas.getDimension());
 		mdAssertEquals(fileName, "ExposureTime", Float.valueOf(0.02F), metadatas.getExposureTime());
 		mdAssertEquals(fileName, "ExposureTimeFormat", "1/50", metadatas.getExposureTimeFormat());
-		mdAssertEquals(fileName, "Flash", "Flash(16) Off, Did not fire", metadatas.getFlash().toString());
+		mdAssertEquals(fileName, "Flash", "Flash(16) Off, Did not fire", String.valueOf(metadatas.getFlash()));
 		mdAssertEquals(fileName, "FocalLength", Float.valueOf(50F), metadatas.getFocalLength());
 		mdAssertEquals(fileName, "Format", "JPEG", metadatas.getFormat());
 		mdAssertNull(fileName, "ISOSpeed", metadatas.getISOSpeed());
@@ -97,6 +98,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * @param metadatas
 	 */
 	protected void assertMetadatas_104(ImageMetadatas metadatas) {
+		// display(metadatas);
 		final String fileName = ImageResourceUtils._104;
 		mdAssertEquals(fileName, "Aperture", Float.valueOf(2F), metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "F/2.0", metadatas.getApertureFormat());
@@ -104,14 +106,14 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "ColorSpace", "sRGB", metadatas.getColorSpace());
 		mdAssertEquals(fileName, "Compression", "JPEG", metadatas.getCompression());
 		mdAssertEquals(fileName, "CompressionQuality", 65, metadatas.getCompressionQuality());
-		mdAssertEquals(fileName, "Coordinates", "45�55'20.35\" N,6�52'7.11\" E", metadatas.getCoordinates().toString());
+		mdAssertEquals(fileName, "Coordinates", "45�55'20.35\" N,6�52'7.11\" E", String.valueOf(metadatas.getCoordinates()));
 		mdAssertEquals(fileName, "Date", "2019-08-14T10:20:58+02:00", metadatas.getDate().toString());
 		mdAssertEquals(fileName, "Device", "LGE", metadatas.getDevice());
 		mdAssertEquals(fileName, "DeviceModel", "Nexus 5X", metadatas.getDeviceModel());
 		mdAssertEquals(fileName, "Dimension", Size.valueOf(4032, 3024), metadatas.getDimension());
 		mdAssertEquals(fileName, "ExposureTime", Float.valueOf(0.001046721F), metadatas.getExposureTime());
 		mdAssertEquals(fileName, "ExposureTimeFormat", "1/955", metadatas.getExposureTimeFormat());
-		mdAssertEquals(fileName, "Flash", "Flash(0) No Flash", metadatas.getFlash().toString());
+		mdAssertEquals(fileName, "Flash", "Flash(0) No Flash", String.valueOf(metadatas.getFlash()));
 		mdAssertEquals(fileName, "FocalLength", Float.valueOf(4.67F), metadatas.getFocalLength());
 		mdAssertEquals(fileName, "Format", "JPEG", metadatas.getFormat());
 		mdAssertNull(fileName, "ISOSpeed", metadatas.getISOSpeed());
@@ -125,6 +127,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * @param metadatas assertMetadatas_104
 	 */
 	protected void assertMetadatas_BadAssTottooFail(ImageMetadatas metadatas) {
+		// display(metadatas);
 		final String fileName = ImageResourceUtils.BAD_ASS_TOTTOO_FAIL;
 		// System.out.println("#####");
 		// System.out.println(metadatas.get("exif:datetime"));
@@ -161,8 +164,8 @@ public abstract class AbstractImageMetadatasTest {
 	 * @param metadatas
 	 */
 	protected void assertMetadatas_WeiAss(ImageMetadatas metadatas) {
+		// display(metadatas);
 		final String fileName = ImageResourceUtils.WEI_ASS;
-		display(metadatas);
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "", metadatas.getApertureFormat());
 		mdAssertEquals(fileName, "ColorDepth", 8, metadatas.getColorDepth());
@@ -170,7 +173,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "Compression", "JPEG", metadatas.getCompression());
 		mdAssertEquals(fileName, "CompressionQuality", 74, metadatas.getCompressionQuality());
 		mdAssertNull(fileName, "Coordinates", metadatas.getCoordinates());
-		mdAssertNotNull(fileName, "Date", metadatas.getDate());
+		mdAssertNotNull(fileName, "Date", metadatas.getDate()); // no date defined in metadatas
 		mdAssertNull(fileName, "Device", metadatas.getDevice());
 		mdAssertNull(fileName, "DeviceModel", metadatas.getDeviceModel());
 		mdAssertEquals(fileName, "Dimension", Size.valueOf(1024, 768), metadatas.getDimension());
@@ -194,6 +197,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * @param metadatas
 	 */
 	protected void assertMetadatas_Rabbitmq(ImageMetadatas metadatas) {
+		// display(metadatas);
 		final String fileName = ImageResourceUtils.RABBITMQ;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "", metadatas.getApertureFormat());
@@ -202,8 +206,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "Compression", "Zip", metadatas.getCompression());
 		mdAssertEquals(fileName, "CompressionQuality", 92, metadatas.getCompressionQuality());
 		mdAssertNull(fileName, "Coordinates", metadatas.getCoordinates());
-		mdAssertNotNull(fileName, "Date", metadatas.getDate());
-		// mdAssertEquals(fileName, "Date", "2019-11-08T10:33:49Z", metadatas.getDate().toString());
+		mdAssertNotNull(fileName, "Date", metadatas.getDate()); // no date defined in metadatas
 		mdAssertNull(fileName, "Device", metadatas.getDevice());
 		mdAssertNull(fileName, "DeviceModel", metadatas.getDeviceModel());
 		mdAssertEquals(fileName, "Dimension", Size.valueOf(2362, 2500), metadatas.getDimension());
@@ -234,6 +237,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * @param metadatas
 	 */
 	protected void assertMetadatas_Plan4_550Mpixels(ImageMetadatas metadatas) {
+		// display(metadatas);
 		final String fileName = ImageResourceUtils.PLAN4_550MPIXELS;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "", metadatas.getApertureFormat());
@@ -242,7 +246,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "Compression", "Group4", metadatas.getCompression());
 		mdAssertEquals(fileName, "CompressionQuality", 92, metadatas.getCompressionQuality());
 		mdAssertNull(fileName, "Coordinates", metadatas.getCoordinates());
-		mdAssertNotNull(fileName, "Date", metadatas.getDate());
+		mdAssertNotNull(fileName, "Date", metadatas.getDate()); // no date defined in metadatas
 		mdAssertNull(fileName, "Device", metadatas.getDevice());
 		mdAssertNull(fileName, "DeviceModel", metadatas.getDeviceModel());
 		mdAssertEquals(fileName, "Dimension", Size.valueOf(28083, 19867), metadatas.getDimension());
@@ -254,7 +258,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertNull(fileName, "ISOSpeed", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(600, 600), metadatas.getResolution());
 		mdAssertEquals(fileName, "ResolutionUnit", "PixelsPerInch", metadatas.getResolutionUnit());
-		mdAssertNull(fileName, "Software", metadatas.getSoftware());
+		mdAssertEquals(fileName, "Software", "GPL Ghostscript 8.54", metadatas.getSoftware());
 
 		mdAssertEquals(fileName, "tiff:alpha", "unspecified", metadatas.get("tiff:alpha"));
 		mdAssertEquals(fileName, "tiff:endian", "lsb", metadatas.get("tiff:endian"));
@@ -271,6 +275,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * @param metadatas
 	 */
 	protected void assertMetadatas_Multipage_tiff(ImageMetadatas metadatas) {
+		// display(metadatas);
 		final String fileName = ImageResourceUtils.MULTIPAGE_TIFF;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "", metadatas.getApertureFormat());
@@ -279,7 +284,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "Compression", "JPEG", metadatas.getCompression());
 		mdAssertEquals(fileName, "CompressionQuality", 92, metadatas.getCompressionQuality());
 		mdAssertNull(fileName, "Coordinates", metadatas.getCoordinates());
-		mdAssertNotNull(fileName, "Date", metadatas.getDate());
+		mdAssertNotNull(fileName, "Date", metadatas.getDate()); // no date defined in metadatas
 		mdAssertNull(fileName, "Device", metadatas.getDevice());
 		mdAssertNull(fileName, "DeviceModel", metadatas.getDeviceModel());
 		mdAssertEquals(fileName, "Dimension", Size.valueOf(800, 600), metadatas.getDimension());
@@ -291,7 +296,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertNull(fileName, "ISOSpeed", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(96, 96), metadatas.getResolution());
 		mdAssertEquals(fileName, "ResolutionUnit", "PixelsPerInch", metadatas.getResolutionUnit());
-		mdAssertNull(fileName, "Software", metadatas.getSoftware());
+		mdAssertEquals(fileName, "Software", "IrfanView", metadatas.getSoftware());
 
 		mdAssertEquals(fileName, "tiff:alpha", "unspecified", metadatas.get("tiff:alpha"));
 		mdAssertEquals(fileName, "tiff:endian", "lsb", metadatas.get("tiff:endian"));
@@ -308,29 +313,57 @@ public abstract class AbstractImageMetadatasTest {
 		return (n, m) -> true;
 	}
 
+	protected boolean debug() {
+		return false;
+	}
+
 	// *****************************************
 
 	private void mdAssertNull(String fileName, String message, Object obj) {
 		if(assertFilter().test(fileName, message)) {
-			assertNull(message, obj);
+			try {
+				assertNull(message, obj);
+			} catch(AssertionError e) {
+				assertion(e, fileName, message);
+			}
 		}
 	}
 
 	private void mdAssertNotNull(String fileName, String message, Object obj) {
 		if(assertFilter().test(fileName, message)) {
-			assertNotNull(message, obj);
+			try {
+				assertNotNull(message, obj);
+			} catch(AssertionError e) {
+				assertion(e, fileName, message);
+			}
 		}
 	}
 
 	private void mdAssertEquals(String fileName, String message, long expected, long actual) {
 		if(assertFilter().test(fileName, message)) {
-			assertEquals(message, expected, actual);
+			try {
+				assertEquals(message, expected, actual);
+			} catch(AssertionError e) {
+				assertion(e, fileName, message);
+			}
 		}
 	}
 
 	private void mdAssertEquals(String fileName, String message, Object expected, Object actual) {
 		if(assertFilter().test(fileName, message)) {
-			assertEquals(message, expected, actual);
+			try {
+				assertEquals(message, expected, actual);
+			} catch(AssertionError e) {
+				assertion(e, fileName, message);
+			}
+		}
+	}
+
+	private void assertion(AssertionError error, String fileName, String message) {
+		if(debug()) {
+			System.out.println("FAILEd for " + fileName + " : " + message + "  =>  " + error.getMessage());
+		} else {
+			throw error;
 		}
 	}
 
