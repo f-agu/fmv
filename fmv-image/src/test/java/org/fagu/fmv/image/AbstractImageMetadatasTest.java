@@ -87,7 +87,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "Flash", "Flash(16) Off, Did not fire", String.valueOf(metadatas.getFlash()));
 		mdAssertEquals(fileName, "FocalLength", Float.valueOf(50F), metadatas.getFocalLength());
 		mdAssertEquals(fileName, "Format", "JPEG", metadatas.getFormat());
-		mdAssertNull(fileName, "ISOSpeed", metadatas.getISOSpeed());
+		mdAssertEquals(fileName, "ISO", Integer.valueOf(100), metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		mdAssertNull(fileName, "Software", metadatas.getSoftware());
 	}
@@ -116,7 +116,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "Flash", "Flash(0) No Flash", String.valueOf(metadatas.getFlash()));
 		mdAssertEquals(fileName, "FocalLength", Float.valueOf(4.67F), metadatas.getFocalLength());
 		mdAssertEquals(fileName, "Format", "JPEG", metadatas.getFormat());
-		mdAssertNull(fileName, "ISOSpeed", metadatas.getISOSpeed());
+		mdAssertEquals(fileName, "ISO", Integer.valueOf(60), metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		mdAssertEquals(fileName, "Software", "bullhead-user 8.1.0 OPM7.181205.001 5080180 release-keys", metadatas.getSoftware());
 	}
@@ -153,7 +153,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertNull(fileName, "Flash", metadatas.getFlash());
 		mdAssertNull(fileName, "FocalLength", metadatas.getFocalLength());
 		mdAssertEquals(fileName, "Format", "JPEG", metadatas.getFormat());
-		mdAssertNull(fileName, "ISOSpeed", metadatas.getISOSpeed());
+		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		mdAssertEquals(fileName, "Software", "Adobe Photoshop CS3 Windows", metadatas.getSoftware());
 	}
@@ -182,7 +182,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertNull(fileName, "Flash", metadatas.getFlash());
 		mdAssertNull(fileName, "FocalLength", metadatas.getFocalLength());
 		mdAssertEquals(fileName, "Format", "JPEG", metadatas.getFormat());
-		mdAssertNull(fileName, "ISOSpeed", metadatas.getISOSpeed());
+		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		mdAssertEquals(fileName, "ResolutionUnit", "Undefined", metadatas.getResolutionUnit());
 		mdAssertNull(fileName, "Software", metadatas.getSoftware());
@@ -215,7 +215,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertNull(fileName, "Flash", metadatas.getFlash());
 		mdAssertNull(fileName, "FocalLength", metadatas.getFocalLength());
 		mdAssertEquals(fileName, "Format", "PNG", metadatas.getFormat());
-		mdAssertNull(fileName, "ISOSpeed", metadatas.getISOSpeed());
+		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		mdAssertEquals(fileName, "ResolutionUnit", "Undefined", metadatas.getResolutionUnit());
 		mdAssertNull(fileName, "Software", metadatas.getSoftware());
@@ -255,7 +255,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertNull(fileName, "Flash", metadatas.getFlash());
 		mdAssertNull(fileName, "FocalLength", metadatas.getFocalLength());
 		mdAssertEquals(fileName, "Format", "TIFF", metadatas.getFormat());
-		mdAssertNull(fileName, "ISOSpeed", metadatas.getISOSpeed());
+		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(600, 600), metadatas.getResolution());
 		mdAssertEquals(fileName, "ResolutionUnit", "PixelsPerInch", metadatas.getResolutionUnit());
 		mdAssertEquals(fileName, "Software", "GPL Ghostscript 8.54", metadatas.getSoftware());
@@ -293,7 +293,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertNull(fileName, "Flash", metadatas.getFlash());
 		mdAssertNull(fileName, "FocalLength", metadatas.getFocalLength());
 		mdAssertEquals(fileName, "Format", "TIFF", metadatas.getFormat());
-		mdAssertNull(fileName, "ISOSpeed", metadatas.getISOSpeed());
+		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(96, 96), metadatas.getResolution());
 		mdAssertEquals(fileName, "ResolutionUnit", "PixelsPerInch", metadatas.getResolutionUnit());
 		mdAssertEquals(fileName, "Software", "IrfanView", metadatas.getSoftware());

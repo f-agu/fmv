@@ -52,6 +52,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.im.soft.Identify;
 import org.fagu.fmv.image.Coordinates;
@@ -322,7 +323,7 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 
 	@Override
 	public Integer getISOSpeed() {
-		return getISOSpeed("exif:isospeedratings");
+		return ObjectUtils.firstNonNull(getISOSpeed("exif:isospeedratings"), getISOSpeed("exif:photographicsensitivity"));
 	}
 
 	@Override
