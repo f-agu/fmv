@@ -35,22 +35,26 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 		return null;
 	}
 
-	default OptionalInt getInt(String propertyName) {
-		String value = getFirst(propertyName);
-		try {
-			return OptionalInt.of(Integer.parseInt(value));
-		} catch(Exception e) {
-			return OptionalInt.empty();
+	default OptionalInt getInt(String... propertyNames) {
+		for(String propertyName : propertyNames) {
+			String value = getFirst(propertyName);
+			try {
+				return OptionalInt.of(Integer.parseInt(value));
+			} catch(Exception e) { // ignore
+			}
 		}
+		return OptionalInt.empty();
 	}
 
-	default Optional<Double> getDouble(String propertyName) {
-		String value = getFirst(propertyName);
-		try {
-			return Optional.of(Double.parseDouble(value));
-		} catch(Exception e) {
-			return Optional.empty();
+	default Optional<Double> getDouble(String... propertyNames) {
+		for(String propertyName : propertyNames) {
+			String value = getFirst(propertyName);
+			try {
+				return Optional.of(Double.parseDouble(value));
+			} catch(Exception e) { // ignore
+			}
 		}
+		return Optional.empty();
 	}
 
 	String getFormat();
@@ -83,10 +87,12 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 
 	Integer getISOSpeed();
 
-	default Integer getISOSpeed(String propertyName) {
-		try {
-			return Integer.parseInt(getFirst(propertyName).split(",")[0]);
-		} catch(Exception ignored) { // ignore
+	default Integer getISOSpeed(String... propertyNames) {
+		for(String propertyName : propertyNames) {
+			try {
+				return Integer.parseInt(getFirst(propertyName).split(",")[0]);
+			} catch(Exception ignored) { // ignore
+			}
 		}
 		return null;
 	}
@@ -95,15 +101,17 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 
 	Float getExposureTime();
 
-	default Float getExposureTime(String propertyName) {
-		try {
-			String etime = getFirst(propertyName);
-			if(etime.contains("/")) {
-				String[] values = etime.split("/");
-				return Float.valueOf(Float.parseFloat(values[0]) / Float.parseFloat(values[1]));
+	default Float getExposureTime(String... propertyNames) {
+		for(String propertyName : propertyNames) {
+			try {
+				String etime = getFirst(propertyName);
+				if(etime.contains("/")) {
+					String[] values = etime.split("/");
+					return Float.valueOf(Float.parseFloat(values[0]) / Float.parseFloat(values[1]));
+				}
+				return Float.parseFloat(etime);
+			} catch(Exception ignored) { // ignore
 			}
-			return Float.parseFloat(etime);
-		} catch(Exception ignored) { // ignore
 		}
 		return null;
 	}
@@ -122,15 +130,17 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 
 	Float getAperture();
 
-	default Float getAperture(String propertyName) {
-		try {
-			String[] fNumber = getFirst(propertyName).split("/");
-			if(fNumber.length == 1) {
-				Float.valueOf(Float.parseFloat(fNumber[0]));
+	default Float getAperture(String... propertyNames) {
+		for(String propertyName : propertyNames) {
+			try {
+				String[] fNumber = getFirst(propertyName).split("/");
+				if(fNumber.length == 1) {
+					return Float.valueOf(Float.parseFloat(fNumber[0]));
+				}
+				return Float.valueOf(Float.parseFloat(fNumber[0]) / Float.parseFloat(fNumber[1]));
+			} catch(Exception ignored) {
+				// ignore
 			}
-			return Float.valueOf(Float.parseFloat(fNumber[0]) / Float.parseFloat(fNumber[1]));
-		} catch(Exception ignored) {
-			// ignore
 		}
 		return null;
 	}
@@ -151,20 +161,8 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 
 	default Coordinates getCoordinates(LTude latitudeLTude, LTude longitudeLTude) {
 		try {
-			Double latitude = latitudeLTude != null ? latitudeLTude.toDouble() : null;
-			Double longitude = longitudeLTude != null ? longitudeLTude.toDouble() : null;
-
-			if(latitude != null && ! "N".equalsIgnoreCase(latitudeLTude.ref)) {
-				latitude = - latitude;
-			}
-			if(longitude != null && ! "E".equalsIgnoreCase(longitudeLTude.ref)) {
-				longitude = - longitude;
-			}
-			if(latitude != null && longitude != null && ! (latitude > 90 || latitude < - 90 || longitude > 90 || longitude < - 90)) {
-				return new Coordinates(latitude, longitude);
-			}
-		} catch(Exception ignored) {
-			// ignore
+			return LTude.toCoordinates(latitudeLTude, longitudeLTude);
+		} catch(Exception ignored) { // ignore
 		}
 		return null;
 	}
@@ -189,6 +187,8 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 	default String toJSON() {
 		return JSONObject.fromObject(getMetadatas()).toString();
 	}
+
+	// -------------------------------------
 
 	public static class LTude {
 
@@ -263,13 +263,8 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 			return null;
 		}
 
-		// ***********************
-
 		private static double toDouble(int degrees, int minutes, float secondes) {
-			double value = degrees;
-			value += minutes / 60D;
-			value += secondes / 3600D;
-			return value;
+			return degrees + minutes / 60D + secondes / 3600D;
 		}
 
 	}
