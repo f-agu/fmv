@@ -2,6 +2,7 @@ package org.fagu.fmv.image;
 
 import static org.junit.Assert.assertEquals;
 
+import org.fagu.fmv.image.exif.Flash;
 import org.junit.Test;
 
 

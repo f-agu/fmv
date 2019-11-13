@@ -3,16 +3,13 @@ package org.fagu.fmv.image;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.NavigableSet;
 import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.media.MetadataProperties;
-import org.fagu.fmv.media.Metadatas;
+import org.fagu.fmv.image.exif.Flash;
+import org.fagu.fmv.media.MetadatasContainer;
 import org.fagu.fmv.utils.media.Size;
-
-import net.sf.json.JSONObject;
 
 
 /**
@@ -20,41 +17,14 @@ import net.sf.json.JSONObject;
  * @author f.agu
  * @created 7 nov. 2019 10:02:49
  */
-public interface ImageMetadatas extends Metadatas, MetadataProperties {
+public interface ImageMetadatas extends MetadatasContainer {
 
-	NavigableMap<String, String> getMetadatas();
-
-	default String getFirst(String... propertyNames) {
-		String value;
-		for(String propName : propertyNames) {
-			value = getMetadatas().get(propName);
-			if(value != null) {
-				return value;
-			}
+	default NavigableMap<String, Object> getMetadatas() {
+		Map<String, Object> data = getData();
+		if(data instanceof NavigableMap) {
+			return (NavigableMap<String, Object>)data;
 		}
-		return null;
-	}
-
-	default OptionalInt getInt(String... propertyNames) {
-		for(String propertyName : propertyNames) {
-			String value = getFirst(propertyName);
-			try {
-				return OptionalInt.of(Integer.parseInt(value));
-			} catch(Exception e) { // ignore
-			}
-		}
-		return OptionalInt.empty();
-	}
-
-	default Optional<Double> getDouble(String... propertyNames) {
-		for(String propertyName : propertyNames) {
-			String value = getFirst(propertyName);
-			try {
-				return Optional.of(Double.parseDouble(value));
-			} catch(Exception e) { // ignore
-			}
-		}
-		return Optional.empty();
+		return new TreeMap<>(data);
 	}
 
 	String getFormat();
@@ -87,34 +57,9 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 
 	Integer getISOSpeed();
 
-	default Integer getISOSpeed(String... propertyNames) {
-		for(String propertyName : propertyNames) {
-			try {
-				return Integer.parseInt(getFirst(propertyName).split(",")[0]);
-			} catch(Exception ignored) { // ignore
-			}
-		}
-		return null;
-	}
-
 	Optional<String> getLensModel();
 
 	Float getExposureTime();
-
-	default Float getExposureTime(String... propertyNames) {
-		for(String propertyName : propertyNames) {
-			try {
-				String etime = getFirst(propertyName);
-				if(etime.contains("/")) {
-					String[] values = etime.split("/");
-					return Float.valueOf(Float.parseFloat(values[0]) / Float.parseFloat(values[1]));
-				}
-				return Float.parseFloat(etime);
-			} catch(Exception ignored) { // ignore
-			}
-		}
-		return null;
-	}
 
 	default String getExposureTimeFormat() {
 		Float exposure = getExposureTime();
@@ -129,21 +74,6 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 	}
 
 	Float getAperture();
-
-	default Float getAperture(String... propertyNames) {
-		for(String propertyName : propertyNames) {
-			try {
-				String[] fNumber = getFirst(propertyName).split("/");
-				if(fNumber.length == 1) {
-					return Float.valueOf(Float.parseFloat(fNumber[0]));
-				}
-				return Float.valueOf(Float.parseFloat(fNumber[0]) / Float.parseFloat(fNumber[1]));
-			} catch(Exception ignored) {
-				// ignore
-			}
-		}
-		return null;
-	}
 
 	default String getApertureFormat() {
 		Float aperture = getAperture();
@@ -168,24 +98,8 @@ public interface ImageMetadatas extends Metadatas, MetadataProperties {
 	}
 
 	@Override
-	default Object get(String name) {
-		return getMetadatas().get(name);
-	}
-
-	@Override
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	default Map<String, Object> getData() {
-		return (Map)getMetadatas();
-	}
-
-	@Override
-	default NavigableSet<String> getNames() {
-		return getMetadatas().navigableKeySet();
-	}
-
-	@Override
-	default String toJSON() {
-		return JSONObject.fromObject(getMetadatas()).toString();
+		return getMetadatas();
 	}
 
 	// -------------------------------------

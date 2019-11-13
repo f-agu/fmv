@@ -56,7 +56,7 @@ public class ImageMetadatasFactory extends MetadatasFactory {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public MetadatasBuilder withFile(File file) {
-		return IMImageMetadatas.with(file);
+		return IMIdentifyImageMetadatas.with(file);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class ImageMetadatasFactory extends MetadatasFactory {
 	 */
 	@Override
 	public Metadatas parseJSON(String json) {
-		return IMImageMetadatas.parseJSON(json);
+		return IMIdentifyImageMetadatas.parseJSON(json);
 	}
 
 }

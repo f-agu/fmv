@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.fagu.fmv.im.Image;
-import org.fagu.fmv.im.IMImageMetadatas;
+import org.fagu.fmv.im.IMIdentifyImageMetadatas;
 import org.fagu.fmv.utils.file.DoneFuture;
 
 
@@ -134,16 +134,16 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 	private Callable<Map<FileFound, InfosFile>> create(List<FileFound> buffer, Consumer<List<FileFound>> consumer) {
 		List<File> files = buffer.stream().map(FileFound::getFileFound).collect(Collectors.toList());
 		return () -> {
-			Map<File, IMImageMetadatas> map = null;
+			Map<File, IMIdentifyImageMetadatas> map = null;
 			try {
-				map = IMImageMetadatas.with(files).extractAll();
+				map = IMIdentifyImageMetadatas.with(files).extractAll();
 			} catch(IOException e) {
 				throw new RuntimeException(e);
 			}
 			Map<File, FileFound> reverseMap = buffer.stream().collect(Collectors.toMap(FileFound::getFileFound, ff -> ff));
 			Map<FileFound, InfosFile> outMap = new LinkedHashMap<>(map.size());
 
-			for(Entry<File, IMImageMetadatas> entry : map.entrySet()) {
+			for(Entry<File, IMIdentifyImageMetadatas> entry : map.entrySet()) {
 				Image image = new Image(entry.getKey(), entry.getValue());
 				outMap.put(reverseMap.get(entry.getKey()), new InfosFile(image));
 			}

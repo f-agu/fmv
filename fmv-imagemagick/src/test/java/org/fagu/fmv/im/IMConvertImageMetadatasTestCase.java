@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
@@ -19,7 +18,7 @@ import org.junit.Test;
 /**
  * @author f.agu
  */
-public class IMImageMetadatasTestCase extends TestAllImageMetadatasTest {
+public class IMConvertImageMetadatasTestCase extends TestAllImageMetadatasTest {
 
 	@Test
 	public void testMultiple() throws IOException {
@@ -27,10 +26,9 @@ public class IMImageMetadatasTestCase extends TestAllImageMetadatasTest {
 		File file2 = ImageResourceUtils.extractFile("wei-ass.jpg");
 
 		try {
-			Map<File, IMImageMetadatas> map = IMImageMetadatas.with(Arrays.asList(file2, file1)).extractAll();
-			Iterator<IMImageMetadatas> iterator = map.values().iterator();
-			assertMetadatas_WeiAss(iterator.next());
-			assertMetadatas_BadAssTottooFail(iterator.next());
+			Map<File, IMConvertImageMetadatas> map = IMConvertImageMetadatas.with(Arrays.asList(file2, file1)).extractAll();
+			assertMetadatas_WeiAss(map.get(file2));
+			assertMetadatas_BadAssTottooFail(map.get(file1));
 		} finally {
 			if(file1 != null) {
 				file1.delete();
@@ -54,7 +52,7 @@ public class IMImageMetadatasTestCase extends TestAllImageMetadatasTest {
 				public void run() {
 					++i;
 					System.out.println(i + " Run...");
-					ImageMetadatas extract = IMImageMetadatas.extractSingleton(file);
+					ImageMetadatas extract = IMConvertImageMetadatas.extractSingleton(file);
 					System.out.println(extract);
 					System.out.println(i + " Dimension: " + extract.getDimension());
 					synchronized(this) {
@@ -81,17 +79,21 @@ public class IMImageMetadatasTestCase extends TestAllImageMetadatasTest {
 
 	@Override
 	protected ImageMetadatas with(File file) throws IOException {
-		return IMImageMetadatas.with(file).extract();
+		return IMConvertImageMetadatas.with(file).extract();
 	}
 
 	@Override
 	protected ImageMetadatas with(InputStream inputStream) throws IOException {
-		return IMImageMetadatas.with(inputStream).extract();
+		return IMConvertImageMetadatas.with(inputStream).extract();
 	}
 
-	private static final List<String> MULTIPAGE_TIFF_EXCLUDE_PROPERTIES = Arrays.asList("Software");
+	private static final List<String> MULTIPAGE_TIFF_EXCLUDE_PROPERTIES = Arrays.asList("CompressionQuality", "ResolutionUnit", "Software");
 
-	private static final List<String> PLAN4_550MPIXELS_EXCLUDE_PROPERTIES = Arrays.asList("Software");
+	private static final List<String> PLAN4_550MPIXELS_EXCLUDE_PROPERTIES = Arrays.asList("CompressionQuality", "ResolutionUnit", "Software");
+
+	private static final List<String> RABBITMQ_EXCLUDE_PROPERTIES = Arrays.asList("CompressionQuality", "Resolution", "ResolutionUnit");
+
+	private static final List<String> WEI_ASS_EXCLUDE_PROPERTIES = Arrays.asList("Resolution", "ResolutionUnit");
 
 	@Override
 	protected BiPredicate<String, String> assertFilter() {
@@ -100,6 +102,12 @@ public class IMImageMetadatasTestCase extends TestAllImageMetadatasTest {
 				return false;
 			}
 			if(ImageResourceUtils.PLAN4_550MPIXELS.equals(fileName) && PLAN4_550MPIXELS_EXCLUDE_PROPERTIES.contains(property)) {
+				return false;
+			}
+			if(ImageResourceUtils.RABBITMQ.equals(fileName) && RABBITMQ_EXCLUDE_PROPERTIES.contains(property)) {
+				return false;
+			}
+			if(ImageResourceUtils.WEI_ASS.equals(fileName) && WEI_ASS_EXCLUDE_PROPERTIES.contains(property)) {
 				return false;
 			}
 

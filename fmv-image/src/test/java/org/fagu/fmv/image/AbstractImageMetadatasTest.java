@@ -164,6 +164,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * @param metadatas
 	 */
 	protected void assertMetadatas_WeiAss(ImageMetadatas metadatas) {
+		metadatas.getResolution();
 		// display(metadatas);
 		final String fileName = ImageResourceUtils.WEI_ASS;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
@@ -306,7 +307,7 @@ public abstract class AbstractImageMetadatasTest {
 	}
 
 	protected void display(ImageMetadatas metadatas) {
-		metadatas.getMetadatas().forEach((k, v) -> System.out.println(k + " : " + v));
+		metadatas.getData().forEach((k, v) -> System.out.println(k + " : " + v));
 	}
 
 	protected BiPredicate<String, String> assertFilter() {

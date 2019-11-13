@@ -37,7 +37,7 @@ public class Image implements Media, Comparable<Image>, Serializable {
 
 	private final File file;
 
-	private IMImageMetadatas metadatas;
+	private IMIdentifyImageMetadatas metadatas;
 
 	/**
 	 * @param file
@@ -50,7 +50,7 @@ public class Image implements Media, Comparable<Image>, Serializable {
 	 * @param file
 	 * @param metadatas
 	 */
-	public Image(File file, IMImageMetadatas metadatas) {
+	public Image(File file, IMIdentifyImageMetadatas metadatas) {
 		this.file = file;
 		this.metadatas = metadatas;
 	}
@@ -95,10 +95,10 @@ public class Image implements Media, Comparable<Image>, Serializable {
 	 * @see org.fagu.fmv.mymedia.Media#getMetadatas()
 	 */
 	@Override
-	public IMImageMetadatas getMetadatas() {
+	public IMIdentifyImageMetadatas getMetadatas() {
 		if(metadatas == null) {
 			try {
-				metadatas = IMImageMetadatas.with(file).extract();
+				metadatas = IMIdentifyImageMetadatas.with(file).extract();
 			} catch(Exception e) {
 				throw new RuntimeException(e);
 			}

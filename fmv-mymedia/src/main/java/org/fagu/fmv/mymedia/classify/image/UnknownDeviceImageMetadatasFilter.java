@@ -22,13 +22,13 @@ package org.fagu.fmv.mymedia.classify.image;
 
 import java.util.function.Predicate;
 
-import org.fagu.fmv.im.IMImageMetadatas;
+import org.fagu.fmv.im.IMIdentifyImageMetadatas;
 
 
 /**
  * @author f.agu
  */
-public class UnknownDeviceImageMetadatasFilter implements Predicate<IMImageMetadatas> {
+public class UnknownDeviceImageMetadatasFilter implements Predicate<IMIdentifyImageMetadatas> {
 
 	/**
 	 * @param device
@@ -40,7 +40,7 @@ public class UnknownDeviceImageMetadatasFilter implements Predicate<IMImageMetad
 	 * @see java.util.function.Predicate#test(java.lang.Object)
 	 */
 	@Override
-	public boolean test(IMImageMetadatas t) {
+	public boolean test(IMIdentifyImageMetadatas t) {
 		return t == null || t.getDevice() == null || t.getDeviceModel() == null;
 	}
 

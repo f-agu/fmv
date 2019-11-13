@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -51,14 +52,13 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.apache.commons.exec.CommandLine;
-import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.im.soft.Identify;
 import org.fagu.fmv.image.Coordinates;
-import org.fagu.fmv.image.Flash;
 import org.fagu.fmv.image.ImageMetadatas;
 import org.fagu.fmv.image.MapImageMetadatas;
+import org.fagu.fmv.image.exif.Flash;
+import org.fagu.fmv.media.JsonReader;
 import org.fagu.fmv.media.MetadatasBuilder;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
@@ -82,16 +82,16 @@ import net.sf.json.JSONObject;
  * 
  * @author f.agu
  */
-public class IMImageMetadatas extends MapImageMetadatas implements Serializable {
+public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Serializable {
 
 	private static final long serialVersionUID = - 3899723797675922936L;
 
-	private static final Hashtable<File, Future<IMImageMetadatas>> FUTURE_HASHTABLE = new Hashtable<>();
+	private static final Hashtable<File, Future<IMIdentifyImageMetadatas>> FUTURE_HASHTABLE = new Hashtable<>();
 
 	// --------------------------------------------------------
 
 	public abstract static class ImageMetadatasSourcesBuilder<B extends ImageMetadatasSourcesBuilder<?, T>, T>
-			implements MetadatasBuilder<IMImageMetadatas, B> {
+			implements MetadatasBuilder<IMIdentifyImageMetadatas, B> {
 
 		final Sources<T> sources;
 
@@ -124,8 +124,8 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 		}
 
 		@Override
-		public IMImageMetadatas extract() throws IOException {
-			Map<T, IMImageMetadatas> extract = IMImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
+		public IMIdentifyImageMetadatas extract() throws IOException {
+			Map<T, IMIdentifyImageMetadatas> extract = IMIdentifyImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
 			return extract.values().iterator().next();
 		}
 
@@ -156,8 +156,8 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 			super(new FilesSources(new ArrayList<>(sourceFiles))); // defensive copy
 		}
 
-		public Map<File, IMImageMetadatas> extractAll() throws IOException {
-			return IMImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
+		public Map<File, IMIdentifyImageMetadatas> extractAll() throws IOException {
+			return IMIdentifyImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
 		}
 
 	}
@@ -174,13 +174,13 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 
 	// --------------------------------------------------------
 
-	protected IMImageMetadatas(TreeMap<String, String> metadatas) {
+	protected IMIdentifyImageMetadatas(NavigableMap<String, Object> metadatas) {
 		super(metadatas);
 	}
 
 	@Override
 	public String getFormat() {
-		return metadatas.get("format");
+		return getString("format");
 	}
 
 	@Override
@@ -191,7 +191,7 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 		OffsetDateTime date = Stream.of("exif:datetime", "exif:datetimeoriginal")
 				.map(prop -> {
 					try {
-						Date parse = dateFormat.parse(metadatas.get(prop));
+						Date parse = dateFormat.parse(getString(prop));
 						Instant instant = parse.toInstant();
 						ZoneOffset offset = OffsetDateTime.ofInstant(instant, ZoneId.systemDefault()).getOffset();
 						return instant.atOffset(offset);
@@ -207,7 +207,7 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 		}
 		// psd
 		try {
-			String line = metadatas.get("xap:createdate");
+			String line = getString("xap:createdate");
 			int lastIndex = line.lastIndexOf(':');
 			String xapDate = line.substring(0, lastIndex) + line.substring(lastIndex + 1, line.length());
 			Date parse = dateFormat.parse(xapDate);
@@ -219,11 +219,11 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 		OffsetDateTime dateCreate = null;
 		OffsetDateTime dateModify = null;
 		try {
-			dateCreate = OffsetDateTime.parse(metadatas.get("date:create"));
+			dateCreate = OffsetDateTime.parse(getString("date:create"));
 		} catch(Exception ignored) {// ignore
 		}
 		try {
-			dateModify = OffsetDateTime.parse(metadatas.get("date:modify"));
+			dateModify = OffsetDateTime.parse(getString("date:modify"));
 		} catch(Exception ignored) {// ignore
 		}
 
@@ -242,7 +242,7 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 	@Override
 	public Size getResolution() {
 		try {
-			String resolution = metadatas.get("xy");
+			String resolution = getString("xy");
 			if(resolution.length() > 0) {
 				String[] resolutionTab = resolution.split(" ");
 				if(resolutionTab.length == 4) {
@@ -260,9 +260,9 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 	@Override
 	public Size getDimension() {
 		try {
-			String dimensions = metadatas.get("wh");
+			String dimensions = getString("wh");
 			if(StringUtils.isBlank(dimensions)) {
-				dimensions = metadatas.get("exif:exifimagewidth") + ' ' + metadatas.get("exif:exifimagelength");
+				dimensions = getString("exif:exifimagewidth") + ' ' + getString("exif:exifimagelength");
 			}
 			if(dimensions.length() > 0) {
 				String[] dimensionsTab = dimensions.split(" ");
@@ -278,57 +278,59 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 
 	@Override
 	public String getColorSpace() {
-		return metadatas.get("colorspace");
+		return getString("colorspace");
 	}
 
 	@Override
 	public Optional<String> getICCProfile() {
-		return Optional.ofNullable(metadatas.get("icc:description"));
+		return getFirstString("icc:description");
 	}
 
 	@Override
 	public int getColorDepth() {
-		return NumberUtils.toInt(metadatas.get("cdepth"));
+		return getFirstInteger("cdepth").orElse(0);
 	}
 
 	@Override
 	public int getCompressionQuality() {
-		return NumberUtils.toInt(metadatas.get("compressionq"));
+		return getFirstInteger("compressionq").orElse(0);
 	}
 
 	@Override
 	public String getCompression() {
-		return metadatas.get("compression");
+		return getString("compression");
 	}
 
 	@Override
 	public String getResolutionUnit() {
-		return metadatas.get("resunit");
+		return getString("resunit");
 	}
 
 	@Override
 	public String getDevice() {
-		return metadatas.get("exif:make");
+		return getString("exif:make");
 	}
 
 	@Override
 	public String getDeviceModel() {
-		return metadatas.get("exif:model");
+		return getString("exif:model");
 	}
 
 	@Override
 	public String getSoftware() {
-		return metadatas.get("exif:software");
+		return getString("exif:software");
 	}
 
 	@Override
 	public Integer getISOSpeed() {
-		return ObjectUtils.firstNonNull(getISOSpeed("exif:isospeedratings"), getISOSpeed("exif:photographicsensitivity"));
+		return getFirstInteger("exif:isospeedratings")
+				.orElseGet(() -> getFirstInteger("exif:photographicsensitivity")
+						.orElse(null));
 	}
 
 	@Override
 	public Float getExposureTime() {
-		return getExposureTime("exif:exposuretime");
+		return getFirstFloat("exif:exposuretime").orElse(null);
 	}
 
 	@Override
@@ -338,34 +340,26 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 
 	@Override
 	public Float getAperture() {
-		return getAperture("exif:fnumber");
+		return getFirstFloat("exif:fnumber").orElse(null);
 	}
 
 	@Override
 	public Float getFocalLength() {
-		try {
-			String[] focalLength = metadatas.get("exif:focallength").split("/");
-			return Float.valueOf(Float.parseFloat(focalLength[0]) / Float.parseFloat(focalLength[1]));
-		} catch(Exception ignored) {
-			// ignore
-		}
-		return null;
+		return getFirstFloat("exif:focallength").orElse(null);
 	}
 
 	@Override
 	public Flash getFlash() {
-		try {
-			return Flash.valueOf(Integer.parseInt(metadatas.get("exif:flash")));
-		} catch(Exception ignored) { // ignore
-		}
-		return null;
+		return getFirstInteger("exif:flash")
+				.map(Flash::valueOf)
+				.orElse(null);
 	}
 
 	@Override
 	public Coordinates getCoordinates() {
 		try {
-			LTude latitude = LTude.of(parseCoordinate(metadatas.get("exif:gpslatitude")), metadatas.get("exif:gpslatituderef"));
-			LTude longitude = LTude.of(parseCoordinate(metadatas.get("exif:gpslongitude")), metadatas.get("exif:gpslongituderef"));
+			LTude latitude = LTude.of(parseCoordinate(getString("exif:gpslatitude")), getString("exif:gpslatituderef"));
+			LTude longitude = LTude.of(parseCoordinate(getString("exif:gpslongitude")), getString("exif:gpslongituderef"));
 			return LTude.toCoordinates(latitude, longitude);
 		} catch(Exception ignored) {
 			// ignore
@@ -373,23 +367,18 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 		return null;
 	}
 
-	public static IMImageMetadatas parseJSON(String json) {
-		TreeMap<String, String> params = new TreeMap<>();
+	public static IMIdentifyImageMetadatas parseJSON(String json) {
 		JSONObject jsonObject = JSONObject.fromObject(json);
-		Iterator<?> keys = jsonObject.keys();
-		while(keys.hasNext()) {
-			String key = (String)keys.next();
-			params.put(key, jsonObject.getString(key));
-		}
-		return new IMImageMetadatas(params);
+		NavigableMap<String, Object> params = JsonReader.parse(jsonObject);
+		return new IMIdentifyImageMetadatas(params);
 	}
 
 	public static ImageMetadatas extract(InputStream inputStream) throws IOException {
 		return with(inputStream).extract();
 	}
 
-	public static synchronized IMImageMetadatas extractSingleton(final File sourceFile) {
-		Future<IMImageMetadatas> future = FUTURE_HASHTABLE.get(sourceFile);
+	public static synchronized IMIdentifyImageMetadatas extractSingleton(final File sourceFile) {
+		Future<IMIdentifyImageMetadatas> future = FUTURE_HASHTABLE.get(sourceFile);
 		if(future != null) {
 			try {
 				return future.get();
@@ -427,7 +416,11 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 
 	// *****************************************
 
-	private static <T> Map<T, IMImageMetadatas> extract(
+	private String getString(String prop) {
+		return getFirstString(prop).orElse(null);
+	}
+
+	private static <T> Map<T, IMIdentifyImageMetadatas> extract(
 			Soft identifySoft,
 			Sources<T> sources,
 			Consumer<CommandLine> logger,
@@ -470,9 +463,9 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 		softExecutor.execute();
 
 		// parse output
-		Map<T, IMImageMetadatas> outMap = new LinkedHashMap<>();
+		Map<T, IMIdentifyImageMetadatas> outMap = new LinkedHashMap<>();
 		Iterator<Source<T>> sourceIterator = sources.iterator();
-		TreeMap<String, String> params = null;
+		TreeMap<String, Object> params = null;
 		Source<T> currentSource = null;
 		for(String line : outputs) {
 			if(StringUtils.isBlank(line) || boundary.equals(line)) {
@@ -480,7 +473,7 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 			}
 			if((line.startsWith("==") || line.startsWith(boundary + "==")) && line.endsWith("==")) {
 				if(currentSource != null) {
-					outMap.put(currentSource.value, new IMImageMetadatas(params));
+					outMap.put(currentSource.value, new IMIdentifyImageMetadatas(params));
 				}
 				currentSource = sourceIterator.next();
 				if(StringUtils.substringBetween(line, "==").equals(currentSource.name)) {
@@ -503,7 +496,7 @@ public class IMImageMetadatas extends MapImageMetadatas implements Serializable 
 			}
 		}
 		if(currentSource != null) {
-			outMap.put(currentSource.value, new IMImageMetadatas(params));
+			outMap.put(currentSource.value, new IMIdentifyImageMetadatas(params));
 		}
 		return outMap;
 	}
