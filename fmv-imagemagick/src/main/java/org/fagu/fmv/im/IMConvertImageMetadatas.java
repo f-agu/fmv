@@ -280,13 +280,13 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 	}
 
 	@Override
-	public int getColorDepth() {
-		return getFirstInteger("depth").orElse(0);
+	public Integer getColorDepth() {
+		return getFirstInteger("depth").orElse(null);
 	}
 
 	@Override
-	public int getCompressionQuality() {
-		return getFirstInteger("quality").orElse(0);
+	public Integer getCompressionQuality() {
+		return getFirstInteger("quality").orElse(null);
 	}
 
 	@Override

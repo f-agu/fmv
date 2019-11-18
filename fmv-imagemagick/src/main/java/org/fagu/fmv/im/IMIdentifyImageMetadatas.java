@@ -287,13 +287,13 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 	}
 
 	@Override
-	public int getColorDepth() {
-		return getFirstInteger("cdepth").orElse(0);
+	public Integer getColorDepth() {
+		return getFirstInteger("cdepth").orElse(null);
 	}
 
 	@Override
-	public int getCompressionQuality() {
-		return getFirstInteger("compressionq").orElse(0);
+	public Integer getCompressionQuality() {
+		return getFirstInteger("compressionq").orElse(null);
 	}
 
 	@Override

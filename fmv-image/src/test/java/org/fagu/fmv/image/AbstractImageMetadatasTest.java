@@ -71,12 +71,12 @@ public abstract class AbstractImageMetadatasTest {
 	protected void assertMetadatas_203(ImageMetadatas metadatas) {
 		// display(metadatas);
 		final String fileName = ImageResourceUtils._203;
-		mdAssertEquals(fileName, "Aperture", Float.valueOf(2.8F), metadatas.getAperture());
+		mdAssertEquals(fileName, "Aperture", Float.valueOf(2.8F), metadatas.getAperture(), 0.1);
 		mdAssertEquals(fileName, "ApertureFormat", "F/2.8", metadatas.getApertureFormat());
-		mdAssertEquals(fileName, "ColorDepth", 8, metadatas.getColorDepth());
+		mdAssertEquals(fileName, "ColorDepth", Integer.valueOf(8), metadatas.getColorDepth());
 		mdAssertEquals(fileName, "ColorSpace", "sRGB", metadatas.getColorSpace());
 		mdAssertEquals(fileName, "Compression", "JPEG", metadatas.getCompression());
-		mdAssertEquals(fileName, "CompressionQuality", 65, metadatas.getCompressionQuality());
+		mdAssertEquals(fileName, "CompressionQuality", Integer.valueOf(65), metadatas.getCompressionQuality());
 		mdAssertNull(fileName, "Coordinates", metadatas.getCoordinates());
 		mdAssertEquals(fileName, "Date", "2019-08-16T11:20:23+02:00", metadatas.getDate().toString());
 		mdAssertEquals(fileName, "Device", "Canon", metadatas.getDevice());
@@ -102,10 +102,10 @@ public abstract class AbstractImageMetadatasTest {
 		final String fileName = ImageResourceUtils._104;
 		mdAssertEquals(fileName, "Aperture", Float.valueOf(2F), metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "F/2.0", metadatas.getApertureFormat());
-		mdAssertEquals(fileName, "ColorDepth", 8, metadatas.getColorDepth());
+		mdAssertEquals(fileName, "ColorDepth", Integer.valueOf(8), metadatas.getColorDepth());
 		mdAssertEquals(fileName, "ColorSpace", "sRGB", metadatas.getColorSpace());
 		mdAssertEquals(fileName, "Compression", "JPEG", metadatas.getCompression());
-		mdAssertEquals(fileName, "CompressionQuality", 65, metadatas.getCompressionQuality());
+		mdAssertEquals(fileName, "CompressionQuality", Integer.valueOf(65), metadatas.getCompressionQuality());
 		mdAssertEquals(fileName, "Coordinates", "45�55'20.35\" N,6�52'7.11\" E", String.valueOf(metadatas.getCoordinates()));
 		mdAssertEquals(fileName, "Date", "2019-08-14T10:20:58+02:00", metadatas.getDate().toString());
 		mdAssertEquals(fileName, "Device", "LGE", metadatas.getDevice());
@@ -139,10 +139,10 @@ public abstract class AbstractImageMetadatasTest {
 
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "", metadatas.getApertureFormat());
-		mdAssertEquals(fileName, "ColorDepth", 8, metadatas.getColorDepth());
+		mdAssertEquals(fileName, "ColorDepth", Integer.valueOf(8), metadatas.getColorDepth());
 		mdAssertEquals(fileName, "ColorSpace", "sRGB", metadatas.getColorSpace());
 		mdAssertEquals(fileName, "Compression", "JPEG", metadatas.getCompression());
-		mdAssertEquals(fileName, "CompressionQuality", 91, metadatas.getCompressionQuality());
+		mdAssertEquals(fileName, "CompressionQuality", Integer.valueOf(91), metadatas.getCompressionQuality());
 		mdAssertNull(fileName, "Coordinates", metadatas.getCoordinates());
 		mdAssertEquals(fileName, "Date", "2010-01-02T20:03:43+01:00", metadatas.getDate().toString());
 		mdAssertNull(fileName, "Device", metadatas.getDevice());
@@ -169,10 +169,10 @@ public abstract class AbstractImageMetadatasTest {
 		final String fileName = ImageResourceUtils.WEI_ASS;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "", metadatas.getApertureFormat());
-		mdAssertEquals(fileName, "ColorDepth", 8, metadatas.getColorDepth());
+		mdAssertEquals(fileName, "ColorDepth", Integer.valueOf(8), metadatas.getColorDepth());
 		mdAssertEquals(fileName, "ColorSpace", "sRGB", metadatas.getColorSpace());
 		mdAssertEquals(fileName, "Compression", "JPEG", metadatas.getCompression());
-		mdAssertEquals(fileName, "CompressionQuality", 74, metadatas.getCompressionQuality());
+		mdAssertEquals(fileName, "CompressionQuality", Integer.valueOf(74), metadatas.getCompressionQuality());
 		mdAssertNull(fileName, "Coordinates", metadatas.getCoordinates());
 		mdAssertNotNull(fileName, "Date", metadatas.getDate()); // no date defined in metadatas
 		mdAssertNull(fileName, "Device", metadatas.getDevice());
@@ -202,10 +202,10 @@ public abstract class AbstractImageMetadatasTest {
 		final String fileName = ImageResourceUtils.RABBITMQ;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "", metadatas.getApertureFormat());
-		mdAssertEquals(fileName, "ColorDepth", 8, metadatas.getColorDepth());
+		mdAssertEquals(fileName, "ColorDepth", Integer.valueOf(8), metadatas.getColorDepth());
 		mdAssertEquals(fileName, "ColorSpace", "sRGB", metadatas.getColorSpace());
 		mdAssertEquals(fileName, "Compression", "Zip", metadatas.getCompression());
-		mdAssertEquals(fileName, "CompressionQuality", 92, metadatas.getCompressionQuality());
+		mdAssertEquals(fileName, "CompressionQuality", Integer.valueOf(92), metadatas.getCompressionQuality());
 		mdAssertNull(fileName, "Coordinates", metadatas.getCoordinates());
 		mdAssertNotNull(fileName, "Date", metadatas.getDate()); // no date defined in metadatas
 		mdAssertNull(fileName, "Device", metadatas.getDevice());
@@ -242,10 +242,10 @@ public abstract class AbstractImageMetadatasTest {
 		final String fileName = ImageResourceUtils.PLAN4_550MPIXELS;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "", metadatas.getApertureFormat());
-		mdAssertEquals(fileName, "ColorDepth", 1, metadatas.getColorDepth());
+		mdAssertEquals(fileName, "ColorDepth", Integer.valueOf(1), metadatas.getColorDepth());
 		mdAssertEquals(fileName, "ColorSpace", "Gray", metadatas.getColorSpace());
 		mdAssertEquals(fileName, "Compression", "Group4", metadatas.getCompression());
-		mdAssertEquals(fileName, "CompressionQuality", 92, metadatas.getCompressionQuality());
+		mdAssertEquals(fileName, "CompressionQuality", Integer.valueOf(92), metadatas.getCompressionQuality());
 		mdAssertNull(fileName, "Coordinates", metadatas.getCoordinates());
 		mdAssertNotNull(fileName, "Date", metadatas.getDate()); // no date defined in metadatas
 		mdAssertNull(fileName, "Device", metadatas.getDevice());
@@ -280,10 +280,10 @@ public abstract class AbstractImageMetadatasTest {
 		final String fileName = ImageResourceUtils.MULTIPAGE_TIFF;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "", metadatas.getApertureFormat());
-		mdAssertEquals(fileName, "ColorDepth", 8, metadatas.getColorDepth());
+		mdAssertEquals(fileName, "ColorDepth", Integer.valueOf(8), metadatas.getColorDepth());
 		mdAssertEquals(fileName, "ColorSpace", "sRGB", metadatas.getColorSpace());
 		mdAssertEquals(fileName, "Compression", "JPEG", metadatas.getCompression());
-		mdAssertEquals(fileName, "CompressionQuality", 92, metadatas.getCompressionQuality());
+		mdAssertEquals(fileName, "CompressionQuality", Integer.valueOf(92), metadatas.getCompressionQuality());
 		mdAssertNull(fileName, "Coordinates", metadatas.getCoordinates());
 		mdAssertNotNull(fileName, "Date", metadatas.getDate()); // no date defined in metadatas
 		mdAssertNull(fileName, "Device", metadatas.getDevice());
@@ -344,6 +344,16 @@ public abstract class AbstractImageMetadatasTest {
 		if(assertFilter().test(fileName, message)) {
 			try {
 				assertEquals(message, expected, actual);
+			} catch(AssertionError e) {
+				assertion(e, fileName, message);
+			}
+		}
+	}
+
+	private void mdAssertEquals(String fileName, String message, double expected, double actual, double delta) {
+		if(assertFilter().test(fileName, message)) {
+			try {
+				assertEquals(message, expected, actual, delta);
 			} catch(AssertionError e) {
 				assertion(e, fileName, message);
 			}

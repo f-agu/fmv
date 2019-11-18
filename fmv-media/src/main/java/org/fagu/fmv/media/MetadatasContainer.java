@@ -84,6 +84,16 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 		}, propertyNames);
 	}
 
+	default Optional<Boolean> getFirstBoolean(String... propertyNames) {
+		return getFirstObject(Boolean.class, new StringParser<Boolean>() {
+
+			@Override
+			public Boolean parse(Object i) {
+				return Boolean.parseBoolean((String)i);
+			}
+		}, propertyNames);
+	}
+
 	default Optional<Integer> getFirstInteger(String... propertyNames) {
 		return getFirstObject(Integer.class, new StringParser<Integer>() {
 

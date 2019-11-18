@@ -1,5 +1,8 @@
 package org.fagu.fmv.image;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -41,9 +44,9 @@ public interface ImageMetadatas extends MetadatasContainer {
 
 	Optional<String> getICCProfile();
 
-	int getColorDepth();
+	Integer getColorDepth();
 
-	int getCompressionQuality();
+	Integer getCompressionQuality();
 
 	String getCompression();
 
@@ -80,7 +83,13 @@ public interface ImageMetadatas extends MetadatasContainer {
 		if(aperture == null) {
 			return StringUtils.EMPTY;
 		}
-		return "F/" + aperture.floatValue();
+		DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+		symbols.setDecimalSeparator('.');
+		DecimalFormat format = (DecimalFormat)NumberFormat.getInstance();
+		format.setDecimalFormatSymbols(symbols);
+		format.setMaximumFractionDigits(1);
+		format.setMinimumFractionDigits(1);
+		return "F/" + format.format(aperture.floatValue());
 	}
 
 	Float getFocalLength();
