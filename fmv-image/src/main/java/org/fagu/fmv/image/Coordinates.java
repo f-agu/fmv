@@ -96,7 +96,7 @@ public class Coordinates {
 
 	@Override
 	public String toString() {
-		return getLatitudeDMS(3) + ',' + getLongitudeDMS(3);
+		return getLatitudeDMS(3) + ", " + getLongitudeDMS(3);
 	}
 
 	// **********************************
@@ -154,7 +154,7 @@ public class Coordinates {
 		// e.g. output = "87/1,43/1,40/1"
 		// output = degrees + "/1," + minutes + "/1," + seconds + "/1";
 
-		// Standard output of D°M′S″
-		return degrees + '�' + minutes + '\'' + seconds + "\" " + (inCoord < 0 ? negative : inCoord > 0 ? positive : "");
+		// Standard output of D° M′ S"
+		return degrees + "° " + minutes + "' " + seconds + "\" " + (inCoord < 0 ? negative : inCoord > 0 ? positive : "");
 	}
 }
