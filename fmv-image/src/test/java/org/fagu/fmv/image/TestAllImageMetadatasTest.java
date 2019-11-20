@@ -53,7 +53,7 @@ public abstract class TestAllImageMetadatasTest extends AbstractImageMetadatasTe
 	public void testFailed() throws Exception {
 		File file = ImageResourceUtils.extractFile(ImageResourceUtils.NO_IMAGE, "jpg");
 		try {
-			with(file);
+			with(file, ImageResourceUtils.NO_IMAGE);
 			fail();
 		} catch(IOException e) {
 			String message = e.getMessage();

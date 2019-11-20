@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.math.Fraction;
 
@@ -21,8 +21,6 @@ import net.sf.json.JSONObject;
  * @created 13 nov. 2019 11:04:26
  */
 public interface MetadatasContainer extends Metadatas, MetadataProperties {
-
-	static final Pattern FRACTION_PATTERN = Pattern.compile("(\\d+(?:\\.\\d+))/(\\d+(?:\\.\\d+))");
 
 	@Override
 	default NavigableSet<String> getNames() {
@@ -44,16 +42,19 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 		return JSONObject.fromObject(getData()).toString();
 	}
 
-	default Optional<Object> getFirstObject(String... propertyNames) {
+	default Stream<Object> getObjects(String... propertyNames) {
 		Map<String, Object> data = getData();
 		return Arrays.stream(propertyNames)
 				.map(data::get)
-				.filter(Objects::nonNull)
-				.findFirst();
+				.filter(Objects::nonNull);
+	}
+
+	default Optional<Object> getFirstObject(String... propertyNames) {
+		return getObjects(propertyNames).findFirst();
 	}
 
 	@SuppressWarnings("unchecked")
-	default <T> Optional<T> getFirstObject(Class<T> cls, Parser<T> parser, String... propertyNames) {
+	default <T> Stream<T> getObjects(Class<T> cls, Parser<T> parser, String... propertyNames) {
 		Map<String, Object> data = getData();
 		return Arrays.stream(propertyNames)
 				.map(data::get)
@@ -69,113 +70,79 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 					}
 					return null;
 				})
-				.filter(Objects::nonNull)
-				.map(o -> o)
-				.findFirst();
+				.filter(Objects::nonNull);
+	}
+
+	default <T> Optional<T> getFirstObject(Class<T> cls, Parser<T> parser, String... propertyNames) {
+		return getObjects(cls, parser, propertyNames).findFirst();
+	}
+
+	default Stream<String> getStrings(String... propertyNames) {
+		return getObjects(String.class, Parsers.stringToString(), propertyNames);
 	}
 
 	default Optional<String> getFirstString(String... propertyNames) {
-		return getFirstObject(String.class, new StringParser<String>() {
+		return getStrings(propertyNames).findFirst();
+	}
 
-			@Override
-			public String parse(Object i) {
-				return (String)i;
-			}
-		}, propertyNames);
+	default Stream<Boolean> getBooleans(String... propertyNames) {
+		return getObjects(Boolean.class, Parsers.stringToBoolean(), propertyNames);
 	}
 
 	default Optional<Boolean> getFirstBoolean(String... propertyNames) {
-		return getFirstObject(Boolean.class, new StringParser<Boolean>() {
+		return getBooleans(propertyNames).findFirst();
+	}
 
-			@Override
-			public Boolean parse(Object i) {
-				return Boolean.parseBoolean((String)i);
-			}
-		}, propertyNames);
+	default Stream<Integer> getIntegers(String... propertyNames) {
+		return getObjects(Integer.class, Parsers.stringToInteger(), propertyNames);
 	}
 
 	default Optional<Integer> getFirstInteger(String... propertyNames) {
-		return getFirstObject(Integer.class, new StringParser<Integer>() {
+		return getIntegers(propertyNames).findFirst();
+	}
 
-			@Override
-			public Integer parse(Object i) {
-				try {
-					return Integer.parseInt((String)i);
-				} catch(NumberFormatException e) {
-					return Fraction.getFraction((String)i).intValue();
-				}
-			}
-		}, propertyNames);
+	default Stream<Long> getLongs(String... propertyNames) {
+		return getObjects(Long.class, Parsers.stringToLong(), propertyNames);
 	}
 
 	default Optional<Long> getFirstLong(String... propertyNames) {
-		return getFirstObject(Long.class, new StringParser<Long>() {
+		return getLongs(propertyNames).findFirst();
+	}
 
-			@Override
-			public Long parse(Object i) {
-				try {
-					return Long.parseLong((String)i);
-				} catch(NumberFormatException e) {
-					return Fraction.getFraction((String)i).longValue();
-				}
-			}
-		}, propertyNames);
+	default Stream<Float> getFloats(String... propertyNames) {
+		return getObjects(Float.class, Parsers.stringToFloat(), propertyNames);
 	}
 
 	default Optional<Float> getFirstFloat(String... propertyNames) {
-		return getFirstObject(Float.class, new StringParser<Float>() {
+		return getFloats(propertyNames).findFirst();
+	}
 
-			@Override
-			public Float parse(Object i) {
-				try {
-					return Float.parseFloat((String)i);
-				} catch(NumberFormatException e) {
-					return Fraction.getFraction((String)i).floatValue();
-				}
-			}
-		}, propertyNames);
+	default Stream<Double> getDoubles(String... propertyNames) {
+		return getObjects(Double.class, Parsers.stringToDouble(), propertyNames);
 	}
 
 	default Optional<Double> getFirstDouble(String... propertyNames) {
-		return getFirstObject(Double.class, new StringParser<Double>() {
+		return getDoubles(propertyNames).findFirst();
+	}
 
-			@Override
-			public Double parse(Object i) {
-				try {
-					return Double.parseDouble((String)i);
-				} catch(NumberFormatException e) {
-					return Fraction.getFraction((String)i).doubleValue();
-				}
-			}
-		}, propertyNames);
+	default Stream<Number> getNumbers(String... propertyNames) {
+		return getObjects(Number.class, Parsers.stringToNumber(), propertyNames);
 	}
 
 	default Optional<Number> getFirstNumber(String... propertyNames) {
-		return getFirstObject(Number.class, new StringParser<Number>() {
+		return getNumbers(propertyNames).findFirst();
+	}
 
-			@Override
-			public Number parse(Object i) {
-				try {
-					return Double.parseDouble((String)i);
-				} catch(NumberFormatException e) {
-					return Fraction.getFraction((String)i).doubleValue();
-				}
-			}
-		}, propertyNames);
+	default Stream<Fraction> getFractions(String... propertyNames) {
+		return getObjects(Fraction.class, Parsers.stringToFraction(), propertyNames);
 	}
 
 	default Optional<Fraction> getFirstFraction(String... propertyNames) {
-		return getFirstObject(Fraction.class, new StringParser<Fraction>() {
-
-			@Override
-			public Fraction parse(Object i) {
-				return Fraction.getFraction((String)i);
-			}
-		}, propertyNames);
+		return getFractions(propertyNames).findFirst();
 	}
 
-	default Optional<MetadatasContainer> getFirstMetadatas(String... propertyNames) {
-		return getFirstObject(MetadatasContainer.class, new Parser<MetadatasContainer>() {
+	default Stream<MetadatasContainer> getMetadatass(String... propertyNames) {
+		return getObjects(MetadatasContainer.class, new Parser<MetadatasContainer>() {
 
 			@Override
 			public boolean accept(Object i) {
@@ -198,22 +165,8 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 		}, propertyNames);
 	}
 
-	// -------------------------
-
-	interface Parser<O> {
-
-		boolean accept(Object i);
-
-		O parse(Object i);
-
+	default Optional<MetadatasContainer> getFirstMetadatas(String... propertyNames) {
+		return getMetadatass(propertyNames).findFirst();
 	}
 
-	abstract class StringParser<O> implements Parser<O> {
-
-		@Override
-		public boolean accept(Object i) {
-			return i instanceof String;
-		}
-
-	}
 }

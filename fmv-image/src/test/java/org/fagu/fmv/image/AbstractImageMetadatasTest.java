@@ -27,10 +27,17 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.fagu.fmv.utils.media.Size;
+import org.junit.AfterClass;
 
 
 /**
@@ -38,9 +45,28 @@ import org.fagu.fmv.utils.media.Size;
  */
 public abstract class AbstractImageMetadatasTest {
 
-	protected abstract ImageMetadatas with(File file) throws IOException;
+	private static final Map<String, Set<String>> FAILED_KEYS = new HashMap<>();
 
-	protected abstract ImageMetadatas with(InputStream inputStream) throws IOException;
+	protected static boolean DEBUG = false;
+
+	@SuppressWarnings("unchecked")
+	@AfterClass
+	public static void debugFailedKeys() {
+		if(DEBUG) {
+			System.out.println();
+			System.out.println("Global keys to exclude :");
+			FAILED_KEYS.values().stream()
+					.reduce((a, b) -> new HashSet<>(CollectionUtils.intersection(a, b)))
+					.orElse(Collections.emptySet())
+					.stream()
+					.sorted()
+					.forEach(System.out::println);
+		}
+	}
+
+	protected abstract ImageMetadatas with(File file, String name) throws IOException;
+
+	protected abstract ImageMetadatas with(InputStream inputStream, String name) throws IOException;
 
 	// ********************************************
 
@@ -48,7 +74,7 @@ public abstract class AbstractImageMetadatasTest {
 		// by file
 		File file = ImageResourceUtils.extractFile(resourceName);
 		try {
-			ImageMetadatas metadatas = with(file);
+			ImageMetadatas metadatas = with(file, resourceName);
 			assertConsumer.accept(metadatas);
 		} finally {
 			if(file != null && ! file.delete()) {
@@ -58,7 +84,7 @@ public abstract class AbstractImageMetadatasTest {
 
 		// by inputStream
 		try (InputStream inputStream = AbstractImageMetadatasTest.class.getResourceAsStream(resourceName)) {
-			ImageMetadatas metadatas = with(inputStream);
+			ImageMetadatas metadatas = with(inputStream, resourceName);
 			assertConsumer.accept(metadatas);
 		}
 	}
@@ -86,7 +112,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "ExposureTimeFormat", "1/50", metadatas.getExposureTimeFormat());
 		mdAssertEquals(fileName, "Flash", "Flash(16) Off, Did not fire", String.valueOf(metadatas.getFlash()));
 		mdAssertEquals(fileName, "FocalLength", Float.valueOf(50F), metadatas.getFocalLength());
-		mdAssertEquals(fileName, "Format", "JPEG", metadatas.getFormat());
+		mdAssertEquals(fileName, "Format", "JPEG", String.valueOf(metadatas.getFormat()).toUpperCase());
 		mdAssertEquals(fileName, "ISO", Integer.valueOf(100), metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		mdAssertNull(fileName, "Software", metadatas.getSoftware());
@@ -115,7 +141,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "ExposureTimeFormat", "1/955", metadatas.getExposureTimeFormat());
 		mdAssertEquals(fileName, "Flash", "Flash(0) No Flash", String.valueOf(metadatas.getFlash()));
 		mdAssertEquals(fileName, "FocalLength", Float.valueOf(4.67F), metadatas.getFocalLength());
-		mdAssertEquals(fileName, "Format", "JPEG", metadatas.getFormat());
+		mdAssertEquals(fileName, "Format", "JPEG", String.valueOf(metadatas.getFormat()).toUpperCase());
 		mdAssertEquals(fileName, "ISO", Integer.valueOf(60), metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		mdAssertEquals(fileName, "Software", "bullhead-user 8.1.0 OPM7.181205.001 5080180 release-keys", metadatas.getSoftware());
@@ -152,7 +178,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "ExposureTimeFormat", "", metadatas.getExposureTimeFormat());
 		mdAssertNull(fileName, "Flash", metadatas.getFlash());
 		mdAssertNull(fileName, "FocalLength", metadatas.getFocalLength());
-		mdAssertEquals(fileName, "Format", "JPEG", metadatas.getFormat());
+		mdAssertEquals(fileName, "Format", "JPEG", String.valueOf(metadatas.getFormat()).toUpperCase());
 		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		mdAssertEquals(fileName, "Software", "Adobe Photoshop CS3 Windows", metadatas.getSoftware());
@@ -182,7 +208,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "ExposureTimeFormat", "", metadatas.getExposureTimeFormat());
 		mdAssertNull(fileName, "Flash", metadatas.getFlash());
 		mdAssertNull(fileName, "FocalLength", metadatas.getFocalLength());
-		mdAssertEquals(fileName, "Format", "JPEG", metadatas.getFormat());
+		mdAssertEquals(fileName, "Format", "JPEG", String.valueOf(metadatas.getFormat()).toUpperCase());
 		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		mdAssertEquals(fileName, "ResolutionUnit", "Undefined", metadatas.getResolutionUnit());
@@ -215,7 +241,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "ExposureTimeFormat", "", metadatas.getExposureTimeFormat());
 		mdAssertNull(fileName, "Flash", metadatas.getFlash());
 		mdAssertNull(fileName, "FocalLength", metadatas.getFocalLength());
-		mdAssertEquals(fileName, "Format", "PNG", metadatas.getFormat());
+		mdAssertEquals(fileName, "Format", "PNG", String.valueOf(metadatas.getFormat()).toUpperCase());
 		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		mdAssertEquals(fileName, "ResolutionUnit", "Undefined", metadatas.getResolutionUnit());
@@ -255,7 +281,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "ExposureTimeFormat", "", metadatas.getExposureTimeFormat());
 		mdAssertNull(fileName, "Flash", metadatas.getFlash());
 		mdAssertNull(fileName, "FocalLength", metadatas.getFocalLength());
-		mdAssertEquals(fileName, "Format", "TIFF", metadatas.getFormat());
+		mdAssertEquals(fileName, "Format", "TIFF", String.valueOf(metadatas.getFormat()).toUpperCase());
 		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(600, 600), metadatas.getResolution());
 		mdAssertEquals(fileName, "ResolutionUnit", "PixelsPerInch", metadatas.getResolutionUnit());
@@ -293,7 +319,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "ExposureTimeFormat", "", metadatas.getExposureTimeFormat());
 		mdAssertNull(fileName, "Flash", metadatas.getFlash());
 		mdAssertNull(fileName, "FocalLength", metadatas.getFocalLength());
-		mdAssertEquals(fileName, "Format", "TIFF", metadatas.getFormat());
+		mdAssertEquals(fileName, "Format", "TIFF", String.valueOf(metadatas.getFormat()).toUpperCase());
 		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(96, 96), metadatas.getResolution());
 		mdAssertEquals(fileName, "ResolutionUnit", "PixelsPerInch", metadatas.getResolutionUnit());
@@ -312,10 +338,6 @@ public abstract class AbstractImageMetadatasTest {
 
 	protected BiPredicate<String, String> assertFilter() {
 		return (n, m) -> true;
-	}
-
-	protected boolean debug() {
-		return false;
 	}
 
 	// *****************************************
@@ -340,15 +362,15 @@ public abstract class AbstractImageMetadatasTest {
 		}
 	}
 
-	private void mdAssertEquals(String fileName, String message, long expected, long actual) {
-		if(assertFilter().test(fileName, message)) {
-			try {
-				assertEquals(message, expected, actual);
-			} catch(AssertionError e) {
-				assertion(e, fileName, message);
-			}
-		}
-	}
+	// private void mdAssertEquals(String fileName, String message, long expected, long actual) {
+	// if(assertFilter().test(fileName, message)) {
+	// try {
+	// assertEquals(message, expected, actual);
+	// } catch(AssertionError e) {
+	// assertion(e, fileName, message);
+	// }
+	// }
+	// }
 
 	private void mdAssertEquals(String fileName, String message, double expected, double actual, double delta) {
 		if(assertFilter().test(fileName, message)) {
@@ -361,6 +383,10 @@ public abstract class AbstractImageMetadatasTest {
 	}
 
 	private void mdAssertEquals(String fileName, String message, Object expected, Object actual) {
+		if((expected instanceof Float || expected instanceof Double) && expected != null && actual != null) {
+			mdAssertEquals(fileName, message, ((Number)expected).doubleValue(), ((Number)actual).doubleValue(), 0.01D);
+			return;
+		}
 		if(assertFilter().test(fileName, message)) {
 			try {
 				assertEquals(message, expected, actual);
@@ -371,8 +397,10 @@ public abstract class AbstractImageMetadatasTest {
 	}
 
 	private void assertion(AssertionError error, String fileName, String message) {
-		if(debug()) {
-			System.out.println("FAILEd for " + fileName + " : " + message + "  =>  " + error.getMessage());
+		if(DEBUG) {
+			System.out.println("FAILED for " + fileName + " : " + message + "  =>  " + error.getMessage());
+			FAILED_KEYS.computeIfAbsent(fileName, k -> new HashSet<>())
+					.add(message);
 		} else {
 			throw error;
 		}

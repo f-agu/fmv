@@ -78,12 +78,12 @@ public class IMConvertImageMetadatasTestCase extends TestAllImageMetadatasTest {
 	// ********************************************
 
 	@Override
-	protected ImageMetadatas with(File file) throws IOException {
+	protected ImageMetadatas with(File file, String name) throws IOException {
 		return IMConvertImageMetadatas.with(file).extract();
 	}
 
 	@Override
-	protected ImageMetadatas with(InputStream inputStream) throws IOException {
+	protected ImageMetadatas with(InputStream inputStream, String name) throws IOException {
 		return IMConvertImageMetadatas.with(inputStream).extract();
 	}
 
