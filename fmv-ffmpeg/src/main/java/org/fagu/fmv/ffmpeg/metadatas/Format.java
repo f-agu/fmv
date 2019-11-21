@@ -23,8 +23,11 @@ package org.fagu.fmv.ffmpeg.metadatas;
 import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.fagu.fmv.utils.geo.Coordinates;
 
 import net.sf.json.JSONObject;
 
@@ -34,19 +37,10 @@ import net.sf.json.JSONObject;
  */
 public class Format extends InfoBase {
 
-	/**
-	 * @param movieMetadatas
-	 * @param map
-	 */
 	public Format(MovieMetadatas movieMetadatas, NavigableMap<String, Object> map) {
 		super(movieMetadatas, map);
 	}
 
-	/**
-	 * @param jsonObject
-	 * @param movieMetadatas
-	 * @return
-	 */
 	public static Format create(JSONObject jsonObject, MovieMetadatas movieMetadatas) {
 		return new Format(movieMetadatas, MovieMetadatas.createMap(jsonObject));
 	}
@@ -56,91 +50,69 @@ public class Format extends InfoBase {
 		return "format";
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> fileName() {
 		return getString("filename");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> formatLongName() {
 		return getString("format_long_name");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> formatName() {
 		return getString("format_name");
 	}
 
-	/**
-	 * @return
-	 */
 	public OptionalInt size() {
 		return getInt("size");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> compatibleBrands() {
 		return tagString("compatible_brands").map(StringUtils::stripToEmpty);
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> majorBrand() {
 		return tagString("major_brand").map(StringUtils::stripToEmpty);
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> album() {
 		return tagString("album");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> year() {
 		return tagString("date");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> comment() {
 		return tagString("comment");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> artist() {
 		return tagString("artist");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> genre() {
 		return tagString("genre");
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
+	public Optional<Coordinates> coordinates() {
+		return tagString("location") // +48.8617+002.3547/
+				.map(s -> {
+					Pattern pattern = Pattern.compile("((?:\\+|-)\\d+(?:\\.\\d+)?)((?:\\+|-)\\d+(?:\\.\\d+)?)/");
+					Matcher matcher = pattern.matcher(s);
+					if( ! matcher.matches()) {
+						return null;
+					}
+					double latitude = Double.parseDouble(matcher.group(1));
+					double longitude = Double.parseDouble(matcher.group(2));
+					return new Coordinates(latitude, longitude);
+				});
+	}
+
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder(100);
-		buf.append("Format[").append(formatName().orElse("?")).append(']');
-		return buf.toString();
+		return new StringBuilder(100)
+				.append("Format[").append(formatName().orElse("?")).append(']')
+				.toString();
 	}
 
 }
