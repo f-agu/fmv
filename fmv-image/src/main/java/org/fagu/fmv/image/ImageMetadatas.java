@@ -12,6 +12,7 @@ import java.util.TreeMap;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.image.exif.Flash;
 import org.fagu.fmv.media.MetadatasContainer;
+import org.fagu.fmv.utils.geo.Coordinates;
 import org.fagu.fmv.utils.media.Size;
 
 

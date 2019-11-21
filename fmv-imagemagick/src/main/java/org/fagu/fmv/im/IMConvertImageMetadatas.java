@@ -52,7 +52,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.exec.CommandLine;
 import org.fagu.fmv.im.soft.Convert;
-import org.fagu.fmv.image.Coordinates;
 import org.fagu.fmv.image.ImageMetadatas;
 import org.fagu.fmv.image.MapImageMetadatas;
 import org.fagu.fmv.image.exif.Flash;
@@ -63,6 +62,7 @@ import org.fagu.fmv.media.MetadatasContainer;
 import org.fagu.fmv.media.NavigableMapMetadatasContainer;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
+import org.fagu.fmv.utils.geo.Coordinates;
 import org.fagu.fmv.utils.media.Size;
 
 import net.sf.json.JSONArray;

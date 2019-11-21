@@ -1,4 +1,4 @@
-package org.fagu.fmv.image;
+package org.fagu.fmv.utils.geo;
 
 /*
  * #%L
