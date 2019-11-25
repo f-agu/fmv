@@ -4,10 +4,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.time.OffsetDateTime;
-import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Optional;
-import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.image.exif.Flash;
@@ -22,14 +19,6 @@ import org.fagu.fmv.utils.media.Size;
  * @created 7 nov. 2019 10:02:49
  */
 public interface ImageMetadatas extends MetadatasContainer {
-
-	default NavigableMap<String, Object> getMetadatas() {
-		Map<String, Object> data = getData();
-		if(data instanceof NavigableMap) {
-			return (NavigableMap<String, Object>)data;
-		}
-		return new TreeMap<>(data);
-	}
 
 	String getFormat();
 
@@ -105,11 +94,6 @@ public interface ImageMetadatas extends MetadatasContainer {
 		} catch(Exception ignored) { // ignore
 		}
 		return null;
-	}
-
-	@Override
-	default Map<String, Object> getData() {
-		return getMetadatas();
 	}
 
 	// -------------------------------------

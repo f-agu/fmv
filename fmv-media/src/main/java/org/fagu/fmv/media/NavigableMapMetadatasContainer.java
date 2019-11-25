@@ -15,8 +15,10 @@ public class NavigableMapMetadatasContainer implements MetadatasContainer {
 
 	private final NavigableMap<String, Object> metadatas;
 
-	public NavigableMapMetadatasContainer(NavigableMap<String, Object> metadatas) {
-		this.metadatas = Collections.unmodifiableNavigableMap(new TreeMap<>(metadatas));
+	public NavigableMapMetadatasContainer(Map<String, Object> metadatas) {
+		TreeMap<String, Object> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+		map.putAll(metadatas);
+		this.metadatas = Collections.unmodifiableNavigableMap(map);
 	}
 
 	@Override

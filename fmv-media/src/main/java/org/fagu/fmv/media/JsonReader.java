@@ -59,7 +59,6 @@ public class JsonReader {
 				// System.out.println(value);
 			}
 			map.put(name, value);
-			map.put(name.toLowerCase(), value);
 		}
 		return map;
 	}

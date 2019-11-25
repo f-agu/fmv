@@ -1,6 +1,6 @@
 package org.fagu.fmv.image;
 
-import java.util.NavigableMap;
+import java.util.Map;
 
 import org.fagu.fmv.media.NavigableMapMetadatasContainer;
 
@@ -14,7 +14,7 @@ public abstract class MapImageMetadatas extends NavigableMapMetadatasContainer i
 
 	private final long createTime;
 
-	protected MapImageMetadatas(NavigableMap<String, Object> metadatas) {
+	protected MapImageMetadatas(Map<String, Object> metadatas) {
 		super(metadatas);
 		createTime = System.currentTimeMillis();
 	}

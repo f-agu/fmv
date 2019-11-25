@@ -7,7 +7,6 @@ import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
@@ -153,14 +152,7 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 			public MetadatasContainer parse(Object i) {
 				@SuppressWarnings("unchecked")
 				Map<String, Object> map = (Map<String, Object>)i;
-				NavigableMap<String, Object> nvMap = null;
-				if(map instanceof NavigableMap) {
-					nvMap = (NavigableMap<String, Object>)map;
-				} else {
-					nvMap = new TreeMap<>(map);
-				}
-
-				return new NavigableMapMetadatasContainer(nvMap);
+				return new NavigableMapMetadatasContainer(map);
 			}
 		}, propertyNames);
 	}
