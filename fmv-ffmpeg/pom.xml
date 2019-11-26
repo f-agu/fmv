@@ -51,12 +51,10 @@
 			<groupId>com.neovisionaries</groupId>
 			<artifactId>nv-i18n</artifactId>
 		</dependency>
-		<dependency>
-	        <groupId>net.sf.json-lib</groupId>
-	        <artifactId>json-lib</artifactId>
-	        <type>jar</type>
-	        <classifier>jdk15</classifier>
-	    </dependency>
+	    <dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
 
 		<!-- tests -->
 		<dependency>

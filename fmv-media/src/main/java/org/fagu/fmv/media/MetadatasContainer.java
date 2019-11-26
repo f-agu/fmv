@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.math.Fraction;
 
-import net.sf.json.JSONObject;
+import com.google.gson.Gson;
 
 
 /**
@@ -38,7 +38,8 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 
 	@Override
 	default String toJSON() {
-		return JSONObject.fromObject(getData()).toString();
+		Gson gson = new Gson();
+		return gson.toJson(getData());
 	}
 
 	default Stream<Object> getObjects(String... propertyNames) {
@@ -52,23 +53,11 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 		return getObjects(propertyNames).findFirst();
 	}
 
-	@SuppressWarnings("unchecked")
 	default <T> Stream<T> getObjects(Class<T> cls, Parser<T> parser, String... propertyNames) {
 		Map<String, Object> data = getData();
 		return Arrays.stream(propertyNames)
 				.map(data::get)
-				.map(o -> {
-					if(o == null) {
-						return null;
-					}
-					if(cls.isAssignableFrom(o.getClass())) {
-						return (T)o;
-					}
-					if(parser != null && parser.accept(o)) {
-						return parser.parse(o);
-					}
-					return null;
-				})
+				.map(o -> Parsers.objectTo(cls, parser).parse(o))
 				.filter(Objects::nonNull);
 	}
 
@@ -92,8 +81,24 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 		return getBooleans(propertyNames).findFirst();
 	}
 
+	default Stream<Byte> getBytes(String... propertyNames) {
+		return getObjects(Byte.class, Parsers.combine(Parsers.stringToByte(), Parsers.numberTo(Byte.class)), propertyNames);
+	}
+
+	default Optional<Byte> getFirstByte(String... propertyNames) {
+		return getBytes(propertyNames).findFirst();
+	}
+
+	default Stream<Short> getShorts(String... propertyNames) {
+		return getObjects(Short.class, Parsers.combine(Parsers.stringToShort(), Parsers.numberTo(Short.class)), propertyNames);
+	}
+
+	default Optional<Short> getFirstShort(String... propertyNames) {
+		return getShorts(propertyNames).findFirst();
+	}
+
 	default Stream<Integer> getIntegers(String... propertyNames) {
-		return getObjects(Integer.class, Parsers.stringToInteger(), propertyNames);
+		return getObjects(Integer.class, Parsers.combine(Parsers.stringToInteger(), Parsers.numberTo(Integer.class)), propertyNames);
 	}
 
 	default Optional<Integer> getFirstInteger(String... propertyNames) {
@@ -101,7 +106,7 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 	}
 
 	default Stream<Long> getLongs(String... propertyNames) {
-		return getObjects(Long.class, Parsers.stringToLong(), propertyNames);
+		return getObjects(Long.class, Parsers.combine(Parsers.stringToLong(), Parsers.numberTo(Long.class)), propertyNames);
 	}
 
 	default Optional<Long> getFirstLong(String... propertyNames) {
@@ -109,7 +114,7 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 	}
 
 	default Stream<Float> getFloats(String... propertyNames) {
-		return getObjects(Float.class, Parsers.stringToFloat(), propertyNames);
+		return getObjects(Float.class, Parsers.combine(Parsers.stringToFloat(), Parsers.numberTo(Float.class)), propertyNames);
 	}
 
 	default Optional<Float> getFirstFloat(String... propertyNames) {
@@ -117,7 +122,7 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 	}
 
 	default Stream<Double> getDoubles(String... propertyNames) {
-		return getObjects(Double.class, Parsers.stringToDouble(), propertyNames);
+		return getObjects(Double.class, Parsers.combine(Parsers.stringToDouble(), Parsers.numberTo(Double.class)), propertyNames);
 	}
 
 	default Optional<Double> getFirstDouble(String... propertyNames) {

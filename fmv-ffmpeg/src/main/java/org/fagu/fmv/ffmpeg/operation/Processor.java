@@ -28,7 +28,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.coder.Coder;
 import org.fagu.fmv.ffmpeg.operation.Parameter.Way;
 import org.fagu.fmv.ffmpeg.require.Require;
@@ -56,12 +56,6 @@ public abstract class Processor<P extends Processor<?>> {
 
 	private final MapMap<String, Type, Coder<?>> coderMap;
 
-	/**
-	 * @param ioParameters
-	 * @param ioEntity
-	 * @param index
-	 * @param require
-	 */
 	public Processor(IOParameters ioParameters, IOEntity ioEntity, int index, Require require) {
 		this.ioParameters = Objects.requireNonNull(ioParameters);
 		this.ioEntity = Objects.requireNonNull(ioEntity);
@@ -70,9 +64,6 @@ public abstract class Processor<P extends Processor<?>> {
 		coderMap = MultiValueMaps.hashMapHashMap();
 	}
 
-	/**
-	 * @return the inputIndex
-	 */
 	public int getIndex() {
 		return index;
 	}

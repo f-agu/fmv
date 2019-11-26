@@ -20,7 +20,7 @@ package org.fagu.fmv.cli.command;
  * #L%
  */
 
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.fagu.fmv.cli.annotation.Alias;
 import org.fagu.fmv.cli.annotation.Command;
 import org.fagu.fmv.cli.utils.OpenFile;

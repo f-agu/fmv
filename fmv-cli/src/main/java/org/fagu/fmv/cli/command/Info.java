@@ -22,7 +22,7 @@ package org.fagu.fmv.cli.command;
 
 import java.io.File;
 
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.fagu.fmv.cli.annotation.Command;
 import org.fagu.fmv.core.project.FileSource;
 import org.fagu.fmv.ffmpeg.metadatas.Format;

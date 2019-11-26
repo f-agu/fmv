@@ -1,0 +1,19 @@
+{
+  "cdepth": "8",
+  "colorspace": "sRGB",
+  "compression": "JPEG",
+  "compressionq": "92",
+  "date:create": "2019-11-26T14:08:18+00:00",
+  "date:modify": "2019-11-26T14:08:18+00:00",
+  "filename": "-",
+  "format": "TIFF",
+  "jpeg:sampling-factor": "2x2",
+  "resunit": "PixelsPerInch",
+  "tiff:alpha": "unspecified",
+  "tiff:endian": "lsb",
+  "tiff:photometric": "RGB",
+  "tiff:rows-per-strip": "16",
+  "tiff:software": "IrfanView",
+  "wh": "800 600",
+  "xy": "96 96"
+}

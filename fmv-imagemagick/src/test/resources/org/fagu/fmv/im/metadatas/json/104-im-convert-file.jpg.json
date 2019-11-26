@@ -1,0 +1,194 @@
+[
+  {
+    "image": {
+      "name": "-",
+      "baseName": "BaseImageMetadatasTest5211719347813362691.jpg",
+      "format": "JPEG",
+      "formatDescription": "JPEG",
+      "mimeType": "image/jpeg",
+      "class": "DirectClass",
+      "geometry": {
+        "width": 4032.0,
+        "height": 3024.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "resolution": {
+        "x": 72.0,
+        "y": 72.0
+      },
+      "printSize": {
+        "x": 56.0,
+        "y": 42.0
+      },
+      "units": "PixelsPerInch",
+      "type": "TrueColor",
+      "baseType": "Undefined",
+      "endianess": "Undefined",
+      "colorspace": "sRGB",
+      "depth": 8.0,
+      "baseDepth": 8.0,
+      "channelDepth": {
+        "red": 8.0,
+        "green": 8.0,
+        "blue": 1.0
+      },
+      "pixels": 3.6578304E7,
+      "imageStatistics": {
+        "Overall": {
+          "min": 0.0,
+          "max": 255.0,
+          "mean": 87.8915,
+          "standardDeviation": 17087.7,
+          "kurtosis": -0.116727,
+          "skewness": 0.798684,
+          "entropy": 0.940638
+        }
+      },
+      "channelStatistics": {
+        "Red": {
+          "min": 0.0,
+          "max": 255.0,
+          "mean": 73.7119,
+          "standardDeviation": 15553.6,
+          "kurtosis": 0.505164,
+          "skewness": 0.932693,
+          "entropy": 0.918997
+        },
+        "Green": {
+          "min": 0.0,
+          "max": 255.0,
+          "mean": 86.5256,
+          "standardDeviation": 16790.2,
+          "kurtosis": -0.17363,
+          "skewness": 0.735036,
+          "entropy": 0.946773
+        },
+        "Blue": {
+          "min": 0.0,
+          "max": 255.0,
+          "mean": 103.437,
+          "standardDeviation": 18919.1,
+          "kurtosis": -0.652522,
+          "skewness": 0.639336,
+          "entropy": 0.956144
+        }
+      },
+      "renderingIntent": "Perceptual",
+      "gamma": 0.454545,
+      "chromaticity": {
+        "redPrimary": {
+          "x": 0.64,
+          "y": 0.33
+        },
+        "greenPrimary": {
+          "x": 0.3,
+          "y": 0.6
+        },
+        "bluePrimary": {
+          "x": 0.15,
+          "y": 0.06
+        },
+        "whitePrimary": {
+          "x": 0.3127,
+          "y": 0.329
+        }
+      },
+      "matteColor": "#BDBDBD",
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#DFDFDF",
+      "transparentColor": "#00000000",
+      "interlace": "None",
+      "intensity": "Undefined",
+      "compose": "Over",
+      "pageGeometry": {
+        "width": 4032.0,
+        "height": 3024.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "dispose": "Undefined",
+      "iterations": 0.0,
+      "compression": "JPEG",
+      "quality": 65.0,
+      "orientation": "TopLeft",
+      "properties": {
+        "date:create": "2019-11-26T14:07:24+00:00",
+        "date:modify": "2019-11-26T14:07:24+00:00",
+        "exif:ApertureValue": "200/100",
+        "exif:BrightnessValue": "0/100",
+        "exif:ColorSpace": "1",
+        "exif:ComponentsConfiguration": "1, 2, 3, 0",
+        "exif:DateTime": "2019:08:14 10:20:58",
+        "exif:DateTimeDigitized": "2019:08:14 10:20:58",
+        "exif:DateTimeOriginal": "2019:08:14 10:20:58",
+        "exif:ExifOffset": "272",
+        "exif:ExifVersion": "48, 50, 50, 48",
+        "exif:ExposureBiasValue": "0/6",
+        "exif:ExposureMode": "0",
+        "exif:ExposureProgram": "0",
+        "exif:ExposureTime": "1046721/1000000000",
+        "exif:Flash": "0",
+        "exif:FlashPixVersion": "48, 49, 48, 48",
+        "exif:FNumber": "200/100",
+        "exif:FocalLength": "4670/1000",
+        "exif:FocalLengthIn35mmFilm": "0",
+        "exif:GPSAltitude": "108869/100",
+        "exif:GPSAltitudeRef": "0",
+        "exif:GPSDateStamp": "2019:08:14",
+        "exif:GPSInfo": "785",
+        "exif:GPSLatitude": "45/1, 55/1, 2035/100",
+        "exif:GPSLatitudeRef": "N",
+        "exif:GPSLongitude": "6/1, 52/1, 711/100",
+        "exif:GPSLongitudeRef": "E",
+        "exif:GPSTimeStamp": "8/1, 20/1, 55/1",
+        "exif:ImageLength": "3024",
+        "exif:ImageWidth": "4032",
+        "exif:InteroperabilityOffset": "755",
+        "exif:Make": "LGE",
+        "exif:MeteringMode": "0",
+        "exif:Model": "Nexus 5X",
+        "exif:Orientation": "1",
+        "exif:PhotographicSensitivity": "60",
+        "exif:PixelXDimension": "4032",
+        "exif:PixelYDimension": "3024",
+        "exif:ResolutionUnit": "2",
+        "exif:SceneCaptureType": "0",
+        "exif:SceneType": "0",
+        "exif:SensingMethod": "0",
+        "exif:ShutterSpeedValue": "-989/100",
+        "exif:Software": "bullhead-user 8.1.0 OPM7.181205.001 5080180 release-keys",
+        "exif:SubjectDistanceRange": "3",
+        "exif:SubSecTime": "528891",
+        "exif:SubSecTimeDigitized": "528891",
+        "exif:SubSecTimeOriginal": "528891",
+        "exif:thumbnail:InteroperabilityIndex": "R98",
+        "exif:thumbnail:InteroperabilityVersion": "48, 49, 48, 48",
+        "exif:WhiteBalance": "0",
+        "exif:XResolution": "72/1",
+        "exif:YCbCrPositioning": "1",
+        "exif:YResolution": "72/1",
+        "icc:copyright": "Copyright (c) 2016 Google Inc.",
+        "icc:description": "sRGB IEC61966-2.1",
+        "jpeg:colorspace": "2",
+        "jpeg:sampling-factor": "2x2,1x1,1x1",
+        "signature": "9219d9ef0bc3e181b2c37e1c62e2e2afb1f9a89014775e7b2388acfec5572bd9"
+      },
+      "profiles": {
+        "exif": {
+          "length": 984.0
+        },
+        "icc": {
+          "length": 596.0
+        }
+      },
+      "tainted": false,
+      "filesize": "931438B",
+      "numberPixels": "12.1928M",
+      "pixelsPerSecond": "113.731MB",
+      "userTime": "0.109u",
+      "elapsedTime": "0:01.107",
+      "version": "C:\\Program Files\\ImageMagick-7.0.8-Q16\\\\index.html"
+    }
+  }
+]

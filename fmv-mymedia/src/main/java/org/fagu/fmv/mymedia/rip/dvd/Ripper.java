@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.OptionalInt;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -355,9 +355,9 @@ public class Ripper implements Closeable {
 		outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(21)).overwrite();
 
 		int nbFrames = 0;
-		OptionalInt countEstimateFrames = movieMetadatas.getVideoStream().countEstimateFrames();
+		Optional<Integer> countEstimateFrames = movieMetadatas.getVideoStream().countEstimateFrames();
 		if(countEstimateFrames.isPresent()) {
-			nbFrames = countEstimateFrames.getAsInt();
+			nbFrames = countEstimateFrames.get();
 		} else {
 			// TODO
 		}

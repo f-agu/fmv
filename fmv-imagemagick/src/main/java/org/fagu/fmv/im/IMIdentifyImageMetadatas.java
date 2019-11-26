@@ -38,7 +38,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -57,14 +56,13 @@ import org.fagu.fmv.im.soft.Identify;
 import org.fagu.fmv.image.ImageMetadatas;
 import org.fagu.fmv.image.MapImageMetadatas;
 import org.fagu.fmv.image.exif.Flash;
-import org.fagu.fmv.media.JsonReader;
 import org.fagu.fmv.media.MetadatasBuilder;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.utils.geo.Coordinates;
 import org.fagu.fmv.utils.media.Size;
 
-import net.sf.json.JSONObject;
+import com.google.gson.Gson;
 
 
 /**
@@ -174,7 +172,7 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 	// --------------------------------------------------------
 
-	protected IMIdentifyImageMetadatas(NavigableMap<String, Object> metadatas) {
+	protected IMIdentifyImageMetadatas(Map<String, Object> metadatas) {
 		super(metadatas);
 	}
 
@@ -368,8 +366,9 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 	}
 
 	public static IMIdentifyImageMetadatas parseJSON(String json) {
-		JSONObject jsonObject = JSONObject.fromObject(json);
-		NavigableMap<String, Object> params = JsonReader.parse(jsonObject);
+		Gson gson = new Gson();
+		@SuppressWarnings("unchecked")
+		Map<String, Object> params = gson.fromJson(json, Map.class);
 		return new IMIdentifyImageMetadatas(params);
 	}
 

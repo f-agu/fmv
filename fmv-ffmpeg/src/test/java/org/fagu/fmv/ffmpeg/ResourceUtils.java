@@ -36,26 +36,12 @@ import org.apache.commons.io.IOUtils;
  */
 public class ResourceUtils {
 
-	/**
-	 * 
-	 */
 	private ResourceUtils() {}
 
-	/**
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
 	public static File extract(String resource) throws IOException {
 		return extract(resource, null);
 	}
 
-	/**
-	 * @param tmpFolder
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
 	public static File extract(String resource, File tmpFolder) throws IOException {
 		File file = File.createTempFile(FilenameUtils.getBaseName(resource), "." + FilenameUtils.getExtension(resource), tmpFolder);
 		try (InputStream inputStream = open(resource);
@@ -65,11 +51,6 @@ public class ResourceUtils {
 		return file;
 	}
 
-	/**
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
 	public static InputStream open(String resource) throws IOException {
 		return FFHelper.class.getResourceAsStream(resource);
 	}

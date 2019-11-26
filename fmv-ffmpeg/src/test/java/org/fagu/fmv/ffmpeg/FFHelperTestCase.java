@@ -409,7 +409,7 @@ public class FFHelperTestCase {
 		final MovieMetadatas movieMetadatas = mock(MovieMetadatas.class);
 		VideoStream videoStream = mock(VideoStream.class);
 		doReturn(videoStream).when(movieMetadatas).getVideoStream();
-		doReturn(Rotation.R_180).when(videoStream).rotate();
+		doReturn(Rotation.R_180).when(videoStream).rotation();
 
 		movieMetadatasSupplier = fileName -> movieMetadatas;
 
@@ -433,7 +433,7 @@ public class FFHelperTestCase {
 		final MovieMetadatas movieMetadatas = mock(MovieMetadatas.class);
 		VideoStream videoStream = mock(VideoStream.class);
 		doReturn(videoStream).when(movieMetadatas).getVideoStream();
-		doReturn(Rotation.R_270).when(videoStream).rotate();
+		doReturn(Rotation.R_270).when(videoStream).rotation();
 
 		movieMetadatasSupplier = fileName -> movieMetadatas;
 

@@ -22,8 +22,8 @@ package org.fagu.fmv.ffmpeg.operation;
 
 import java.util.StringTokenizer;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.fagu.fmv.utils.time.Time;
 
 
@@ -89,86 +89,56 @@ public class FFMPEGProgressReadLine implements ProgressReadLine {
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Progress#getFrame()
-	 */
 	@Override
 	public int getFrame() {
 		return frame;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Progress#getFps()
-	 */
 	@Override
 	public int getFps() {
 		return fps;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Progress#getQ()
-	 */
 	@Override
 	public int getQ() {
 		return q;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Progress#getSizeKb()
-	 */
 	@Override
 	public int getSizeKb() {
 		return sizeKb;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Progress#getTime()
-	 */
 	@Override
 	public Time getTime() {
 		return time;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Progress#getBitRateKb()
-	 */
 	@Override
 	public Double getBitRateKb() {
 		return bitrateKb;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Progress#getDup()
-	 */
 	@Override
 	public Integer getDup() {
 		return dup;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Progress#getDrop()
-	 */
 	@Override
 	public Integer getDrop() {
 		return drop;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Progress#getSpeed()
-	 */
 	@Override
 	public Float getSpeed() {
 		return speed;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder(100);
-		buf.append("Progress[frame=").append(frame).append(",fps=").append(fps).append(",time=").append(time).append(']');
-		return buf.toString();
+		return new StringBuilder(100)
+				.append("Progress[frame=").append(frame).append(",fps=").append(fps).append(",time=").append(time).append(']')
+				.toString();
 	}
 
 }

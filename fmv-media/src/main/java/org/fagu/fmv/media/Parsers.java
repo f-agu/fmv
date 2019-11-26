@@ -1,5 +1,9 @@
 package org.fagu.fmv.media;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
+
 import org.apache.commons.lang3.math.Fraction;
 
 
@@ -11,6 +15,127 @@ import org.apache.commons.lang3.math.Fraction;
 public class Parsers {
 
 	private Parsers() {}
+
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	@SafeVarargs
+	public static <T> Parser<T> combine(Parser<T>... parsers) {
+		return combine(Arrays.asList(parsers));
+	}
+
+	public static <T> Parser<T> combine(Collection<Parser<T>> parsers) {
+		return new Parser<T>() {
+
+			@Override
+			public boolean accept(Object o) {
+				return parsers.stream().anyMatch(p -> p.accept(o));
+			}
+
+			@Override
+			public T parse(Object o) {
+				return parsers.stream()
+						.filter(p -> p.accept(o))
+						.map(p -> p.parse(o))
+						.findFirst()
+						.orElse(null);
+			}
+
+		};
+	}
+
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	@SafeVarargs
+	@SuppressWarnings("unchecked")
+	public static <T> Parser<T> objectTo(Class<T> cls, Parser<T>... parsers) {
+		return new ObjectParser<T>() {
+
+			@Override
+			public T parse(Object o) {
+				if(o == null) {
+					return null;
+				}
+				if(cls.isAssignableFrom(o.getClass())) {
+					return (T)o;
+				}
+				if(parsers != null) {
+					return Arrays.stream(parsers)
+							.filter(p -> p.accept(o))
+							.findFirst()
+							.map(p -> p.parse(o))
+							.orElse(null);
+				}
+				return null;
+			}
+		};
+	}
+
+	public static Parser<String> objectToString() {
+		return objectTo(String.class, stringToString());
+	}
+
+	public static Parser<Boolean> objectToBoolean() {
+		return objectTo(Boolean.class, stringToBoolean());
+	}
+
+	public static Parser<Byte> objectToByte() {
+		return objectTo(Byte.class, stringToByte(), numberTo(Byte.class));
+	}
+
+	public static Parser<Short> objectToShort() {
+		return objectTo(Short.class, stringToShort(), numberTo(Short.class));
+	}
+
+	public static Parser<Integer> objectToInteger() {
+		return objectTo(Integer.class, stringToInteger(), numberTo(Integer.class));
+	}
+
+	public static Parser<Long> objectToLong() {
+		return objectTo(Long.class, stringToLong(), numberTo(Long.class));
+	}
+
+	public static Parser<Float> objectToFloat() {
+		return objectTo(Float.class, stringToFloat(), numberTo(Float.class));
+	}
+
+	public static Parser<Double> objectToDouble() {
+		return objectTo(Double.class, stringToDouble(), numberTo(Double.class));
+	}
+
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	public static Optional<String> parseToString(Object object) {
+		return Optional.ofNullable(objectToString().parse(object));
+	}
+
+	public static Optional<Boolean> parseToBoolean(Object object) {
+		return Optional.ofNullable(objectToBoolean().parse(object));
+	}
+
+	public static Optional<Byte> parseToByte(Object object) {
+		return Optional.ofNullable(objectToByte().parse(object));
+	}
+
+	public static Optional<Short> parseToShort(Object object) {
+		return Optional.ofNullable(objectToShort().parse(object));
+	}
+
+	public static Optional<Integer> parseToInteger(Object object) {
+		return Optional.ofNullable(objectToInteger().parse(object));
+	}
+
+	public static Optional<Long> parseToLong(Object object) {
+		return Optional.ofNullable(objectToLong().parse(object));
+	}
+
+	public static Optional<Float> parseToFloat(Object object) {
+		return Optional.ofNullable(objectToFloat().parse(object));
+	}
+
+	public static Optional<Double> parseToDouble(Object object) {
+		return Optional.ofNullable(objectToDouble().parse(object));
+	}
+
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	public static Parser<String> stringToString() {
 		return new StringParser<String>() {
@@ -28,6 +153,34 @@ public class Parsers {
 			@Override
 			public Boolean parse(Object i) {
 				return Boolean.parseBoolean((String)i);
+			}
+		};
+	}
+
+	public static Parser<Byte> stringToByte() {
+		return new StringParser<Byte>() {
+
+			@Override
+			public Byte parse(Object i) {
+				try {
+					return Byte.parseByte((String)i);
+				} catch(NumberFormatException e) {
+					return Fraction.getFraction((String)i).byteValue();
+				}
+			}
+		};
+	}
+
+	public static Parser<Short> stringToShort() {
+		return new StringParser<Short>() {
+
+			@Override
+			public Short parse(Object i) {
+				try {
+					return Short.parseShort((String)i);
+				} catch(NumberFormatException e) {
+					return Fraction.getFraction((String)i).shortValue();
+				}
 			}
 		};
 	}
@@ -92,11 +245,11 @@ public class Parsers {
 		return new StringParser<Number>() {
 
 			@Override
-			public Number parse(Object i) {
+			public Number parse(Object o) {
 				try {
-					return Double.parseDouble((String)i);
+					return Double.parseDouble((String)o);
 				} catch(NumberFormatException e) {
-					return Fraction.getFraction((String)i).doubleValue();
+					return Fraction.getFraction((String)o).doubleValue();
 				}
 			}
 		};
@@ -106,13 +259,62 @@ public class Parsers {
 		return new StringParser<Fraction>() {
 
 			@Override
-			public Fraction parse(Object i) {
-				return Fraction.getFraction((String)i);
+			public Fraction parse(Object o) {
+				return Fraction.getFraction((String)o);
+			}
+		};
+	}
+
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	public static <N extends Number> Parser<N> numberTo(Class<N> cls) {
+		return new Parser<N>() {
+
+			@Override
+			public boolean accept(Object o) {
+				return o instanceof Number;
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public N parse(Object o) {
+				Number number = (Number)o;
+				if(cls.isAssignableFrom(number.getClass())) {
+					return (N)number;
+				}
+				if(cls == Byte.class) {
+					return (N)Byte.valueOf(number.byteValue());
+				}
+				if(cls == Short.class) {
+					return (N)Short.valueOf(number.shortValue());
+				}
+				if(cls == Integer.class) {
+					return (N)Integer.valueOf(number.intValue());
+				}
+				if(cls == Long.class) {
+					return (N)Long.valueOf(number.longValue());
+				}
+				if(cls == Float.class) {
+					return (N)Float.valueOf(number.floatValue());
+				}
+				if(cls == Double.class) {
+					return (N)Double.valueOf(number.doubleValue());
+				}
+				throw new RuntimeException("Undefined type: " + cls);
 			}
 		};
 	}
 
 	// ----------------------------------------------
+
+	public abstract static class ObjectParser<O> implements Parser<O> {
+
+		@Override
+		public boolean accept(Object i) {
+			return true;
+		}
+
+	}
 
 	public abstract static class StringParser<O> implements Parser<O> {
 

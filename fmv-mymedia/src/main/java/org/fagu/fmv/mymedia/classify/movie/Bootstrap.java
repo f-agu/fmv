@@ -69,7 +69,7 @@ public class Bootstrap {
 
 				// Format format = videoMetadatas.getFormat();
 				VideoStream videoStream = videoMetadatas.getVideoStream();
-				Rotation rotate = videoStream.rotate();
+				Rotation rotate = videoStream.rotation();
 				// System.out.println(count + ": " + file.getName() + " " + infos); // .getFormat().creationDate()
 				System.out.println("   " + rotate + ", " + videoStream.handlerName());
 			}

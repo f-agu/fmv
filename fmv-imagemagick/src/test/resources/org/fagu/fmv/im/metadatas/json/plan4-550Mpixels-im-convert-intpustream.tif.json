@@ -1,0 +1,85 @@
+[
+  {
+    "image": {
+      "name": "-",
+      "baseName": "-",
+      "format": "TIFF",
+      "formatDescription": "TIFF",
+      "mimeType": "image/tiff",
+      "class": "DirectClass",
+      "geometry": {
+        "width": 28083.0,
+        "height": 19867.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "resolution": {
+        "x": 600.0,
+        "y": 600.0
+      },
+      "printSize": {
+        "x": 46.805,
+        "y": 33.1117
+      },
+      "units": "PixelsPerInch",
+      "type": "Bilevel",
+      "endianess": "Undefined",
+      "colorspace": "Gray",
+      "depth": 1.0,
+      "baseDepth": 1.0,
+      "channelDepth": {
+        "gray": 1.0
+      },
+      "pixels": 5.57924961E8,
+      "channelStatistics": {
+        "Gray": {
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.984067,
+          "standardDeviation": 8206.09,
+          "kurtosis": 57.7785,
+          "skewness": -7.73165,
+          "entropy": 0.117952
+        }
+      },
+      "renderingIntent": "Undefined",
+      "gamma": 0.454545,
+      "matteColor": "#BDBDBD",
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#DFDFDF",
+      "transparentColor": "#00000000",
+      "interlace": "None",
+      "intensity": "Undefined",
+      "compose": "Over",
+      "pageGeometry": {
+        "width": 28083.0,
+        "height": 19867.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "dispose": "Undefined",
+      "iterations": 0.0,
+      "compression": "Group4",
+      "orientation": "TopLeft",
+      "properties": {
+        "date:create": "2019-11-26T14:07:52+00:00",
+        "date:modify": "2019-11-26T14:07:52+00:00",
+        "signature": "07ca4f96d25312fbf56798b4b04a269d9ba0eb7d649bae74d9f3a67ed7cd8f04",
+        "tiff:alpha": "unspecified",
+        "tiff:endian": "lsb",
+        "tiff:photometric": "min-is-white",
+        "tiff:rows-per-strip": "19867",
+        "tiff:software": "GPL Ghostscript 8.54",
+        "tiff:subfiletype": "PAGE",
+        "tiff:timestamp": "2011:09:21 08:05:12"
+      },
+      "tainted": false,
+      "filesize": "207916B",
+      "numberPixels": "557.925M",
+      "pixelsPerSecond": "294.444MB",
+      "userTime": "1.891u",
+      "elapsedTime": "0:02.894",
+      "version": "C:\\Program Files\\ImageMagick-7.0.8-Q16\\\\index.html"
+    }
+  }
+]

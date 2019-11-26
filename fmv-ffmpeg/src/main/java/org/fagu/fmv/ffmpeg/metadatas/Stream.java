@@ -22,9 +22,7 @@ package org.fagu.fmv.ffmpeg.metadatas;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -34,8 +32,6 @@ import org.fagu.fmv.ffmpeg.utils.Fraction;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.utils.time.Duration;
 
-import net.sf.json.JSONObject;
-
 
 /**
  * @author f.agu
@@ -44,37 +40,23 @@ public abstract class Stream extends InfoBase {
 
 	private static final Map<String, StreamFactory> STREAM_FACTORY_MAP = getStreamFactories();
 
-	/**
-	 * @param movieMetadatas
-	 * @param map
-	 */
-	protected Stream(MovieMetadatas movieMetadatas, NavigableMap<String, Object> map) {
+	protected Stream(MovieMetadatas movieMetadatas, Map<String, Object> map) {
 		super(movieMetadatas, map);
 	}
 
-	/**
-	 * @param jsonObject
-	 * @param movieMetadatas
-	 * @return
-	 */
-	public static Stream create(JSONObject jsonObject, MovieMetadatas movieMetadatas) {
-		NavigableMap<String, Object> map = MovieMetadatas.createMap(jsonObject);
+	public static Stream create(MovieMetadatas movieMetadatas, Map<String, Object> map) {
 		String codecType = (String)map.get("codec_type");
-		Stream stream = createStream(codecType, map, movieMetadatas);
+		Stream stream = createStream(codecType, movieMetadatas, map);
 		if(stream != null) {
 			return stream;
 		}
-		stream = createStream(null, map, movieMetadatas);
+		stream = createStream(null, movieMetadatas, map);
 		if(stream != null) {
 			return stream;
 		}
 		return new UnknownStream(movieMetadatas, map);
 	}
 
-	/**
-	 * @param type
-	 * @param streamFactory
-	 */
 	public static void setFactory(String type, StreamFactory streamFactory) {
 		STREAM_FACTORY_MAP.put(type, streamFactory);
 	}
@@ -84,25 +66,14 @@ public abstract class Stream extends InfoBase {
 		return StringUtils.capitalize(type().name().toLowerCase()) + "Stream-" + index();
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	public boolean is(Type type) {
 		return type == type();
 	}
 
-	/**
-	 * @return
-	 */
 	public int index() {
-		return getInt("index").getAsInt();
+		return getInt("index").orElseThrow(RuntimeException::new);
 	}
 
-	/**
-	 * @param formats
-	 * @return
-	 */
 	public boolean isCodec(Formats formats) {
 		Optional<String> codec = codecName();
 		if(codec.isPresent()) {
@@ -111,81 +82,48 @@ public abstract class Stream extends InfoBase {
 		return false;
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> codecName() {
 		return getString("codec_name");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> codecLongName() {
 		return getString("codec_long_name");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> codecType() {
 		return getString("codec_type");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<Fraction> codecTimeBase() {
 		return getFraction("codec_time_base");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<String> codecTag() {
 		return getString("codec_tag");
 	}
 
-	/**
-	 * @return
-	 */
 	public Object codecTagString() {
 		return get("codec_tag_string");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<FrameRate> frameRate() {
 		return getFrameRate("r_frame_rate");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<FrameRate> averageFrameRate() {
 		return getFrameRate("avg_frame_rate");
 	}
 
-	/**
-	 * @return
-	 */
 	public Optional<Fraction> timeBase() {
 		return getFraction("time_base");
 	}
 
-	/**
-	 * @return
-	 */
-	public OptionalInt numberOfFrames() {
+	public Optional<Integer> numberOfFrames() {
 		return getInt("nb_frames");
 	}
 
-	/**
-	 * @return
-	 */
-	public OptionalInt countEstimateFrames() {
-		OptionalInt count = numberOfFrames();
+	public Optional<Integer> countEstimateFrames() {
+		Optional<Integer> count = numberOfFrames();
 		if(count.isPresent()) {
 			return count;
 		}
@@ -194,7 +132,7 @@ public abstract class Stream extends InfoBase {
 			frameRate = averageFrameRate().orElse(null);
 		}
 		if(frameRate == null) {
-			return OptionalInt.empty();
+			return Optional.empty();
 		}
 		Duration duration = duration().orElse(null);
 		if(duration == null) {
@@ -211,81 +149,53 @@ public abstract class Stream extends InfoBase {
 		}
 
 		if(duration == null) {
-			OptionalInt dts = durationTimeBase();
+			Optional<Integer> dts = durationTimeBase();
 			if( ! dts.isPresent()) {
-				return OptionalInt.empty();
+				return Optional.empty();
 			}
 			Fraction timeBase = timeBase().orElse(null);
 			if(timeBase == null) {
-				return OptionalInt.empty();
+				return Optional.empty();
 			}
-			duration = Duration.valueOf(dts.getAsInt() * timeBase.doubleValue());
+			duration = Duration.valueOf(dts.get() * timeBase.doubleValue());
 		}
 
-		return OptionalInt.of((int)(frameRate.doubleValue() * duration.toSeconds()));
+		return Optional.of((int)(frameRate.doubleValue() * duration.toSeconds()));
 	}
 
-	/**
-	 * PTS
-	 *
-	 * @return
-	 */
-	public OptionalInt startPresentationTimeStamp() {
+	public Optional<Integer> startPresentationTimeStamp() {
 		return getInt("start_pts");
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public Map<String, Object> dispositions() {
 		return sub("disposition");
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public Object disposition(String name) {
 		return dispositions().get(name);
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean containsAttachedPicture() {
 		return Integer.valueOf(1).equals(disposition("attached_pic"));
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isDefaultStream() {
 		return "1".equals(disposition("default"));
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder(100);
-		buf.append("Stream[").append(codecType().orElse("?")).append(']');
-		return buf.toString();
+		return new StringBuilder(100)
+				.append("Stream[").append(codecType().orElse("?")).append(']')
+				.toString();
 	}
 
 	// **********************************************
 
-	/**
-	 * @return
-	 */
 	public abstract Type type();
 
 	// **********************************************
 
-	/**
-	 * @return
-	 */
 	private static Map<String, StreamFactory> getStreamFactories() {
 		Map<String, StreamFactory> map = new HashMap<>(8);
 		map.put("attachments", new AttachmentsStreamFactory());
@@ -297,16 +207,10 @@ public abstract class Stream extends InfoBase {
 		return map;
 	}
 
-	/**
-	 * @param code
-	 * @param map
-	 * @param movieMetadatas
-	 * @return
-	 */
-	private static Stream createStream(String code, NavigableMap<String, Object> map, MovieMetadatas movieMetadatas) {
+	private static Stream createStream(String code, MovieMetadatas movieMetadatas, Map<String, Object> map) {
 		StreamFactory streamFactory = STREAM_FACTORY_MAP.get(code);
 		if(streamFactory != null) {
-			Stream stream = streamFactory.create(map, movieMetadatas);
+			Stream stream = streamFactory.create(movieMetadatas, map);
 			if(stream != null) {
 				return stream;
 			}

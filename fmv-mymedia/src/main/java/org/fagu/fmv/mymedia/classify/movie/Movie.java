@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -104,9 +103,9 @@ public class Movie implements Media {
 			if(StringUtils.isNotEmpty(handlerName)) {
 				keys.add(handlerName);
 			}
-			OptionalInt sampleRate = audioStream.sampleRate();
+			Optional<Integer> sampleRate = audioStream.sampleRate();
 			if(sampleRate.isPresent()) {
-				keys.add(sampleRate.getAsInt() + "Hz");
+				keys.add(sampleRate.get() + "Hz");
 			}
 		}
 		return keys.stream().collect(Collectors.joining(" "));

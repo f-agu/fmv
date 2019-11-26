@@ -22,7 +22,7 @@ package org.fagu.fmv.ffmpeg.utils.srcgen;
 
 import java.text.BreakIterator;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**

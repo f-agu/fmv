@@ -2,7 +2,6 @@ package org.fagu.fmv.im;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,10 @@ import org.junit.Test;
  * @author f.agu
  */
 public class IMConvertImageMetadatasTestCase extends TestAllImageMetadatasTest {
+
+	public IMConvertImageMetadatasTestCase() {
+		super(new IMConvertImageTestMetadataExtractor());
+	}
 
 	@Test
 	public void testMultiple() throws IOException {
@@ -77,15 +80,9 @@ public class IMConvertImageMetadatasTestCase extends TestAllImageMetadatasTest {
 
 	// ********************************************
 
-	@Override
-	protected ImageMetadatas with(File file, String name) throws IOException {
-		return IMConvertImageMetadatas.with(file).extract();
-	}
+	private static final List<String> EXCLUDE_PROPERTIES = Arrays.asList(); // "ColorDepth", "CompressionQuality"
 
-	@Override
-	protected ImageMetadatas with(InputStream inputStream, String name) throws IOException {
-		return IMConvertImageMetadatas.with(inputStream).extract();
-	}
+	private static final List<String> BAD_ASS_TOTTOO_FAIL_PROPERTIES = Arrays.asList("ResolutionUnit", "Software");
 
 	private static final List<String> MULTIPAGE_TIFF_EXCLUDE_PROPERTIES = Arrays.asList("CompressionQuality", "ResolutionUnit", "Software");
 
@@ -98,6 +95,13 @@ public class IMConvertImageMetadatasTestCase extends TestAllImageMetadatasTest {
 	@Override
 	protected BiPredicate<String, String> assertFilter() {
 		return (fileName, property) -> {
+			if(EXCLUDE_PROPERTIES.contains(property)) {
+				return false;
+			}
+
+			if(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL.equals(fileName) && BAD_ASS_TOTTOO_FAIL_PROPERTIES.contains(property)) {
+				return false;
+			}
 			if(ImageResourceUtils.MULTIPAGE_TIFF.equals(fileName) && MULTIPAGE_TIFF_EXCLUDE_PROPERTIES.contains(property)) {
 				return false;
 			}

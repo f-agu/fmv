@@ -25,7 +25,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
-import org.fagu.fmv.utils.Resources;
+import org.fagu.fmv.image.ImageResourceUtils;
 import org.junit.Test;
 
 
@@ -38,9 +38,7 @@ public class DominantColorTestCase {
 
 	@Test
 	public void testRealImageRGB_File() throws IOException {
-		Package pkg = DominantColor.class.getPackage();
-		File file = Resources.extractToTempFile(Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg"), IMIdentifyImageMetadatasTestCase.class
-				.getSimpleName(), ".jpg");
+		File file = ImageResourceUtils.extractFile(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL);
 		try {
 			Color dominantColor = DominantColor.getInstance().getDominantColor(file, s -> {});
 			assertEquals(new Color(85, 70, 70), dominantColor);
@@ -54,12 +52,13 @@ public class DominantColorTestCase {
 	@Test
 	public void testRealImageRGB_InputStream() throws IOException {
 		// StreamLog.debug(true);
-		Package pkg = DominantColor.class.getPackage();
-		String resourcePath = Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg");
+		// Package pkg = DominantColor.class.getPackage();
+		// String resourcePath = Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg");
+		// ImageResourceUtils.getInputStream(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL);
 
 		Color dominantColor = DominantColor.getInstance()
 				.getDominantColor(
-						() -> Resources.getResourceInputStream(resourcePath),
+						() -> ImageResourceUtils.getInputStream(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL),
 						s -> {});
 		assertEquals(new Color(85, 70, 70), dominantColor);
 	}

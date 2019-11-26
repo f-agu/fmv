@@ -23,7 +23,7 @@ package org.fagu.fmv.cli;
 import java.io.File;
 import java.util.Optional;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.core.project.FileSource;
 import org.fagu.fmv.ffmpeg.metadatas.AudioStream;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
@@ -38,9 +38,6 @@ import org.fagu.fmv.utils.time.Duration;
  */
 public class ConsoleOutput {
 
-	/**
-	 * 
-	 */
 	private ConsoleOutput() {}
 
 	/**

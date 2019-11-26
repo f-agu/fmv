@@ -2,7 +2,6 @@ package org.fagu.fmv.im;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +19,10 @@ import org.junit.Test;
  * @author f.agu
  */
 public class IMIdentifyImageMetadatasTestCase extends TestAllImageMetadatasTest {
+
+	public IMIdentifyImageMetadatasTestCase() {
+		super(new IMIdentifyImageTestMetadataExtractor());
+	}
 
 	@Test
 	public void testMultiple() throws IOException {
@@ -78,16 +81,6 @@ public class IMIdentifyImageMetadatasTestCase extends TestAllImageMetadatasTest 
 	}
 
 	// ********************************************
-
-	@Override
-	protected ImageMetadatas with(File file, String name) throws IOException {
-		return IMIdentifyImageMetadatas.with(file).extract();
-	}
-
-	@Override
-	protected ImageMetadatas with(InputStream inputStream, String name) throws IOException {
-		return IMIdentifyImageMetadatas.with(inputStream).extract();
-	}
 
 	private static final List<String> MULTIPAGE_TIFF_EXCLUDE_PROPERTIES = Arrays.asList("Software");
 

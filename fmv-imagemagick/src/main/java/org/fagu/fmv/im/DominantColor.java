@@ -84,6 +84,7 @@ public class DominantColor {
 		}
 		List<String> outputs = new ArrayList<>();
 		try (InputStream inputStream = inputStreamSupplier.getInputStream()) {
+			Objects.requireNonNull(inputStream);
 			convertSoft.withParameters(op.toList())
 					.addCommonReadLine(outputs::add)
 					.logCommandLine(logger)

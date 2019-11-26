@@ -49,6 +49,8 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 
 	public static final Ratio ZERO = new Ratio(0, 1);
 
+	public static final Ratio ONE = new Ratio(1, 1);
+
 	public static final Ratio TRADITIONAL_TELEVISION = new Ratio(4, 3);
 
 	public static final Ratio ACADEMY = new Ratio(11, 8);

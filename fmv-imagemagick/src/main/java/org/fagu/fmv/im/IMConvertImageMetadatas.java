@@ -37,7 +37,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -56,7 +55,6 @@ import org.fagu.fmv.image.ImageMetadatas;
 import org.fagu.fmv.image.MapImageMetadatas;
 import org.fagu.fmv.image.exif.Flash;
 import org.fagu.fmv.image.exif.Resolution;
-import org.fagu.fmv.media.JsonReader;
 import org.fagu.fmv.media.MetadatasBuilder;
 import org.fagu.fmv.media.MetadatasContainer;
 import org.fagu.fmv.media.NavigableMapMetadatasContainer;
@@ -65,7 +63,7 @@ import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.utils.geo.Coordinates;
 import org.fagu.fmv.utils.media.Size;
 
-import net.sf.json.JSONArray;
+import com.google.gson.Gson;
 
 
 /**
@@ -167,8 +165,11 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 
 	// --------------------------------------------------------
 
-	protected IMConvertImageMetadatas(NavigableMap<String, Object> metadatas) {
+	private final String json;
+
+	protected IMConvertImageMetadatas(Map<String, Object> metadatas, String json) {
 		super(metadatas);
+		this.json = Objects.requireNonNull(json);
 	}
 
 	@Override
@@ -381,6 +382,11 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		return null;
 	}
 
+	@Override
+	public String toJSON() {
+		return json;
+	}
+
 	public MetadatasContainer getProperties() {
 		return getFirstMetadatas("properties").orElse(new NavigableMapMetadatasContainer(Collections.emptyNavigableMap()));
 	}
@@ -455,10 +461,11 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		sources.getSoftExecutor().accept(softExecutor);
 		softExecutor.execute();
 
-		List<NavigableMap<String, Object>> metadatasList = JsonReader.parse(JSONArray.fromObject(output.toString()));
+		Gson gson = new Gson();
+		List<Object> map = gson.fromJson(output.toString(), List.class);
 		Iterator<Source<T>> iterator = sources.iterator();
-		return metadatasList.stream()
-				.map(m -> new IMConvertImageMetadatas((NavigableMap<String, Object>)m.get("image")))
+		return map.stream()
+				.map(m -> new IMConvertImageMetadatas((Map<String, Object>)((Map<String, Object>)m).get("image"), output.toString()))
 				.collect(Collectors.toMap(m -> iterator.next().value, Function.identity()));
 	}
 

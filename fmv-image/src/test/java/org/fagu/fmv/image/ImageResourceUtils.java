@@ -21,8 +21,10 @@ limitations under the License.
  */
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.utils.Resources;
 
 
@@ -55,8 +57,12 @@ public class ImageResourceUtils {
 
 	public static File extractFile(String filename, String extension) throws IOException {
 		Package pkg = ImageMetadatas.class.getPackage();
-		return Resources.extractToTempFile(Resources.getResourcePath(pkg, filename), AbstractImageMetadatasTest.class
-				.getSimpleName(), "." + extension);
+		return Resources.extractToTempFile(Resources.getResourcePath(pkg, filename), ImageBaseMetadatasTest.class
+				.getSimpleName(), StringUtils.isEmpty(extension) ? "" : "." + extension);
+	}
+
+	public static InputStream getInputStream(String filename) {
+		return ImageBaseMetadatasTest.class.getResourceAsStream(filename);
 	}
 
 }

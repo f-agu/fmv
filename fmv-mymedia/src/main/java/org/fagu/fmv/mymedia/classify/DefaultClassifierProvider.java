@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.im.Image;
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.mymedia.classify.image.ReduceImageConverter;
@@ -41,14 +41,6 @@ import org.fagu.fmv.utils.file.FileFinder;
  */
 public class DefaultClassifierProvider implements ClassifierProvider {
 
-	/**
-	 * 
-	 */
-	public DefaultClassifierProvider() {}
-
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.ClassifierProvider#getConverter(java.lang.Class)
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public <M extends Media> List<Converter<M>> getConverter(Class<? extends M> mediaCls, File destFolder) {
@@ -62,17 +54,10 @@ public class DefaultClassifierProvider implements ClassifierProvider {
 		return list;
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.ClassifierProvider#getConverterListener(java.lang.Class)
-	 */
 	@Override
 	public <M extends Media> List<ConverterListener<M>> getConverterListener(Class<? extends M> mediaCls) {
 		return Collections.singletonList(new ConverterListener<M>() {
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ConverterListener#eventPreConvert(org.fagu.fmv.media.Media,
-			 *      java.io.File)
-			 */
 			@Override
 			public void eventPreConvert(M srcMedia, File destFile) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -87,9 +72,6 @@ public class DefaultClassifierProvider implements ClassifierProvider {
 		});
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.ClassifierProvider#getClassifierFactories(java.lang.Class)
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public <F extends FileFinder<M>, M extends Media> List<ClassifierFactory<F, M>> getClassifierFactories(Class<? extends Media> mediaCls) {

@@ -45,58 +45,31 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 
 	private final Class<? extends ExceptionKnownAnalyzer> exceptionKnownSPIClass;
 
-	/**
-	 * @param exceptionKnownSPIClass
-	 */
 	public MetadatasFactory(Class<? extends ExceptionKnownAnalyzer> exceptionKnownSPIClass) {
 		this.exceptionKnownSPIClass = exceptionKnownSPIClass;
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	@SuppressWarnings("rawtypes")
-	abstract public MetadatasBuilder withFile(File file);
+	public abstract MetadatasBuilder withFile(File file);
 
-	/**
-	 * @param json
-	 * @return
-	 */
-	abstract public Metadatas parseJSON(String json);
+	public abstract Metadatas parseJSON(String json);
 
 	// --------------------------------------------------
 
-	/**
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
 	public Metadatas extract(File file) throws IOException {
 		return withFile(file).extract();
 	}
 
-	/**
-	 * @return
-	 */
 	public List<? extends ExceptionKnownAnalyzer> getExceptionKnownAnalyzers() {
 		return ExceptionKnownAnalyzers.getExceptionKnownAnalyzers(exceptionKnownSPIClass);
 	}
 
-	/**
-	 * @param e
-	 * @return
-	 */
 	public Optional<ExceptionKnown> getExceptionKnown(IOException e) {
 		return ExceptionKnownAnalyzers.getKnown(exceptionKnownSPIClass, e);
 	}
 
 	// --------------------------------------------------
 
-	/**
-	 * @param fileType
-	 * @return
-	 */
 	public static MetadatasFactory createFactory(FileType fileType) {
 		search();
 		for(MetadatasFactory metadatasFactory : METADATAS_FACTORIES) {
@@ -107,25 +80,15 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 		throw new IllegalArgumentException("FileType undefined: " + fileType);
 	}
 
-	/**
-	 * @param fileType
-	 * @return
-	 */
 	public static Metadatas parseJSON(FileType fileType, String json) {
 		MetadatasFactory metadatasFactory = createFactory(fileType);
 		return metadatasFactory.parseJSON(json);
 	}
 
-	/**
-	 * @param metadatasFactory
-	 */
 	public static void register(MetadatasFactory metadatasFactory) {
 		METADATAS_FACTORIES.add(metadatasFactory);
 	}
 
-	/**
-	 * @param packageName
-	 */
 	public static void register(String packageName) {
 		ClassResolver classResolver = new ClassResolver();
 		try {
@@ -151,9 +114,6 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 
 	// ************************************************
 
-	/**
-	 *
-	 */
 	private static void search() {
 		if(METADATAS_FACTORIES.isEmpty()) {
 			ServiceLoader.load(MetadatasFactory.class).forEach(MetadatasFactory::register);

@@ -2,47 +2,26 @@ package org.fagu.fmv.ffmpeg.metadatas;
 
 import java.io.File;
 import java.io.IOException;
-
-/*
- * #%L
- * fmv-ffmpeg
- * %%
- * Copyright (C) 2014 fagu
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.io.Serializable;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-import java.util.NavigableMap;
+import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.fagu.fmv.ffmpeg.executor.Executed;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.ioe.FileMediaInput;
+import org.fagu.fmv.ffmpeg.ioe.PipeMediaInput;
 import org.fagu.fmv.ffmpeg.operation.InfoOperation;
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
 import org.fagu.fmv.ffmpeg.operation.Type;
@@ -53,23 +32,20 @@ import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.utils.collection.MapList;
 import org.fagu.fmv.utils.collection.MultiValueMaps;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.google.gson.Gson;
 
 
 /**
  * @author f.agu
  */
-public class MovieMetadatas implements Metadatas, Serializable {
-
-	private static final long serialVersionUID = 943696962662143599L;
+public class MovieMetadatas implements Metadatas {
 
 	private static final Map<String, Factory<?>> FACTORY_MAP = new HashMap<>(4);
 
 	static {
-		FACTORY_MAP.put("format", Format::create);
+		FACTORY_MAP.put("format", Format::new);
 		FACTORY_MAP.put("streams", Stream::create);
-		FACTORY_MAP.put("chapters", Chapter::create);
+		FACTORY_MAP.put("chapters", Chapter::new);
 	}
 
 	// --------------------------------------------------------
@@ -115,89 +91,70 @@ public class MovieMetadatas implements Metadatas, Serializable {
 
 	// --------------------------------------------------------
 
-	private final List<InfoBase> infoBaseList;
+	private final List<InfoBase> infoBases;
 
 	private final String original;
 
-	/**
-	 * @param infoBaseList
-	 * @param original
-	 */
 	protected MovieMetadatas(List<InfoBase> infoBaseList, String original) {
-		this.infoBaseList = Collections.unmodifiableList(infoBaseList);
+		this.infoBases = Collections.unmodifiableList(infoBaseList);
 		this.original = original;
 	}
 
-	/**
-	 * @param mediaInput
-	 * @return
-	 */
 	public static MovieMetadatasBuilder with(MediaInput mediaInput) {
 		return new MovieMetadatasBuilder(mediaInput);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
+	public static MovieMetadatasBuilder with(InputStream inputStream) {
+		return new MovieMetadatasBuilder(new PipeMediaInput())
+				.customizeExecutor(se -> se.input(inputStream));
+	}
+
 	public static MovieMetadatasBuilder with(File file) {
 		return new MovieMetadatasBuilder(new FileMediaInput(file));
 	}
 
-	/**
-	 * @param str
-	 * @return
-	 */
-	public static MovieMetadatas parseJSON(String str) {
-		JSONObject jsonObject = JSONObject.fromObject(str);
-		return create(jsonObject);
+	public static MovieMetadatas parseJSON(String jsonString) {
+		Gson gson = new Gson();
+		@SuppressWarnings("unchecked")
+		Map<String, Object> map = gson.fromJson(jsonString, Map.class);
+		return create(map, jsonString);
 	}
 
-	/**
-	 * @param jsonObject
-	 * @return
-	 */
-	public static MovieMetadatas create(JSONObject jsonObject) {
+	private static MovieMetadatas create(Map<String, Object> map, String jsonString) {
 		List<InfoBase> objects = new ArrayList<>(4);
-		JSONArray names = jsonObject.names();
-		Iterator<?> namesIterator = names.iterator();
-		MovieMetadatas movieMetadatas = new MovieMetadatas(objects, jsonObject.toString());
-		while(namesIterator.hasNext()) {
-			String name = (String)namesIterator.next();
+		MovieMetadatas movieMetadatas = new MovieMetadatas(objects, jsonString);
+		BiConsumer<Factory<?>, Object> appender = (f, v) -> {
+			if(v instanceof Map) {
+				@SuppressWarnings("unchecked")
+				Map<String, Object> vmap = (Map<String, Object>)v;
+				InfoBase infoBase = f.create(movieMetadatas, vmap);
+				if(infoBase != null) {
+					objects.add(infoBase);
+				}
+			}
+		};
+
+		for(Entry<String, Object> entry : map.entrySet()) {
+			String name = entry.getKey();
 			Factory<?> factory = FACTORY_MAP.get(name);
 			if(factory == null) {
 				continue;
 			}
-			Object object = jsonObject.get(name);
-			if(object instanceof JSONArray) {
-				JSONArray array = (JSONArray)object;
-				ListIterator<?> listIterator = array.listIterator();
-				while(listIterator.hasNext()) {
-					Object next = listIterator.next();
-					if(next instanceof JSONObject) {
-						JSONObject nextJson = (JSONObject)next;
-						InfoBase obj = factory.create(nextJson, movieMetadatas);
-						if(obj != null) {
-							objects.add(obj);
-						}
-					} else {
-						// System.out.println(next);
-					}
+			Object value = entry.getValue();
+			if(value instanceof Collection) {
+				@SuppressWarnings("unchecked")
+				Collection<Object> collection = (Collection<Object>)value;
+				for(Object obj : collection) {
+					appender.accept(factory, obj);
 				}
-			} else if(object instanceof JSONObject) {
-				InfoBase obj = factory.create((JSONObject)object, movieMetadatas);
-				if(obj != null) {
-					objects.add(obj);
-				}
+			} else {
+				appender.accept(factory, value);
 			}
+
 		}
 		return movieMetadatas;
 	}
 
-	/**
-	 * @param type
-	 * @param factory
-	 */
 	public static void setFactory(String type, Factory<?> factory) {
 		FACTORY_MAP.put(type, factory);
 	}
@@ -205,49 +162,33 @@ public class MovieMetadatas implements Metadatas, Serializable {
 	@Override
 	public Map<String, Object> getData() {
 		Map<String, Object> main = new LinkedHashMap<>();
-		for(InfoBase infoBase : infoBaseList) {
+		for(InfoBase infoBase : infoBases) {
 			main.put(infoBase.getName(), infoBase.getData());
 		}
 		return main;
 	}
 
-	/**
-	 * @see org.fagu.fmv.media.Metadatas#toJSON()
-	 */
 	@Override
 	public String toJSON() {
 		return original;
 	}
 
-	/**
-	 * @return the infoBaseList
-	 */
 	public List<InfoBase> getInfoBaseList() {
-		return infoBaseList;
+		return infoBases;
 	}
 
-	/**
-	 * @return
-	 */
 	public List<Stream> getStreams() {
 		return filterBy(Stream.class);
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	public List<InfoBase> getStreams(Type type) {
 		return filterBy(getClassByType(type));
 	}
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	public <S extends InfoBase> List<S> getStreams(Predicate<S> predicate) {
 		List<S> list = new ArrayList<>();
-		for(InfoBase infoBase : infoBaseList) {
+		for(InfoBase infoBase : infoBases) {
 			if(predicate.test((S)infoBase)) {
 				list.add((S)infoBase);
 			}
@@ -255,9 +196,6 @@ public class MovieMetadatas implements Metadatas, Serializable {
 		return list;
 	}
 
-	/**
-	 * @return
-	 */
 	public MapList<Type, Stream> toTypeMap() {
 		MapList<Type, Stream> map = MultiValueMaps.hashMapArrayList();
 		for(Stream stream : filterBy(Stream.class)) {
@@ -266,62 +204,36 @@ public class MovieMetadatas implements Metadatas, Serializable {
 		return map;
 	}
 
-	/**
-	 * @return
-	 */
 	public List<Chapter> getChapters() {
 		return filterBy(Chapter.class);
 	}
 
-	/**
-	 * @return
-	 */
 	public List<AudioStream> getAudioStreams() {
 		return filterBy(AudioStream.class);
 	}
 
-	/**
-	 * @return
-	 */
 	public List<VideoStream> getVideoStreams() {
 		return filterBy(VideoStream.class);
 	}
 
-	/**
-	 * @return
-	 */
 	public List<SubtitleStream> getSubtitleStreams() {
 		return filterBy(SubtitleStream.class);
 	}
 
-	/**
-	 * @return
-	 */
 	public AudioStream getAudioStream() {
 		return filterFirstBy(AudioStream.class);
 	}
 
-	/**
-	 * @return
-	 */
 	public VideoStream getVideoStream() {
 		return filterFirstBy(VideoStream.class);
 	}
 
-	/**
-	 * @return
-	 */
 	public SubtitleStream getSubtitleStream() {
 		return filterFirstBy(SubtitleStream.class);
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	public Stream getFirstStreamBy(Type type) {
-		for(InfoBase obj : filterBy(Stream.class)) {
-			Stream stream = (Stream)obj;
+		for(Stream stream : filterBy(Stream.class)) {
 			if(stream.type() == type) {
 				return stream;
 			}
@@ -329,31 +241,21 @@ public class MovieMetadatas implements Metadatas, Serializable {
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
 	public Format getFormat() {
 		List<Format> list = filterBy(Format.class);
 		return ! list.isEmpty() ? list.get(0) : null;
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public Map<InfoBase, Object> searchTags(String name) {
 		Map<InfoBase, Object> map = new HashMap<>();
-		for(InfoBase infoBase : infoBaseList) {
+		for(InfoBase infoBase : infoBases) {
 			infoBase.tag(name).ifPresent(value -> map.put(infoBase, value));
 		}
 		return map;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isTreatedByFMV() {
-		for(InfoBase infoBase : infoBaseList) {
+		for(InfoBase infoBase : infoBases) {
 			if(infoBase.isTreatedByFMV()) {
 				return true;
 			}
@@ -361,17 +263,10 @@ public class MovieMetadatas implements Metadatas, Serializable {
 		return false;
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	public boolean contains(Type type) {
 		return ! filterBy(getClassByType(type)).isEmpty();
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder(1000);
@@ -401,50 +296,11 @@ public class MovieMetadatas implements Metadatas, Serializable {
 	@FunctionalInterface
 	public interface Factory<O extends InfoBase> {
 
-		/**
-		 * @param jsonObject
-		 * @param movieMetadatas
-		 * @return
-		 */
-		O create(JSONObject jsonObject, MovieMetadatas movieMetadatas);
-	}
-
-	// ---------------------------------------------------------------
-
-	/**
-	 * @param jsonObject
-	 * @return
-	 */
-	static NavigableMap<String, Object> createMap(JSONObject jsonObject) {
-		JSONArray names = jsonObject.names();
-		Iterator<?> iterator = names.iterator();
-		NavigableMap<String, Object> map = new TreeMap<>();
-		while(iterator.hasNext()) {
-			String name = (String)iterator.next();
-			String nameLC = name.toLowerCase();
-			Object object = jsonObject.get(name);
-			if(object instanceof JSONObject) {
-				NavigableMap<String, Object> createMap = createMap((JSONObject)object);
-				map.put(name, createMap);
-				map.put(nameLC, createMap);
-			} else if(object instanceof List) {
-				@SuppressWarnings("unchecked")
-				List<Object> jsonArray = (List<Object>)object;
-				map.put(name, jsonArray);
-			} else {
-				map.put(name, object);
-				map.put(nameLC, object);
-			}
-		}
-		return map;
+		O create(MovieMetadatas movieMetadatas, Map<String, Object> map);
 	}
 
 	// *****************************************************
 
-	/**
-	 * @param cls
-	 * @return
-	 */
 	private <T extends InfoBase> T filterFirstBy(Class<T> cls) {
 		List<T> list = filterBy(cls);
 		if(list == null || list.isEmpty()) {
@@ -453,18 +309,10 @@ public class MovieMetadatas implements Metadatas, Serializable {
 		return list.get(0);
 	}
 
-	/**
-	 * @param cls
-	 * @return
-	 */
 	private <T extends InfoBase> List<T> filterBy(Class<T> cls) {
 		return getStreams(ib -> cls.isAssignableFrom(ib.getClass()));
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	private <T> Class<T> getClassByType(Type type) {
 		switch(type) {

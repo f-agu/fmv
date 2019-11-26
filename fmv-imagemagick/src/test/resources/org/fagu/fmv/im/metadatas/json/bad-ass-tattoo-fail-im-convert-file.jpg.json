@@ -1,0 +1,164 @@
+[
+  {
+    "image": {
+      "name": "-",
+      "baseName": "BaseImageMetadatasTest594107593399065763.jpg",
+      "format": "JPEG",
+      "formatDescription": "JPEG",
+      "mimeType": "image/jpeg",
+      "class": "DirectClass",
+      "geometry": {
+        "width": 450.0,
+        "height": 428.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "resolution": {
+        "x": 72.0,
+        "y": 72.0
+      },
+      "printSize": {
+        "x": 6.25,
+        "y": 5.94444
+      },
+      "units": "PixelsPerInch",
+      "type": "TrueColor",
+      "baseType": "Undefined",
+      "endianess": "Undefined",
+      "colorspace": "sRGB",
+      "depth": 8.0,
+      "baseDepth": 8.0,
+      "channelDepth": {
+        "red": 8.0,
+        "green": 8.0,
+        "blue": 1.0
+      },
+      "pixels": 577800.0,
+      "imageStatistics": {
+        "Overall": {
+          "min": 0.0,
+          "max": 255.0,
+          "mean": 75.1651,
+          "standardDeviation": 15501.3,
+          "kurtosis": -0.985381,
+          "skewness": 0.662609,
+          "entropy": 0.904575
+        }
+      },
+      "channelStatistics": {
+        "Red": {
+          "min": 0.0,
+          "max": 255.0,
+          "mean": 85.3984,
+          "standardDeviation": 17098.2,
+          "kurtosis": -1.17339,
+          "skewness": 0.575496,
+          "entropy": 0.930679
+        },
+        "Green": {
+          "min": 0.0,
+          "max": 255.0,
+          "mean": 69.8293,
+          "standardDeviation": 14603.0,
+          "kurtosis": -1.05977,
+          "skewness": 0.679025,
+          "entropy": 0.87754
+        },
+        "Blue": {
+          "min": 0.0,
+          "max": 255.0,
+          "mean": 70.2676,
+          "standardDeviation": 14802.7,
+          "kurtosis": -1.0558,
+          "skewness": 0.622077,
+          "entropy": 0.905505
+        }
+      },
+      "renderingIntent": "Perceptual",
+      "gamma": 0.454545,
+      "chromaticity": {
+        "redPrimary": {
+          "x": 0.64,
+          "y": 0.33
+        },
+        "greenPrimary": {
+          "x": 0.3,
+          "y": 0.6
+        },
+        "bluePrimary": {
+          "x": 0.15,
+          "y": 0.06
+        },
+        "whitePrimary": {
+          "x": 0.3127,
+          "y": 0.329
+        }
+      },
+      "matteColor": "#BDBDBD",
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#DFDFDF",
+      "transparentColor": "#00000000",
+      "interlace": "JPEG",
+      "intensity": "Undefined",
+      "compose": "Over",
+      "pageGeometry": {
+        "width": 450.0,
+        "height": 428.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "dispose": "Undefined",
+      "iterations": 0.0,
+      "compression": "JPEG",
+      "quality": 91.0,
+      "orientation": "TopLeft",
+      "properties": {
+        "date:create": "2019-11-26T14:07:31+00:00",
+        "date:modify": "2019-11-26T14:07:31+00:00",
+        "exif:ColorSpace": "65535",
+        "exif:DateTime": "2010:01:02 20:03:43",
+        "exif:ExifOffset": "164",
+        "exif:Orientation": "1",
+        "exif:PixelXDimension": "450",
+        "exif:PixelYDimension": "428",
+        "exif:ResolutionUnit": "2",
+        "exif:Software": "Adobe Photoshop CS3 Windows",
+        "exif:thumbnail:Compression": "6",
+        "exif:thumbnail:JPEGInterchangeFormat": "302",
+        "exif:thumbnail:JPEGInterchangeFormatLength": "0",
+        "exif:thumbnail:ResolutionUnit": "2",
+        "exif:thumbnail:XResolution": "72/1",
+        "exif:thumbnail:YResolution": "72/1",
+        "exif:XResolution": "72/1",
+        "exif:YResolution": "72/1",
+        "jpeg:colorspace": "2",
+        "jpeg:sampling-factor": "1x1,1x1,1x1",
+        "signature": "fb1c18224a6d8e5c61008af8bca3ada692da1aaa2510881df9b3e5a6e928b34f"
+      },
+      "profiles": {
+        "8bim": {
+          "length": 1574.0
+        },
+        "exif": {
+          "length": 308.0
+        },
+        "iptc": {
+          "Unknown[2,0]": [
+            "�"
+          ],
+          "length": 7.0
+        },
+        "xmp": {
+          "length": 3704.0
+        }
+      },
+      "tainted": false,
+      "filesize": "28519B",
+      "numberPixels": "192600",
+      "pixelsPerSecond": "33.4665MB",
+      "userTime": "0.000u",
+      "elapsedTime": "0:01.005",
+      "version": "C:\\Program Files\\ImageMagick-7.0.8-Q16\\\\index.html"
+    }
+  }
+]

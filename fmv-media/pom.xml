@@ -28,10 +28,8 @@
 			<artifactId>commons-codec</artifactId>
 		</dependency>
 		<dependency>
-	        <groupId>net.sf.json-lib</groupId>
-	        <artifactId>json-lib</artifactId>
-	        <type>jar</type>
-	        <classifier>jdk15</classifier>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
 	    </dependency>
 		
 		<dependency>
@@ -45,8 +43,12 @@
 			<artifactId>mockito-core</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
 
 </project>
 

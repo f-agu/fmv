@@ -1,0 +1,20 @@
+{
+  "cdepth": "1",
+  "colorspace": "Gray",
+  "compression": "Group4",
+  "compressionq": "92",
+  "date:create": "2019-11-26T14:08:20+00:00",
+  "date:modify": "2019-11-26T14:08:20+00:00",
+  "filename": "-",
+  "format": "TIFF",
+  "resunit": "PixelsPerInch",
+  "tiff:alpha": "unspecified",
+  "tiff:endian": "lsb",
+  "tiff:photometric": "min-is-white",
+  "tiff:rows-per-strip": "19867",
+  "tiff:software": "GPL Ghostscript 8.54",
+  "tiff:subfiletype": "PAGE",
+  "tiff:timestamp": "2011:09:21 08:05:12",
+  "wh": "28083 19867",
+  "xy": "600 600"
+}

@@ -3,7 +3,7 @@ package org.fagu.fmv.cli.command;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.cli.CommandBuilder;
 import org.fagu.fmv.cli.CommandFactory;
 import org.fagu.fmv.cli.annotation.Alias;

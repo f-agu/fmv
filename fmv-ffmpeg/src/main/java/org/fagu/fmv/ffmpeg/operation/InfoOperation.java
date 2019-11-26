@@ -29,9 +29,6 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.soft.exec.BufferedReadLine;
 import org.fagu.fmv.soft.exec.ReadLine;
 
-import net.sf.json.JSONException;
-import net.sf.json.JSONObject;
-
 
 /**
  * ffprobe -v quiet -print_format json -show_format -show_streams
@@ -42,9 +39,6 @@ public class InfoOperation extends FFProbeOperation<MovieMetadatas> {
 
 	// ------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public enum PrintFormat {
 		DEFAULT, COMPACT, CSV, FLAT, INI, JSON, XML
 	}
@@ -61,9 +55,6 @@ public class InfoOperation extends FFProbeOperation<MovieMetadatas> {
 
 	private final ReadLine errReadLine;
 
-	/**
-	 * @param input
-	 */
 	public InfoOperation(MediaInput input) {
 		super();
 		this.input = Objects.requireNonNull(input);
@@ -77,10 +68,6 @@ public class InfoOperation extends FFProbeOperation<MovieMetadatas> {
 		printFormat(PrintFormat.JSON).showFormat().showStreams().showChapters();
 	}
 
-	/**
-	 * @param printFormat
-	 * @return
-	 */
 	public InfoOperation printFormat(PrintFormat printFormat) {
 		add(Parameter.createGlobal("-print_format", printFormat.name().toLowerCase()));
 		return this;
@@ -196,46 +183,24 @@ public class InfoOperation extends FFProbeOperation<MovieMetadatas> {
 		return this;
 	}
 
-	/**
-	 * @param microseconds
-	 * @return
-	 */
 	public InfoOperation analyzeDuration(long microseconds) {
 		add(Parameter.before(input, "-analyzeduration", Long.toString(microseconds)));
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.AbstractOperation#getOutReadLine()
-	 */
 	@Override
 	public ReadLine getOutReadLine() {
 		return outReadLine;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.AbstractOperation#getErrReadLine()
-	 */
 	@Override
 	public ReadLine getErrReadLine() {
 		return errReadLine;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getResult()
-	 */
 	@Override
 	public MovieMetadatas getResult() {
-		try {
-			JSONObject jsonObject = JSONObject.fromObject(StringUtils.join(out, ' '));
-			return MovieMetadatas.create(jsonObject);
-		} catch(JSONException e) {
-			// debug
-			// for(String str : out) {
-			// System.out.println(str);
-			// }
-			throw e;
-		}
+		return MovieMetadatas.parseJSON(StringUtils.join(out, ' '));
 	}
 
 }

@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.SortedSet;
 import java.util.StringJoiner;
 import java.util.StringTokenizer;
@@ -220,7 +219,7 @@ public class FFReducer extends AbstractReducer {
 		Size size = videoStream.size();
 		Rotation rotation = inRotation;
 		if(rotation == null) {
-			rotation = videoStream.rotate();
+			rotation = videoStream.rotation();
 		}
 		if(rotation != null) {
 			size = rotation.resize(size);
@@ -294,8 +293,8 @@ public class FFReducer extends AbstractReducer {
 	 * @return
 	 */
 	private boolean isVideoStream(VideoStream videoStream, Logger logger) {
-		OptionalInt numberOfFrames = videoStream.numberOfFrames();
-		if(numberOfFrames.isPresent() && numberOfFrames.getAsInt() == 1) {
+		Optional<Integer> numberOfFrames = videoStream.numberOfFrames();
+		if(numberOfFrames.isPresent() && numberOfFrames.get() == 1) {
 			logger.log("Is audio: number of frames unavailable: " + numberOfFrames);
 			return false;
 		}
@@ -424,12 +423,12 @@ public class FFReducer extends AbstractReducer {
 		}
 
 		VideoStream videoStream = metadatas.getVideoStream();
-		OptionalInt countEstimateFrames = videoStream.countEstimateFrames();
+		Optional<Integer> countEstimateFrames = videoStream.countEstimateFrames();
 		Progress progress = executor.getProgress();
 		TextProgressBar textProgressBar = null;
 		if(countEstimateFrames.isPresent() && progress != null) {
 			textProgressBar = FFMpegProgressBar.with(progress)
-					.byFrame(countEstimateFrames.getAsInt())
+					.byFrame(countEstimateFrames.get())
 					.fileSize(srcFile.length())
 					.build()
 					.makeBar(consolePrefixMessage);
@@ -481,7 +480,7 @@ public class FFReducer extends AbstractReducer {
 	private boolean needToReduceAudio(MovieMetadatas metadatas, File srcFile) {
 		AudioStream audioStream = metadatas.getAudioStream();
 		String extension = FilenameUtils.getExtension(srcFile.getName());
-		if( ! audioFormat.equalsIgnoreCase(extension) || audioStream.bitRate().getAsInt() > 128000) {
+		if( ! audioFormat.equalsIgnoreCase(extension) || audioStream.bitRate().get() > 128000) {
 			return true;
 		}
 		VideoStream videoStream = metadatas.getVideoStream();

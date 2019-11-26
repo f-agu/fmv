@@ -6,13 +6,18 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 
+import org.fagu.fmv.media.TestMetadataExtractor;
 import org.junit.Test;
 
 
 /**
  * @author f.agu
  */
-public abstract class TestAllImageMetadatasTest extends AbstractImageMetadatasTest {
+public abstract class TestAllImageMetadatasTest extends ImageBaseMetadatasTest {
+
+	public TestAllImageMetadatasTest(TestMetadataExtractor<ImageMetadatas> testMetadataExtractor) {
+		super(testMetadataExtractor);
+	}
 
 	@Test
 	public void testFile_bad_ass_tattoo() throws IOException {
@@ -53,7 +58,7 @@ public abstract class TestAllImageMetadatasTest extends AbstractImageMetadatasTe
 	public void testFailed() throws Exception {
 		File file = ImageResourceUtils.extractFile(ImageResourceUtils.NO_IMAGE, "jpg");
 		try {
-			with(file, ImageResourceUtils.NO_IMAGE);
+			testMetadataExtractor.extract(file, ImageResourceUtils.NO_IMAGE);
 			fail();
 		} catch(IOException e) {
 			String message = e.getMessage();

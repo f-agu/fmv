@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg;
 
+import java.util.Optional;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -78,9 +80,9 @@ public class FFMpegUtils {
 	 */
 	public static int minAudioSampleRate(AudioStream audioStream, int minOrDefaultSampleRate) {
 		if(audioStream != null) {
-			OptionalInt sampleRate = audioStream.sampleRate();
+			Optional<Integer> sampleRate = audioStream.sampleRate();
 			if(sampleRate.isPresent()) {
-				return Math.min(minOrDefaultSampleRate, sampleRate.getAsInt());
+				return Math.min(minOrDefaultSampleRate, sampleRate.get());
 			}
 		}
 		return minOrDefaultSampleRate;
@@ -107,9 +109,9 @@ public class FFMpegUtils {
 	 */
 	public static int minAudioBitRate(AudioStream audioStream, int minOrDefaultBitRate) {
 		if(audioStream != null) {
-			OptionalInt bitRate = audioStream.bitRate();
+			Optional<Integer> bitRate = audioStream.bitRate();
 			if(bitRate.isPresent()) {
-				return Math.min(minOrDefaultBitRate, bitRate.getAsInt());
+				return Math.min(minOrDefaultBitRate, bitRate.get());
 			}
 		}
 		return minOrDefaultBitRate;
@@ -136,9 +138,9 @@ public class FFMpegUtils {
 	 */
 	public static int minAudioChannel(AudioStream audioStream, int minOrDefaultChannel) {
 		if(audioStream != null) {
-			OptionalInt channel = audioStream.channels();
+			Optional<Integer> channel = audioStream.channels();
 			if(channel.isPresent()) {
-				return Math.min(minOrDefaultChannel, channel.getAsInt());
+				return Math.min(minOrDefaultChannel, channel.get());
 			}
 		}
 		return minOrDefaultChannel;

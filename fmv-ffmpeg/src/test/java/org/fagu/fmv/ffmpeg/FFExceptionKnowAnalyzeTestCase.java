@@ -39,14 +39,6 @@ import org.junit.Test;
  */
 public class FFExceptionKnowAnalyzeTestCase {
 
-	/**
-	 * 
-	 */
-	public FFExceptionKnowAnalyzeTestCase() {}
-
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void test() throws IOException {
 		extractMetadatas(null, "Permission denied");
@@ -56,11 +48,6 @@ public class FFExceptionKnowAnalyzeTestCase {
 
 	// ****************************************************************
 
-	/**
-	 * @param resource
-	 * @param expectedMessage
-	 * @throws IOException
-	 */
 	private void extractMetadatas(String resource, String expectedMessage) throws IOException {
 		File folder = new File(System.getProperty("java.io.tmpdir"), "ff-extractmetadatas-test");
 		try {

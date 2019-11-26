@@ -38,18 +38,17 @@ import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.OptionalLong;
 import java.util.function.Function;
 
 import javax.xml.bind.DatatypeConverter;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.fagu.fmv.ffmpeg.utils.Fraction;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
 import org.fagu.fmv.media.MetadataProperties;
+import org.fagu.fmv.media.Parsers;
 import org.fagu.fmv.utils.media.Ratio;
 import org.fagu.fmv.utils.time.Duration;
 import org.fagu.fmv.utils.time.Time;
@@ -67,15 +66,15 @@ public abstract class InfoBase implements MetadataProperties {
 
 	protected final NavigableMap<String, Object> map;
 
-	protected InfoBase(MovieMetadatas movieMetadatas, NavigableMap<String, Object> map) {
+	protected InfoBase(MovieMetadatas movieMetadatas, Map<String, Object> map) {
 		this.movieMetadatas = movieMetadatas;
-		this.map = map;
+		this.map = DeepCopy.copy(map);
 	}
 
 	public abstract String getName();
 
-	public Map<String, Object> getData() {
-		return Collections.unmodifiableMap(map);
+	public NavigableMap<String, Object> getData() {
+		return map;
 	}
 
 	@Override
@@ -110,7 +109,7 @@ public abstract class InfoBase implements MetadataProperties {
 		return object;
 	}
 
-	public OptionalInt bitRate() {
+	public Optional<Integer> bitRate() {
 		return getInt("bit_rate");
 	}
 
@@ -130,7 +129,7 @@ public abstract class InfoBase implements MetadataProperties {
 
 	}
 
-	public OptionalInt durationTimeBase() {
+	public Optional<Integer> durationTimeBase() {
 		return getInt("duration_ts");
 	}
 
@@ -249,34 +248,20 @@ public abstract class InfoBase implements MetadataProperties {
 
 	// ********************************************
 
-	protected OptionalInt getInt(String name) {
-		Object object = map.get(name);
-		if(object instanceof Integer) {
-			return OptionalInt.of((Integer)object);
-		}
-		if(object instanceof String) {
-			return OptionalInt.of(NumberUtils.toInt((String)object));
-		}
-		return OptionalInt.empty();
+	protected Optional<Integer> getInt(String name) {
+		return Parsers.parseToInteger(map.get(name));
 	}
 
-	protected OptionalLong getLong(String name) {
-		Object object = map.get(name);
-		if(object instanceof Number) {
-			return OptionalLong.of(((Number)object).longValue());
-		}
-		if(object instanceof String) {
-			return OptionalLong.of(NumberUtils.toLong((String)object));
-		}
-		return OptionalLong.empty();
+	protected Optional<Long> getLong(String name) {
+		return Parsers.parseToLong(map.get(name));
 	}
 
 	protected Optional<Double> getDouble(String name) {
-		return getString(name).map(Double::parseDouble);
+		return Parsers.parseToDouble(map.get(name));
 	}
 
 	protected Optional<String> getString(String name) {
-		return Optional.ofNullable((String)map.get(name));
+		return Parsers.parseToString(map.get(name));
 	}
 
 	protected Optional<Time> getTime(String name) {

@@ -61,7 +61,7 @@ public class AutoRotate extends FilterCombined {
 		if(movieMetadatas != null && ! isAutoRotateObsolete()) {
 			VideoStream videoStream = movieMetadatas.getVideoStream();
 			if(videoStream != null) {
-				rotation = videoStream.rotate();
+				rotation = videoStream.rotation();
 			}
 		}
 		return new AutoRotate(Rotate.create(rotation));

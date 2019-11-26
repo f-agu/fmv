@@ -22,20 +22,17 @@ package org.fagu.fmv.image;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.fagu.fmv.media.BaseMetadatasTest;
+import org.fagu.fmv.media.TestMetadataExtractor;
 import org.fagu.fmv.utils.media.Size;
 import org.junit.AfterClass;
 
@@ -43,13 +40,19 @@ import org.junit.AfterClass;
 /**
  * @author f.agu
  */
-public abstract class AbstractImageMetadatasTest {
+public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 
 	private static final Map<String, Set<String>> FAILED_KEYS = new HashMap<>();
 
 	protected static boolean DEBUG = false;
 
-	@SuppressWarnings("unchecked")
+	public ImageBaseMetadatasTest(TestMetadataExtractor<ImageMetadatas> testMetadataExtractor) {
+		super(
+				testMetadataExtractor,
+				ImageResourceUtils::extractFile,
+				ImageBaseMetadatasTest.class::getResourceAsStream);
+	}
+
 	@AfterClass
 	public static void debugFailedKeys() {
 		if(DEBUG) {
@@ -64,37 +67,12 @@ public abstract class AbstractImageMetadatasTest {
 		}
 	}
 
-	protected abstract ImageMetadatas with(File file, String name) throws IOException;
-
-	protected abstract ImageMetadatas with(InputStream inputStream, String name) throws IOException;
-
-	// ********************************************
-
-	protected void singleDoAndDelete(String resourceName, Consumer<ImageMetadatas> assertConsumer) throws IOException {
-		// by file
-		File file = ImageResourceUtils.extractFile(resourceName);
-		try {
-			ImageMetadatas metadatas = with(file, resourceName);
-			assertConsumer.accept(metadatas);
-		} finally {
-			if(file != null && ! file.delete()) {
-				fail("Unable to delete " + file);
-			}
-		}
-
-		// by inputStream
-		try (InputStream inputStream = AbstractImageMetadatasTest.class.getResourceAsStream(resourceName)) {
-			ImageMetadatas metadatas = with(inputStream, resourceName);
-			assertConsumer.accept(metadatas);
-		}
-	}
-
 	/**
 	 * 203.jpg
 	 * 
 	 * @param metadatas
 	 */
-	protected void assertMetadatas_203(ImageMetadatas metadatas) {
+	public void assertMetadatas_203(ImageMetadatas metadatas) {
 		// display(metadatas);
 		final String fileName = ImageResourceUtils._203;
 		mdAssertEquals(fileName, "Aperture", Float.valueOf(2.8F), metadatas.getAperture(), 0.1);
@@ -123,7 +101,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * 
 	 * @param metadatas
 	 */
-	protected void assertMetadatas_104(ImageMetadatas metadatas) {
+	public void assertMetadatas_104(ImageMetadatas metadatas) {
 		// display(metadatas);
 		final String fileName = ImageResourceUtils._104;
 		mdAssertEquals(fileName, "Aperture", Float.valueOf(2F), metadatas.getAperture());
@@ -132,7 +110,7 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "ColorSpace", "sRGB", metadatas.getColorSpace());
 		mdAssertEquals(fileName, "Compression", "JPEG", metadatas.getCompression());
 		mdAssertEquals(fileName, "CompressionQuality", Integer.valueOf(65), metadatas.getCompressionQuality());
-		mdAssertEquals(fileName, "Coordinates", "45�55'20.35\" N,6�52'7.11\" E", String.valueOf(metadatas.getCoordinates()));
+		mdAssertEquals(fileName, "Coordinates", "45° 55' 20.35\" N, 6° 52' 7.11\" E", String.valueOf(metadatas.getCoordinates()));
 		mdAssertEquals(fileName, "Date", "2019-08-14T10:20:58+02:00", metadatas.getDate().toString());
 		mdAssertEquals(fileName, "Device", "LGE", metadatas.getDevice());
 		mdAssertEquals(fileName, "DeviceModel", "Nexus 5X", metadatas.getDeviceModel());
@@ -152,17 +130,9 @@ public abstract class AbstractImageMetadatasTest {
 	 * 
 	 * @param metadatas assertMetadatas_104
 	 */
-	protected void assertMetadatas_BadAssTottooFail(ImageMetadatas metadatas) {
+	public void assertMetadatas_BadAssTottooFail(ImageMetadatas metadatas) {
 		// display(metadatas);
 		final String fileName = ImageResourceUtils.BAD_ASS_TOTTOO_FAIL;
-		// System.out.println("#####");
-		// System.out.println(metadatas.get("exif:datetime"));
-		// System.out.println(metadatas.get("exif:datetimeoriginal"));
-		// System.out.println(metadatas.get("xap:createdate"));
-		// System.out.println(metadatas.get("date:create"));
-		// System.out.println(metadatas.get("date:modify"));
-		// System.out.println("> " + metadatas.getDate());
-
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
 		mdAssertEquals(fileName, "ApertureFormat", "", metadatas.getApertureFormat());
 		mdAssertEquals(fileName, "ColorDepth", Integer.valueOf(8), metadatas.getColorDepth());
@@ -189,8 +159,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * 
 	 * @param metadatas
 	 */
-	protected void assertMetadatas_WeiAss(ImageMetadatas metadatas) {
-		metadatas.getResolution();
+	public void assertMetadatas_WeiAss(ImageMetadatas metadatas) {
 		// display(metadatas);
 		final String fileName = ImageResourceUtils.WEI_ASS;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
@@ -223,7 +192,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * 
 	 * @param metadatas
 	 */
-	protected void assertMetadatas_Rabbitmq(ImageMetadatas metadatas) {
+	public void assertMetadatas_Rabbitmq(ImageMetadatas metadatas) {
 		// display(metadatas);
 		final String fileName = ImageResourceUtils.RABBITMQ;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
@@ -263,7 +232,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * 
 	 * @param metadatas
 	 */
-	protected void assertMetadatas_Plan4_550Mpixels(ImageMetadatas metadatas) {
+	public void assertMetadatas_Plan4_550Mpixels(ImageMetadatas metadatas) {
 		// display(metadatas);
 		final String fileName = ImageResourceUtils.PLAN4_550MPIXELS;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
@@ -301,7 +270,7 @@ public abstract class AbstractImageMetadatasTest {
 	 * 
 	 * @param metadatas
 	 */
-	protected void assertMetadatas_Multipage_tiff(ImageMetadatas metadatas) {
+	public void assertMetadatas_Multipage_tiff(ImageMetadatas metadatas) {
 		// display(metadatas);
 		final String fileName = ImageResourceUtils.MULTIPAGE_TIFF;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
@@ -332,9 +301,11 @@ public abstract class AbstractImageMetadatasTest {
 		mdAssertEquals(fileName, "tiff:software", "IrfanView", metadatas.get("tiff:software"));
 	}
 
-	protected void display(ImageMetadatas metadatas) {
+	public void display(ImageMetadatas metadatas) {
 		metadatas.getData().forEach((k, v) -> System.out.println(k + " : " + v));
 	}
+
+	// *****************************************
 
 	protected BiPredicate<String, String> assertFilter() {
 		return (n, m) -> true;

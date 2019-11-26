@@ -151,7 +151,7 @@ public class MovieScriptConverter extends Converter<Movie> {
 		try {
 			script.println("if exist \"" + dest.getPath() + "\" goto :movie_" + currentVideo);
 			script.println("echo.");
-			script.println("echo Frame: " + infos.getVideoStream().countEstimateFrames().getAsInt());
+			script.println("echo Frame: " + infos.getVideoStream().countEstimateFrames().get());
 			script.println(executor.getCommandLineString());
 			script.println();
 		} catch(IOException e) {

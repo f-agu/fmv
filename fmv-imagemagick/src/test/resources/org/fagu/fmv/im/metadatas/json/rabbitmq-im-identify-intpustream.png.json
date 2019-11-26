@@ -1,0 +1,22 @@
+{
+  "cdepth": "8",
+  "colorspace": "sRGB",
+  "compression": "Zip",
+  "compressionq": "92",
+  "date:create": "2019-11-26T14:08:22+00:00",
+  "date:modify": "2019-11-26T14:08:22+00:00",
+  "filename": "-",
+  "format": "PNG",
+  "png:chrm": "chunk was found (see Chromaticity, above)",
+  "png:gama": "gamma\u003d0.45455 (See Gamma, above)",
+  "png:ihdr.bit-depth-orig": "8",
+  "png:ihdr.bit_depth": "8",
+  "png:ihdr.color-type-orig": "6",
+  "png:ihdr.color_type": "6 (RGBA)",
+  "png:ihdr.interlace_method": "0 (Not interlaced)",
+  "png:ihdr.width,height": "2362, 2500",
+  "png:srgb": "intent\u003d0 (Perceptual Intent)",
+  "resunit": "Undefined",
+  "wh": "2362 2500",
+  "xy": "72 72"
+}

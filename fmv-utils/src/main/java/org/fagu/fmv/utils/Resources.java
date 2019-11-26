@@ -23,9 +23,9 @@ package org.fagu.fmv.utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 
 /**
@@ -33,37 +33,22 @@ import org.apache.commons.io.IOUtils;
  */
 public class Resources {
 
-	/**
-	 * 
-	 */
-	private Resources() {
-		super();
-	}
+	private Resources() {}
 
 	// ***************************************
 
-	/**
-	 * @param clsPackage
-	 * @param name
-	 * @return
-	 */
 	public static String getResourcePath(Package clsPackage, String name) {
 		if(clsPackage == null) {
 			return name;
 		}
-		StringBuilder sb = new StringBuilder();
-		sb.append(clsPackage.getName().replace('.', '/'));
+		StringBuilder sb = new StringBuilder()
+				.append(clsPackage.getName().replace('.', '/'));
 		if( ! name.startsWith("/")) {
 			sb.append('/');
 		}
-		sb.append(name);
-		return sb.toString();
+		return sb.append(name).toString();
 	}
 
-	/**
-	 * @param cls
-	 * @return
-	 */
 	public static String getResourcePath(Class<?> cls) {
 		if(cls == null) {
 			return null;
@@ -71,53 +56,25 @@ public class Resources {
 		return cls.getName().replace('.', '/') + ".class";
 	}
 
-	/**
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
 	public static InputStream getResourceInputStream(String resource) throws IOException {
-		Resources resources = new Resources();
-		return resources.getInputStream(resource);
+		return Objects.requireNonNull(new Resources().getInputStream(resource), "Resource not found: " + resource);
 	}
 
-	/**
-	 * @param resource
-	 * @param prefix
-	 * @param suffix
-	 * @return
-	 */
 	public static File extractToTempFile(String resource, String prefix, String suffix) throws IOException {
 		File tmpFile = File.createTempFile(prefix, suffix);
-		tmpFile = extractToFile(resource, tmpFile);
-		return tmpFile;
+		return extractToFile(resource, tmpFile);
 	}
 
-	/**
-	 * @param resource
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
 	public static File extractToFile(String resource, File file) throws IOException {
-		InputStream inputStream = null;
-		try {
-			inputStream = getResourceInputStream(resource);
+		try (InputStream inputStream = getResourceInputStream(resource)) {
 			FileUtils.copyInputStreamToFile(inputStream, file);
 			return file;
-		} finally {
-			IOUtils.closeQuietly(inputStream);
 		}
 	}
 
 	// **************************************************
 
-	/**
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
-	private InputStream getInputStream(String resource) throws IOException {
+	private InputStream getInputStream(String resource) {
 		return getClass().getClassLoader().getResourceAsStream(resource);
 	}
 

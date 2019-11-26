@@ -33,7 +33,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.cli.Console;
 import org.fagu.fmv.cli.Environnement;
 import org.fagu.fmv.cli.FMVCLIConfig;

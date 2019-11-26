@@ -25,7 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.filter.Label.State;
 
 
@@ -34,7 +34,7 @@ import org.fagu.fmv.ffmpeg.filter.Label.State;
  */
 public class FilterNaming {
 
-	private final static char[] DIGITS = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'};
+	private static final char[] DIGITS = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'};
 
 	private int counter = 0;
 
