@@ -2,7 +2,7 @@
   {
     "image": {
       "name": "-",
-      "baseName": "BaseImageMetadatasTest594107593399065763.jpg",
+      "baseName": "ImageBaseMetadatasTest7063338404799696717.jpg",
       "format": "JPEG",
       "formatDescription": "JPEG",
       "mimeType": "image/jpeg",
@@ -113,8 +113,8 @@
       "quality": 91.0,
       "orientation": "TopLeft",
       "properties": {
-        "date:create": "2019-11-26T14:07:31+00:00",
-        "date:modify": "2019-11-26T14:07:31+00:00",
+        "date:create": "2019-11-27T13:37:40+00:00",
+        "date:modify": "2019-11-27T13:37:40+00:00",
         "exif:ColorSpace": "65535",
         "exif:DateTime": "2010:01:02 20:03:43",
         "exif:ExifOffset": "164",
@@ -155,9 +155,9 @@
       "tainted": false,
       "filesize": "28519B",
       "numberPixels": "192600",
-      "pixelsPerSecond": "33.4665MB",
-      "userTime": "0.000u",
-      "elapsedTime": "0:01.005",
+      "pixelsPerSecond": "7.30373MB",
+      "userTime": "0.016u",
+      "elapsedTime": "0:01.026",
       "version": "C:\\Program Files\\ImageMagick-7.0.8-Q16\\\\index.html"
     }
   }

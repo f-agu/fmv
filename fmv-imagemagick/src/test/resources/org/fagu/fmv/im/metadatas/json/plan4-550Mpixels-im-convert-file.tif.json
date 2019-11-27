@@ -2,7 +2,7 @@
   {
     "image": {
       "name": "-",
-      "baseName": "BaseImageMetadatasTest2869086208110050948.tif",
+      "baseName": "ImageBaseMetadatasTest5936866042133783204.tif",
       "format": "TIFF",
       "formatDescription": "TIFF",
       "mimeType": "image/tiff",
@@ -62,8 +62,8 @@
       "compression": "Group4",
       "orientation": "TopLeft",
       "properties": {
-        "date:create": "2019-11-26T14:07:32+00:00",
-        "date:modify": "2019-11-26T14:07:32+00:00",
+        "date:create": "2019-11-27T13:37:41+00:00",
+        "date:modify": "2019-11-27T13:37:41+00:00",
         "signature": "07ca4f96d25312fbf56798b4b04a269d9ba0eb7d649bae74d9f3a67ed7cd8f04",
         "tiff:alpha": "unspecified",
         "tiff:endian": "lsb",
@@ -76,9 +76,9 @@
       "tainted": false,
       "filesize": "207916B",
       "numberPixels": "557.925M",
-      "pixelsPerSecond": "292.759MB",
-      "userTime": "1.906u",
-      "elapsedTime": "0:02.905",
+      "pixelsPerSecond": "234.457MB",
+      "userTime": "2.250u",
+      "elapsedTime": "0:03.379",
       "version": "C:\\Program Files\\ImageMagick-7.0.8-Q16\\\\index.html"
     }
   }

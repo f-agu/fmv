@@ -115,8 +115,8 @@
       "compression": "Zip",
       "orientation": "Undefined",
       "properties": {
-        "date:create": "2019-11-26T14:08:14+00:00",
-        "date:modify": "2019-11-26T14:08:14+00:00",
+        "date:create": "2019-11-27T13:38:24+00:00",
+        "date:modify": "2019-11-27T13:38:24+00:00",
         "png:cHRM": "chunk was found (see Chromaticity, above)",
         "png:gAMA": "gamma\u003d0.45455 (See Gamma, above)",
         "png:IHDR.bit-depth-orig": "8",
@@ -131,9 +131,9 @@
       "tainted": false,
       "filesize": "40945B",
       "numberPixels": "5905000",
-      "pixelsPerSecond": "38.7375MB",
-      "userTime": "0.484u",
-      "elapsedTime": "0:01.152",
+      "pixelsPerSecond": "43.9391MB",
+      "userTime": "0.453u",
+      "elapsedTime": "0:01.134",
       "version": "C:\\Program Files\\ImageMagick-7.0.8-Q16\\\\index.html"
     }
   }

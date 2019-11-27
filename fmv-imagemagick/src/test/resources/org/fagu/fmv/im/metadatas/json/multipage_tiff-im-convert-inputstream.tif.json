@@ -3,19 +3,26 @@
     "image": {
       "name": "-",
       "baseName": "-",
-      "format": "JPEG",
-      "formatDescription": "JPEG",
-      "mimeType": "image/jpeg",
+      "format": "TIFF",
+      "formatDescription": "TIFF",
+      "mimeType": "image/tiff",
       "class": "DirectClass",
       "geometry": {
-        "width": 1024.0,
-        "height": 768.0,
+        "width": 800.0,
+        "height": 600.0,
         "x": 0.0,
         "y": 0.0
       },
-      "units": "Undefined",
+      "resolution": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "printSize": {
+        "x": 8.33333,
+        "y": 6.25
+      },
+      "units": "PixelsPerInch",
       "type": "TrueColor",
-      "baseType": "Undefined",
       "endianess": "Undefined",
       "colorspace": "sRGB",
       "depth": 8.0,
@@ -25,45 +32,45 @@
         "green": 8.0,
         "blue": 1.0
       },
-      "pixels": 2359296.0,
+      "pixels": 1440000.0,
       "imageStatistics": {
         "Overall": {
           "min": 0.0,
           "max": 255.0,
-          "mean": 75.6683,
-          "standardDeviation": 14773.7,
-          "kurtosis": -0.723792,
-          "skewness": 0.84792,
-          "entropy": 0.866512
+          "mean": 243.085,
+          "standardDeviation": 13302.9,
+          "kurtosis": 16.6629,
+          "skewness": -4.29831,
+          "entropy": 0.130446
         }
       },
       "channelStatistics": {
         "Red": {
           "min": 0.0,
           "max": 255.0,
-          "mean": 81.7185,
-          "standardDeviation": 14756.7,
-          "kurtosis": -0.837651,
-          "skewness": 0.790135,
-          "entropy": 0.891759
+          "mean": 243.078,
+          "standardDeviation": 13300.0,
+          "kurtosis": 16.6788,
+          "skewness": -4.29939,
+          "entropy": 0.132199
         },
         "Green": {
           "min": 0.0,
           "max": 255.0,
-          "mean": 75.9634,
-          "standardDeviation": 15015.0,
-          "kurtosis": -0.789709,
-          "skewness": 0.819363,
-          "entropy": 0.867013
+          "mean": 243.125,
+          "standardDeviation": 13375.1,
+          "kurtosis": 16.6732,
+          "skewness": -4.30212,
+          "entropy": 0.115535
         },
         "Blue": {
           "min": 0.0,
           "max": 255.0,
-          "mean": 69.3228,
-          "standardDeviation": 14549.4,
-          "kurtosis": -0.50736,
-          "skewness": 0.959972,
-          "entropy": 0.840763
+          "mean": 243.051,
+          "standardDeviation": 13233.7,
+          "kurtosis": 16.6317,
+          "skewness": -4.29293,
+          "entropy": 0.143604
         }
       },
       "renderingIntent": "Perceptual",
@@ -94,29 +101,32 @@
       "intensity": "Undefined",
       "compose": "Over",
       "pageGeometry": {
-        "width": 1024.0,
-        "height": 768.0,
+        "width": 800.0,
+        "height": 600.0,
         "x": 0.0,
         "y": 0.0
       },
       "dispose": "Undefined",
       "iterations": 0.0,
       "compression": "JPEG",
-      "quality": 74.0,
-      "orientation": "Undefined",
+      "orientation": "TopLeft",
       "properties": {
-        "date:create": "2019-11-26T14:08:16+00:00",
-        "date:modify": "2019-11-26T14:08:16+00:00",
-        "jpeg:colorspace": "2",
-        "jpeg:sampling-factor": "2x1,1x1,1x1",
-        "signature": "ac0ea9fcd208909ac7f36362b0d8539c652d8a93df86a4b6cf9f36a0a277a8da"
+        "date:create": "2019-11-27T13:37:41+00:00",
+        "date:modify": "2019-11-27T13:37:41+00:00",
+        "jpeg:sampling-factor": "2x2",
+        "signature": "282994c06d5b4d470d191b29c31594615fa73da38a4e4d020f5f24627162fe87",
+        "tiff:alpha": "unspecified",
+        "tiff:endian": "lsb",
+        "tiff:photometric": "RGB",
+        "tiff:rows-per-strip": "16",
+        "tiff:software": "IrfanView"
       },
       "tainted": false,
-      "filesize": "77026B",
-      "numberPixels": "786432",
-      "pixelsPerSecond": "37.1102MB",
-      "userTime": "0.031u",
-      "elapsedTime": "0:01.021",
+      "filesize": "810405B",
+      "numberPixels": "480000",
+      "pixelsPerSecond": "34.3195MB",
+      "userTime": "0.000u",
+      "elapsedTime": "0:01.013",
       "version": "C:\\Program Files\\ImageMagick-7.0.8-Q16\\\\index.html"
     }
   }

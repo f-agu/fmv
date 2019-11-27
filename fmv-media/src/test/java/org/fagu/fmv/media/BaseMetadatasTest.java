@@ -38,7 +38,9 @@ public class BaseMetadatasTest<M extends Metadatas> {
 		File file = fileResourceSupplier.supply(resourceName);
 		try {
 			M metadatas = testMetadataExtractor.extract(file, resourceName);
-			fileConsumer.accept(metadatas);
+			if(metadatas != null) {
+				fileConsumer.accept(metadatas);
+			}
 		} finally {
 			if(file != null && ! file.delete()) {
 				fail("Unable to delete " + file);
@@ -48,7 +50,9 @@ public class BaseMetadatasTest<M extends Metadatas> {
 		// by inputStream
 		try (InputStream inputStream = inputStreamResourceSupplier.supply(resourceName)) {
 			M metadatas = testMetadataExtractor.extract(inputStream, resourceName);
-			isConsumer.accept(metadatas);
+			if(metadatas != null) {
+				isConsumer.accept(metadatas);
+			}
 		}
 	}
 

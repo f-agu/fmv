@@ -113,8 +113,8 @@
       "quality": 65.0,
       "orientation": "TopLeft",
       "properties": {
-        "date:create": "2019-11-26T14:07:30+00:00",
-        "date:modify": "2019-11-26T14:07:30+00:00",
+        "date:create": "2019-11-27T13:37:38+00:00",
+        "date:modify": "2019-11-27T13:37:38+00:00",
         "exif:ApertureValue": "196608/65536",
         "exif:Artist": "Photographer:fagu",
         "exif:ColorSpace": "1",
@@ -178,9 +178,9 @@
       "tainted": false,
       "filesize": "727851B",
       "numberPixels": "15.0543M",
-      "pixelsPerSecond": "142.955MB",
-      "userTime": "0.094u",
-      "elapsedTime": "0:01.105",
+      "pixelsPerSecond": "118.958MB",
+      "userTime": "0.125u",
+      "elapsedTime": "0:01.126",
       "version": "C:\\Program Files\\ImageMagick-7.0.8-Q16\\\\index.html"
     }
   }

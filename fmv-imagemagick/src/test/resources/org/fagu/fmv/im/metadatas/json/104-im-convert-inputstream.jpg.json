@@ -113,8 +113,8 @@
       "quality": 65.0,
       "orientation": "TopLeft",
       "properties": {
-        "date:create": "2019-11-26T14:07:27+00:00",
-        "date:modify": "2019-11-26T14:07:27+00:00",
+        "date:create": "2019-11-27T13:37:35+00:00",
+        "date:modify": "2019-11-27T13:37:35+00:00",
         "exif:ApertureValue": "200/100",
         "exif:BrightnessValue": "0/100",
         "exif:ColorSpace": "1",
@@ -185,9 +185,9 @@
       "tainted": false,
       "filesize": "931438B",
       "numberPixels": "12.1928M",
-      "pixelsPerSecond": "141.071MB",
+      "pixelsPerSecond": "137.569MB",
       "userTime": "0.094u",
-      "elapsedTime": "0:01.086",
+      "elapsedTime": "0:01.088",
       "version": "C:\\Program Files\\ImageMagick-7.0.8-Q16\\\\index.html"
     }
   }

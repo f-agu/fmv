@@ -2,7 +2,7 @@
   {
     "image": {
       "name": "-",
-      "baseName": "BaseImageMetadatasTest2419793527605133483.jpg",
+      "baseName": "ImageBaseMetadatasTest871527987395368858.jpg",
       "format": "JPEG",
       "formatDescription": "JPEG",
       "mimeType": "image/jpeg",
@@ -113,8 +113,8 @@
       "quality": 65.0,
       "orientation": "TopLeft",
       "properties": {
-        "date:create": "2019-11-26T14:07:28+00:00",
-        "date:modify": "2019-11-26T14:07:28+00:00",
+        "date:create": "2019-11-27T13:37:36+00:00",
+        "date:modify": "2019-11-27T13:37:36+00:00",
         "exif:ApertureValue": "196608/65536",
         "exif:Artist": "Photographer:fagu",
         "exif:ColorSpace": "1",
@@ -178,9 +178,9 @@
       "tainted": false,
       "filesize": "727851B",
       "numberPixels": "15.0543M",
-      "pixelsPerSecond": "141.572MB",
-      "userTime": "0.109u",
-      "elapsedTime": "0:01.106",
+      "pixelsPerSecond": "115.092MB",
+      "userTime": "0.141u",
+      "elapsedTime": "0:01.130",
       "version": "C:\\Program Files\\ImageMagick-7.0.8-Q16\\\\index.html"
     }
   }

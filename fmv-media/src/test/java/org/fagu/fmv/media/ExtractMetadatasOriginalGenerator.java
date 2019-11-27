@@ -56,7 +56,7 @@ public abstract class ExtractMetadatasOriginalGenerator<M extends Metadatas> {
 		baseMetadatasTest.singleDoAndDelete(
 				resourceName,
 				writer(resourceName, "file", extractor),
-				writer(resourceName, "intpustream", extractor));
+				writer(resourceName, "inputstream", extractor));
 	}
 
 	protected Consumer<M> writer(String srcName, String srcType, String extractor) {
