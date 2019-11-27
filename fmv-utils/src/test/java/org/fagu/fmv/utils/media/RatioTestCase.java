@@ -134,10 +134,10 @@ public class RatioTestCase {
 	@Test
 	public void testKeepRatio() {
 		Ratio ratio = Size.valueOf(467, 700).getRatio();
-		System.out.println(ratio);
+		assertEquals(Ratio.valueOf(467, 700), ratio);
 		Size newSize = ratio.getSizeIn(Size.valueOf(600, 600));
-		System.out.println(newSize);
-		System.out.println(newSize.getRatio());
+		assertEquals(Size.valueOf(400, 600), newSize);
+		assertEquals(Ratio.valueOf(2, 3), newSize.getRatio());
 	}
 
 }

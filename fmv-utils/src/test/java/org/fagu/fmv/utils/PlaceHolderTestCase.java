@@ -108,21 +108,23 @@ public class PlaceHolderTestCase {
 		assertEquals("replace", PlaceHolder.format("bonjour, ${trois} suivi de [${un}]", map), "bonjour, 3 suivi de [1]");
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testSystemEnv() throws Exception {
 		Map<String, String> map = System.getenv();
 		assertFalse("env empty", map.isEmpty());
 		for(Entry<String, String> entry : map.entrySet()) {
-			assertEquals(entry.getKey(), PlaceHolder.format(PlaceHolder.wrapKey(entry.getKey())), entry.getValue());
+			assertEquals(
+					entry.toString(),
+					PlaceHolder.format(
+							PlaceHolder.wrapKey(entry.getKey()),
+							Replacers.chain()
+									.ofSystemProperties()
+									.ofEnv()
+									.unresolvableCopy()),
+					entry.getValue());
 		}
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void testDefined() throws Exception {
 		Map<String, String> map = new HashMap<>();

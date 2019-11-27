@@ -2,7 +2,8 @@
 
 rem mvn -q -Dexec.executable=echo -Dexec.args=${project.version} --non-recursive exec:exec
 
-FOR /F "tokens=*" %a in ('mvn -q -Dexec.executable=echo -Dexec.args=${project.version} --non-recursive exec:exec') do SET OUTPUT=%a
+rem FOR /F "tokens=*" %a in ('mvn -q -Dexec.executable=echo -Dexec.args=${project.version} --non-recursive exec:exec') do SET OUTPUT=%a
+rem FOR /F "tokens=*" %a in ('mvn -q -Dexec.executable=echo -Dexec.args=${project.version} --non-recursive exec:exec') do SET OUTPUT=%a
 
 rem echo %OUTPUT%
 
@@ -20,4 +21,4 @@ rem )
 
 rem echo %REPO_NAME%
 
-rem mvn deploy -DskipTests -DaltDeploymentRepository=anid::default::https://nexus.oodrive.net/nexus/content/repositories/snapshots
+mvn deploy -DskipTests -DaltDeploymentRepository=anid::default::https://nexus.oodrive.net/nexus/content/repositories/snapshots
