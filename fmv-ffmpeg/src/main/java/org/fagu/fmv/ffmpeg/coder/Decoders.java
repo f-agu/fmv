@@ -160,7 +160,7 @@ public class Decoders extends Coders {
 	public static final Decoders ADPCM_IMA_RAD = new Decoders("adpcm_ima_rad");
 
 	// ADPCM IMA Loki SDL MJPEG
-	public static final Decoders ADPCM_IMA_SMJPEG = new Decoders("adpcm_ima_smjpeg");
+	public static final Decoders ADPCM_IMA_SMJPEG = new Decoders("adpcm_ima_smjpeg", SubType.IMAGE);
 
 	// ADPCM IMA WAV
 	public static final Decoders ADPCM_IMA_WAV = new Decoders("adpcm_ima_wav");
@@ -700,13 +700,13 @@ public class Decoders extends Coders {
 	public static final Decoders MIMIC = new Decoders("mimic");
 
 	// MJPEG (Motion JPEG)
-	public static final Decoders MJPEG = new Decoders("mjpeg");
+	public static final Decoders MJPEG = new Decoders("mjpeg", SubType.IMAGE);
 
 	// Nvidia CUVID MJPEG decoder (codec mjpeg)
-	public static final Decoders MJPEG_CUVID = new Decoders("mjpeg_cuvid");
+	public static final Decoders MJPEG_CUVID = new Decoders("mjpeg_cuvid", SubType.IMAGE);
 
 	// Apple MJPEG-B
-	public static final Decoders MJPEGB = new Decoders("mjpegb");
+	public static final Decoders MJPEGB = new Decoders("mjpegb", SubType.IMAGE);
 
 	// MLP (Meridian Lossless Packing)
 	public static final Decoders MLP = new Decoders("mlp");
