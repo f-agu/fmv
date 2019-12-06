@@ -191,10 +191,10 @@ public class Soft {
 		return withParameters(Collections.emptyList());
 	}
 
-	public SoftExecutor withParameters(String param1, String... otherPparameters) {
-		List<String> params = new ArrayList<>(1 + otherPparameters.length);
+	public SoftExecutor withParameters(String param1, String... otherParameters) {
+		List<String> params = new ArrayList<>(1 + otherParameters.length);
 		params.add(param1);
-		params.addAll(Arrays.asList(otherPparameters));
+		params.addAll(Arrays.asList(otherParameters));
 		return withParameters(params);
 	}
 
