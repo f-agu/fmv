@@ -386,6 +386,9 @@ public class Ripper implements Closeable {
 	 */
 	private void filterAndMap(InputProcessor inputProcessor, OutputProcessor outputProcessor,
 			Iterator<? extends Stream> ffmpegStreams, List<? extends org.fagu.fmv.soft.mplayer.Stream> mplayerStreams) {
+		if( ! ffmpegStreams.hasNext()) {
+			return;
+		}
 		if(mplayerStreams.size() == 1) {
 			outputProcessor.map().streams(ffmpegStreams.next()).input(inputProcessor);
 		} else if(mplayerStreams.size() > 1) {
