@@ -28,6 +28,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
@@ -63,7 +64,9 @@ public class VLCSoftProvider extends SoftProvider {
 		if(SystemUtils.IS_OS_WINDOWS) {
 			return SoftOnWindows.createSoftFoundFactory(getName());
 		}
-		throw new RuntimeException("Not implemented"); // TODO
+
+		// Not implemented !
+		return (file, locator, softPolicy) -> SoftFound.notFound();
 	}
 
 	@Override
