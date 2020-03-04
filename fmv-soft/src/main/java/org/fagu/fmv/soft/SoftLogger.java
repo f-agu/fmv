@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,11 +41,47 @@ import org.fagu.fmv.soft.spring.actuator.Softs;
  */
 public class SoftLogger {
 
+	// -------------------------------------------------
+
+	public static class Builder {
+
+		private final List<Soft> softs;
+
+		private SoftLogListener softLogListener;
+
+		private Builder(List<Soft> softs) {
+			this.softs = softs;
+		}
+
+		public Builder withSoftLogListener(SoftLogListener softLogListener) {
+			this.softLogListener = softLogListener;
+			return this;
+		}
+
+		public SoftLogger build() {
+			return new SoftLogger(softs, softLogListener);
+		}
+	}
+
+	// -------------------------------------------------
+
 	private final List<Soft> softs;
+
+	private final SoftLogListener softLogListener;
+
+	private SoftLogger(List<Soft> softs, SoftLogListener softLogListener) {
+		this.softs = softs;
+		this.softLogListener = softLogListener != null ? softLogListener : new SoftLogListener() {};
+	}
 
 	public SoftLogger(List<Soft> softs) {
 		this.softs = new ArrayList<>(softs);
 		Collections.sort(this.softs, (s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
+		this.softLogListener = new SoftLogListener() {};
+	}
+
+	public static Builder withSofts(List<Soft> softs) {
+		return new Builder(Objects.requireNonNull(softs));
 	}
 
 	public boolean log(Consumer<String> logger) {
@@ -62,23 +99,26 @@ public class SoftLogger {
 			SoftProvider softProvider = soft.getSoftProvider();
 			if(founds.isFound()) {
 				toLine(startLine(maxLength, name, firstFound), softProvider, firstFound, logger);
+				softLogListener.eventFound(soft, firstFound, logger);
 			} else {
 				if(founds.isEmpty()) {
 					toLine(startLine(maxLength, name, firstFound), softProvider, SoftFound.notFound(), logger);
+					softLogListener.eventNotFoundEmpty(soft, firstFound, logger);
 				} else {
 					int index = 0;
 					for(SoftFound softFound : founds) {
 						toLine(startLine(maxLength, 0 == index++ ? name : null, softFound), softProvider, softFound, logger);
+						softLogListener.eventNotFoundNotEmpty(soft, softFound, logger);
 					}
 				}
 
 				String downloadURL = softProvider.getDownloadURL();
 				if(StringUtils.isNotBlank(downloadURL)) {
-					logger.accept("    Download at: " + downloadURL);
+					logger.accept("   Download at: " + downloadURL);
 				}
 				String logMessageIfNotFound = softProvider.getLogMessageIfNotFound();
 				if(StringUtils.isNotBlank(logMessageIfNotFound)) {
-					logger.accept("    " + logMessageIfNotFound);
+					logger.accept("   " + logMessageIfNotFound);
 				}
 			}
 		}
@@ -166,7 +206,6 @@ public class SoftLogger {
 				formatConsumer.accept("   Minimum version: " + minVersion);
 			}
 		}
-
 	}
 
 	private void appendFile(StringBuilder line, SoftFound softFound) {
