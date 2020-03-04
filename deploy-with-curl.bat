@@ -3,7 +3,7 @@
 rem set PWD=%~dp0
 rem set PWD=D:\tmp\fmv\fmv\
 rem set VERSION=0.16.0-SNAPSHOT
-set VERSION=0.17.0
+set VERSION=0.17.1
 
 set REPO_URL=https://nexus.oodrive.net/nexus/
 set REPO_LOCAL=%USERPROFILE%\.m2\repository\org\fagu\
@@ -18,7 +18,6 @@ if "%VERSION:~-8%" == "SNAPSHOT" (
 call:artefact fmv-dependencies
 call:artefact fmv-ffmpeg
 call:artefact fmv-image
-call:artefact fmv-imageexiftool
 call:artefact fmv-imagemagick
 call:artefact fmv-media
 call:artefact fmv-parent
