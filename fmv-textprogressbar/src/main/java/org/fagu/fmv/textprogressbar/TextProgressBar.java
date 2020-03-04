@@ -33,7 +33,16 @@ public class TextProgressBar implements Closeable {
 
 		private Consumer<String> display = System.out::print;
 
+		private String startCommandSequence = "\r";
+
 		private TextProgressBarBuilder() {}
+
+		public TextProgressBarBuilder withStartCommandSequence(String value) {
+			if(value != null) {
+				this.startCommandSequence = value;
+			}
+			return this;
+		}
 
 		public TextProgressBarBuilder append(Part part) {
 			if(part != null) {
@@ -154,50 +163,35 @@ public class TextProgressBar implements Closeable {
 
 	private final Consumer<String> display;
 
+	private final String startCommandSequence;
+
 	private TimerTask timerTask;
 
 	private Timer timer;
 
-	/**
-	 * @param builder
-	 */
 	private TextProgressBar(TextProgressBarBuilder builder) {
 		this.autoPrintFull = builder.autoPrintFull;
 		this.display = builder.display;
+		this.startCommandSequence = builder.startCommandSequence;
 		this.parts = Collections.unmodifiableList(new ArrayList<>(builder.parts));
 	}
 
-	/**
-	 * @return
-	 */
 	public static TextProgressBarBuilder newBar() {
 		return new TextProgressBarBuilder();
 	}
 
-	/**
-	 * @param percent
-	 */
 	public void print(int percent) {
 		print(false, percent);
 	}
 
-	/**
-	 *
-	 */
 	public TextProgressBar printFull() {
 		return printFull(100);
 	}
 
-	/**
-	 * @param percent
-	 */
 	public TextProgressBar printFull(int percent) {
 		return print(true, percent);
 	}
 
-	/**
-	 * @see java.io.Closeable#close()
-	 */
 	@Override
 	public void close() throws IOException {
 		if(autoPrintFull) {
@@ -214,17 +208,10 @@ public class TextProgressBar implements Closeable {
 
 	// **********************************************
 
-	/**
-	 * @param progressInPercent
-	 * @param refreshPeriodMilliseconds
-	 */
 	private void schedule(IntSupplier progressInPercent, long refreshPeriodMilliseconds) {
 		IntSupplier supplier = progressInPercent != null ? progressInPercent : () -> 0;
 		timerTask = new TimerTask() {
 
-			/**
-			 * @see java.util.TimerTask#run()
-			 */
 			@Override
 			public void run() {
 				print(supplier.getAsInt());
@@ -234,26 +221,16 @@ public class TextProgressBar implements Closeable {
 		timer.scheduleAtFixedRate(timerTask, 0, refreshPeriodMilliseconds);
 	}
 
-	/**
-	 * @param finish
-	 * @param percent
-	 * @return
-	 */
 	private TextProgressBar print(boolean finish, int percent) {
 		ProgressStatus status = createStatus(finish, percent);
 
 		StringBuilder bar = new StringBuilder(140);
-		bar.append('\r');
+		bar.append(startCommandSequence);
 		parts.stream().forEach(p -> bar.append(p.getWith(status)));
 		display.accept(bar.toString());
 		return this;
 	}
 
-	/**
-	 * @param finish
-	 * @param percent
-	 * @return
-	 */
 	private ProgressStatus createStatus(boolean finish, int percent) {
 		return new ProgressStatus() {
 
