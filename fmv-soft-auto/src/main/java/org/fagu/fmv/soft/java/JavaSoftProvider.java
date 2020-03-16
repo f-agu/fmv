@@ -40,12 +40,12 @@ public class JavaSoftProvider extends SoftProvider {
 
 	public JavaSoftProvider(SoftPolicy softPolicy) {
 		super(NAME, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(1, 1))));
+				.onAllPlatforms(minVersion(1, 8))));
 	}
 
 	JavaSoftProvider(String name, SoftPolicy softPolicy) {
 		super(name, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
-				.onAllPlatforms(minVersion(1, 1))));
+				.onAllPlatforms(minVersion(1, 8))));
 	}
 
 	@Override
