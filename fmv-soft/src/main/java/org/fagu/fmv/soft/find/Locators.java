@@ -43,49 +43,26 @@ public class Locators {
 
 	private final FileFilter fileFilter;
 
-	/**
-	 * @param fileFilter
-	 */
 	public Locators(FileFilter fileFilter) {
 		this.fileFilter = Objects.requireNonNull(fileFilter);
 	}
 
-	/**
-	 * @param path
-	 * @return
-	 */
 	public Locator byPath(String path) {
 		return path == null ? NOTHING : named("path[" + path + ']', softName -> listByPath(path));
 	}
 
-	/**
-	 * @param propertyName
-	 * @return
-	 */
 	public Locator byPropertyPath(String propertyName) {
 		return propertyName == null ? NOTHING : named("property-path[" + propertyName + ']', byPath(System.getProperty(propertyName)));
 	}
 
-	/**
-	 * @return
-	 */
 	public Locator byCurrentPath() {
 		return byPath(".");
 	}
 
-	/**
-	 * @param envName
-	 * @return
-	 */
 	public Locator byEnv(String envName) {
 		return byEnv(envName, Arrays.asList("bin", "bin32", "bin64"));
 	}
 
-	/**
-	 * @param envName
-	 * @param subFolders
-	 * @return
-	 */
 	public Locator byEnv(String envName, Collection<String> subFolders) {
 		if(envName == null) {
 			return NOTHING;
@@ -106,25 +83,22 @@ public class Locators {
 		});
 	}
 
-	/**
-	 * @return
-	 */
 	public Locator byEnvPath() {
-		return named("env[PATH]", softname -> listByPath(System.getenv("PATH")));
+		return byEnvPath("PATH");
 	}
 
-	/**
-	 * @return
-	 */
+	public Locator byEnvLdLibraryPath() {
+		return byEnvPath("LD_LIBRARY_PATH");
+	}
+
+	public Locator byEnvPath(String envName) {
+		return named("env[" + envName + "]", softname -> listByPath(System.getenv(envName)));
+	}
+
 	public static Locator nothing() {
 		return NOTHING;
 	}
 
-	/**
-	 * @param name
-	 * @param locator
-	 * @return
-	 */
 	public static Locator named(String name, Locator locator) {
 		return new Locator() {
 
@@ -143,10 +117,6 @@ public class Locators {
 
 	// ***********************************************************
 
-	/**
-	 * @param paths
-	 * @return
-	 */
 	private List<File> listByPath(String paths) {
 		if(paths != null) {
 			List<File> list = new ArrayList<>();

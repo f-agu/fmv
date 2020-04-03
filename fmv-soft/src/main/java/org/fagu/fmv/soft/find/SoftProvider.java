@@ -120,7 +120,10 @@ public abstract class SoftProvider {
 		Sorter sorter = sPolicy != null ? sPolicy.getSorter() : null;
 		SoftLocator softLocator = new SoftLocator(getName(), sorter, getFileFilter());
 		softLocator.setSoftPolicy(sPolicy);
-		softLocator.setEnvName(getName().toUpperCase() + "_HOME");
+		String upperCase = getName().toUpperCase()
+				.replace('-', '_')
+				.replace(' ', '_');
+		softLocator.setEnvName(upperCase + "_HOME");
 		return softLocator;
 	}
 

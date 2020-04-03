@@ -238,10 +238,6 @@ public class SoftLocator {
 
 	// ************************************************
 
-	/**
-	 * @param loc
-	 * @return
-	 */
 	protected List<Locator> getLocators(Locators loc) {
 		if( ! definedLocators.isEmpty()) {
 			return new ArrayList<>(definedLocators); // defensive copy
@@ -249,10 +245,6 @@ public class SoftLocator {
 		return getDefaultLocators(loc);
 	}
 
-	/**
-	 * @param loc
-	 * @return
-	 */
 	protected List<Locator> getDefaultLocators(Locators loc) {
 		Locators locators = loc != null ? loc : createLocators();
 		List<Locator> locatorList = new ArrayList<>(4);
@@ -261,19 +253,14 @@ public class SoftLocator {
 		}
 		locatorList.add(locators.byCurrentPath());
 		locatorList.add(locators.byEnvPath());
+		locatorList.add(locators.byEnvLdLibraryPath());
 		return locatorList;
 	}
 
-	/**
-	 * @return
-	 */
 	protected SoftTester defaultSoftTester() {
 		return DEFAULT_SOFT_TESTER;
 	}
 
-	/**
-	 * @return
-	 */
 	protected Function<Founds, File> getFoundPolicy() {
 		return DEFAULT_FOUND_POLICY;
 	}
