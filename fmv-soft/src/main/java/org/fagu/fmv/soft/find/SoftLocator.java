@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import org.fagu.fmv.soft.SearchListener;
 import org.fagu.fmv.soft.find.strategy.HighestPrecedenceSorter;
 
 
@@ -70,23 +71,18 @@ public class SoftLocator {
 
 	private final List<Locator> definedLocators;
 
-	/**
-	 * @param softName
-	 */
+	private final List<SearchListener> searchListeners;
+
 	public SoftLocator(String softName) {
 		this(softName, null, null);
 	}
 
-	/**
-	 * @param softName
-	 * @param sorter
-	 * @param fileFilter
-	 */
 	public SoftLocator(String softName, Sorter sorter, FileFilter fileFilter) {
 		this.softName = Objects.requireNonNull(softName);
 		definedLocators = new ArrayList<>();
 		this.sorter = sorter != null ? sorter : new HighestPrecedenceSorter();
 		this.fileFilter = fileFilter != null ? fileFilter : PlateformFileFilter.plateformAndBasename(softName);
+		this.searchListeners = new ArrayList<>();
 	}
 
 	public String getSoftPath() {
@@ -113,21 +109,12 @@ public class SoftLocator {
 		this.envName = envName;
 	}
 
-	/**
-	 * @param cacheNaming
-	 * @param cachePopulator
-	 * @return
-	 */
 	public SoftLocator enableCache(UnaryOperator<String> cacheNaming, Function<Founds, List<Locator>> cachePopulator) {
 		this.cacheNaming = Objects.requireNonNull(cacheNaming);
 		this.cachePopulator = Objects.requireNonNull(cachePopulator);
 		return this;
 	}
 
-	/**
-	 * @param groupName
-	 * @return
-	 */
 	public SoftLocator enableCacheInSameFolderOfGroup(String groupName) {
 		return enableCache(n -> groupName, founds -> {
 			if(founds == null) {
@@ -142,38 +129,30 @@ public class SoftLocator {
 		});
 	}
 
-	/**
-	 * @return the foundStrategy
-	 */
 	public Sorter getSorter() {
 		return sorter;
 	}
 
-	/**
-	 * @return
-	 */
 	public Locators createLocators() {
 		return new Locators(fileFilter);
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftLocator addDefaultLocator() {
 		return addLocators(getDefaultLocators(null));
 	}
 
-	/**
-	 * @param locators
-	 * @return
-	 */
 	public SoftLocator addLocator(Locator... locators) {
 		return addLocators(Arrays.asList(locators));
 	}
 
-	/**
-	 * @param locators
-	 */
+	public SoftLocator addLocator(Function<Locators, Locator> locatorFct) {
+		return addLocator(locatorFct.apply(createLocators()));
+	}
+
+	public SoftLocator addLocators(Function<Locators, Collection<Locator>> locatorsFct) {
+		return addLocators(locatorsFct.apply(createLocators()));
+	}
+
 	public SoftLocator addLocators(Collection<Locator> locators) {
 		for(Locator locator : locators) {
 			if(locator == null) {
@@ -181,6 +160,22 @@ public class SoftLocator {
 			}
 		}
 		definedLocators.addAll(locators);
+		return this;
+	}
+
+	public SoftLocator addSearchListener(SearchListener searchListener) {
+		if(searchListener != null) {
+			searchListeners.add(searchListener);
+		}
+		return this;
+	}
+
+	public SoftLocator addSearchListeners(Collection<SearchListener> listeners) {
+		if(listeners != null) {
+			listeners.stream()
+					.filter(Objects::nonNull)
+					.forEach(this.searchListeners::add);
+		}
 		return this;
 	}
 
@@ -229,9 +224,6 @@ public class SoftLocator {
 		return cache(finding(getLocators(locators), tester, searchProperties));
 	}
 
-	/**
-	 * 
-	 */
 	public static void evictCache() {
 		CACHE_MAP.clear();
 	}
@@ -272,6 +264,9 @@ public class SoftLocator {
 	}
 
 	private Founds finding(Collection<Locator> locators, SoftTester tester, Properties searchProperties) {
+		Collection<Locator> roLocators = Collections.unmodifiableCollection(locators);
+		searchListeners.forEach(sl -> sl.eventPreSearch(roLocators, tester, searchProperties));
+
 		List<SoftFound> softFounds = new ArrayList<>();
 		Set<File> fileDones = new HashSet<>(4);
 		for(Locator locator : locators) {
@@ -280,6 +275,7 @@ public class SoftLocator {
 					SoftFound found = tester.test(file, locator, softPolicy);
 					if(found != null) {
 						softFounds.add(found);
+						searchListeners.forEach(sl -> sl.eventAddSoftFound(locator, found));
 					}
 				}
 			}
@@ -288,10 +284,6 @@ public class SoftLocator {
 		return new Founds(softName, sort, softPolicy, searchProperties);
 	}
 
-	/**
-	 * @param founds
-	 * @return
-	 */
 	private Founds cache(Founds founds) {
 		if(cachePopulator != null) {
 			CACHE_MAP.putIfAbsent(cacheNaming.apply(softName), founds);
@@ -299,12 +291,6 @@ public class SoftLocator {
 		return founds;
 	}
 
-	/**
-	 * @param t1
-	 * @param t2
-	 * @param t3
-	 * @return
-	 */
 	private static <T> T firstFoundNotNull(T t1, T t2, T t3) {
 		if(t1 != null) {
 			return t1;

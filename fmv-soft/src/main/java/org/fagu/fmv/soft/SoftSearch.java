@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.ServiceLoader;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.fagu.fmv.soft.find.Founds;
@@ -39,6 +40,10 @@ public class SoftSearch {
 
 	private Properties searchProperties;
 
+	private Consumer<SoftLocator> softLocatorConsumer;
+
+	private final List<SearchListener> searchListeners;
+
 	SoftSearch(SoftProvider softProvider) {
 		this(sp -> softProvider);
 	}
@@ -46,6 +51,7 @@ public class SoftSearch {
 	SoftSearch(Function<SoftPolicy, SoftProvider> softProviderSupplier) {
 		this.softProviderSupplier = Objects.requireNonNull(softProviderSupplier);
 		softFindListeners = new ArrayList<>();
+		searchListeners = new ArrayList<>();
 	}
 
 	public SoftSearch withPolicy(SoftPolicy softPolicy) {
@@ -66,18 +72,39 @@ public class SoftSearch {
 		return this;
 	}
 
-	public SoftSearch withListener(SoftFindListener softFindListener) {
+	public SoftSearch withLocatorConsumer(Consumer<SoftLocator> conusmer) {
+		this.softLocatorConsumer = conusmer;
+		return this;
+	}
+
+	public SoftSearch addSoftFindListener(SoftFindListener softFindListener) {
 		if(softFindListener != null) {
 			softFindListeners.add(softFindListener);
 		}
 		return this;
 	}
 
-	public SoftSearch withListeners(Collection<SoftFindListener> softFindListeners) {
+	public SoftSearch addSoftFindListeners(Collection<SoftFindListener> softFindListeners) {
 		if(softFindListeners != null) {
 			softFindListeners.stream()
 					.filter(Objects::nonNull)
 					.forEach(this.softFindListeners::add);
+		}
+		return this;
+	}
+
+	public SoftSearch addSearchListener(SearchListener searchListener) {
+		if(searchListener != null) {
+			searchListeners.add(searchListener);
+		}
+		return this;
+	}
+
+	public SoftSearch addSearchListeners(Collection<SearchListener> searchListeners) {
+		if(searchListeners != null) {
+			searchListeners.stream()
+					.filter(Objects::nonNull)
+					.forEach(this.searchListeners::add);
 		}
 		return this;
 	}
@@ -142,6 +169,10 @@ public class SoftSearch {
 		} else {
 			myLoc.setSoftPolicy(getProvider().getSoftPolicy());
 		}
+		if(softLocatorConsumer != null) {
+			softLocatorConsumer.accept(myLoc);
+		}
+		myLoc.addSearchListeners(searchListeners);
 		return myLoc;
 	}
 

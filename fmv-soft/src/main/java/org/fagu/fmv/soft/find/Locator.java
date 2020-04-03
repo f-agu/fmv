@@ -30,10 +30,6 @@ import java.util.List;
 @FunctionalInterface
 public interface Locator {
 
-	/**
-	 * @param softName
-	 * @return
-	 */
 	List<File> locate(String softName);
 
 }

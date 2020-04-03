@@ -44,9 +44,6 @@ public class SoftFound implements Comparable<SoftFound> {
 
 	private String localizedBy;
 
-	/**
-	 *
-	 */
 	private SoftFound() {
 		file = null;
 		softInfo = null;
@@ -54,12 +51,6 @@ public class SoftFound implements Comparable<SoftFound> {
 		reason = null;
 	}
 
-	/**
-	 * @param foundReason
-	 * @param file
-	 * @param softInfo
-	 * @param reason
-	 */
 	private SoftFound(FoundReason foundReason, File file, SoftInfo softInfo, String reason) {
 		this.foundReason = Objects.requireNonNull(foundReason);
 		this.file = Objects.requireNonNull(file);
@@ -67,80 +58,38 @@ public class SoftFound implements Comparable<SoftFound> {
 		this.reason = reason; // nullable
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static SoftFound found(File file) {
 		return foundCheck(file, FoundReasons.FOUND, null, null);
 	}
 
-	/**
-	 * @param softInfo
-	 * @return
-	 */
 	public static SoftFound found(SoftInfo softInfo) {
 		return foundCheck(softInfo.getFile(), FoundReasons.FOUND, softInfo, null);
 	}
 
-	/**
-	 * @param info
-	 * @param expectedVersion
-	 * @return
-	 */
 	public static SoftFound foundBadVersion(SoftInfo softInfo, String expectedVersion) {
 		return foundCheck(softInfo.getFile(), FoundReasons.BAD_VERSION, softInfo, expectedVersion);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static SoftFound foundBadSoft(File file) {
 		return foundCheck(file, FoundReasons.BAD_SOFT, null, null);
 	}
 
-	/**
-	 * @param info
-	 * @return
-	 */
 	public static SoftFound foundBadSoft(SoftInfo softInfo) {
 		return foundBadSoft(softInfo, null);
 	}
 
-	/**
-	 * @param softInfo
-	 * @param reason
-	 * @return
-	 */
 	public static SoftFound foundBadSoft(SoftInfo softInfo, String reason) {
 		return foundCheck(softInfo.getFile(), FoundReasons.BAD_SOFT, softInfo, reason);
 	}
 
-	/**
-	 * @param file
-	 * @param reason
-	 * @return
-	 */
 	public static SoftFound foundError(File file, String reason) {
 		return foundCheck(file, FoundReasons.ERROR, null, reason);
 	}
 
-	/**
-	 * @param softFounds
-	 * @return
-	 */
 	public static SoftFound multiple(final SoftFound... softFounds) {
 		return multiple(Arrays.asList(softFounds));
 	}
 
-	/**
-	 * @param foundReason
-	 * @param file
-	 * @param softInfo
-	 * @param reason
-	 * @return
-	 */
 	public static SoftFound of(FoundReason foundReason, File file, SoftInfo softInfo, String reason) {
 		if(foundReason == FoundReasons.MULTIPLE) {
 			throw new IllegalArgumentException(foundReason.name());
@@ -148,10 +97,6 @@ public class SoftFound implements Comparable<SoftFound> {
 		return foundCheck(file, foundReason, softInfo, reason);
 	}
 
-	/**
-	 * @param softFounds
-	 * @return
-	 */
 	public static SoftFound multiple(final Collection<SoftFound> softFounds) {
 		if(softFounds == null) {
 			return SoftFound.notFound();
@@ -166,9 +111,6 @@ public class SoftFound implements Comparable<SoftFound> {
 		}
 		return new SoftFound(first.getFoundReason(), first.getFile(), first.getSoftInfo(), first.getReason()) {
 
-			/**
-			 * @see org.fagu.fmv.soft.find.SoftFound#getFound()
-			 */
 			@Override
 			public FoundReason getFoundReason() {
 				FoundReason current = null;
@@ -181,17 +123,11 @@ public class SoftFound implements Comparable<SoftFound> {
 				return current;
 			}
 
-			/**
-			 * @see org.fagu.fmv.soft.find.SoftFound#isFound()
-			 */
 			@Override
 			public boolean isFound() {
 				return filteredSoftFounds.stream().anyMatch(SoftFound::isFound);
 			}
 
-			/**
-			 * @see org.fagu.fmv.soft.find.SoftFound#toString()
-			 */
 			@Override
 			public String toString() {
 				return filteredSoftFounds.stream().map(SoftFound::toString).collect(Collectors.joining(","));
@@ -199,75 +135,45 @@ public class SoftFound implements Comparable<SoftFound> {
 		};
 	}
 
-	/**
-	 * @return
-	 */
 	public static SoftFound notFound() {
 		return SF_NOT_FOUND;
 	}
 
 	// ===============
 
-	/**
-	 * @return
-	 */
 	public FoundReason getFoundReason() {
 		return foundReason;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getReason() {
 		return reason;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getLocalizedBy() {
 		return localizedBy;
 	}
 
-	/**
-	 * @param localizedBy
-	 */
 	public SoftFound setLocalizedBy(String localizedBy) {
 		this.localizedBy = localizedBy;
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isFound() {
 		return foundReason == FoundReasons.FOUND;
 	}
 
-	/**
-	 * @return
-	 */
 	public File getFile() {
 		return file;
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftInfo getSoftInfo() {
 		return softInfo;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getInfo() {
 		return softInfo != null ? softInfo.getInfo() : "<version undefined>";
 	}
 
-	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
 	@Override
 	public int compareTo(SoftFound o) {
 		if(isFound() && ! o.isFound()) {
@@ -279,9 +185,6 @@ public class SoftFound implements Comparable<SoftFound> {
 		return compareByInfo(o);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
@@ -297,10 +200,6 @@ public class SoftFound implements Comparable<SoftFound> {
 
 	// **********************************************
 
-	/**
-	 * @param o
-	 * @return
-	 */
 	// @SuppressWarnings("unchecked")
 	private int compareByInfo(SoftFound o) {
 		if(softInfo != null) {
@@ -317,13 +216,6 @@ public class SoftFound implements Comparable<SoftFound> {
 		return Integer.compare(hashCode(), o.hashCode());
 	}
 
-	/**
-	 * @param file
-	 * @param foundReason
-	 * @param softInfo
-	 * @param reason
-	 * @return
-	 */
 	private static SoftFound foundCheck(File file, FoundReason foundReason, SoftInfo softInfo, String reason) {
 		if(file == null || ! file.exists()) {
 			return notFound();
