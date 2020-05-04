@@ -34,6 +34,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteException;
+import org.fagu.fmv.soft.BasicExecuteDelegate;
+import org.fagu.fmv.soft.ExecuteDelegate;
 import org.fagu.fmv.soft.exec.BufferedReadLine;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.ExecHelper;
@@ -53,9 +55,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	// ------------------------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public static class ExecSoftFoundFactoryPrepare {
 
 		private final SoftProvider softProvider;
@@ -75,9 +74,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	// ------------------------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public static class ExecSoftFoundFactoryBuilder extends ExecHelper<ExecSoftFoundFactoryBuilder> {
 
 		private final SoftProvider softProvider;
@@ -91,6 +87,8 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 		private ExecutorFactory executorFactory;
 
 		private Supplier<List<String>> bufferedReadLineSupplier = () -> new LimitedLastQueue<>(500);
+
+		private ExecuteDelegate executeDelegate;
 
 		private ExecSoftFoundFactoryBuilder(SoftProvider softProvider, List<String> parameters) {
 			this.softProvider = softProvider;
@@ -157,6 +155,11 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 			return this;
 		}
 
+		public ExecSoftFoundFactoryBuilder withExecuteDelegate(ExecuteDelegate executeDelegate) {
+			this.executeDelegate = executeDelegate;
+			return this;
+		}
+
 		public ExecSoftFoundFactoryBuilder withExecutorFactory(ExecutorFactory executorFactory) {
 			this.executorFactory = executorFactory;
 			return this;
@@ -170,8 +173,9 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 				throw new IllegalStateException("ParserFactory is missing");
 			}
 			ExecutorFactory execFact = executorFactory != null ? executorFactory : getDefaultExecutorFactory();
+			ExecuteDelegate execDelegate = executeDelegate != null ? executeDelegate : BasicExecuteDelegate.INSTANCE;
 			build = true;
-			return new ExecSoftFoundFactory(execFact, parameters, parserFactory, bufferedReadLineSupplier);
+			return new ExecSoftFoundFactory(execFact, parameters, parserFactory, bufferedReadLineSupplier, execDelegate);
 		}
 
 		// **********************************************************
@@ -194,9 +198,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	// ------------------------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	@FunctionalInterface
 	public interface ParserFactory {
 
@@ -205,9 +206,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	// ------------------------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public interface Parser {
 
 		void readLine(String line);
@@ -236,9 +234,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	// ------------------------------------------------------------
 
-	/**
-	 * @author fagu
-	 */
 	@FunctionalInterface
 	public interface ParseVersion {
 
@@ -247,9 +242,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	// ------------------------------------------------------------
 
-	/**
-	 * @author fagu
-	 */
 	@FunctionalInterface
 	public interface ParseVersionDate {
 
@@ -258,9 +250,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	// ------------------------------------------------------------
 
-	/**
-	 * @author fagu
-	 */
 	public static class VersionDate {
 
 		private final Version version;
@@ -308,12 +297,15 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	private final Supplier<List<String>> bufferedReadLineSupplier;
 
+	private final ExecuteDelegate executeDelegate;
+
 	private ExecSoftFoundFactory(ExecutorFactory executorFactory, List<String> parameters, ParserFactory parserFactory,
-			Supplier<List<String>> bufferedReadLineSupplier) {
+			Supplier<List<String>> bufferedReadLineSupplier, ExecuteDelegate executeDelegate) {
 		this.executorFactory = Objects.requireNonNull(executorFactory);
 		this.parameters = parameters;
 		this.parserFactory = parserFactory;
 		this.bufferedReadLineSupplier = bufferedReadLineSupplier;
+		this.executeDelegate = Objects.requireNonNull(executeDelegate);
 	}
 
 	public static ExecSoftFoundFactoryPrepare forProvider(SoftProvider softProvider) {
@@ -336,7 +328,7 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 		FMVExecutor executor = executorFactory.create(file, parser, bufferedReadLine);
 
 		try {
-			int exitValue = executor.execute(commandLine);
+			int exitValue = executeDelegate.execute(executor, commandLine);
 			SoftFound softFound = parser.closeAndParse(cmdLineStr, exitValue);
 			if(locator != null && softFound != null) {
 				softFound.setLocalizedBy(locator.toString());

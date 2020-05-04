@@ -23,6 +23,10 @@ public class EnvironmentExecuteDelegate implements ExecuteDelegate {
 		this.envs.putAll(envs);
 	}
 
+	public static EnvironmentExecuteDelegate systemEnvs() {
+		return new EnvironmentExecuteDelegate(System.getenv());
+	}
+
 	@Override
 	public int execute(FMVExecutor fmvExecutor, CommandLine commandLine) throws IOException {
 		return fmvExecutor.execute(commandLine, envs);
