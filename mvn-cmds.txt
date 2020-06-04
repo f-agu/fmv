@@ -2,7 +2,7 @@
 git clone https://github.com/f-agu/fmv.git
 cd fmv
 mvn compile test
-mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.18.1 -DreleaseVersion=0.18.1 -DdevelopmentVersion=0.19.0-SNAPSHOT -U -B release:prepare
+mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.18.2 -DreleaseVersion=0.18.2 -DdevelopmentVersion=0.19.0-SNAPSHOT -U -B release:prepare
 
 mvn -Dmaven.test.skip=true -DskipTests release:perform
 
