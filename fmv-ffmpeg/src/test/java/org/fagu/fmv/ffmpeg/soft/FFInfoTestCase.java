@@ -271,6 +271,26 @@ public class FFInfoTestCase {
 		assertFull(parser, new Version(2, 6, 1), date(2015, 3, 7), null);
 	}
 
+	@Test
+	public void testFFProbe_2020_06_01() throws Exception {
+		Parser parser = newParserProbe();
+
+		parser.readLine("ffprobe version git-2020-06-01-dd76226 Copyright (c) 2007-2020 the FFmpeg developers");
+		parser.readLine("built with gcc 9.3.1 (GCC) 20200523");
+		parser.readLine(
+				"configuration: --enable-gpl --enable-version3 --enable-sdl2 --enable-fontconfig --enable-gnutls --enable-iconv --enable-libass --enable-libdav1d --enable-libbluray --enable-libfreetype --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libsrt --enable-libtheora --enable-libtwolame --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxml2 --enable-libzimg --enable-lzma --enable-zlib --enable-gmp --enable-libvidstab --enable-libvmaf --enable-libvorbis --enable-libvo-amrwbenc --enable-libmysofa --enable-libspeex --enable-libxvid --enable-libaom --disable-w32threads --enable-libmfx --enable-ffnvcodec --enable-cuda-llvm --enable-cuvid --enable-d3d11va --enable-nvenc --enable-nvdec --enable-dxva2 --enable-avisynth --enable-libopenmpt --enable-amf");
+		parser.readLine("libavutil      56. 49.100 / 56. 49.100");
+		parser.readLine("libavcodec     58. 90.100 / 58. 90.100");
+		parser.readLine("libavformat    58. 44.100 / 58. 44.100");
+		parser.readLine("libavdevice    58.  9.103 / 58.  9.103");
+		parser.readLine("libavfilter     7. 84.100 /  7. 84.100");
+		parser.readLine("libswscale      5.  6.101 /  5.  6.101");
+		parser.readLine("libswresample   3.  6.100 /  3.  6.100");
+		parser.readLine("libpostproc    55.  6.100 / 55.  6.100");
+
+		assertFull(parser, null, date(2020, 6, 1), null);
+	}
+
 	// ********************************************************
 
 	private Date date(int year, int month, int day) {

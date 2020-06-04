@@ -38,15 +38,8 @@ public class FFSoftPolicy {
 
 	public static final Version MIN_VERSION = new Version(2, 2, 1);
 
-	/**
-	 *
-	 */
 	private FFSoftPolicy() {}
 
-	/**
-	 * @param ffInfo
-	 * @return
-	 */
 	public static SoftFound toSoftFound(FFInfo ffInfo) {
 		Objects.requireNonNull(ffInfo);
 
@@ -70,10 +63,6 @@ public class FFSoftPolicy {
 
 	// ******************************************************
 
-	/**
-	 * @param ffInfo
-	 * @return
-	 */
 	private static SoftFound check(boolean verify, FFInfo ffInfo) {
 		if(verify) {
 			return SoftFound.found(ffInfo);

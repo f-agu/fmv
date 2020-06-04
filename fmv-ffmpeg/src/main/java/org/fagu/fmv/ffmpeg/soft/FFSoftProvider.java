@@ -62,6 +62,8 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 	private static final Pattern NVERSION_PATTERN = Pattern.compile("[N|n]-?(.+)-[a-zA-Z0-9]+");
 
+	private static final Pattern GITBUILDDATE_PATTERN = Pattern.compile("git-([0-9]+)-([0-9]+)-([0-9]+).*");
+
 	private static final Pattern BUILD_PATTERN = Pattern.compile(".*built on (.*) with gcc.*");
 
 	private static final Pattern FF_FIRSTLINE_PATTERN = Pattern.compile("(ff[a-z]+) version (.*)");
@@ -155,7 +157,9 @@ public abstract class FFSoftProvider extends SoftProvider {
 				if(matcher.matches()) {
 					String parsedTool = matcher.group(1).trim();
 					if(parsedTool.equalsIgnoreCase(getName())) {
-						version = getVersion(matcher.group(2).trim());
+						String svorb = matcher.group(2).trim();
+						version = getVersion(svorb);
+						builtDate = getBuiltDate(svorb);
 						return;
 					}
 					softFound = SoftFound.foundError(file, "Wrong tool, need " + getName() + " and found " + parsedTool + ": " + line);
@@ -226,6 +230,18 @@ public abstract class FFSoftProvider extends SoftProvider {
 			return VersionParserManager.parse(sver);
 		} catch(VersionParseException e) {
 			// ignore
+		}
+		return null;
+	}
+
+	static Date getBuiltDate(String line) {
+		String sbuilt = StringUtils.substringBefore(line, " ");
+		Matcher matcher = GITBUILDDATE_PATTERN.matcher(sbuilt);
+		if(matcher.matches()) {
+			int year = Integer.parseInt(matcher.group(1));
+			int month = Integer.parseInt(matcher.group(2));
+			int day = Integer.parseInt(matcher.group(3));
+			return new Date(year - 1900, month - 1, day);
 		}
 		return null;
 	}
