@@ -42,7 +42,7 @@ import org.fagu.fmv.utils.io.InputStreamSupplier;
  */
 public class DominantColor {
 
-	private static final Pattern PATTERN = Pattern.compile("(\\w+)\\((\\d+(?:,[\\d\\.]+)*)\\)");
+	private static final Pattern PATTERN = Pattern.compile("(\\w+)\\((\\d+%?(?:,[\\d\\.]+%?)*)\\)");
 
 	private final Soft convertSoft;
 
@@ -104,12 +104,21 @@ public class DominantColor {
 		ColorSpace colorSpace = parseColorSpace(matcher.group(1));
 		String values = matcher.group(2);
 		String[] components = values.split(",");
-		float[] floatComponents = new float[components.length];
+		int countNumComponents = colorSpace.getNumComponents();
+		float[] floatComponents = new float[countNumComponents];
+		float alpha = 1F;
 		for(int i = 0; i < components.length; ++i) {
-			floatComponents[i] = Float.valueOf(components[i]) / 255F;
+			if(countNumComponents <= i) {
+				alpha = Float.valueOf(components[i]);
+				continue;
+			}
+			if(components[i].endsWith("%")) {
+				floatComponents[i] = Float.valueOf(components[i].substring(0, components[i].length() - 1)) / 100;
+			} else {
+				floatComponents[i] = Float.valueOf(components[i]) / 255F;
+			}
 		}
-
-		return new Color(colorSpace, floatComponents, 1);
+		return new Color(colorSpace, floatComponents, alpha);
 	}
 
 	// ***************************************************

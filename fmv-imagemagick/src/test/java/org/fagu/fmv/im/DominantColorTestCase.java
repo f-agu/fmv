@@ -65,31 +65,34 @@ public class DominantColorTestCase {
 
 	@Test
 	public void testParseRGB() throws IOException {
-		assertColor(DominantColor.parse("srgb(130,125,119)"), 130, 125, 119);
+		assertColor(DominantColor.parse("srgb(130,125,119)"), 130, 125, 119, 255);
+		assertColor(DominantColor.parse("srgba(130,125,119,0.4)"), 130, 125, 119, 102);
+		assertColor(DominantColor.parse("srgba(49%,48%,47%,0.785565)"), 124, 122, 119, 200);
 	}
 
 	@Test
 	public void testParseCMYK() throws IOException {
-		assertColor("black", DominantColor.parse("cmyk(0,0,0,255)"), 0, 0, 0);
-		assertColor("white", DominantColor.parse("cmyk(0,0,0,0)"), 255, 255, 255);
-		assertColor("red", DominantColor.parse("cmyk(0,255,255,0)"), 255, 0, 0);
-		assertColor("green", DominantColor.parse("cmyk(255,0,255,0)"), 0, 255, 0);
-		assertColor("blue", DominantColor.parse("cmyk(255,255,0,0)"), 0, 0, 255);
-		assertColor("yellow", DominantColor.parse("cmyk(0,0,255,0)"), 255, 255, 0);
-		assertColor("cyan", DominantColor.parse("cmyk(255,0,0,0)"), 0, 255, 255);
-		assertColor("magenta", DominantColor.parse("cmyk(0,255,0,0)"), 255, 0, 255);
+		assertColor("black", DominantColor.parse("cmyk(0,0,0,255)"), 0, 0, 0, 255);
+		assertColor("white", DominantColor.parse("cmyk(0,0,0,0)"), 255, 255, 255, 255);
+		assertColor("red", DominantColor.parse("cmyk(0,255,255,0)"), 255, 0, 0, 255);
+		assertColor("green", DominantColor.parse("cmyk(255,0,255,0)"), 0, 255, 0, 255);
+		assertColor("blue", DominantColor.parse("cmyk(255,255,0,0)"), 0, 0, 255, 255);
+		assertColor("yellow", DominantColor.parse("cmyk(0,0,255,0)"), 255, 255, 0, 255);
+		assertColor("cyan", DominantColor.parse("cmyk(255,0,0,0)"), 0, 255, 255, 255);
+		assertColor("magenta", DominantColor.parse("cmyk(0,255,0,0)"), 255, 0, 255, 255);
 	}
 
 	// ***********************************************
 
-	private void assertColor(Color color, int expectedRed, int expectedGreen, int expectedBlue) {
-		assertColor(null, color, expectedRed, expectedGreen, expectedBlue);
+	private void assertColor(Color color, int expectedRed, int expectedGreen, int expectedBlue, int expectedAlpha) {
+		assertColor(null, color, expectedRed, expectedGreen, expectedBlue, expectedAlpha);
 	}
 
-	private void assertColor(String title, Color color, int expectedRed, int expectedGreen, int expectedBlue) {
+	private void assertColor(String title, Color color, int expectedRed, int expectedGreen, int expectedBlue, int expectedAlpha) {
 		assertEquals(title + "[red]", expectedRed, color.getRed());
 		assertEquals(title + "[green]", expectedGreen, color.getGreen());
 		assertEquals(title + "[blue]", expectedBlue, color.getBlue());
+		assertEquals(title + "[transparency]", expectedAlpha, color.getAlpha());
 	}
 
 }
