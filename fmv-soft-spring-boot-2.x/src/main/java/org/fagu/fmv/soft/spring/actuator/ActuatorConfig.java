@@ -1,5 +1,6 @@
 package org.fagu.fmv.soft.spring.actuator;
 
+import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
 /*-
  * #%L
  * fmv-soft
@@ -30,11 +31,13 @@ import org.springframework.context.annotation.Configuration;
 public class ActuatorConfig {
 
 	@Bean
+	@ConditionalOnEnabledHealthIndicator("soft-info")
 	SoftInfoContributor softVersionInfoContributor() {
 		return new SoftInfoContributor();
 	}
 
 	@Bean
+	@ConditionalOnEnabledHealthIndicator("soft-found")
 	SoftFoundHealthIndicator softHealthIndicator() {
 		return new SoftFoundHealthIndicator();
 	}
