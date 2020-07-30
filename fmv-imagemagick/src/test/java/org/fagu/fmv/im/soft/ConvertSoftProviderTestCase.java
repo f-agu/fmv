@@ -1,5 +1,7 @@
 package org.fagu.fmv.im.soft;
 
+import org.fagu.fmv.soft.ExecuteDelegateRepository;
+import org.fagu.fmv.soft.LogExecuteDelegate;
 /*-
  * #%L
  * fmv-imagemagick
@@ -31,6 +33,12 @@ import org.junit.Test;
  * @created 25 avr. 2017 12:45:28
  */
 public class ConvertSoftProviderTestCase {
+
+	@Test
+	public void testSearch() {
+		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
+		Convert.search();
+	}
 
 	@Test
 	@Ignore

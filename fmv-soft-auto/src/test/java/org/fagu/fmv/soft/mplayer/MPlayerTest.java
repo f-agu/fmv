@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.mplayer;
 
+import org.fagu.fmv.soft.ExecuteDelegateRepository;
+import org.fagu.fmv.soft.LogExecuteDelegate;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -10,6 +12,12 @@ import org.junit.Test;
  */
 @Ignore
 public class MPlayerTest {
+
+	@Test
+	public void testSearch() {
+		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
+		MPlayer.search();
+	}
 
 	@Test
 	public void testMPlayer() {

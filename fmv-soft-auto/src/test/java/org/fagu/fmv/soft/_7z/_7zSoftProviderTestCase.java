@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import org.fagu.fmv.soft.ExecuteDelegateRepository;
+import org.fagu.fmv.soft.LogExecuteDelegate;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
@@ -24,6 +26,7 @@ public class _7zSoftProviderTestCase {
 	@Test
 	@Ignore
 	public void testSearch() {
+		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Soft s = _7z.search();
 		System.out.println(s);
 		s.getFounds().getFounds().forEach(sf -> {

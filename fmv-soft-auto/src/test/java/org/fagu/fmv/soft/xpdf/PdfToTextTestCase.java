@@ -33,6 +33,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.ExecuteDelegateRepository;
+import org.fagu.fmv.soft.LogExecuteDelegate;
 import org.fagu.fmv.soft.SoftTestCase;
 import org.junit.Test;
 
@@ -43,7 +45,13 @@ import org.junit.Test;
 public class PdfToTextTestCase {
 
 	@Test
-	public void test() throws IOException {
+	public void testSearch() {
+		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
+		PdfToText.search();
+	}
+
+	@Test
+	public void testExtractText() throws IOException {
 		File folder = new File(System.getProperty("java.io.tmpdir"), "xpdf-pdftotext");
 		try {
 			FileUtils.deleteDirectory(folder);

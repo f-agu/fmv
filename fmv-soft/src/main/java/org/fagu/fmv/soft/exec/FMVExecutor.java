@@ -40,8 +40,8 @@ import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.ProcessDestroyer;
 import org.apache.commons.exec.ShutdownHookProcessDestroyer;
-import org.fagu.fmv.soft.BasicExecuteDelegate;
 import org.fagu.fmv.soft.ExecuteDelegate;
+import org.fagu.fmv.soft.ExecuteDelegateRepository;
 import org.fagu.fmv.soft.utils.Proxifier;
 import org.fagu.fmv.utils.order.OrderComparator;
 
@@ -267,7 +267,7 @@ public class FMVExecutor extends DefaultExecutor {
 	 * @return
 	 */
 	public FMVFuture<Integer> executeAsynchronous(CommandLine command, ExecutorService executorService) {
-		return executeAsynchronous(BasicExecuteDelegate.INSTANCE, command, executorService, null, null, null);
+		return executeAsynchronous(ExecuteDelegateRepository.get(), command, executorService, null, null, null);
 	}
 
 	/**

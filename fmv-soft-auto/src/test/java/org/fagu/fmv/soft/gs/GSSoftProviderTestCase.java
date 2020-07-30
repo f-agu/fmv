@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.fagu.fmv.soft.ExecuteDelegateRepository;
+import org.fagu.fmv.soft.LogExecuteDelegate;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
@@ -41,6 +43,12 @@ import org.junit.Test;
  * @author f.agu
  */
 public class GSSoftProviderTestCase {
+
+	@Test
+	public void testSearch() {
+		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
+		GS.search();
+	}
 
 	@Test
 	public void testParseOnWindows() throws IOException {

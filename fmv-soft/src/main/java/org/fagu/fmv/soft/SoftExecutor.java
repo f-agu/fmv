@@ -272,7 +272,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 			return executeDelegate;
 		}
 		if(environmentMap.isEmpty()) {
-			return BasicExecuteDelegate.INSTANCE;
+			return ExecuteDelegateRepository.get();
 		}
 		return new EnvironmentExecuteDelegate(environmentMap);
 	}

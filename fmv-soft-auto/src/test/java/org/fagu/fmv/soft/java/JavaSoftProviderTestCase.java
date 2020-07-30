@@ -25,6 +25,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import org.fagu.fmv.soft.ExecuteDelegateRepository;
+import org.fagu.fmv.soft.LogExecuteDelegate;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
@@ -42,9 +44,12 @@ import org.junit.Test;
  */
 public class JavaSoftProviderTestCase {
 
-	/**
-	 * @throws IOException
-	 */
+	@Test
+	public void testSearch() {
+		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
+		Java.search();
+	}
+
 	@Test
 	public void testParse18OnWindows() throws IOException {
 		Parser parser = newParser();
@@ -54,9 +59,6 @@ public class JavaSoftProviderTestCase {
 		assertInfo(parser, new Version(1, 8, 0, 20));
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	public void testParse18OnLinux() throws IOException {
 		Parser parser = newParser();
@@ -66,9 +68,6 @@ public class JavaSoftProviderTestCase {
 		assertInfo(parser, new Version(1, 8, 0, 45));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	@Ignore
 	public void testFind() {
@@ -82,20 +81,12 @@ public class JavaSoftProviderTestCase {
 
 	// *******************************************************
 
-	/**
-	 * @return
-	 */
 	private Parser newParser() {
 		JavaSoftProvider softProvider = new JavaSoftProvider();
 		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory(ImmutableProperties.of())).getParserFactory();
 		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
-	/**
-	 * @param parser
-	 * @param expectedVersion
-	 * @throws IOException
-	 */
 	private void assertInfo(Parser parser, Version expectedVersion) throws IOException {
 		SoftFound softFound = parser.closeAndParse("", 0);
 		VersionSoftInfo softInfo = (VersionSoftInfo)softFound.getSoftInfo();

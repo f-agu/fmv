@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteException;
-import org.fagu.fmv.soft.BasicExecuteDelegate;
 import org.fagu.fmv.soft.ExecuteDelegate;
+import org.fagu.fmv.soft.ExecuteDelegateRepository;
 import org.fagu.fmv.soft.exec.BufferedReadLine;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.ExecHelper;
@@ -173,7 +173,7 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 				throw new IllegalStateException("ParserFactory is missing");
 			}
 			ExecutorFactory execFact = executorFactory != null ? executorFactory : getDefaultExecutorFactory();
-			ExecuteDelegate execDelegate = executeDelegate != null ? executeDelegate : BasicExecuteDelegate.INSTANCE;
+			ExecuteDelegate execDelegate = executeDelegate != null ? executeDelegate : ExecuteDelegateRepository.get();
 			build = true;
 			return new ExecSoftFoundFactory(execFact, parameters, parserFactory, bufferedReadLineSupplier, execDelegate);
 		}
@@ -326,7 +326,6 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 		BufferedReadLine bufferedReadLine = new BufferedReadLine(readLineList);
 
 		FMVExecutor executor = executorFactory.create(file, parser, bufferedReadLine);
-
 		try {
 			int exitValue = executeDelegate.execute(executor, commandLine);
 			SoftFound softFound = parser.closeAndParse(cmdLineStr, exitValue);
