@@ -20,7 +20,6 @@ package org.fagu.fmv.utils.order;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -35,14 +34,6 @@ public class OrderComparator implements Comparator<Object> {
 
 	public static final OrderComparator INSTANCE = new OrderComparator();
 
-	/**
-	 * 
-	 */
-	public OrderComparator() {}
-
-	/**
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 */
 	@Override
 	public int compare(Object o1, Object o2) {
 		int i1 = getOrder(o1);
@@ -50,9 +41,6 @@ public class OrderComparator implements Comparator<Object> {
 		return Integer.compare(i1, i2);
 	}
 
-	/**
-	 * @param list
-	 */
 	public static void sort(List<?> list) {
 		if(list.size() > 1) {
 			Collections.sort(list, INSTANCE);
@@ -61,10 +49,6 @@ public class OrderComparator implements Comparator<Object> {
 
 	// ******************************************
 
-	/**
-	 * @param obj
-	 * @return
-	 */
 	protected int getOrder(Object obj) {
 		if(obj instanceof Ordered) {
 			return ((Ordered)obj).getOrder();

@@ -25,12 +25,15 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalLong;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.function.IntConsumer;
+import java.util.stream.Collectors;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -342,7 +345,11 @@ public class FMVExecutor extends DefaultExecutor {
 	protected Process launch(CommandLine command, Map<String, String> env, File dir) throws IOException {
 		Process process = super.launch(command, env, dir);
 		OrderComparator.sort(processOperators);
-		for(ProcessOperator processOperator : processOperators) {
+		Set<Class<? extends ProcessOperator>> set = new HashSet<>(2);
+		List<ProcessOperator> distinctList = processOperators.stream()
+				.filter(po -> set.add(po.getClass()))
+				.collect(Collectors.toList());
+		for(ProcessOperator processOperator : distinctList) {
 			process = Objects.requireNonNull(processOperator.operate(process), "Return null ProcessOperator on " + processOperator.toString());
 		}
 		return process;
