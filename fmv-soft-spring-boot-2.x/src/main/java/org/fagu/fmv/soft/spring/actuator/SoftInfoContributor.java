@@ -40,9 +40,23 @@ import org.springframework.boot.actuate.info.InfoContributor;
  */
 public class SoftInfoContributor implements InfoContributor {
 
+	private final boolean cacheEnabled;
+
+	private Map<String, String> cache;
+
+	public SoftInfoContributor(boolean cacheEnabled) {
+		this.cacheEnabled = cacheEnabled;
+	}
+
 	@Override
 	public void contribute(Builder builder) {
-		builder.withDetail("softs", content());
+		Map<String, String> content = null;
+		if(cacheEnabled && cache != null) {
+			content = cache;
+		} else {
+			content = content();
+		}
+		builder.withDetail("softs", content);
 	}
 
 	// *********************************************

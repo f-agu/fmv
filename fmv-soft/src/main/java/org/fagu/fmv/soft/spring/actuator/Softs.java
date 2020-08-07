@@ -38,34 +38,22 @@ public class Softs {
 
 	private Softs() {}
 
-	/**
-	 * @param soft
-	 */
 	public static void contributeInfo(Soft soft) {
 		if(soft != null) {
 			infoContributors.put(soft.getName(), soft);
 		}
 	}
 
-	/**
-	 * @param soft
-	 */
 	public static void indicateHealth(Soft soft) {
 		if(soft != null) {
 			healthIndicators.put(soft.getName(), soft);
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	public static Collection<Soft> getInfoContributors() {
 		return Collections.unmodifiableCollection(infoContributors.values());
 	}
 
-	/**
-	 * @return
-	 */
 	public static Collection<Soft> getHealthIndicators() {
 		return Collections.unmodifiableCollection(healthIndicators.values());
 	}

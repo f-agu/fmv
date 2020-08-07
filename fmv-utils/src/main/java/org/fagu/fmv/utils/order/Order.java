@@ -20,7 +20,6 @@ package org.fagu.fmv.utils.order;
  * #L%
  */
 
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -34,8 +33,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
 public @interface Order {
 
-	/**
-	 * @return
-	 */
 	int value() default Ordered.LOWEST_PRECEDENCE;
 }

@@ -30,8 +30,5 @@ public interface Ordered {
 
 	int LOWEST_PRECEDENCE = Integer.MAX_VALUE;
 
-	/**
-	 * @return
-	 */
 	int getOrder();
 }

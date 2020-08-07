@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.fagu.fmv.soft.spring.actuator.ActuatorConfig
+org.fagu.fmv.soft.spring.config.ActuatorConfig,\
+org.fagu.fmv.soft.spring.config.FmvConfig

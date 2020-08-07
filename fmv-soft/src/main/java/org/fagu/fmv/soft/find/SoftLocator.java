@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
@@ -52,6 +53,8 @@ public class SoftLocator {
 			.setLocalizedBy(locator != null ? locator.toString() : null);
 
 	private static final Map<String, Founds> CACHE_MAP = new HashMap<>();
+
+	private static final List<Locator> DEFAULT_LOCATORS = new LinkedList<>();
 
 	private final String softName;
 
@@ -224,6 +227,12 @@ public class SoftLocator {
 		return cache(finding(getLocators(locators), tester, searchProperties));
 	}
 
+	public static void addDefaultLocator(Locator locator) {
+		if(locator != null) {
+			DEFAULT_LOCATORS.add(locator);
+		}
+	}
+
 	public static void evictCache() {
 		CACHE_MAP.clear();
 	}
@@ -237,9 +246,10 @@ public class SoftLocator {
 		return getDefaultLocators(loc);
 	}
 
-	protected List<Locator> getDefaultLocators(Locators loc) {
+	protected final List<Locator> getDefaultLocators(Locators loc) {
 		Locators locators = loc != null ? loc : createLocators();
 		List<Locator> locatorList = new ArrayList<>(4);
+		locatorList.addAll(DEFAULT_LOCATORS);
 		if(softPath != null) {
 			locatorList.add(locators.byPath(softPath));
 		}

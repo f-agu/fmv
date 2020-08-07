@@ -1,6 +1,11 @@
-package org.fagu.fmv.soft.spring.actuator;
+package org.fagu.fmv.soft.spring.config;
 
+import org.fagu.fmv.soft.spring.actuator.CachedHealthIndicator;
+import org.fagu.fmv.soft.spring.actuator.SoftFoundHealthIndicator;
+import org.fagu.fmv.soft.spring.actuator.SoftInfoContributor;
+import org.fagu.fmv.soft.spring.config.SoftIndicatorProperties.Contributor;
 import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
+import org.springframework.boot.actuate.health.HealthIndicator;
 /*-
  * #%L
  * fmv-soft
@@ -31,14 +36,23 @@ import org.springframework.context.annotation.Configuration;
 public class ActuatorConfig {
 
 	@Bean
+	SoftIndicatorProperties softIndicatorProperties() {
+		return new SoftIndicatorProperties();
+	}
+
+	@Bean
 	@ConditionalOnEnabledHealthIndicator("soft-info")
-	SoftInfoContributor softVersionInfoContributor() {
-		return new SoftInfoContributor();
+	SoftInfoContributor softVersionInfoContributor(SoftIndicatorProperties softIndicatorProperties) {
+		Contributor contributor = softIndicatorProperties.getContributor();
+		return new SoftInfoContributor(contributor.getCacheEnabled());
 	}
 
 	@Bean
 	@ConditionalOnEnabledHealthIndicator("soft-found")
-	SoftFoundHealthIndicator softHealthIndicator() {
+	HealthIndicator softHealthIndicator(SoftIndicatorProperties softIndicatorProperties) {
+		if(softIndicatorProperties.getHealth().getCacheEnabled()) {
+			return new CachedHealthIndicator(new SoftFoundHealthIndicator());
+		}
 		return new SoftFoundHealthIndicator();
 	}
 
