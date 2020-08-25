@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class GeneralInfo extends InfoBase {
 
-	public GeneralInfo(int indexByType, Map<String, String> infoMap) {
+	public GeneralInfo(int indexByType, Map<String, Object> infoMap) {
 		super(indexByType, infoMap);
 	}
 

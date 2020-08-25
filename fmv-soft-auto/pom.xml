@@ -15,9 +15,19 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.fagu</groupId>
+			<artifactId>fmv-image</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.fagu</groupId>
 			<artifactId>fmv-soft</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+		
 		
 		<dependency>
 			<groupId>org.fagu</groupId>

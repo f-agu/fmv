@@ -21,7 +21,7 @@ public class MediaInfoParametersTestCase {
 			System.out.println();
 			System.out.println("****************************");
 			System.out.println(infoBase.getType() + " #" + infoBase.getIndexByType());
-			infoBase.getDataMap().forEach((k, v) -> System.out.println(k + " : " + v));
+			infoBase.getData().forEach((k, v) -> System.out.println(k + " : " + v));
 			System.out.println();
 		}
 	}

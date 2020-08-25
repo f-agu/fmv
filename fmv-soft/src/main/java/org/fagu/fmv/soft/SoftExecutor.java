@@ -157,7 +157,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 			fmvExecutor.addProcessOperator(pidProcessOperator);
 			try {
 				execListener.eventExecuting(commandLine);
-				exitValue = geExecuteDelegate().execute(fmvExecutor, commandLine);
+				exitValue = getExecuteDelegate().execute(fmvExecutor, commandLine);
 				time = System.currentTimeMillis() - startTime;
 				execListener.eventExecuted(commandLine, exitValue, time);
 			} catch(ExecuteException e) {
@@ -180,7 +180,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 			final AtomicLong time = new AtomicLong();
 			final PIDProcessOperator pidProcessOperator = new PIDProcessOperator();
 			fmvExecutor.addProcessOperator(pidProcessOperator);
-			return new WrapFuture<>(fmvExecutor.executeAsynchronous(geExecuteDelegate(), commandLine, executorService,
+			return new WrapFuture<>(fmvExecutor.executeAsynchronous(getExecuteDelegate(), commandLine, executorService,
 					// before
 					() -> {
 						startTime.set(System.currentTimeMillis());
@@ -267,7 +267,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		return forExec.exec(fmvExecutor, commandLine, execListener, readLineList);
 	}
 
-	private ExecuteDelegate geExecuteDelegate() {
+	private ExecuteDelegate getExecuteDelegate() {
 		if(executeDelegate != null) {
 			return executeDelegate;
 		}

@@ -4,13 +4,12 @@ import java.util.Map;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 3 juil. 2019 11:11:26
  */
 public class OtherInfo extends InfoBase {
 
-	public OtherInfo(int indexByType, Map<String, String> infoMap) {
+	public OtherInfo(int indexByType, Map<String, Object> infoMap) {
 		super(indexByType, infoMap);
 	}
 

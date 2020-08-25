@@ -5,7 +5,7 @@ import java.util.OptionalInt;
 
 
 /**
- * @author Utilisateur
+ * @author f.agu
  * @created 7 avr. 2018 15:15:50
  */
 public interface ParsableType {

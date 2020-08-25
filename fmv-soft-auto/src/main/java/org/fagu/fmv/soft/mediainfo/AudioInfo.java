@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class AudioInfo extends InfoBase {
 
-	public AudioInfo(int indexByType, Map<String, String> infoMap) {
+	public AudioInfo(int indexByType, Map<String, Object> infoMap) {
 		super(indexByType, infoMap);
 	}
 

@@ -60,6 +60,7 @@ import org.fagu.fmv.media.MetadatasContainer;
 import org.fagu.fmv.media.NavigableMapMetadatasContainer;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
+import org.fagu.fmv.soft.SoftExecutorHelper;
 import org.fagu.fmv.utils.geo.Coordinates;
 import org.fagu.fmv.utils.media.Size;
 
@@ -82,6 +83,7 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 	// --------------------------------------------------------
 
 	public abstract static class ImageMetadatasSourcesBuilder<B extends ImageMetadatasSourcesBuilder<?, T>, T>
+			extends SoftExecutorHelper<B>
 			implements MetadatasBuilder<IMConvertImageMetadatas, B> {
 
 		final Sources<T> sources;
@@ -89,8 +91,6 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		Soft convertSoft;
 
 		Consumer<CommandLine> logger;
-
-		Consumer<SoftExecutor> customizeExecutor;
 
 		private ImageMetadatasSourcesBuilder(Sources<T> sources) {
 			this.sources = sources;
@@ -109,14 +109,8 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		}
 
 		@Override
-		public B customizeExecutor(Consumer<SoftExecutor> customizeExecutor) {
-			this.customizeExecutor = customizeExecutor;
-			return getThis();
-		}
-
-		@Override
 		public IMConvertImageMetadatas extract() throws IOException {
-			Map<T, IMConvertImageMetadatas> extract = IMConvertImageMetadatas.extract(convertSoft, sources, logger, customizeExecutor);
+			Map<T, IMConvertImageMetadatas> extract = IMConvertImageMetadatas.extract(convertSoft, sources, logger, this);
 			return extract.values().iterator().next();
 		}
 
@@ -148,7 +142,7 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		}
 
 		public Map<File, IMConvertImageMetadatas> extractAll() throws IOException {
-			return IMConvertImageMetadatas.extract(convertSoft, sources, logger, customizeExecutor);
+			return IMConvertImageMetadatas.extract(convertSoft, sources, logger, this);
 		}
 
 	}
@@ -439,7 +433,7 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 			Soft identifySoft,
 			Sources<T> sources,
 			Consumer<CommandLine> logger,
-			Consumer<SoftExecutor> customizeExecutor)
+			SoftExecutorHelper<?> softExecutorHelper)
 			throws IOException {
 
 		Objects.requireNonNull(identifySoft);
@@ -455,9 +449,7 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		SoftExecutor softExecutor = identifySoft.withParameters(op.toList())
 				.addOutReadLine(output::append)
 				.logCommandLine(logger);
-		if(customizeExecutor != null) {
-			customizeExecutor.accept(softExecutor);
-		}
+		softExecutorHelper.populate(softExecutor);
 		sources.getSoftExecutor().accept(softExecutor);
 		softExecutor.execute();
 

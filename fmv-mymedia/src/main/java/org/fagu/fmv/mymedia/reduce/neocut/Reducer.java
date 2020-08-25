@@ -25,8 +25,8 @@ import org.fagu.fmv.ffmpeg.progressbar.FFMpegProgressBar;
 import org.fagu.fmv.image.Rectangle;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.soft.mediainfo.Info;
-import org.fagu.fmv.soft.mediainfo.MediaInfoExtractor;
 import org.fagu.fmv.soft.mediainfo.VideoInfo;
+import org.fagu.fmv.soft.mediainfo.raw.RawMediaInfoExtractor;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.utils.time.Duration;
 import org.fagu.fmv.utils.time.Time;
@@ -133,7 +133,7 @@ public class Reducer implements Closeable {
 	}
 
 	private OptionalDouble getCRF(File srcFile) throws IOException {
-		MediaInfoExtractor extractor = new MediaInfoExtractor();
+		RawMediaInfoExtractor extractor = new RawMediaInfoExtractor();
 		Info info = extractor.extract(srcFile);
 		Optional<VideoInfo> firstVideo = info.getFirstVideo();
 		if( ! firstVideo.isPresent()) {

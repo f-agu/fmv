@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Objects;
 
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.mediainfo.raw.RawDetails0ReadLine;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 3 juil. 2019 10:42:58
  */
@@ -27,7 +27,7 @@ public class MediaInfoParameters {
 
 	public Info getAllParameters() throws IOException {
 		final List<InfoBase> infoBases = new ArrayList<>();
-		try (ReadLineDetails0 readLineDetails0 = new ReadLineDetails0(infoBases::add)) {
+		try (RawDetails0ReadLine readLineDetails0 = new RawDetails0ReadLine(infoBases::add)) {
 			mediaInfoSoft.withParameters("--Info-Parameters")
 					.addOutReadLine(readLineDetails0)
 					.execute();

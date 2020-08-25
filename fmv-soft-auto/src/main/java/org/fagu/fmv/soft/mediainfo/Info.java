@@ -2,22 +2,23 @@ package org.fagu.fmv.soft.mediainfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.fagu.fmv.media.MetadatasContainer;
 
 
 /**
  * @author f.agu
  * @created 7 avr. 2018 14:15:55
  */
-public class Info {
+public class Info implements MetadatasContainer {
 
 	private final List<InfoBase> infoBases;
 
-	/**
-	 * @param infoBases
-	 */
 	public Info(List<InfoBase> infoBases) {
 		this.infoBases = Collections.unmodifiableList(new ArrayList<>(infoBases));
 	}
@@ -66,6 +67,10 @@ public class Info {
 		return getFirstInfoByType(AudioInfo.class);
 	}
 
+	public Optional<ImageInfo> getFirstImage() {
+		return getFirstInfoByType(ImageInfo.class);
+	}
+
 	public Optional<TextInfo> getFirstText() {
 		return getFirstInfoByType(TextInfo.class);
 	}
@@ -80,5 +85,15 @@ public class Info {
 
 	public List<InfoBase> getInfos() {
 		return infoBases;
+	}
+
+	@Override
+	public Map<String, Object> getData() {
+		Map<String, Object> data = new HashMap<>();
+		infoBases.forEach(ib -> {
+			String name = ib.getType().name().toLowerCase() + ib.getIndexByType();
+			data.put(name, ib.getData());
+		});
+		return data;
 	}
 }

@@ -3,9 +3,8 @@ package org.fagu.fmv.soft.mediainfo;
 import java.util.Collections;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.TreeMap;
-
-import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -16,7 +15,7 @@ public class VideoInfo extends InfoBase {
 
 	private EncodingSettings encodingSettings;
 
-	public VideoInfo(int indexByType, Map<String, String> infoMap) {
+	public VideoInfo(int indexByType, Map<String, Object> infoMap) {
 		super(indexByType, infoMap);
 	}
 
@@ -25,20 +24,27 @@ public class VideoInfo extends InfoBase {
 		return InfoType.VIDEO;
 	}
 
+	public Optional<Integer> getWidth() {
+		return getFirstInteger("Width");
+	}
+
+	public Optional<Integer> getHeight() {
+		return getFirstInteger("Height");
+	}
+
 	public EncodingSettings getEncodingSettings() {
 		if(encodingSettings == null) {
-			String value = getString("Encoding settings");
-			NavigableMap<String, String> settingMap;
-			if(StringUtils.isEmpty(value)) {
-				settingMap = Collections.emptyNavigableMap();
-			} else {
-				settingMap = new TreeMap<>();
-				for(String split : value.split(" / ")) {
-					int pos = split.indexOf('=');
-					settingMap.put(split.substring(0, pos), split.substring(pos + 1));
-				}
-			}
-			encodingSettings = new EncodingSettings(settingMap);
+			encodingSettings = new EncodingSettings(
+					getFirstString("Encoding settings")
+							.map(v -> {
+								NavigableMap<String, String> settingMap = new TreeMap<>();
+								for(String split : v.split(" / ")) {
+									int pos = split.indexOf('=');
+									settingMap.put(split.substring(0, pos), split.substring(pos + 1));
+								}
+								return settingMap;
+							})
+							.orElseGet(Collections::emptyNavigableMap));
 		}
 		return encodingSettings;
 	}

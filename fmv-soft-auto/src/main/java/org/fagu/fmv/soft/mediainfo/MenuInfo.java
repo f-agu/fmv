@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class MenuInfo extends InfoBase {
 
-	public MenuInfo(int indexByType, Map<String, String> infoMap) {
+	public MenuInfo(int indexByType, Map<String, Object> infoMap) {
 		super(indexByType, infoMap);
 	}
 

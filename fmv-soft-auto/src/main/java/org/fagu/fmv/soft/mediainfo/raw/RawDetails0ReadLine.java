@@ -1,4 +1,4 @@
-package org.fagu.fmv.soft.mediainfo;
+package org.fagu.fmv.soft.mediainfo.raw;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -11,6 +11,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.fagu.fmv.soft.exec.ReadLine;
+import org.fagu.fmv.soft.mediainfo.AudioInfo;
+import org.fagu.fmv.soft.mediainfo.GeneralInfo;
+import org.fagu.fmv.soft.mediainfo.ImageInfo;
+import org.fagu.fmv.soft.mediainfo.InfoBase;
+import org.fagu.fmv.soft.mediainfo.MenuInfo;
+import org.fagu.fmv.soft.mediainfo.OtherInfo;
+import org.fagu.fmv.soft.mediainfo.TextInfo;
+import org.fagu.fmv.soft.mediainfo.VideoInfo;
 
 
 /**
@@ -18,24 +26,23 @@ import org.fagu.fmv.soft.exec.ReadLine;
  * @author f.agu
  * @created 3 juil. 2019 10:49:31
  */
-public class ReadLineDetails0 implements ReadLine, Closeable {
+public class RawDetails0ReadLine implements ReadLine, Closeable {
 
 	private static final Pattern TITLE_INDEX = Pattern.compile("\\w+ #(\\d+)");
 
 	private final Consumer<InfoBase> infoConsumer;
 
-	private final Map<String, String> infoMap;
+	private final Map<String, Object> infoMap;
 
-	private Function<Map<String, String>, InfoBase> currentInfoBaseFactory;
+	private Function<Map<String, Object>, InfoBase> currentInfoBaseFactory;
 
-	public ReadLineDetails0(Consumer<InfoBase> infoConsumer) {
+	public RawDetails0ReadLine(Consumer<InfoBase> infoConsumer) {
 		this.infoConsumer = Objects.requireNonNull(infoConsumer);
 		infoMap = new HashMap<>();
 	}
 
 	@Override
 	public void read(String line) {
-		System.out.println(line);
 		if("".equals(line.trim())) {
 			if(currentInfoBaseFactory != null) {
 				infoConsumer.accept(currentInfoBaseFactory.apply(infoMap));
@@ -67,7 +74,7 @@ public class ReadLineDetails0 implements ReadLine, Closeable {
 
 	// *******************************************
 
-	private Function<Map<String, String>, InfoBase> parseType(String line) {
+	private Function<Map<String, Object>, InfoBase> parseType(String line) {
 		int indexByType = parseIndex(line);
 
 		if(line.startsWith("General")) {

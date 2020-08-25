@@ -1,4 +1,4 @@
-package org.fagu.fmv.soft.mediainfo;
+package org.fagu.fmv.soft.mediainfo.raw;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,21 +13,27 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.SoftExecutor;
+import org.fagu.fmv.soft.SoftExecutorHelper;
+import org.fagu.fmv.soft.mediainfo.Info;
+import org.fagu.fmv.soft.mediainfo.InfoBase;
+import org.fagu.fmv.soft.mediainfo.InfoType;
+import org.fagu.fmv.soft.mediainfo.MediaInfo;
 
 
 /**
  * @author f.agu
  * @created 7 avr. 2018 14:06:28
  */
-public class MediaInfoExtractor {
+public class RawMediaInfoExtractor extends SoftExecutorHelper<RawMediaInfoExtractor> {
 
 	private final Soft mediaInfoSoft;
 
-	public MediaInfoExtractor() {
+	public RawMediaInfoExtractor() {
 		this(MediaInfo.search());
 	}
 
-	public MediaInfoExtractor(Soft mediaInfoSoft) {
+	public RawMediaInfoExtractor(Soft mediaInfoSoft) {
 		this.mediaInfoSoft = Objects.requireNonNull(mediaInfoSoft);
 	}
 
@@ -49,16 +55,17 @@ public class MediaInfoExtractor {
 		final Map<File, Info> fileInfoMap = new HashMap<>();
 		final Iterator<File> iterator = files.iterator();
 		final List<InfoBase> infoBases = new ArrayList<>();
-		try (ReadLineDetails0 readLineDetails0 = new ReadLineDetails0(info -> {
+		try (RawDetails0ReadLine readLineDetails0 = new RawDetails0ReadLine(info -> {
 			if(info.getType() == InfoType.GENERAL && ! infoBases.isEmpty()) {
 				fileInfoMap.put(iterator.next(), new Info(infoBases));
 				infoBases.clear();
 			}
 			infoBases.add(info);
 		})) {
-			mediaInfoSoft.withParameters(parameters)
-					.addOutReadLine(readLineDetails0)
-					.execute();
+			SoftExecutor softExecutor = mediaInfoSoft.withParameters(parameters)
+					.addOutReadLine(readLineDetails0);
+			populate(softExecutor);
+			softExecutor.execute();
 		}
 		return fileInfoMap;
 	}

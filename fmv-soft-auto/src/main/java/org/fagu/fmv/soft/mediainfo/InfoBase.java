@@ -5,18 +5,20 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+import org.fagu.fmv.media.MetadatasContainer;
+
 
 /**
  * @author f.agu
  * @created 7 avr. 2018 14:09:58
  */
-public abstract class InfoBase implements ParsableType {
+public abstract class InfoBase implements MetadatasContainer { // ParsableType
 
 	private final int indexByType;
 
-	private final NavigableMap<String, String> infoMap;
+	private final NavigableMap<String, Object> infoMap;
 
-	public InfoBase(int indexByType, Map<String, String> infoMap) {
+	public InfoBase(int indexByType, Map<String, Object> infoMap) {
 		this.indexByType = indexByType;
 		this.infoMap = Collections.unmodifiableNavigableMap(new TreeMap<>(infoMap));
 	}
@@ -27,12 +29,17 @@ public abstract class InfoBase implements ParsableType {
 		return indexByType;
 	}
 
-	@Override
-	public String getString(String key) {
-		return infoMap.get(key);
-	}
+	// @Override
+	// public String getString(String key) {
+	// return infoMap.get(key);
+	// }
+	//
+	// public NavigableMap<String, String> getDataMap() {
+	// return infoMap;
+	// }
 
-	public NavigableMap<String, String> getDataMap() {
+	@Override
+	public Map<String, Object> getData() {
 		return infoMap;
 	}
 
