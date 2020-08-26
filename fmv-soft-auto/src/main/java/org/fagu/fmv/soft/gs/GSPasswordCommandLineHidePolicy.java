@@ -14,8 +14,9 @@ public class GSPasswordCommandLineHidePolicy implements CommandLineHidePolicy {
 	@Override
 	public void applyPolicy(CommandLineToStringBuilder builder) {
 		builder
-				.whenArg().verify(a -> a.startsWith("-sOwnerPassword")).replaceBy("-sOwnerPassword" + CommandLineToString.HIDE)
-				.whenArg().verify(a -> a.startsWith("-sUserPassword")).replaceBy("-sUserPassword" + CommandLineToString.HIDE);
+				.whenArg().verify(a -> a.startsWith("-sOwnerPassword=")).replaceBy("-sOwnerPassword=" + CommandLineToString.HIDE)
+				.whenArg().verify(a -> a.startsWith("-sUserPassword=")).replaceBy("-sUserPassword=" + CommandLineToString.HIDE)
+				.whenArg().verify(a -> a.startsWith("-sPDFPassword=")).replaceBy("-sPDFPassword=" + CommandLineToString.HIDE);
 	}
 
 }
