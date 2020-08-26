@@ -36,7 +36,7 @@ public class MediaInfoExtractorTestCase {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testJson() throws IOException {
 		JsonMediaInfoExtractor extractor = new JsonMediaInfoExtractor();
 		Map<File, Info> map = extractor.extractAll(
