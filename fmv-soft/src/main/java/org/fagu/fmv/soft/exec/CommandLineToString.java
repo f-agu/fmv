@@ -19,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class CommandLineToString {
 
-	private static final String HIDE = "*******";
+	public static final String HIDE = "*******";
 
 	// ------------------------------------------------------------
 

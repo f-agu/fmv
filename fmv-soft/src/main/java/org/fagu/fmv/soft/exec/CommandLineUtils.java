@@ -2,8 +2,10 @@ package org.fagu.fmv.soft.exec;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.ServiceLoader;
 
 import org.apache.commons.exec.CommandLine;
+import org.fagu.fmv.soft.exec.CommandLineToString.CommandLineToStringBuilder;
 
 
 /**
@@ -22,9 +24,10 @@ public class CommandLineUtils {
 	}
 
 	public static String toLine(Collection<String> args) {
-		return CommandLineToString.with(args)
-				.whenArg().verify(s -> s.toLowerCase().startsWith("-pass")).hideNext()
-				.build().toString();
+		CommandLineToStringBuilder builder = CommandLineToString.with(args)
+				.whenArg().verify(s -> s.toLowerCase().startsWith("-pass")).hideNext();
+		ServiceLoader.load(CommandLineHidePolicy.class).forEach(clhp -> clhp.applyPolicy(builder));
+		return builder.build().toString();
 	}
 
 }
