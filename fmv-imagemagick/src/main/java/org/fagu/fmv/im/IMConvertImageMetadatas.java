@@ -286,7 +286,11 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 
 	@Override
 	public String getCompression() {
-		return getFirstString("compression").orElse(null);
+		String value = getFirstString("compression").orElse(null);
+		if("undefined".equalsIgnoreCase(value)) {
+			return null;
+		}
+		return value;
 	}
 
 	@Override

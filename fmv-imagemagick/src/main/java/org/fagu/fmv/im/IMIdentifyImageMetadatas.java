@@ -416,7 +416,9 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 	// *****************************************
 
 	private String getString(String prop) {
-		return getFirstString(prop).orElse(null);
+		return getFirstString(prop)
+				.map(s -> "Undefined".equalsIgnoreCase(s) ? null : s)
+				.orElse(null);
 	}
 
 	private static <T> Map<T, IMIdentifyImageMetadatas> extract(

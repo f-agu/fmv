@@ -2,6 +2,7 @@ org.fagu.fmv.soft._7z._7zSoftProvider
 org.fagu.fmv.soft.gpac.MP4BoxSoftProvider
 org.fagu.fmv.soft.gpac.MP42TSSoftProvider
 org.fagu.fmv.soft.gs.GSSoftProvider
+org.fagu.fmv.soft.java.JavaSoftProvider
 org.fagu.fmv.soft.mediainfo.MediaInfoSoftProvider
 org.fagu.fmv.soft.mplayer.MEncoderSoftProvider
 org.fagu.fmv.soft.mplayer.MPlayerSoftProvider

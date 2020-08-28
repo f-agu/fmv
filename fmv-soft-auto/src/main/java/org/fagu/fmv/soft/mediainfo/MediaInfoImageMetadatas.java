@@ -105,9 +105,13 @@ public class MediaInfoImageMetadatas implements ImageMetadatas {
 
 	@Override
 	public String getCompression() {
-		return info.getFirstImage()
+		String value = info.getFirstImage()
 				.flatMap(i -> i.getFirstString("Compression_Mode"))
 				.orElse(null);
+		if("undefined".equalsIgnoreCase(value)) {
+			return null;
+		}
+		return value;
 	}
 
 	@Override
