@@ -55,6 +55,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.im.soft.Identify;
 import org.fagu.fmv.image.ImageMetadatas;
 import org.fagu.fmv.image.MapImageMetadatas;
+import org.fagu.fmv.image.Orientation;
 import org.fagu.fmv.image.exif.Flash;
 import org.fagu.fmv.media.MetadatasBuilder;
 import org.fagu.fmv.soft.Soft;
@@ -258,14 +259,20 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 	@Override
 	public Size getDimension() {
 		try {
+			Orientation orientation = getOrientation().orElse(Orientation.HORIZONTAL);
 			String dimensions = getString("wh");
 			if(StringUtils.isBlank(dimensions)) {
 				dimensions = getString("exif:exifimagewidth") + ' ' + getString("exif:exifimagelength");
 			}
+			if(StringUtils.isBlank(dimensions)) {
+				dimensions = getString("exif:pixelxdimension") + ' ' + getString("exif:pixelydimension");
+				orientation = Orientation.HORIZONTAL;
+			}
 			if(dimensions.length() > 0) {
 				String[] dimensionsTab = dimensions.split(" ");
 				if(dimensionsTab.length >= 2) {
-					return Size.valueOf(Integer.parseInt(dimensionsTab[0]), Integer.parseInt(dimensionsTab[1]));
+					Size size = Size.valueOf(Integer.parseInt(dimensionsTab[0]), Integer.parseInt(dimensionsTab[1]));
+					return orientation.rotateSize(size);
 				}
 			}
 		} catch(Exception ignored) {
@@ -281,7 +288,7 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 	@Override
 	public Optional<String> getICCProfile() {
-		return getFirstString("icc:description");
+		return getFirstString("icc:description", "photoshop:iccprofile");
 	}
 
 	@Override
@@ -333,7 +340,7 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 	@Override
 	public Optional<String> getLensModel() {
-		return Optional.empty();
+		return getFirstString("exif:lensmodel", "aux:lens");
 	}
 
 	@Override
@@ -344,6 +351,12 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 	@Override
 	public Float getFocalLength() {
 		return getFirstFloat("exif:focallength").orElse(null);
+	}
+
+	@Override
+	public Optional<Orientation> getOrientation() {
+		return getFirstInteger("exif:orientation")
+				.map(Orientation::valueOf);
 	}
 
 	@Override
@@ -440,7 +453,7 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		StringJoiner joiner = new StringJoiner("\n", "", "\n");
 		joiner.add("==%f==");
 		joiner.add("format=%m");
-		joiner.add("%[exif:*]%[date:*]%[xap:*]%[icc:*]%[*]xy=%x %y");
+		joiner.add("%[exif:*]%[date:*]%[xap:*]%[xmp:*]%[iptc:*]%[icc:*]%[*]%[*:*]xy=%x %y");
 		joiner.add("colorspace=%[colorspace]");
 		joiner.add("wh=%w %h");
 		joiner.add("cdepth=%z");

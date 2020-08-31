@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.fagu.fmv.image.ImageMetadatas;
+import org.fagu.fmv.image.Orientation;
 import org.fagu.fmv.image.exif.Flash;
 import org.fagu.fmv.utils.geo.Coordinates;
 import org.fagu.fmv.utils.media.Size;
@@ -137,6 +138,11 @@ public class MediaInfoImageMetadatas implements ImageMetadatas {
 	@Override
 	public Integer getISOSpeed() {
 		return null;
+	}
+
+	@Override
+	public Optional<Orientation> getOrientation() {
+		return Optional.empty();
 	}
 
 	@Override

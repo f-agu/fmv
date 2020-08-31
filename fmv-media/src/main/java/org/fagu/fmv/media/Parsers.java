@@ -2,6 +2,7 @@ package org.fagu.fmv.media;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.math.Fraction;
@@ -34,8 +35,10 @@ public class Parsers {
 			public T parse(Object o) {
 				return parsers.stream()
 						.filter(p -> p.accept(o))
-						.map(p -> p.parse(o))
+						.filter(Objects::nonNull)
 						.findFirst()
+						.map(p -> p.parse(o))
+						.filter(Objects::nonNull)
 						.orElse(null);
 			}
 
@@ -60,8 +63,10 @@ public class Parsers {
 				if(parsers != null) {
 					return Arrays.stream(parsers)
 							.filter(p -> p.accept(o))
-							.findFirst()
+							.filter(Objects::nonNull)
 							.map(p -> p.parse(o))
+							.filter(Objects::nonNull)
+							.findFirst()
 							.orElse(null);
 				}
 				return null;
@@ -70,7 +75,18 @@ public class Parsers {
 	}
 
 	public static Parser<String> objectToString() {
-		return objectTo(String.class, stringToString());
+		return objectTo(String.class, stringToString(), new Parser<String>() {
+
+			@Override
+			public boolean accept(Object i) {
+				return true;
+			}
+
+			@Override
+			public String parse(Object i) {
+				return String.valueOf(i);
+			}
+		});
 	}
 
 	public static Parser<Boolean> objectToBoolean() {
@@ -311,7 +327,7 @@ public class Parsers {
 
 		@Override
 		public boolean accept(Object i) {
-			return true;
+			return i != null;
 		}
 
 	}

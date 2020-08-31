@@ -57,6 +57,7 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 		Map<String, Object> data = getData();
 		return Arrays.stream(propertyNames)
 				.map(data::get)
+				.filter(Objects::nonNull)
 				.map(o -> Parsers.objectTo(cls, parser).parse(o))
 				.filter(Objects::nonNull);
 	}
@@ -66,7 +67,7 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 	}
 
 	default Stream<String> getStrings(String... propertyNames) {
-		return getObjects(String.class, Parsers.stringToString(), propertyNames);
+		return getObjects(String.class, Parsers.combine(Parsers.stringToString(), Parsers.objectToString()), propertyNames);
 	}
 
 	default Optional<String> getFirstString(String... propertyNames) {

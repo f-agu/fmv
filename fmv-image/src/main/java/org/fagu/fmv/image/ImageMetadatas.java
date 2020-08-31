@@ -52,6 +52,8 @@ public interface ImageMetadatas extends MetadatasContainer {
 
 	Optional<String> getLensModel();
 
+	Optional<Orientation> getOrientation();
+
 	Float getExposureTime();
 
 	default String getExposureTimeFormat() {

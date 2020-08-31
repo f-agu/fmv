@@ -53,6 +53,7 @@ import org.apache.commons.exec.CommandLine;
 import org.fagu.fmv.im.soft.Convert;
 import org.fagu.fmv.image.ImageMetadatas;
 import org.fagu.fmv.image.MapImageMetadatas;
+import org.fagu.fmv.image.Orientation;
 import org.fagu.fmv.image.exif.Flash;
 import org.fagu.fmv.image.exif.Resolution;
 import org.fagu.fmv.media.MetadatasBuilder;
@@ -271,12 +272,16 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 
 	@Override
 	public Optional<String> getICCProfile() {
-		return getFirstString("icc:description");
+		Optional<String> opt = getFirstString("icc:description");
+		if(opt.isPresent()) {
+			return opt;
+		}
+		return getProperties().getFirstString("icc:description", "photoshop:ICCProfile");
 	}
 
 	@Override
 	public Integer getColorDepth() {
-		return getFirstInteger("depth").orElse(null);
+		return getFirstInteger("baseDepth", "depth").orElse(null);
 	}
 
 	@Override
@@ -341,7 +346,8 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 
 	@Override
 	public Optional<String> getLensModel() {
-		return Optional.empty();
+		return getProperties()
+				.getFirstString("aux:Lens");
 	}
 
 	@Override
@@ -349,6 +355,14 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		return getProperties()
 				.getFirstFloat("exif:fnumber")
 				.orElse(null);
+	}
+
+	@Override
+	public Optional<Orientation> getOrientation() {
+		// TODO add "orientation", but need to parse
+		// example: "orientation": "TopLeft"
+		return getProperties().getFirstInteger("exif:Orientation")
+				.map(Orientation::valueOf);
 	}
 
 	@Override

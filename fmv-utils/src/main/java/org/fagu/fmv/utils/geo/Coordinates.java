@@ -68,6 +68,35 @@ public class Coordinates {
 		return toDMS(longitude, maximumFractionDigitsSeconds, 'W', 'E');
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(latitude);
+		result = prime * result + (int)(temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(longitude);
+		result = prime * result + (int)(temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj)
+			return true;
+		if(obj == null)
+			return false;
+		if(getClass() != obj.getClass())
+			return false;
+		final double delta = 0.000000001D;
+		Coordinates other = (Coordinates)obj;
+		if(Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude) && Math.abs(latitude - other.latitude) > delta)
+			return false;
+		if(Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude) && Math.abs(latitude - other.latitude) > delta)
+			return false;
+		return true;
+	}
+
 	public float distance(Coordinates to) {
 		// Haversine Formula (from R.W. Sinnott, "Virtues of the Haversine", Sky
 		// and Telescope, vol. 68, no. 2, 1984, p.
@@ -157,4 +186,5 @@ public class Coordinates {
 		// Standard output of D° M′ S"
 		return degrees + "° " + minutes + "' " + seconds + "\" " + (inCoord < 0 ? negative : inCoord > 0 ? positive : "");
 	}
+
 }
