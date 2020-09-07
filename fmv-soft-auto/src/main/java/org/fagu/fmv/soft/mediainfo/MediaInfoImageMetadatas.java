@@ -89,7 +89,8 @@ public class MediaInfoImageMetadatas implements ImageMetadatas {
 
 	@Override
 	public Optional<String> getICCProfile() {
-		return Optional.empty();
+		return info.getFirstImage()
+				.flatMap(i -> i.getFirstString("colour_primaries"));
 	}
 
 	@Override

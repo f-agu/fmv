@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.fagu.fmv.soft.SearchListener;
 import org.fagu.fmv.soft.find.strategy.HighestPrecedenceSorter;
 
@@ -187,7 +188,7 @@ public class SoftLocator {
 	}
 
 	public Founds find(Properties searchProperties, SoftTester softTester) {
-		SoftTester tester = firstFoundNotNull(softTester, defaultSoftTester(), DEFAULT_SOFT_TESTER);
+		SoftTester tester = ObjectUtils.firstNonNull(softTester, defaultSoftTester(), DEFAULT_SOFT_TESTER);
 
 		// 1 - cache
 		if(cachePopulator != null) {
@@ -299,19 +300,6 @@ public class SoftLocator {
 			CACHE_MAP.putIfAbsent(cacheNaming.apply(softName), founds);
 		}
 		return founds;
-	}
-
-	private static <T> T firstFoundNotNull(T t1, T t2, T t3) {
-		if(t1 != null) {
-			return t1;
-		}
-		if(t2 != null) {
-			return t2;
-		}
-		if(t3 != null) {
-			return t3;
-		}
-		throw new IllegalArgumentException();
 	}
 
 }

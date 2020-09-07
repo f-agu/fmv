@@ -249,7 +249,7 @@ public class Parsers {
 			@Override
 			public Double parse(Object i) {
 				try {
-					return Double.parseDouble((String)i);
+					return Double.parseDouble(((String)i).replace(',', '.'));
 				} catch(NumberFormatException e) {
 					return Fraction.getFraction((String)i).doubleValue();
 				}
@@ -263,7 +263,7 @@ public class Parsers {
 			@Override
 			public Number parse(Object o) {
 				try {
-					return Double.parseDouble((String)o);
+					return Double.parseDouble(((String)o).replace(',', '.'));
 				} catch(NumberFormatException e) {
 					return Fraction.getFraction((String)o).doubleValue();
 				}

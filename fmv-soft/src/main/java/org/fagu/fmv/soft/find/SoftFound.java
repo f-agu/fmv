@@ -200,7 +200,6 @@ public class SoftFound implements Comparable<SoftFound> {
 
 	// **********************************************
 
-	// @SuppressWarnings("unchecked")
 	private int compareByInfo(SoftFound o) {
 		if(softInfo != null) {
 			SoftInfo otherInfo = o.getSoftInfo();

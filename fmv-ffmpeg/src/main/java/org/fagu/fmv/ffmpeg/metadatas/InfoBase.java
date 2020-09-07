@@ -28,6 +28,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -235,6 +236,16 @@ public abstract class InfoBase implements MetadataProperties {
 
 	public Optional<String> tagString(String name) {
 		return Optional.ofNullable((String)tags().get(name));
+	}
+
+	public Optional<String> tagFirstString(String... names) {
+		Map<String, Object> tags = tags();
+		return Arrays.stream(names)
+				.map(tags::get)
+				.filter(Objects::nonNull)
+				.filter(o -> o instanceof String)
+				.map(o -> (String)o)
+				.findFirst();
 	}
 
 	public Map<String, Object> sub(String name) {

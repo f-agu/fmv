@@ -58,7 +58,12 @@ public class VideoStream extends Stream {
 	}
 
 	public Size size() {
-		return Size.valueOf(width(), height());
+		int width = width();
+		int height = height();
+		if(width > 0 && height > 0) {
+			return Size.valueOf(width, height);
+		}
+		return null;
 	}
 
 	@Override

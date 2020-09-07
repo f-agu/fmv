@@ -167,4 +167,12 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 		return getMetadatass(propertyNames).findFirst();
 	}
 
+	@SafeVarargs
+	static <T> Optional<T> findFirstNonNull(Optional<T>... optionals) {
+		return Arrays.stream(optionals)
+				.filter(Objects::nonNull)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.findFirst();
+	}
 }

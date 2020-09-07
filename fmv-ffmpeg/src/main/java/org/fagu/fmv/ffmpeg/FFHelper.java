@@ -168,6 +168,11 @@ public class FFHelper {
 	 * @throws IOException
 	 */
 	public static void captureWebCam(File outFile, Duration duration) throws IOException {
+		// http://4youngpadawans.com/stream-camera-video-and-audio-with-ffmpeg/
+		// ffmpeg -list_devices true -f dshow -i dummy
+		// ffmpeg -f dshow -i video="Integrated Webcam":audio="Réseau de microphones (Realtek Audio)" -profile:v high
+		// -pix_fmt yuvj420p -level:v 4.1 -preset ultrafast -tune zerolatency -vcodec libx264 -r 10 -b:v 512k -s 640x360
+		// -acodec aac -ac 2 -ab 32k -ar 44100 output.mp4
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.addMediaInputWebCam().duration(duration);
 

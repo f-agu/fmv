@@ -258,11 +258,21 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 
 	@Override
 	public Size getDimension() {
-		return getFirstMetadatas("geometry")
-				.flatMap(mc -> toSize(mc, "width", "height"))
-				.filter(Objects::nonNull)
-				.orElseGet(() -> toSize(getProperties(), "exif:PixelXDimension", "exif:PixelYDimension")
-						.orElse(null));
+		Size size = toSize(getProperties(), "exif:PixelXDimension", "exif:PixelYDimension")
+				.orElse(null);
+		if(size != null) {
+			return size;
+		}
+
+		Optional<Size> opt = getFirstMetadatas("geometry")
+				.flatMap(mc -> toSize(mc, "width", "height"));
+		if( ! opt.isPresent()) {
+			opt = getFirstMetadatas("pageGeometry")
+					.flatMap(mc -> toSize(mc, "width", "height"));
+		}
+		return opt
+				.flatMap(s -> getOrientation().map(o -> o.rotateSize(s)))
+				.orElse(opt.orElse(null));
 	}
 
 	@Override
@@ -300,6 +310,12 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 
 	@Override
 	public String getResolutionUnit() {
+		String value = getFirstString("units")
+				.map(s -> "Undefined".equalsIgnoreCase(s) ? null : s)
+				.orElse(null);
+		if(value != null) {
+			return value;
+		}
 		return getProperties()
 				.getFirstInteger("exif:ResolutionUnit")
 				.flatMap(Resolution::valueOf)
@@ -347,7 +363,7 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 	@Override
 	public Optional<String> getLensModel() {
 		return getProperties()
-				.getFirstString("aux:Lens");
+				.getFirstString("exif:LensModel", "aux:Lens");
 	}
 
 	@Override
@@ -359,10 +375,35 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 
 	@Override
 	public Optional<Orientation> getOrientation() {
-		// TODO add "orientation", but need to parse
-		// example: "orientation": "TopLeft"
-		return getProperties().getFirstInteger("exif:Orientation")
+		Optional<Orientation> opt = getProperties().getFirstInteger("exif:Orientation")
 				.map(Orientation::valueOf);
+		if(opt.isPresent()) {
+			return opt;
+		}
+		return Optional.empty(); // TODO
+		// return getFirstString("orientation") // See values with commandline: magick identify -list Orientation
+		// .map(s -> {
+		// switch(s) {
+		// case "TopLeft":
+		// return Orientation.HORIZONTAL;
+		// case "TopRight":
+		// return Orientation.ROTATE_90_CW;
+		// case "BottomRight":
+		// return Orientation.ROTATE_180;
+		// case "BottomLeft":
+		// return Orientation.ROTATE_270_CW;
+		// case "LeftTop":
+		// return Orientation.?;
+		// case "RightTop":
+		// return Orientation.?;
+		// case "RightBottom":
+		// return Orientation.?;
+		// case "LeftBottom":
+		// return Orientation.?;
+		// default:
+		// }
+		// throw new IllegalArgumentException("Undefined orientation: " + s);
+		// });
 	}
 
 	@Override
