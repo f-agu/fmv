@@ -137,7 +137,7 @@ public class JavaSpawnTest {
 		assertEquals(0, outCountingOutputStream.getByteCount());
 		assertEquals(3, err.size());
 		assertEquals("Exception in thread \"main\" java.lang.Exception", err.get(0));
-		assertEquals("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:43)", err.get(1));
+		assertTrue(err.get(1).contains("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:"));
 		assertEquals("", err.get(2));
 	}
 
@@ -187,7 +187,7 @@ public class JavaSpawnTest {
 			assertEquals(0, outCountingOutputStream.getByteCount());
 			assertEquals(3, err.size());
 			assertEquals("xException in thread \"main\" java.lang.Exception", err.get(0)); // start with 'x'
-			assertEquals("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:43)", err.get(1));
+			assertTrue(err.get(1).contains("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:"));
 			assertEquals("", err.get(2));
 		}
 	}
@@ -206,7 +206,7 @@ public class JavaSpawnTest {
 
 		assertEquals(size, outCountingOutputStream.getByteCount());
 		assertEquals("xException in thread \"main\" java.lang.Exception", err.get(0)); // start with 'x'
-		assertEquals("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:43)", err.get(1));
+		assertTrue(err.get(1).contains("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:"));
 	}
 
 	@Test
@@ -223,7 +223,7 @@ public class JavaSpawnTest {
 
 		assertEquals(size, outCountingOutputStream.getByteCount());
 		assertEquals("xException in thread \"main\" java.lang.Exception", err.get(0)); // start with 'x'
-		assertEquals("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:43)", err.get(1));
+		assertTrue(err.get(1).contains("\tat org.fagu.fmv.soft.java.ExceptionMain.main(ExceptionMain.java:"));
 	}
 
 	// ***************************************

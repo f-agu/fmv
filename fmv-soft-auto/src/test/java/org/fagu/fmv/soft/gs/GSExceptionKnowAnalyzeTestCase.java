@@ -45,9 +45,6 @@ import org.junit.Test;
  */
 public class GSExceptionKnowAnalyzeTestCase {
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
 	// @Ignore
 	public void testMerge() throws IOException {
@@ -77,7 +74,7 @@ public class GSExceptionKnowAnalyzeTestCase {
 						.execute();
 			} catch(FMVExecuteException e) {
 				if(e.isKnown()) {
-					assertEquals("ddd", e.getExceptionKnown().toString());
+					assertEquals("Permission denied", e.getExceptionKnown().toString());
 				} else {
 					throw e;
 				}
