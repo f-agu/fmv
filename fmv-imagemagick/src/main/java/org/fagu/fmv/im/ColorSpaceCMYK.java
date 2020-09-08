@@ -26,7 +26,6 @@ import java.awt.color.ColorSpace;
  * See
  * {@link https://jar-download.com/explore-java-source-code-detail.php?file=./javaSource/org.icepdf.os/icepdf-core/6.1.2/org/icepdf/core/pobjects/graphics/ColorSpaceCMYK.java&key=65916ab61284bbf2da3895e72d8e888e}
  * 
- * @author Oodrive
  * @author f.agu
  * @created 11 janv. 2017 15:54:44
  */

@@ -41,8 +41,7 @@ public class MediaInfoExtractorTestCase {
 	public void testRaw() throws IOException {
 		RawMediaInfoExtractor extractor = new RawMediaInfoExtractor();
 		Map<File, Info> map = extractor.extractAll(
-				new File("C:\\Projects\\fmv\\fmv-soft-auto\\src\\test\\resources\\org\\fagu\\fmv\\soft\\mp4.mp4"),
-				new File("C:\\Oodrive\\video\\mp4-2\\a.mp4"));
+				new File("C:\\Projects\\fmv\\fmv-soft-auto\\src\\test\\resources\\org\\fagu\\fmv\\soft\\mp4.mp4"));
 
 		map.forEach((file, info) -> {
 			System.out.println();

@@ -24,7 +24,6 @@ import java.util.Objects;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 30 juil. 2020 12:10:38
  */

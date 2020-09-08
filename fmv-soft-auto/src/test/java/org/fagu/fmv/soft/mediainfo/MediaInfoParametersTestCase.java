@@ -27,7 +27,6 @@ import org.junit.Test;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 3 juil. 2019 15:31:39
  */

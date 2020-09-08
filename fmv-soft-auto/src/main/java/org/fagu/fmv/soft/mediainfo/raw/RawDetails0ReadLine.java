@@ -42,7 +42,6 @@ import org.fagu.fmv.soft.mediainfo.VideoInfo;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 3 juil. 2019 10:49:31
  */

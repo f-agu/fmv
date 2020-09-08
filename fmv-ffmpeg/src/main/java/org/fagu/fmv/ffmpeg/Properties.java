@@ -24,7 +24,6 @@ import org.fagu.fmv.utils.PropertyValues.IntegerPropertyValue;
 import org.fagu.fmv.utils.PropertyValues.StringPropertyValue;
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 24 avr. 2017 10:32:04
  */

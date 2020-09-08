@@ -29,7 +29,6 @@ import org.fagu.fmv.soft.exec.FMVExecListener;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 7 nov. 2016 10:45:55
  */

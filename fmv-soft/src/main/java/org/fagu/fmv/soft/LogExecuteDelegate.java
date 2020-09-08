@@ -30,7 +30,6 @@ import org.fagu.fmv.soft.exec.FMVExecutor;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 30 juil. 2020 14:46:56
  */

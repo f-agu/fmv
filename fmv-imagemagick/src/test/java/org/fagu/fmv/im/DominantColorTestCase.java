@@ -30,7 +30,6 @@ import org.junit.Test;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 11 janv. 2017 13:02:17
  */
