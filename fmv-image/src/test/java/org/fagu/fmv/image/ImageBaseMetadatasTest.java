@@ -180,7 +180,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 		mdAssertEquals(fileName, "Format", "JPEG", String.valueOf(metadatas.getFormat()).toUpperCase());
 		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
-		mdAssertEquals(fileName, "ResolutionUnit", "Undefined", metadatas.getResolutionUnit());
+		mdAssertNull(fileName, "ResolutionUnit", metadatas.getResolutionUnit());
 		mdAssertNull(fileName, "Software", metadatas.getSoftware());
 
 		mdAssertEquals(fileName, "jpeg:colorspace", "2", metadatas.get("jpeg:colorspace"));
@@ -213,7 +213,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 		mdAssertEquals(fileName, "Format", "PNG", String.valueOf(metadatas.getFormat()).toUpperCase());
 		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
-		mdAssertEquals(fileName, "ResolutionUnit", "Undefined", metadatas.getResolutionUnit());
+		mdAssertNull(fileName, "ResolutionUnit", metadatas.getResolutionUnit());
 		mdAssertNull(fileName, "Software", metadatas.getSoftware());
 
 		mdAssertEquals(fileName, "png:chrm", "chunk was found (see Chromaticity, above)", metadatas.get("png:chrm"));
