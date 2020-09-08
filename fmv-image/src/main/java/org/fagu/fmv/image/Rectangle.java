@@ -24,7 +24,6 @@ import java.util.Optional;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 4 avr. 2018 15:43:58
  */

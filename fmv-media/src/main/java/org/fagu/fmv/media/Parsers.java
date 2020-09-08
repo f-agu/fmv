@@ -29,7 +29,6 @@ import org.apache.commons.lang3.math.Fraction;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 20 nov. 2019 15:18:50
  */

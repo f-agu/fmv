@@ -27,7 +27,6 @@ import org.fagu.fmv.ffmpeg.operation.FFMPEGProgressReadLine;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 5 juin 2017 16:38:40
  */

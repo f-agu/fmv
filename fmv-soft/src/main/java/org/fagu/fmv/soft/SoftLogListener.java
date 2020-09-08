@@ -26,7 +26,6 @@ import org.fagu.fmv.soft.find.SoftFound;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 4 mars 2020 11:05:08
  */

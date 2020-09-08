@@ -27,7 +27,6 @@ import org.fagu.fmv.soft.SoftExecutor;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 23 janv. 2017 09:41:34
  */

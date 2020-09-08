@@ -20,7 +20,6 @@ package org.fagu.fmv.soft.exec;
  * #L%
  */
 /**
- * @author Oodrive
  * @author f.agu
  * @created 18 janv. 2017 12:19:26
  */

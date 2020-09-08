@@ -28,7 +28,6 @@ import java.util.List;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 3 août 2020 14:45:18
  */

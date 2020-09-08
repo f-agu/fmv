@@ -25,7 +25,6 @@ import org.fagu.fmv.image.Rectangle;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 4 avr. 2018 15:43:58
  */

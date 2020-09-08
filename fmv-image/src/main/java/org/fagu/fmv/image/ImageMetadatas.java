@@ -34,7 +34,6 @@ import org.fagu.fmv.utils.media.Size;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 7 nov. 2019 10:02:49
  */

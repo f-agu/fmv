@@ -26,7 +26,6 @@ import org.fagu.fmv.media.NavigableMapMetadatasContainer;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 7 nov. 2019 10:55:09
  */

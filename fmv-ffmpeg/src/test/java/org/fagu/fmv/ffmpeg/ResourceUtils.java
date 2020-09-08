@@ -30,7 +30,6 @@ import org.apache.commons.io.IOUtils;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 25 janv. 2017 12:12:28
  */

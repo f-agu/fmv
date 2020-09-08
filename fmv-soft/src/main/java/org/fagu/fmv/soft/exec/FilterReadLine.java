@@ -25,7 +25,6 @@ import java.util.function.Predicate;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 8 sept. 2020 13:54:07
  */

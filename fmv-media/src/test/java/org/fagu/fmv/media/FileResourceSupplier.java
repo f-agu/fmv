@@ -25,7 +25,6 @@ import java.io.IOException;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 26 nov. 2019 15:29:00
  */

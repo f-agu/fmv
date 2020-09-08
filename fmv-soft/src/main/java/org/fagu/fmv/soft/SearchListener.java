@@ -29,7 +29,6 @@ import org.fagu.fmv.soft.find.SoftTester;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 3 avr. 2020 15:05:10
  */

@@ -35,7 +35,6 @@ import org.fagu.version.VersionUnit;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 30 sept. 2019 09:52:11
  */

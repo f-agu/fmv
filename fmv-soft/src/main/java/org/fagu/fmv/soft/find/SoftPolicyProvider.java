@@ -27,7 +27,6 @@ import java.util.stream.StreamSupport;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 8 sept. 2020 11:25:58
  */

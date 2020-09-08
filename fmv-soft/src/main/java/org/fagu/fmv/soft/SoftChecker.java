@@ -33,7 +33,6 @@ import org.fagu.fmv.soft.spring.actuator.Softs;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 24 juin 2019 12:39:35
  */

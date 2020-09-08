@@ -27,7 +27,6 @@ import java.util.TreeMap;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 13 nov. 2019 11:21:52
  */

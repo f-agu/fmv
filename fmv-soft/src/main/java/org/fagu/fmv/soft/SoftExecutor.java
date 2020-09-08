@@ -311,7 +311,6 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 
 	/**
 	 * @param <R>
-	 * @author Oodrive
 	 * @author f.agu
 	 * @created 21 avr. 2017 11:31:39
 	 */

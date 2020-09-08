@@ -299,7 +299,6 @@ public class CropDetection {
 	// ----------------------------------------
 
 	/**
-	 * @author Oodrive
 	 * @author f.agu
 	 * @created 14 nov. 2016 16:49:17
 	 */

@@ -29,7 +29,6 @@ import org.fagu.fmv.soft.io.StreamLogConsumer;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 8 juil. 2019 16:55:29
  */

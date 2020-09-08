@@ -37,7 +37,6 @@ import org.fagu.fmv.soft.find.SoftProvider;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 5 déc. 2019 10:38:46
  */

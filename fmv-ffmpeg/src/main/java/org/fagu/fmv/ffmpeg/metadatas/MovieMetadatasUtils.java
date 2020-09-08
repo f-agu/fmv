@@ -28,7 +28,6 @@ import org.fagu.fmv.utils.time.Duration;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 24 avr. 2017 13:58:20
  */

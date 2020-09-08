@@ -24,7 +24,6 @@ import org.fagu.fmv.ffmpeg.operation.MediaOutput;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 18 juil. 2019 16:20:09
  */

@@ -34,7 +34,6 @@ import java.util.function.Consumer;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 26 nov. 2019 10:13:57
  */
