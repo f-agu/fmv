@@ -1,8 +1,8 @@
-package org.fagu.fmv.ffmpeg;
+package org.fagu.fmv.soft.find;
 
 /*-
  * #%L
- * fmv-ffmpeg
+ * fmv-soft
  * %%
  * Copyright (C) 2014 - 2020 fagu
  * %%
@@ -20,34 +20,25 @@ package org.fagu.fmv.ffmpeg;
  * #L%
  */
 
-import java.io.File;
-import java.io.IOException;
-
-import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.junit.Ignore;
-import org.junit.Test;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ServiceLoader;
+import java.util.stream.StreamSupport;
 
 
 /**
  * @author Oodrive
  * @author f.agu
- * @created 10 juin 2019 11:07:22
+ * @created 8 sept. 2020 11:25:58
  */
-@Ignore
-public class VideoStreamTestCase {
+public interface SoftPolicyProvider {
 
-	@Test
-	public void testDuration() throws IOException {
-		File file = null;
-		try {
-			file = ResourceUtils.extract("melt.mpg");
-			MovieMetadatas movieMetadatas = MovieMetadatas.with(file).extract();
-			movieMetadatas.getVideoStream().countEstimateFrames();
-		} finally {
-			if(file != null) {
-				file.delete();
-			}
-		}
+	SoftPolicy findFor(String softName);
+
+	static Optional<SoftPolicy> find(String softName) {
+		return StreamSupport.stream(ServiceLoader.load(SoftPolicyProvider.class).spliterator(), false)
+				.map(spp -> spp.findFor(softName))
+				.filter(Objects::nonNull)
+				.findFirst();
 	}
-
 }

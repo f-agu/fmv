@@ -52,7 +52,7 @@ public abstract class SoftProvider {
 
 	public SoftProvider(String name, SoftPolicy softPolicy) {
 		this.name = Objects.requireNonNull(name);
-		this.softPolicy = softPolicy;
+		this.softPolicy = SoftPolicyProvider.find(name).orElse(softPolicy);
 	}
 
 	public String getName() {

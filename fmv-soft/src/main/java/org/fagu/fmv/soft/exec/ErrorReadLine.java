@@ -7,16 +7,16 @@ package org.fagu.fmv.soft.exec;
  * Copyright (C) 2014 - 2017 fagu
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  * #L%
  */
 import java.util.ArrayList;
@@ -24,8 +24,6 @@ import java.util.List;
 
 import org.apache.commons.exec.ProcessDestroyer;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.fagu.fmv.soft.exec.FMVExecutor;
-import org.fagu.fmv.soft.exec.ReadLine;
 
 
 /**
@@ -45,10 +43,6 @@ public class ErrorReadLine implements ReadLine {
 
 	private List<String> errList;
 
-	/**
-	 * @param maxLineBuffer
-	 * @param killProcessWhenNumberOfLines
-	 */
 	public ErrorReadLine(int maxLineBuffer, int killProcessWhenNumberOfLines) {
 		this.maxLineBuffer = maxLineBuffer;
 		this.killProcessWhenNumberOfLines = killProcessWhenNumberOfLines;
@@ -60,9 +54,6 @@ public class ErrorReadLine implements ReadLine {
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.utils.exec.ReadLine#read(java.lang.String)
-	 */
 	@Override
 	public void read(String line) {
 		++countErrLines;
@@ -79,16 +70,10 @@ public class ErrorReadLine implements ReadLine {
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	public List<String> getErrList() {
 		return errList;
 	}
 
-	/**
-	 * @param executor
-	 */
 	public ErrorReadLine applyProcessDestroyer(FMVExecutor executor) {
 		if(processDestroyer != null) {
 			executor.addProcessDestroyer(processDestroyer);
@@ -98,32 +83,19 @@ public class ErrorReadLine implements ReadLine {
 
 	// *******************************************************************
 
-	/**
-	 * @param mutableObject
-	 * @return
-	 */
 	private static ProcessDestroyer createProcessDestroyer(MutableObject<Process> mutableObject) {
 		return new ProcessDestroyer() {
 
-			/**
-			 * @see org.apache.commons.exec.ProcessDestroyer#size()
-			 */
 			@Override
 			public int size() {
 				return 0;
 			}
 
-			/**
-			 * @see org.apache.commons.exec.ProcessDestroyer#remove(java.lang.Process)
-			 */
 			@Override
 			public boolean remove(Process process) {
 				return false;
 			}
 
-			/**
-			 * @see org.apache.commons.exec.ProcessDestroyer#add(java.lang.Process)
-			 */
 			@Override
 			public boolean add(Process process) {
 				mutableObject.setValue(process);
