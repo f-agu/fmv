@@ -140,12 +140,12 @@ public class Sync {
 				Map<String, Item> destItems = dest.childMap;
 				IniFile destInitFile = dest.iniFile;
 				Item curDestItem = destItems.remove(name);
-				if(curDestItem != null) {
-					curDestItems.add(curDestItem);
-				}
 				if(curDestItem != null && ! accept(curDestItem, destInitFile)) {
 					synchronizer.ignore(curDestItem.toString());
 					continue;
+				}
+				if(curDestItem != null) {
+					curDestItems.add(curDestItem);
 				}
 				if(curDestItem == null) {
 					if(curSrcItem.isDirectory()) {
@@ -176,7 +176,7 @@ public class Sync {
 					synchronizer.doNothingOnFile(curDestItem);
 				}
 			}
-			if(curSrcItem.isDirectory()) {
+			if(curSrcItem.isDirectory() && ! curDestItems.isEmpty()) {
 				sync(curSrcItem, curDestItems);
 			}
 		}
