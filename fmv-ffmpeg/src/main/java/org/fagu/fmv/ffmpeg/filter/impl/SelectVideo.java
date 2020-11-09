@@ -67,7 +67,7 @@ public class SelectVideo extends AbstractFilter {
 		}
 		Optional<Integer> countEstimateFrames = videoStream.countEstimateFrames();
 		if(countEstimateFrames.isPresent()) {
-			int everyFrame = Math.round((float)countEstimateFrames.get() / (float)countFrame);
+			int everyFrame = (int)Math.ceil((float)countEstimateFrames.get() / (float)countFrame);
 			if(everyFrame > 0) {
 				return Optional.of(everyFrame(everyFrame));
 			}
