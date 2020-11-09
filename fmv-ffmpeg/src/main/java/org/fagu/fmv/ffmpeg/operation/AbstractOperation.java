@@ -29,6 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -354,6 +355,18 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 	@Override
 	public Stream<OutputProcessor> getOutputProcessorStream() {
 		return getProcessorStream(OutputProcessor.class);
+	}
+
+	@Override
+	public boolean removeProcessorStream(Processor<?> processor) {
+		Iterator<Entry<IOEntity, Processor<?>>> iterator = processorMap.entrySet().iterator();
+		while(iterator.hasNext()) {
+			if(iterator.next().getValue() == processor) {
+				iterator.remove();
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
