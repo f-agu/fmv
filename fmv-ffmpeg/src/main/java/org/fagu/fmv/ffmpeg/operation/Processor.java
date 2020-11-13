@@ -320,6 +320,10 @@ public abstract class Processor<P extends Processor<?>> {
 		return getParameters(Way.BEFORE);
 	}
 
+	public IOParameters getIOParameters() {
+		return ioParameters;
+	}
+
 	/**
 	 * @param way
 	 * @return

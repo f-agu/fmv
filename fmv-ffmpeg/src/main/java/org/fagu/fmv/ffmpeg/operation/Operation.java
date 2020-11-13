@@ -92,6 +92,8 @@ public interface Operation<R, O> {
 	 */
 	Stream<OutputProcessor> getOutputProcessorStream();
 
+	boolean removeProcessorStream(Processor<?> processor);
+
 	/**
 	 * @return
 	 */
