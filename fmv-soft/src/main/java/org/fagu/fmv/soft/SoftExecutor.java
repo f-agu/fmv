@@ -64,6 +64,8 @@ import org.fagu.fmv.utils.collection.LimitedLastQueue;
  */
 public class SoftExecutor extends ExecHelper<SoftExecutor> {
 
+	private static TemporaryFolderSupplier globalTemporaryFolderSupplier;
+
 	private final SoftProvider softProvider;
 
 	private final File execFile;
@@ -85,6 +87,8 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 	private Supplier<List<String>> bufferedReadLineSupplier = () -> new LimitedLastQueue<>(500);
 
 	private Function<CommandLine, String> toStringCommandLine = CommandLineUtils::toLine;
+
+	private TemporaryFolderSupplier temporaryFolderSupplier;
 
 	public SoftExecutor(SoftProvider softProvider, File execFile, List<String> parameters) {
 		this.softProvider = Objects.requireNonNull(softProvider);
@@ -163,6 +167,14 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		return this;
 	}
 
+	public TemporaryFolderSupplier getTemporaryFolderSupplier() {
+		return temporaryFolderSupplier;
+	}
+
+	public void setTemporaryFolderSupplier(TemporaryFolderSupplier temporaryFolderSupplier) {
+		this.temporaryFolderSupplier = temporaryFolderSupplier;
+	}
+
 	public CommandLine getCommandLine() {
 		return FMVCommandLine.create(execFile, parameters);
 	}
@@ -175,7 +187,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 			int exitValue = 0;
 			PIDProcessOperator pidProcessOperator = new PIDProcessOperator();
 			fmvExecutor.addProcessOperator(pidProcessOperator);
-			try {
+			try (TemporaryFolder temporaryFolder = getTemporaryFolder()) {
 				execListener.eventExecuting(commandLine);
 				exitValue = getExecuteDelegate().execute(fmvExecutor, commandLine);
 				time = System.currentTimeMillis() - startTime;
@@ -226,6 +238,14 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 					}),
 					exitValue -> new Executed(pidProcessOperator.getPID(), exitValue, time.get()));
 		});
+	}
+
+	public static TemporaryFolderSupplier getGlobalTemporaryFolderSupplier() {
+		return globalTemporaryFolderSupplier;
+	}
+
+	public static void setGlobalTemporaryFolderSupplier(TemporaryFolderSupplier globalTemporaryFolderSupplier) {
+		SoftExecutor.globalTemporaryFolderSupplier = globalTemporaryFolderSupplier;
 	}
 
 	// -------------------------------------------------------------
@@ -305,6 +325,16 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 				// ignore
 			}
 		});
+	}
+
+	private TemporaryFolder getTemporaryFolder() throws IOException {
+		TemporaryFolder temporaryFolder = null;
+		if(temporaryFolderSupplier != null) {
+			temporaryFolder = temporaryFolderSupplier.get();
+		} else if(globalTemporaryFolderSupplier != null) {
+			temporaryFolder = globalTemporaryFolderSupplier.get();
+		}
+		return temporaryFolder != null ? temporaryFolder : TemporaryFolder.noFolder();
 	}
 
 	// --------------------------------------------------
