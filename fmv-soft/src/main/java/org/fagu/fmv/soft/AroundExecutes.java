@@ -75,7 +75,7 @@ class AroundExecutes {
 
 		private final File tmpFolder;
 
-		private boolean deleleteAtClose;
+		private boolean deleteAtClose;
 
 		private Set<String> envNames = new HashSet<>(Arrays.asList("TMPDIR", "TEMP", "TMP"));
 
@@ -83,8 +83,9 @@ class AroundExecutes {
 
 		private Consumer<DeleteInfo> deleteInfoConsumer;
 
-		private TemporaryFolderBuilder(File tmpFolder, boolean deleleteAtClose) {
+		private TemporaryFolderBuilder(File tmpFolder, boolean deleteAtClose) {
 			this.tmpFolder = Objects.requireNonNull(tmpFolder);
+			this.deleteAtClose = deleteAtClose;
 		}
 
 		public TemporaryFolderBuilder setEnvironmentNames(Collection<String> envNames) {
@@ -113,6 +114,11 @@ class AroundExecutes {
 					}
 				};
 			}
+			return this;
+		}
+
+		public TemporaryFolderBuilder withDeleteAtClose(boolean deleteAtClose) {
+			this.deleteAtClose = deleteAtClose;
 			return this;
 		}
 
@@ -217,7 +223,7 @@ class AroundExecutes {
 
 		private final File folder;
 
-		private final boolean deleleteAtClose;
+		private final boolean deleteAtClose;
 
 		private final Set<String> envNames;
 
@@ -227,7 +233,7 @@ class AroundExecutes {
 
 		TemporaryFolderAroundExecute(TemporaryFolderBuilder builder) {
 			this.folder = builder.tmpFolder;
-			this.deleleteAtClose = builder.deleleteAtClose;
+			this.deleteAtClose = builder.deleteAtClose;
 			this.envNames = Collections.unmodifiableSet(new HashSet<>(builder.envNames));
 			this.folderChecker = builder.folderChecker != null ? builder.folderChecker : NOTHING_FOLDER_CHECKER;
 			this.deleteInfoConsumer = builder.deleteInfoConsumer != null ? builder.deleteInfoConsumer : di -> {};
@@ -242,7 +248,7 @@ class AroundExecutes {
 
 		@Override
 		public void close() throws IOException {
-			if(deleleteAtClose) {
+			if(deleteAtClose) {
 				DeleteInfo info = delete(folder);
 				deleteInfoConsumer.accept(info);
 			}
