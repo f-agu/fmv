@@ -8,7 +8,7 @@ import java.io.IOException;
  * @author f.agu
  * @created 13 nov. 2020 17:27:49
  */
-public interface TemporaryFolderSupplier {
+public interface AroundExecuteSupplier {
 
-	TemporaryFolder get() throws IOException;
+	AroundExecute get() throws IOException;
 }

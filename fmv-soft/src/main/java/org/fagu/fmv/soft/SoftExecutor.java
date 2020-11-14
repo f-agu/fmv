@@ -64,7 +64,7 @@ import org.fagu.fmv.utils.collection.LimitedLastQueue;
  */
 public class SoftExecutor extends ExecHelper<SoftExecutor> {
 
-	private static TemporaryFolderSupplier globalTemporaryFolderSupplier;
+	private static AroundExecuteSupplier globalAroundExecuteSupplier;
 
 	private final SoftProvider softProvider;
 
@@ -88,7 +88,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 
 	private Function<CommandLine, String> toStringCommandLine = CommandLineUtils::toLine;
 
-	private TemporaryFolderSupplier temporaryFolderSupplier;
+	private AroundExecuteSupplier aroundExecuteSupplier;
 
 	public SoftExecutor(SoftProvider softProvider, File execFile, List<String> parameters) {
 		this.softProvider = Objects.requireNonNull(softProvider);
@@ -167,12 +167,12 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		return this;
 	}
 
-	public TemporaryFolderSupplier getTemporaryFolderSupplier() {
-		return temporaryFolderSupplier;
+	public AroundExecuteSupplier getTemporaryFolderSupplier() {
+		return aroundExecuteSupplier;
 	}
 
-	public void setTemporaryFolderSupplier(TemporaryFolderSupplier temporaryFolderSupplier) {
-		this.temporaryFolderSupplier = temporaryFolderSupplier;
+	public void setTemporaryFolderSupplier(AroundExecuteSupplier temporaryFolderSupplier) {
+		this.aroundExecuteSupplier = temporaryFolderSupplier;
 	}
 
 	public CommandLine getCommandLine() {
@@ -187,7 +187,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 			int exitValue = 0;
 			PIDProcessOperator pidProcessOperator = new PIDProcessOperator();
 			fmvExecutor.addProcessOperator(pidProcessOperator);
-			try (TemporaryFolder temporaryFolder = getTemporaryFolder()) {
+			try (AroundExecute aroundExecute = getAroundExecute()) {
 				execListener.eventExecuting(commandLine);
 				exitValue = getExecuteDelegate().execute(fmvExecutor, commandLine);
 				time = System.currentTimeMillis() - startTime;
@@ -240,12 +240,12 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		});
 	}
 
-	public static TemporaryFolderSupplier getGlobalTemporaryFolderSupplier() {
-		return globalTemporaryFolderSupplier;
+	public static AroundExecuteSupplier getGlobalAroundExecuteSupplier() {
+		return globalAroundExecuteSupplier;
 	}
 
-	public static void setGlobalTemporaryFolderSupplier(TemporaryFolderSupplier globalTemporaryFolderSupplier) {
-		SoftExecutor.globalTemporaryFolderSupplier = globalTemporaryFolderSupplier;
+	public static void setGlobalAroundExecuteSupplier(AroundExecuteSupplier globalAroundExecuteSupplier) {
+		SoftExecutor.globalAroundExecuteSupplier = globalAroundExecuteSupplier;
 	}
 
 	// -------------------------------------------------------------
@@ -327,14 +327,19 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		});
 	}
 
-	private TemporaryFolder getTemporaryFolder() throws IOException {
-		TemporaryFolder temporaryFolder = null;
-		if(temporaryFolderSupplier != null) {
-			temporaryFolder = temporaryFolderSupplier.get();
-		} else if(globalTemporaryFolderSupplier != null) {
-			temporaryFolder = globalTemporaryFolderSupplier.get();
+	private AroundExecute getAroundExecute() throws IOException {
+		AroundExecute aroundExecute = null;
+		if(aroundExecuteSupplier != null) {
+			aroundExecute = aroundExecuteSupplier.get();
+		} else if(globalAroundExecuteSupplier != null) {
+			aroundExecute = globalAroundExecuteSupplier.get();
 		}
-		return temporaryFolder != null ? temporaryFolder : TemporaryFolder.noFolder();
+		if(aroundExecute == null) {
+			aroundExecute = AroundExecute.nothing();
+		} else {
+			aroundExecute.initialize(this);
+		}
+		return aroundExecute;
 	}
 
 	// --------------------------------------------------
