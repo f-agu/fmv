@@ -1,4 +1,4 @@
-package org.fagu.fmv.soft.exception;
+package org.fagu.fmv.soft.exec.exception;
 
 import java.io.IOException;
 

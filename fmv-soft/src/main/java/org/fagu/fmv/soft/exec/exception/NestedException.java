@@ -36,30 +36,18 @@ public class NestedException extends Exception {
 
 	private List<String> msgLines;
 
-	/**
-	 * @param ioException
-	 */
 	public NestedException(IOException ioException) {
 		super(ioException);
 	}
 
-	/**
-	 * @return
-	 */
 	public IOException getIOException() {
 		return (IOException)getCause();
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isFMVExecutorException() {
 		return getCause() instanceof FMVExecuteException;
 	}
 
-	/**
-	 * @return
-	 */
 	public List<String> messageToLines() {
 		if(msgLines == null) {
 			List<String> list = new ArrayList<>();
@@ -76,10 +64,6 @@ public class NestedException extends Exception {
 		return msgLines;
 	}
 
-	/**
-	 * @param strToFind
-	 * @return
-	 */
 	public boolean contains(String strToFind) {
 		return getCause().getMessage().contains(strToFind);
 	}

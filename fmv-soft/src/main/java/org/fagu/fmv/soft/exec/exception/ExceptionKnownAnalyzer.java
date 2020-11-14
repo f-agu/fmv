@@ -25,10 +25,6 @@ package org.fagu.fmv.soft.exec.exception;
 @FunctionalInterface
 public interface ExceptionKnownAnalyzer {
 
-	/**
-	 * @param nestedException
-	 * @return
-	 */
 	ExceptionKnown anaylze(NestedException nestedException);
 
 }

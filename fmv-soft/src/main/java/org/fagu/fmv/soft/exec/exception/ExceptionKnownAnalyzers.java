@@ -34,17 +34,10 @@ import org.fagu.fmv.utils.order.OrderComparator;
  */
 public class ExceptionKnownAnalyzers {
 
-	/**
-	 * 
-	 */
 	private ExceptionKnownAnalyzers() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @param cls
-	 * @return
-	 */
 	public static List<ExceptionKnownAnalyzer> getExceptionKnownAnalyzers(Class<? extends ExceptionKnownAnalyzer> cls) {
 		List<ExceptionKnownAnalyzer> list = new ArrayList<>();
 		for(ExceptionKnownAnalyzer exceptionKnown : ServiceLoader.load(cls)) {
@@ -57,11 +50,6 @@ public class ExceptionKnownAnalyzers {
 		return list;
 	}
 
-	/**
-	 * @param cls
-	 * @param e
-	 * @return
-	 */
 	public static Optional<ExceptionKnown> getKnown(Class<? extends ExceptionKnownAnalyzer> cls, IOException e) {
 		NestedException nestedException = new NestedException(e);
 		return getExceptionKnownAnalyzers(cls).stream()
@@ -70,13 +58,6 @@ public class ExceptionKnownAnalyzers {
 				.findFirst();
 	}
 
-	/**
-	 * @param cls
-	 * @param exception
-	 * @param exceptionKnownConsumer
-	 * @param exceptionConsumer
-	 * @throws E
-	 */
 	@SuppressWarnings("unchecked")
 	public static <E extends IOException> void doOrThrows(Class<? extends ExceptionKnownAnalyzer> cls, E exception,
 			ExceptionKnownConsumer exceptionKnownConsumer, ExceptionConsumer exceptionConsumer) throws E {

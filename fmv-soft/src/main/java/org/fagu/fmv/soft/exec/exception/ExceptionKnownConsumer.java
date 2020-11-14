@@ -28,9 +28,5 @@ import java.io.IOException;
 @FunctionalInterface
 public interface ExceptionKnownConsumer {
 
-	/**
-	 * @param exceptionKnown
-	 * @throws IOException
-	 */
 	void accept(ExceptionKnown exceptionKnown) throws IOException;
 }

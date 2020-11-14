@@ -33,16 +33,10 @@ public class ExceptionKnownIOException extends IOException {
 
 	private final ExceptionKnown exceptionKnown;
 
-	/**
-	 * @param exceptionKnown
-	 */
 	public ExceptionKnownIOException(ExceptionKnown exceptionKnown) {
 		this.exceptionKnown = Objects.requireNonNull(exceptionKnown);
 	}
 
-	/**
-	 * @return
-	 */
 	public ExceptionKnown getExceptionKnown() {
 		return exceptionKnown;
 	}

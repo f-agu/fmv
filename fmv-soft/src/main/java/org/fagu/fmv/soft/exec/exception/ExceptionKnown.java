@@ -36,41 +36,24 @@ public class ExceptionKnown implements Serializable {
 
 	private final String message;
 
-	/**
-	 * @param nestedException
-	 * @param message
-	 */
 	public ExceptionKnown(NestedException nestedException, String message) {
 		this.nestedException = Objects.requireNonNull(nestedException);
 		this.message = Objects.requireNonNull(message);
 	}
 
-	/**
-	 * @return
-	 */
 	public NestedException getNestedException() {
 		return nestedException;
 	}
 
-	/**
-	 * @param consumer
-	 * @return
-	 */
 	public ExceptionKnown onMessage(Consumer<String> consumer) {
 		consumer.accept(message);
 		return this;
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	public void doThrow() throws IOException {
 		throw nestedException.getIOException();
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return message;
