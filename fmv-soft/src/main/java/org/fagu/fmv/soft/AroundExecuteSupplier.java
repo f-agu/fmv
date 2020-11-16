@@ -1,6 +1,9 @@
 package org.fagu.fmv.soft;
 
 import java.io.IOException;
+import java.util.Map;
+
+import org.apache.commons.exec.CommandLine;
 
 
 /**
@@ -10,5 +13,5 @@ import java.io.IOException;
  */
 public interface AroundExecuteSupplier {
 
-	AroundExecute get() throws IOException;
+	AroundExecute get(CommandLine command, Map<String, String> environment) throws IOException;
 }

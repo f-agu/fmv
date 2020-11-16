@@ -64,8 +64,6 @@ import org.fagu.fmv.utils.collection.LimitedLastQueue;
  */
 public class SoftExecutor extends ExecHelper<SoftExecutor> {
 
-	private static AroundExecuteSupplier globalAroundExecuteSupplier;
-
 	private final SoftProvider softProvider;
 
 	private final File execFile;
@@ -87,8 +85,6 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 	private Supplier<List<String>> bufferedReadLineSupplier = () -> new LimitedLastQueue<>(500);
 
 	private Function<CommandLine, String> toStringCommandLine = CommandLineUtils::toLine;
-
-	private AroundExecuteSupplier aroundExecuteSupplier;
 
 	public SoftExecutor(SoftProvider softProvider, File execFile, List<String> parameters) {
 		this.softProvider = Objects.requireNonNull(softProvider);
@@ -167,14 +163,6 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 		return this;
 	}
 
-	public AroundExecuteSupplier getTemporaryFolderSupplier() {
-		return aroundExecuteSupplier;
-	}
-
-	public void setTemporaryFolderSupplier(AroundExecuteSupplier temporaryFolderSupplier) {
-		this.aroundExecuteSupplier = temporaryFolderSupplier;
-	}
-
 	public CommandLine getCommandLine() {
 		return FMVCommandLine.create(execFile, parameters);
 	}
@@ -187,7 +175,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 			int exitValue = 0;
 			PIDProcessOperator pidProcessOperator = new PIDProcessOperator();
 			fmvExecutor.addProcessOperator(pidProcessOperator);
-			try (AroundExecute aroundExecute = getAroundExecute()) {
+			try {
 				execListener.eventExecuting(commandLine);
 				exitValue = getExecuteDelegate().execute(fmvExecutor, commandLine);
 				time = System.currentTimeMillis() - startTime;
@@ -238,14 +226,6 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 					}),
 					exitValue -> new Executed(pidProcessOperator.getPID(), exitValue, time.get()));
 		});
-	}
-
-	public static AroundExecuteSupplier getGlobalAroundExecuteSupplier() {
-		return globalAroundExecuteSupplier;
-	}
-
-	public static void setGlobalAroundExecuteSupplier(AroundExecuteSupplier globalAroundExecuteSupplier) {
-		SoftExecutor.globalAroundExecuteSupplier = globalAroundExecuteSupplier;
 	}
 
 	// -------------------------------------------------------------
@@ -325,21 +305,6 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 				// ignore
 			}
 		});
-	}
-
-	private AroundExecute getAroundExecute() throws IOException {
-		AroundExecute aroundExecute = null;
-		if(aroundExecuteSupplier != null) {
-			aroundExecute = aroundExecuteSupplier.get();
-		} else if(globalAroundExecuteSupplier != null) {
-			aroundExecute = globalAroundExecuteSupplier.get();
-		}
-		if(aroundExecute == null) {
-			aroundExecute = AroundExecute.nothing();
-		} else {
-			aroundExecute.initialize(this);
-		}
-		return aroundExecute;
 	}
 
 	// --------------------------------------------------

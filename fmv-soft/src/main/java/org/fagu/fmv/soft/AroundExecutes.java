@@ -6,16 +6,18 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import org.apache.commons.exec.CommandLine;
 import org.apache.commons.io.FileUtils;
+import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.soft.exec.exception.NoEnoughSpaceOnDeviceException;
 
 
 /**
- * @author Oodrive
  * @author f.agu
  * @created 13 nov. 2020 16:57:33
  */
@@ -34,7 +36,7 @@ class AroundExecutes {
 		private NothingAroundExecute() {}
 
 		@Override
-		public void initialize(SoftExecutor softExecutor) {}
+		public void initialize(FMVExecutor fmvExecutor, CommandLine command, Map<String, String> environment) {}
 
 		@Override
 		public void close() throws IOException {}
@@ -148,77 +150,6 @@ class AroundExecutes {
 
 	// ----------------------------------------------------
 
-	public static class DeleteInfo {
-
-		private static final DeleteInfo EMPTY = new DeleteInfo(0, 0, 0);
-
-		private final int countFiles;
-
-		private final int countFolders;
-
-		private final long size;
-
-		private DeleteInfo(int countFiles, int countFolders, long size) {
-			if(countFiles < 0) {
-				throw new IllegalArgumentException("countFiles must be positive: " + countFiles);
-			}
-			if(countFolders < 0) {
-				throw new IllegalArgumentException("countFolders must be positive: " + countFolders);
-			}
-			if(size < 0) {
-				throw new IllegalArgumentException("size must be positive: " + size);
-			}
-			this.countFiles = countFiles;
-			this.countFolders = countFolders;
-			this.size = size;
-		}
-
-		public static DeleteInfo empty() {
-			return EMPTY;
-		}
-
-		public static DeleteInfo with(int countFiles, int countFolders, long size) {
-			if(countFiles == 0 && countFolders == 0 && size == 0) {
-				return EMPTY;
-			}
-			return new DeleteInfo(countFiles, countFolders, size);
-		}
-
-		public int getCountFiles() {
-			return countFiles;
-		}
-
-		public int getCountFolders() {
-			return countFolders;
-		}
-
-		public long getSize() {
-			return size;
-		}
-
-		public DeleteInfo add(int addCountFiles, int addCountFolders, long addSize) {
-			return with(countFiles + addCountFiles, countFolders + addCountFolders, size + addSize);
-		}
-
-		public DeleteInfo addFile(long addSize) {
-			return add(1, 0, addSize);
-		}
-
-		public DeleteInfo addFiles(int countFiles, long addSize) {
-			return add(countFiles, 0, addSize);
-		}
-
-		public DeleteInfo addFolder() {
-			return add(0, 1, 0);
-		}
-
-		public DeleteInfo add(DeleteInfo deleteInfo) {
-			return add(deleteInfo.countFiles, deleteInfo.countFolders, deleteInfo.size);
-		}
-	}
-
-	// ----------------------------------------------------
-
 	static class TemporaryFolderAroundExecute implements AroundExecute {
 
 		private final File folder;
@@ -240,10 +171,10 @@ class AroundExecutes {
 		}
 
 		@Override
-		public void initialize(SoftExecutor softExecutor) throws IOException {
+		public void initialize(FMVExecutor fmvExecutor, CommandLine command, Map<String, String> environment) throws IOException {
 			folderChecker.check(folder);
 			String tmpFolderPath = folder.getAbsolutePath();
-			envNames.forEach(env -> softExecutor.addEnv(env, tmpFolderPath));
+			envNames.forEach(env -> environment.put(env, tmpFolderPath));
 		}
 
 		@Override
@@ -264,10 +195,10 @@ class AroundExecutes {
 
 	private static DeleteInfo delete(File file) {
 		if( ! file.exists()) {
-			return DeleteInfo.empty();
+			return DeleteInfo.empty(file);
 		}
 
-		DeleteInfo deleteInfo = DeleteInfo.empty();
+		DeleteInfo deleteInfo = DeleteInfo.empty(file);
 
 		if(file.isDirectory()) {
 			File[] children = file.listFiles();

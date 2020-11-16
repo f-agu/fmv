@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,8 @@ import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.ProcessDestroyer;
 import org.apache.commons.exec.ShutdownHookProcessDestroyer;
+import org.fagu.fmv.soft.AroundExecute;
+import org.fagu.fmv.soft.AroundExecuteSupplier;
 import org.fagu.fmv.soft.ExecuteDelegate;
 import org.fagu.fmv.soft.ExecuteDelegateRepository;
 import org.fagu.fmv.soft.utils.Proxifier;
@@ -53,6 +56,8 @@ import org.fagu.fmv.utils.order.OrderComparator;
  * @author f.agu
  */
 public class FMVExecutor extends DefaultExecutor {
+
+	private static AroundExecuteSupplier globalAroundExecuteSupplier;
 
 	// ---------------------------------------------
 
@@ -129,11 +134,10 @@ public class FMVExecutor extends DefaultExecutor {
 
 	private List<ProcessOperator> processOperators = new ArrayList<>();
 
+	private AroundExecuteSupplier aroundExecuteSupplier;
+
 	// --------------
 
-	/**
-	 * @param builder
-	 */
 	private FMVExecutor(FMVExecutorBuilder builder) {
 		if(builder.workingFolder != null) {
 			setWorkingDirectory(builder.workingFolder);
@@ -149,24 +153,14 @@ public class FMVExecutor extends DefaultExecutor {
 		addProcessOperator(new IgnoreNullOutputStreamProcessOperator());
 	}
 
-	/**
-	 * @param workingFolder
-	 * @return
-	 */
 	public static FMVExecutorBuilder with(File workingFolder) {
 		return new FMVExecutorBuilder(workingFolder);
 	}
 
-	/**
-	 * @param fmvExecListener
-	 */
 	public void addListener(FMVExecListener fmvExecListener) {
 		listenerProxifier.add(fmvExecListener);
 	}
 
-	/**
-	 * @param timeOutMilliSeconds
-	 */
 	public void setTimeOut(long timeOutMilliSeconds) {
 		if(timeOutMilliSeconds >= 0 && timeOutMilliSeconds < 10) {
 			throw new IllegalArgumentException("Incredible timeout: " + timeOutMilliSeconds + "ms");
@@ -176,46 +170,36 @@ public class FMVExecutor extends DefaultExecutor {
 		setWatchdog(executeWatchdog);
 	}
 
-	/**
-	 * @return
-	 */
 	public OptionalLong getTimeOut() {
 		return timeOutMilliSeconds == null ? OptionalLong.empty() : OptionalLong.of(timeOutMilliSeconds);
 	}
 
-	/**
-	 * 
-	 */
 	public void removeTimeOut() {
 		timeOutMilliSeconds = null;
 		executeWatchdog = null;
 		setWatchdog(null);
 	}
 
-	/**
-	 * @param processOperator
-	 */
 	public void addProcessOperator(ProcessOperator processOperator) {
 		processOperators.add(processOperator);
 	}
 
-	/**
-	 * @param processOperators
-	 */
 	public void addProcessOperators(Collection<ProcessOperator> processOperators) {
 		this.processOperators.addAll(processOperators);
 	}
 
-	/**
-	 * 
-	 */
+	public AroundExecuteSupplier getAroundExecuteSupplier() {
+		return aroundExecuteSupplier;
+	}
+
+	public void setAroundExecuteSupplier(AroundExecuteSupplier aroundExecuteSupplier) {
+		this.aroundExecuteSupplier = aroundExecuteSupplier;
+	}
+
 	public void clearProcessOperators() {
 		processOperators.clear();
 	}
 
-	/**
-	 * @param processDestroyer
-	 */
 	public void addProcessDestroyer(ProcessDestroyer processDestroyer) {
 		ProcessDestroyer pd = getProcessDestroyer();
 		AggregateProcessDestroyer aggregateProcessDestroyer = null;
@@ -228,60 +212,41 @@ public class FMVExecutor extends DefaultExecutor {
 		aggregateProcessDestroyer.add(processDestroyer);
 	}
 
-	/**
-	 * @see org.apache.commons.exec.DefaultExecutor#execute(org.apache.commons.exec.CommandLine, java.util.Map)
-	 */
 	@Override
 	public int execute(CommandLine command, Map<String, String> environment) throws IOException {
-		proxyFMVExecListener.eventPreExecute(this, command, environment, null);
-		try {
-			int exitValue = super.execute(command, environment);
-			proxyFMVExecListener.eventPostExecute(this, command, environment, null);
+		Map<String, String> envMap = copyEnvironment(environment);
+		try (AroundExecute aroundExecute = getAroundExecute(command, envMap)) {
+			proxyFMVExecListener.eventPreExecute(this, command, envMap, null);
+			int exitValue = super.execute(command, envMap);
+			proxyFMVExecListener.eventPostExecute(this, command, envMap, null);
 			return exitValue;
 		} catch(IOException e) {
-			proxyFMVExecListener.eventFailed(this, command, environment, null, e);
+			proxyFMVExecListener.eventFailed(this, command, envMap, null, e);
 			throw e;
 		}
 	}
 
-	/**
-	 * @see org.apache.commons.exec.DefaultExecutor#execute(org.apache.commons.exec.CommandLine, java.util.Map,
-	 *      org.apache.commons.exec.ExecuteResultHandler)
-	 */
 	@Override
 	public void execute(CommandLine command, Map<String, String> environment, ExecuteResultHandler handler) throws IOException {
-		proxyFMVExecListener.eventPreExecute(this, command, environment, handler);
+		Map<String, String> envMap = copyEnvironment(environment);
 		try {
-			try {
-				super.execute(command, environment, handler);
-				proxyFMVExecListener.eventPostExecute(this, command, environment, handler);
+			try (AroundExecute aroundExecute = getAroundExecute(command, envMap)) {
+				proxyFMVExecListener.eventPreExecute(this, command, envMap, handler);
+				super.execute(command, envMap, handler);
+				proxyFMVExecListener.eventPostExecute(this, command, envMap, handler);
 			} catch(ExecuteException e) {
 				throw new ExecuteException(command.toString(), e.getExitValue(), e);
 			}
 		} catch(IOException e) {
-			proxyFMVExecListener.eventFailed(this, command, environment, handler, e);
+			proxyFMVExecListener.eventFailed(this, command, envMap, handler, e);
 			throw e;
 		}
 	}
 
-	/**
-	 * @param command
-	 * @param executorService
-	 * @return
-	 */
 	public FMVFuture<Integer> executeAsynchronous(CommandLine command, ExecutorService executorService) {
 		return executeAsynchronous(ExecuteDelegateRepository.get(), command, executorService, null, null, null);
 	}
 
-	/**
-	 * @param executeDelegate
-	 * @param command
-	 * @param executorService
-	 * @param before
-	 * @param after
-	 * @param ioExceptionConsumer
-	 * @return
-	 */
 	public FMVFuture<Integer> executeAsynchronous(ExecuteDelegate executeDelegate, CommandLine command, ExecutorService executorService,
 			Runnable before, IntConsumer after,
 			IOExceptionConsumer ioExceptionConsumer) {
@@ -310,14 +275,19 @@ public class FMVExecutor extends DefaultExecutor {
 		}), wpsh.getProcessInputStream());
 	}
 
-	/**
-	 * 
-	 */
 	public void destroy() {
 		if(executeWatchdog != null && ! executeWatchdog.killedProcess()) {
 			executeWatchdog.destroyProcess();
 			executeWatchdog = null;
 		}
+	}
+
+	public static AroundExecuteSupplier getGlobalAroundExecuteSupplier() {
+		return globalAroundExecuteSupplier;
+	}
+
+	public static void setGlobalAroundExecuteSupplier(AroundExecuteSupplier globalAroundExecuteSupplier) {
+		FMVExecutor.globalAroundExecuteSupplier = globalAroundExecuteSupplier;
 	}
 
 	// -------------------------------------------
@@ -328,19 +298,11 @@ public class FMVExecutor extends DefaultExecutor {
 	 */
 	public interface IOExceptionConsumer {
 
-		/**
-		 * @param exception
-		 * @throws IOException
-		 */
 		void accept(IOException exception) throws IOException;
 	}
 
 	// ****************************************
 
-	/**
-	 * @see org.apache.commons.exec.DefaultExecutor#launch(org.apache.commons.exec.CommandLine, java.util.Map,
-	 *      java.io.File)
-	 */
 	@Override
 	protected Process launch(CommandLine command, Map<String, String> env, File dir) throws IOException {
 		Process process = super.launch(command, env, dir);
@@ -353,6 +315,27 @@ public class FMVExecutor extends DefaultExecutor {
 			process = Objects.requireNonNull(processOperator.operate(process), "Return null ProcessOperator on " + processOperator.toString());
 		}
 		return process;
+	}
+
+	// ****************************************
+
+	private AroundExecute getAroundExecute(CommandLine command, Map<String, String> environment) throws IOException {
+		AroundExecute aroundExecute = null;
+		if(aroundExecuteSupplier != null) {
+			aroundExecute = aroundExecuteSupplier.get(command, environment);
+		} else if(globalAroundExecuteSupplier != null) {
+			aroundExecute = globalAroundExecuteSupplier.get(command, environment);
+		}
+		if(aroundExecute == null) {
+			aroundExecute = AroundExecute.nothing();
+		} else {
+			aroundExecute.initialize(this, command, environment);
+		}
+		return aroundExecute;
+	}
+
+	private Map<String, String> copyEnvironment(Map<String, String> environment) {
+		return environment != null ? new HashMap<>(environment) : new HashMap<>();
 	}
 
 }
