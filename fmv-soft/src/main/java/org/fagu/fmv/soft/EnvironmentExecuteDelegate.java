@@ -34,7 +34,7 @@ import org.fagu.fmv.soft.exec.FMVExecutor;
  */
 public class EnvironmentExecuteDelegate implements ExecuteDelegate {
 
-	private final Map<String, String> envs = new HashMap<>();
+	private final Map<String, String> envs = new HashMap<>(System.getenv());
 
 	public EnvironmentExecuteDelegate() {}
 
@@ -43,7 +43,7 @@ public class EnvironmentExecuteDelegate implements ExecuteDelegate {
 	}
 
 	public static EnvironmentExecuteDelegate systemEnvs() {
-		return new EnvironmentExecuteDelegate(System.getenv());
+		return new EnvironmentExecuteDelegate();
 	}
 
 	@Override

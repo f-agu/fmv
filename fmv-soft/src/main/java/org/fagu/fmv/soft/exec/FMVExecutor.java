@@ -216,6 +216,7 @@ public class FMVExecutor extends DefaultExecutor {
 	public int execute(CommandLine command, Map<String, String> environment) throws IOException {
 		Map<String, String> envMap = copyEnvironment(environment);
 		try (AroundExecute aroundExecute = getAroundExecute(command, envMap)) {
+			envMap = environmentNotEmpty(envMap);
 			proxyFMVExecListener.eventPreExecute(this, command, envMap, null);
 			int exitValue = super.execute(command, envMap);
 			proxyFMVExecListener.eventPostExecute(this, command, envMap, null);
@@ -231,6 +232,7 @@ public class FMVExecutor extends DefaultExecutor {
 		Map<String, String> envMap = copyEnvironment(environment);
 		try {
 			try (AroundExecute aroundExecute = getAroundExecute(command, envMap)) {
+				envMap = environmentNotEmpty(envMap);
 				proxyFMVExecListener.eventPreExecute(this, command, envMap, handler);
 				super.execute(command, envMap, handler);
 				proxyFMVExecListener.eventPostExecute(this, command, envMap, handler);
@@ -335,7 +337,11 @@ public class FMVExecutor extends DefaultExecutor {
 	}
 
 	private Map<String, String> copyEnvironment(Map<String, String> environment) {
-		return environment != null ? new HashMap<>(environment) : new HashMap<>();
+		return environment != null ? new HashMap<>(environment) : new HashMap<>(System.getenv());
+	}
+
+	private Map<String, String> environmentNotEmpty(Map<String, String> environment) {
+		return environment == null || environment.isEmpty() ? null : environment;
 	}
 
 }
