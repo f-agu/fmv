@@ -48,20 +48,10 @@ public class Sync {
 
 	private final Synchronizer synchronizer;
 
-	/**
-	 * @param sourceStorage
-	 * @param destStorage
-	 * @param synchronizer
-	 */
 	public Sync(Storage sourceStorage, Storage destStorage, Synchronizer synchronizer) {
 		this(sourceStorage, Collections.singletonList(destStorage), synchronizer);
 	}
 
-	/**
-	 * @param sourceStorage
-	 * @param destStorages
-	 * @param printStream
-	 */
 	public Sync(Storage sourceStorage, List<Storage> destStorages, Synchronizer synchronizer) {
 		if(destStorages.isEmpty()) {
 			throw new IllegalArgumentException("Destination empty");
@@ -71,9 +61,6 @@ public class Sync {
 		this.synchronizer = Objects.requireNonNull(synchronizer);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	public void synchronize() throws IOException {
 		System.out.println("Synchronizer: " + synchronizer);
 		synchronizer.start(sourceStorage, destStorages);
@@ -110,11 +97,6 @@ public class Sync {
 
 	// --------------------------------------------
 
-	/**
-	 * @param srcItem
-	 * @param destItemsList
-	 * @throws IOException
-	 */
 	private void sync(Item srcItem, List<Item> destItemsList) throws IOException {
 		System.out.println(srcItem.toString());
 		synchronizer.doNothingOnFolder(srcItem);
@@ -204,21 +186,12 @@ public class Sync {
 	@FunctionalInterface
 	private static interface ProgressConsumer {
 
-		/**
-		 * @param t
-		 * @throws IOException
-		 */
 		void progress(AtomicLong progress) throws IOException;
 
 	}
 
 	// ------------------------------------
 
-	/**
-	 * @param progressConsumer
-	 * @param srcItem
-	 * @throws IOException
-	 */
 	private void progressBar(ProgressConsumer progressConsumer, Item srcItem) throws IOException {
 		AtomicLong progress = new AtomicLong();
 		long startTime = System.currentTimeMillis();
@@ -246,11 +219,6 @@ public class Sync {
 
 	}
 
-	/**
-	 * @param children
-	 * @return
-	 * @throws IOException
-	 */
 	private IniFile loadInitFile(Map<String, Item> children) throws IOException {
 		Item item = children.get(".fmv-sync");
 		if(item == null) {
@@ -261,14 +229,9 @@ public class Sync {
 		}
 	}
 
-	/**
-	 * @param item
-	 * @param iniFile
-	 * @return
-	 */
 	private boolean accept(Item item, IniFile iniFile) {
 		String name = item.getName();
-		if(name.startsWith(".fmv-")) {
+		if(name.startsWith(".fmv-") || name.endsWith(".vsmeta")) {
 			return false;
 		}
 		if(iniFile == null) {

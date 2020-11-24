@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.SortedSet;
 import java.util.StringJoiner;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteResultHandler;
@@ -170,8 +171,9 @@ public class FFReducer extends AbstractReducer {
 		} else if(metadatas.contains(Type.AUDIO)) {
 			logger.log("is audio");
 			if(needToReduceAudio(metadatas, srcFile)) {
+				List<Stream> onlyStreams = audioOnlyStreams(metadatas);
 				destFile = getTempFile(srcFile, getAudioFormat(srcFile));
-				forceReplace = reduceAudio(metadatas, srcFile, destFile, "128k", consolePrefixMessage, logger);
+				forceReplace = reduceAudio(metadatas, srcFile, destFile, "128k", consolePrefixMessage, logger, onlyStreams);
 			} else {
 				logger.log("Audio already reduced by FMV");
 			}
@@ -478,16 +480,36 @@ public class FFReducer extends AbstractReducer {
 	 * @return
 	 */
 	private boolean needToReduceAudio(MovieMetadatas metadatas, File srcFile) {
-		AudioStream audioStream = metadatas.getAudioStream();
 		String extension = FilenameUtils.getExtension(srcFile.getName());
-		if( ! audioFormat.equalsIgnoreCase(extension) || audioStream.bitRate().get() > 128000) {
+		if( ! audioFormat.equalsIgnoreCase(extension)) {
 			return true;
 		}
-		VideoStream videoStream = metadatas.getVideoStream();
-		if(videoStream != null && Decoders.MJPEG.getName().equals(videoStream.codecName().get())) {
+		if(metadatas.getAudioStreams().stream()
+				.anyMatch(audioStream -> audioStream.bitRate().isPresent() && audioStream.bitRate().get() > 128_000)) {
+			return true;
+		}
+		if(metadatas.getVideoStreams().stream()
+				.anyMatch(videoStream -> Decoders.MJPEG.getName().equals(videoStream.codecName().get()))) {
 			return true; // has cover
 		}
 		return false;
+	}
+
+	private List<Stream> audioOnlyStreams(MovieMetadatas metadatas) {
+		List<AudioStream> audioStreams = metadatas.getAudioStreams();
+		List<Stream> selected = audioStreams.stream()
+				.filter(audioStream -> {
+					if( ! audioStream.bitRate().isPresent()) {
+						System.out.println(audioStream);
+						return false;
+					}
+					// if( ! audioStream.frameRate().isPresent()) {
+					// return false;
+					// }
+					return true;
+				})
+				.collect(Collectors.toList());
+		return selected.size() == audioStreams.size() ? null : selected;
 	}
 
 	/**
@@ -501,7 +523,7 @@ public class FFReducer extends AbstractReducer {
 	 * @throws IOException
 	 */
 	private boolean reduceAudio(MovieMetadatas metadatas, File srcFile, File destFile, String bitRate,
-			String consolePrefixMessage, Logger logger) throws IOException {
+			String consolePrefixMessage, Logger logger, Collection<Stream> onlyStreams) throws IOException {
 
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.hideBanner();
@@ -518,7 +540,11 @@ public class FFReducer extends AbstractReducer {
 		outputProcessor.format(audioFormat);
 		outputProcessor.overwrite();
 
-		outputProcessor.map().allStreams().input(filter);
+		if(onlyStreams != null) {
+			outputProcessor.map().streams(onlyStreams).input(filter);
+		} else {
+			outputProcessor.map().allStreams().input(filter);
+		}
 
 		FFExecutor<Object> executor = builder.build();
 		executor.addListener(new LoggerFFExecListener(logger));

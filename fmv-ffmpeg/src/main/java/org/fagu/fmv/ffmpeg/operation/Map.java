@@ -1,27 +1,9 @@
 package org.fagu.fmv.ffmpeg.operation;
 
-/*
- * #%L
- * fmv-ffmpeg
- * %%
- * Copyright (C) 2014 fagu
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.fagu.fmv.ffmpeg.filter.FilterInput;
@@ -43,85 +25,52 @@ public class Map {
 	 */
 	public class On {
 
-		private Type[] types;
+		private final Collection<Type> types;
 
-		private Stream[] streams;
+		private final Collection<Stream> streams;
 
-		/**
-		 * 
-		 */
-		private On() {}
-
-		/**
-		 * @param types
-		 */
-		private On(Type[] types) {
-			this.types = types;
+		private On() {
+			this.types = null;
+			this.streams = null;
 		}
 
-		/**
-		 * @param types
-		 */
-		private On(Stream[] streams) {
-			this.streams = streams;
+		private On(Collection<Type> types, Collection<Stream> streams) {
+			this.types = types != null ? Collections.unmodifiableList(new ArrayList<>(types)) : null;
+			this.streams = streams != null ? Collections.unmodifiableList(new ArrayList<>(streams)) : null;
 		}
 
-		/**
-		 * @param label
-		 */
 		public On label(String label) {
 			return label(label, true);
 		}
 
-		/**
-		 * @param label
-		 */
 		public On label(Label label) {
 			return label(label, true);
 		}
 
-		/**
-		 * @param outputKey
-		 * @return
-		 */
 		public On outputKey(OutputKey outputKey) {
 			return outputKey(outputKey, true);
 		}
 
-		/**
-		 * @param outputKeys
-		 * @return
-		 */
 		public On outputKeys(Collection<OutputKey> outputKeys) {
 			return outputKeys(outputKeys, true);
 		}
 
-		/**
-		 * @param filterInput
-		 * @return
-		 */
 		public On input(FilterInput filterInput) {
 			return outputKeys(filterInput.getOutputKeys(), ! (filterInput instanceof InputProcessor));
 		}
 
-		/**
-		 * @return
-		 */
 		public Map map() {
 			return Map.this;
 		}
 
 		// **********************************************
 
-		/**
-		 * 
-		 */
 		private Iterator<String> createIterator() {
 			if(types != null) {
-				return Arrays.stream(types).map(t -> Character.toString(t.code())).iterator();
+				return types.stream().map(t -> Character.toString(t.code())).iterator();
 			}
 			if(streams != null) {
-				return Arrays.stream(streams).map(s -> Integer.toString(s.index())).iterator();
+				return streams.stream().map(s -> Integer.toString(s.index())).iterator();
 			}
 			return null;
 		}
@@ -155,22 +104,11 @@ public class Map {
 			return label(outputKey.getLabel(), isLabel);
 		}
 
-		/**
-		 * @param outputKeys
-		 * @param isLabel
-		 * @return
-		 */
 		private On outputKeys(Collection<OutputKey> outputKeys, boolean isLabel) {
 			outputKeys.stream().forEach(ok -> outputKey(ok, isLabel));
 			return this;
 		}
 
-		/**
-		 * @param map
-		 * @param iterator
-		 * @param isLabel
-		 * @return
-		 */
 		private Map with(String map, Iterator<String> iterator, boolean isLabel) {
 			if(iterator == null || ! iterator.hasNext()) {
 				return map(map, isLabel);
@@ -181,11 +119,6 @@ public class Map {
 			return Map.this;
 		}
 
-		/**
-		 * @param name
-		 * @param isLabel
-		 * @return
-		 */
 		private Map map(String name, boolean isLabel) {
 			String map = isLabel ? '[' + name + ']' : name;
 			outputProcessor.add(Parameter.before(outputProcessor.getMediaOutput(), "-map", map));
@@ -199,36 +132,29 @@ public class Map {
 
 	private FilterNaming filterNaming;
 
-	/**
-	 * @param outputProcessor
-	 * @param filterNaming
-	 */
 	Map(OutputProcessor outputProcessor, FilterNaming filterNaming) {
 		this.outputProcessor = outputProcessor;
 		this.filterNaming = filterNaming;
 	}
 
-	/**
-	 * @return
-	 */
 	public On allStreams() {
 		return new On();
 	}
 
-	/**
-	 * @param types
-	 * @return
-	 */
 	public On types(Type... types) {
-		return new On(types);
+		return new On(Arrays.asList(types), null);
 	}
 
-	/**
-	 * @param streams
-	 * @return
-	 */
+	public On types(Collection<Type> types) {
+		return new On(types, null);
+	}
+
 	public On streams(Stream... streams) {
-		return new On(streams);
+		return new On(null, Arrays.asList(streams));
+	}
+
+	public On streams(Collection<Stream> streams) {
+		return new On(null, streams);
 	}
 
 }

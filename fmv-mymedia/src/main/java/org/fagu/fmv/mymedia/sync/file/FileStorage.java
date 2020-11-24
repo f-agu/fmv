@@ -34,30 +34,18 @@ public class FileStorage implements Storage {
 
 	private final Item root;
 
-	/**
-	 * @param files
-	 */
 	public FileStorage(File file) {
 		root = new FileItem(file);
 	}
 
-	/**
-	 * @see org.fagu.sync.Storage#getRoot()
-	 */
 	@Override
 	public Item getRoot() throws IOException {
 		return root;
 	}
 
-	/**
-	 * @see java.io.Closeable#close()
-	 */
 	@Override
 	public void close() throws IOException {}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "file://" + root;

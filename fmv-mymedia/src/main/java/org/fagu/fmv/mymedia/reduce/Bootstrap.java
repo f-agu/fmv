@@ -59,29 +59,18 @@ public class Bootstrap {
 
 	private Map<Predicate<Path>, Supplier<Reducer>> reducerMap = new HashMap<>(4);
 
-	/**
-	 *
-	 */
 	public Bootstrap() {
 		addReducer(FileTypeUtils.with(FileType.IMAGE)::verify, IMReducer::new);
 		addReducer(FileTypeUtils.with(FileType.AUDIO)::verify, FFReducer::new);
 		addReducer(FileTypeUtils.with(FileType.VIDEO)::verify, FFReducer::new);
 	}
 
-	/**
-	 * @param reducer
-	 * @param extensions
-	 */
 	public void addReducer(Predicate<Path> verifyPath, Supplier<Reducer> reducer) {
 		Objects.requireNonNull(verifyPath);
 		Objects.requireNonNull(reducer);
 		reducerMap.put(verifyPath, reducer);
 	}
 
-	/**
-	 * @param rootFile
-	 * @throws IOException
-	 */
 	public void reduce(File rootFile) throws IOException {
 		Logger logger = LoggerFactory.openLogger(LoggerFactory.getLogFile(rootFile, PROPERTY_LOG_FILE, PROPERTY_LOG_FILE_DEFAULT_NAME));
 
@@ -164,9 +153,6 @@ public class Bootstrap {
 
 	// ************************************************
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) throws IOException {
 		if(args.length == 0) {
 			System.out.println("Usage: java -cp . " + Bootstrap.class + " <folder|file> [<folder|file> ...]");
