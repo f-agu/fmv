@@ -175,11 +175,13 @@ public class Soft {
 	}
 
 	public SoftInfo getFirstInfo() {
-		return getFirstFound().getSoftInfo();
+		SoftFound firstFound = getFirstFound();
+		return firstFound != null ? firstFound.getSoftInfo() : null;
 	}
 
 	public File getFile() {
-		return getFirstFound().getFile();
+		SoftFound firstFound = getFirstFound();
+		return firstFound != null ? firstFound.getFile() : null;
 	}
 
 	public SoftFound reFind() throws IOException {
@@ -217,8 +219,8 @@ public class Soft {
 
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder();
-		buf.append(getName());
+		StringBuilder buf = new StringBuilder()
+				.append(getName());
 		if(getFounds().isFound()) {
 			SoftInfo softInfo = getFirstInfo();
 			if(softInfo != null) {
