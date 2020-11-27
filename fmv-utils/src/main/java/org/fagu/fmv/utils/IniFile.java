@@ -45,40 +45,22 @@ public class IniFile {
 
 	private final MapMap<String, String, String> mapMap;
 
-	/**
-	 * @param mapMap
-	 */
 	protected IniFile(MapMap<String, String, String> mapMap) {
 		this.mapMap = Objects.requireNonNull(mapMap);
 	}
 
 	// ********************
 
-	/**
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
 	public static IniFile load(File file) throws IOException {
 		try (Reader reader = new FileReader(file)) {
 			return parse(reader);
 		}
 	}
 
-	/**
-	 * @param inputStream
-	 * @return
-	 * @throws IOException
-	 */
 	public static IniFile parse(InputStream inputStream) throws IOException {
 		return parse(new InputStreamReader(inputStream));
 	}
 
-	/**
-	 * @param reader
-	 * @return
-	 * @throws IOException
-	 */
 	public static IniFile parse(Reader reader) throws IOException {
 		final Pattern sectionPattern = Pattern.compile("\\s*\\[([^]]*)\\]\\s*");
 
@@ -114,47 +96,23 @@ public class IniFile {
 
 	// ********************
 
-	/**
-	 * @param section
-	 * @return
-	 */
 	public Set<String> getKeys(String section) {
 		Map<String, String> map = mapMap.get(section);
 		return map != null ? map.keySet() : Collections.emptySet();
 	}
 
-	/**
-	 * @param section
-	 * @return
-	 */
 	public Map<String, String> getKeyValueMap(String section) {
 		return mapMap.get(section);
 	}
 
-	/**
-	 * @param section
-	 * @param key
-	 * @return
-	 */
 	public boolean contains(String section, String key) {
 		return mapMap.containsKeys(section, key);
 	}
 
-	/**
-	 * @param section
-	 * @param key
-	 * @return
-	 */
 	public String getString(String section, String key) {
 		return getString(section, key, null);
 	}
 
-	/**
-	 * @param section
-	 * @param key
-	 * @param defaultvalue
-	 * @return
-	 */
 	public String getString(String section, String key, String defaultvalue) {
 		String string = mapMap.get(section, key);
 		return string != null ? string : defaultvalue;

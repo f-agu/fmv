@@ -32,16 +32,10 @@ import org.fagu.fmv.mymedia.utils.ScannerHelper;
  */
 public class ConfirmDeleteSynchronizer extends WrappedSynchronizer {
 
-	/**
-	 * @param synchronizer
-	 */
 	public ConfirmDeleteSynchronizer(Synchronizer synchronizer) {
 		super(synchronizer);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#delete(org.fagu.fmv.mymedia.sync.Item)
-	 */
 	@Override
 	public boolean delete(Item item) throws IOException {
 		if(ScannerHelper.yesNo("> Delete " + item)) {
@@ -50,9 +44,6 @@ public class ConfirmDeleteSynchronizer extends WrappedSynchronizer {
 		return false;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "confirm delete, " + super.toString();
