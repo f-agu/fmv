@@ -29,6 +29,7 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFindListener;
@@ -135,36 +136,29 @@ public class SoftSearch {
 	}
 
 	public Soft search() {
-		SoftLocator locator = getLocator();
-		Founds founds = locator.find(searchProperties);
-		return createAndfireEventFound(founds, locator);
-	}
-
-	public Soft search(SoftTester softTester) {
-		checkUsed();
-		SoftLocator locator = getLocator();
-		Founds founds = locator.find(searchProperties, softTester);
-		return createAndfireEventFound(founds, locator);
+		return searchByFactory(() -> getProvider().createSoftFoundFactory(searchProperties));
 	}
 
 	public Soft search(SoftFoundFactory softFoundFactory) {
-		checkUsed();
-		SoftLocator locator = getLocator();
-		Founds founds = locator.find(searchProperties, (file, loc, softPol) -> {
-			try {
-				SoftFound softFound = softFoundFactory.create(file, loc, softPol);
-				if(softFound == null) {
-					return SoftFound.foundBadSoft(file);
-				}
-				return softFound;
-			} catch(IOException e) {
-				return SoftFound.foundError(file, e.getMessage()).setLocalizedBy(locator.toString());
-			}
-		});
-		return createAndfireEventFound(founds, locator);
+		return searchByFactory(() -> softFoundFactory);
+	}
+
+	public Soft search(SoftTester softTester) {
+		return searchByTester(() -> softTester);
 	}
 
 	// *****************
+
+	private Soft searchByFactory(Supplier<SoftFoundFactory> softFoundFactorySupplier) {
+		return searchByTester(() -> softTester(getLocator(), softFoundFactorySupplier.get()));
+	}
+
+	private Soft searchByTester(Supplier<SoftTester> softTesterSupplier) {
+		checkUsed();
+		SoftLocator locator = getLocator();
+		Founds founds = locator.find(searchProperties, softTesterSupplier.get());
+		return createAndfireEventFound(founds, locator);
+	}
 
 	private void checkUsed() {
 		if(softProvider != null) {
@@ -206,6 +200,20 @@ public class SoftSearch {
 
 		softFindListener.eventFound(softLocator, soft);
 		return soft;
+	}
+
+	private SoftTester softTester(SoftLocator locator, SoftFoundFactory softFoundFactory) {
+		return (file, loc, softPol) -> {
+			try {
+				SoftFound softFound = softFoundFactory.create(file, loc, softPol);
+				if(softFound == null) {
+					return SoftFound.foundBadSoft(file);
+				}
+				return softFound;
+			} catch(IOException e) {
+				return SoftFound.foundError(file, e.getMessage()).setLocalizedBy(locator.toString());
+			}
+		};
 	}
 
 }
