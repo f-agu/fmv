@@ -25,6 +25,7 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,6 +67,11 @@ public class JavaSoftProvider extends SoftProvider {
 	JavaSoftProvider(String name, SoftPolicy softPolicy) {
 		super(name, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
 				.onAllPlatforms(minVersion(1, 8))));
+	}
+
+	@Override
+	public Optional<String> getGroupTitle() {
+		return Optional.of("Java");
 	}
 
 	@Override
