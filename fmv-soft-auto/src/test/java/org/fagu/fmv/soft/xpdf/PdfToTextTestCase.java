@@ -20,6 +20,7 @@ package org.fagu.fmv.soft.xpdf;
  * #L%
  */
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,9 +72,19 @@ public class PdfToTextTestCase {
 					.addCommonReadLine(output::add)
 					.addCommonReadLine(System.out::println)
 					.execute();
-			assertEquals(1, output.size());
+			output.forEach(l -> System.out.println("[" + l + "]"));
+			int size = output.size();
+			if(size == 1) { // provider = XPDF
+				assertEquals("Salut, E\u00E9\u00E9\u00E9 de test", output.get(0));
+			} else if(size == 3) {
+				assertEquals("Salut,", output.get(0));
+				assertEquals("", output.get(1));
+				assertEquals("Eééé de test", output.get(2));
+			} else {
+				fail("Output size should be 1 or 3: " + size);
+			}
+
 			// System.out.println(output.get(0));
-			assertEquals("Salut, E\u00E9\u00E9\u00E9 de test", output.get(0));
 		} finally {
 			FileUtils.deleteDirectory(folder);
 		}
