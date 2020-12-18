@@ -23,15 +23,16 @@ package org.fagu.fmv.soft.java;
 import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
 import org.fagu.fmv.soft.find.Locator;
 import org.fagu.fmv.soft.find.Locators;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
@@ -40,7 +41,9 @@ import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.utils.SearchPropertiesHelper;
+import org.fagu.fmv.soft.utils.SearchPropertiesHelper.SearchMatching;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
+import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
 
 
@@ -51,7 +54,11 @@ public class JavaSoftProvider extends SoftProvider {
 
 	private static final String PROP_VERSION_PATTERN = "soft.java.search.versionPattern";
 
-	private static final String DEFAULT_PATTERN_VERSION = "(.*) version \"(.*)\"";
+	private static final String PROP_DATE_PATTERN = "soft.java.search.datePattern";
+
+	private static final String DEFAULT_PATTERN_VERSION = "(.*) version \"(.*)\"(.*)";
+
+	private static final String DEFAULT_PATTERN_DATE = ".*([0-9]{4}\\-[0-9]{1,2}\\-[0-9]{1,2}).*";
 
 	public static final String NAME = "java";
 
@@ -76,14 +83,19 @@ public class JavaSoftProvider extends SoftProvider {
 
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		final Pattern pattern = Pattern.compile(new SearchPropertiesHelper(searchProperties, getName())
-				.getOrDefault(DEFAULT_PATTERN_VERSION, PROP_VERSION_PATTERN));
+		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, getName())
+				.forMatching(DEFAULT_PATTERN_VERSION, PROP_VERSION_PATTERN);
 		return prepareSoftFoundFactory()
 				.withParameters("-version")
-				.parseVersion(line -> {
-					Matcher matcher = pattern.matcher(line);
-					return matcher.matches() ? VersionParserManager.parse(matcher.group(2)) : null;
+				.parseVersionDate(line -> searchMatching.ifMatches(line, matcher -> {
+					Version version = VersionParserManager.parse(matcher.group(2));
+					Date date = null;
+					if(matcher.groupCount() > 2) {
+						date = parseDate(searchProperties, matcher.group(3));
+					}
+					return Optional.of(new VersionDate(version, date));
 				})
+						.orElse(null))
 				.build();
 	}
 
@@ -127,6 +139,23 @@ public class JavaSoftProvider extends SoftProvider {
 	@Override
 	public String getDownloadURL() {
 		return "https://www.java.com/download/";
+	}
+
+	// *****************************************************
+
+	private Date parseDate(Properties searchProperties, String remainLine) {
+		return new SearchPropertiesHelper(searchProperties, getName())
+				.forMatching(DEFAULT_PATTERN_DATE, PROP_DATE_PATTERN)
+				.ifMatches(remainLine, matcher -> {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					try {
+						return Optional.ofNullable(dateFormat.parse(matcher.group(1)));
+					} catch(Exception e) {
+						// ignore
+					}
+					return Optional.empty();
+				})
+				.orElse(null);
 	}
 
 }

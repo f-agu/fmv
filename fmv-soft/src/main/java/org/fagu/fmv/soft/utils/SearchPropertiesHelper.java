@@ -69,9 +69,12 @@ public class SearchPropertiesHelper {
 		return PlaceHolder.with(defaultValue).format(replacerChain);
 	}
 
+	public Pattern toPattern(String defaultPattern, String... patternKeys) {
+		return Pattern.compile(getOrDefault(defaultPattern, patternKeys));
+	}
+
 	public SearchMatching forMatching(String defaultPattern, String... patternKeys) {
-		Pattern pattern = Pattern.compile(getOrDefault(defaultPattern, patternKeys));
-		return new SearchMatching(pattern);
+		return new SearchMatching(toPattern(defaultPattern, patternKeys));
 	}
 
 	// ------------------------------------------

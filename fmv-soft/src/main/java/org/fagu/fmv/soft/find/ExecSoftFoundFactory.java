@@ -103,50 +103,43 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 		public ExecSoftFoundFactoryBuilder parseVersion(ParseVersion parseVersion) {
 			Objects.requireNonNull(parseVersion);
-			return parseFactory((file, softPolicy) -> {
-				return new Parser() {
+			return parseFactory((file, softPolicy) -> new Parser() {
 
-					private Version version;
+				private Version version;
 
-					@Override
-					public void readLine(String line) {
-						Version v = parseVersion.readLineAndParse(line);
-						if(v != null) {
-							version = v;
-						}
-					}
+				@Override
+				public void readLine(String line) {
+					version = parseVersion.readLineAndParse(line);
+				}
 
-					@Override
-					public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-						return softPolicy.toSoftFound(new VersionSoftInfo(file, softProvider.getName(), version));
-					}
-				};
+				@Override
+				public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
+					return softPolicy.toSoftFound(new VersionSoftInfo(file, softProvider.getName(), version));
+				}
 			});
 		}
 
 		public ExecSoftFoundFactoryBuilder parseVersionDate(ParseVersionDate parseVersiondate) {
 			Objects.requireNonNull(parseVersiondate);
-			return parseFactory((file, softPolicy) -> {
-				return new Parser() {
+			return parseFactory((file, softPolicy) -> new Parser() {
 
-					private Version version;
+				private Version version;
 
-					private Date date;
+				private Date date;
 
-					@Override
-					public void readLine(String line) {
-						VersionDate versionDate = parseVersiondate.readLineAndParse(line);
-						if(versionDate != null) {
-							versionDate.getVersion().ifPresent(v -> version = v);
-							versionDate.getDate().ifPresent(d -> date = d);
-						}
+				@Override
+				public void readLine(String line) {
+					VersionDate versionDate = parseVersiondate.readLineAndParse(line);
+					if(versionDate != null) {
+						versionDate.getVersion().ifPresent(v -> version = v);
+						versionDate.getDate().ifPresent(d -> date = d);
 					}
+				}
 
-					@Override
-					public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-						return softPolicy.toSoftFound(new VersionDateSoftInfo(file, softProvider.getName(), version, date));
-					}
-				};
+				@Override
+				public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
+					return softPolicy.toSoftFound(new VersionDateSoftInfo(file, softProvider.getName(), version, date));
+				}
 			});
 		}
 

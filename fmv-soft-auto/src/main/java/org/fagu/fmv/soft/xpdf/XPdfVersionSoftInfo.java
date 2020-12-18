@@ -22,6 +22,7 @@ package org.fagu.fmv.soft.xpdf;
 
 import java.io.File;
 
+import org.fagu.fmv.soft.find.SoftInfo;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.fmv.soft.xpdf.PdfSoftProvider.Provider;
 import org.fagu.version.Version;
@@ -41,6 +42,18 @@ public class XPdfVersionSoftInfo extends VersionSoftInfo {
 
 	public Provider getProvider() {
 		return provider;
+	}
+
+	@Override
+	public int compareTo(SoftInfo o) {
+		if(o instanceof XPdfVersionSoftInfo) {
+			XPdfVersionSoftInfo other = (XPdfVersionSoftInfo)o;
+			Provider otherProvider = other.getProvider();
+			if(provider != otherProvider) {
+				return provider == Provider.POPPLER ? 1 : - 1;
+			}
+		}
+		return super.compareTo(o);
 	}
 
 }

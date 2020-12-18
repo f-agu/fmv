@@ -27,14 +27,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -49,6 +47,7 @@ import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
+import org.fagu.fmv.soft.utils.SearchPropertiesHelper;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.fmv.soft.xpdf.exception.XpdfExceptionKnownAnalyzer;
 import org.fagu.version.Version;
@@ -59,6 +58,10 @@ import org.fagu.version.VersionParserManager;
  * @author f.agu
  */
 public abstract class PdfSoftProvider extends SoftProvider {
+
+	private static final String PROP_VERSION_PATTERN = "soft.xpdf.search.versionPattern";
+
+	private static final String DEFAULT_PATTERN_VERSION = "${soft.name} version ([0-9\\\\.]+)";
 
 	public PdfSoftProvider(String name) {
 		this(name, null);
@@ -80,9 +83,11 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+		final Pattern pattern = Pattern.compile(new SearchPropertiesHelper(searchProperties, getName())
+				.getOrDefault(DEFAULT_PATTERN_VERSION, PROP_VERSION_PATTERN));
 		return prepareSoftFoundFactory()
 				.withParameters("-v")
-				.parseFactory((file, softPolicy) -> createParser(file))
+				.parseFactory((file, softPolicy) -> createParser(file, pattern))
 				.exitValues(exitValues())
 				.timeOut(10_000)
 				.build();
@@ -90,11 +95,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 	@Override
 	public String getDownloadURL() {
-		final String DEFAULT_URL = "http://www.foolabs.com/xpdf/download.html";
-		if(SystemUtils.IS_OS_WINDOWS) {
-			return DEFAULT_URL;
-		}
-		return DEFAULT_URL + " (or http://poppler.freedesktop.org)";
+		return "http://www.xpdfreader.com/download.html, https://blog.alivate.com.au/tag/pdftotext/, http://www.foolabs.com/xpdf/download.html, http://poppler.freedesktop.org";
 	}
 
 	@Override
@@ -103,8 +104,11 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 		// On Windows & Eclipse, file.encoding=UTF-8 -> fix encoding
 		// On Windows & DOS, file.encoding=cp1252 -> do nothing
-		if(hasEncParameter() && softInfo != null && Provider.XPDF.equals(softInfo.getProvider()) && SystemUtils.IS_OS_WINDOWS && "UTF-8".equals(System
-				.getProperty("file.encoding"))) {
+		if(hasEncParameter()
+				&& softInfo != null
+				&& Provider.XPDF.equals(softInfo.getProvider())
+				&& SystemUtils.IS_OS_WINDOWS
+				&& "UTF-8".equals(System.getProperty("file.encoding"))) {
 			List<String> newParams = new ArrayList<>(parameters);
 			if( ! parameters.contains("-enc")) {
 				newParams.add(0, "-enc");
@@ -112,13 +116,6 @@ public abstract class PdfSoftProvider extends SoftProvider {
 			}
 			SoftExecutor softExecutor = new SoftExecutor(this, execFile, newParams);
 			softExecutor.charset(StandardCharsets.UTF_8);
-			// depends on minimal version ? I don't know
-			// Version minVer = new Version(3, 4);
-			// softInfo.getVersion().ifPresent(v -> {
-			// if(v.isUpperOrEqualsThan(minVer)) {
-			// softExecutor.charset(StandardCharsets.UTF_8);
-			// }
-			// });
 			return softExecutor;
 		}
 
@@ -131,14 +128,26 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		if(SystemUtils.IS_OS_WINDOWS) {
 			ProgramFilesLocatorSupplier.with(softLocator)
 					.find(programFile -> {
-						File[] listFiles = programFile.listFiles(f -> f.getName().startsWith("xpdf"));
-						if(listFiles == null || listFiles.length == 0) {
-							return Collections.emptyList();
+						List<File> files = new ArrayList<>();
+
+						// poppler
+						File[] popplerFiles = programFile.listFiles(f -> f.getName().toLowerCase().startsWith("poppler"));
+						if(popplerFiles != null && popplerFiles.length != 0) {
+							Arrays.stream(popplerFiles)
+									.map(f -> new File(f, "bin"))
+									.forEach(files::add);
 						}
-						String arch = "bin" + System.getProperty("sun.arch.data.model");
-						return Arrays.asList(listFiles).stream()
-								.map(f -> new File(f, arch))
-								.collect(Collectors.toList());
+
+						// xpdf
+						File[] xpdfFiles = programFile.listFiles(f -> f.getName().toLowerCase().startsWith("xpdf"));
+						if(xpdfFiles != null && xpdfFiles.length != 0) {
+							String arch = "bin" + System.getProperty("sun.arch.data.model");
+							Arrays.asList(xpdfFiles).stream()
+									.map(f -> new File(f, arch))
+									.forEach(files::add);
+						}
+
+						return files;
 					})
 					.supplyIn();
 			softLocator.addDefaultLocator();
@@ -163,8 +172,8 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 	// ---------------------------------
 
-	protected enum Provider {
-		XPDF, POPPLER
+	public enum Provider {
+		POPPLER, XPDF
 	}
 
 	// ---------------------------------
@@ -174,7 +183,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		if(Provider.POPPLER.equals(provider)) {
 			minVer = new Version(0, 12);
 		} else if(Provider.XPDF.equals(provider)) {
-			minVer = Version.V3;
+			minVer = Version.V4;
 		} else {
 			throw new RuntimeException("Undefined provider: " + provider);
 		}
@@ -184,9 +193,11 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	// ***********************************************************************
 
 	Parser createParser(File file) {
-		return new Parser() {
+		return createParser(file, Pattern.compile(DEFAULT_PATTERN_VERSION));
+	}
 
-			private Pattern pattern = Pattern.compile(getName() + " version ([0-9\\.]+)");
+	Parser createParser(File file, Pattern pattern) {
+		return new Parser() {
 
 			private Version version;
 
@@ -194,6 +205,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 			@Override
 			public void readLine(String line) {
+
 				Matcher matcher = pattern.matcher(line);
 				if(matcher.matches()) {
 					version = VersionParserManager.parse(matcher.group(1));
@@ -216,7 +228,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 		Version v012 = new Version(0, 12);
 		BiPredicate<SoftInfo, Provider> isProvider = (s, p) -> s instanceof XPdfVersionSoftInfo && ((XPdfVersionSoftInfo)s).getProvider() == p;
 		return new VersionSoftPolicy()
-				.on("xpdf", s -> isProvider.test(s, Provider.XPDF), minVersion(Version.V3))
+				.on("xpdf", s -> isProvider.test(s, Provider.XPDF), minVersion(Version.V4))
 				.on("poppler", s -> isProvider.test(s, Provider.POPPLER), minVersion(v012))
 				.onAllPlatforms(minVersion(v012));
 	}

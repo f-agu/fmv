@@ -21,6 +21,9 @@ package org.fagu.fmv.soft.find.info;
  */
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 
@@ -32,21 +35,30 @@ import org.fagu.version.Version;
  */
 public class VersionDateSoftInfo extends VersionSoftInfo {
 
-	private final Date date;
+	private final LocalDateTime date;
 
 	public VersionDateSoftInfo(File file, String softName, Version version, Date date) {
 		super(file, softName, version);
-		this.date = cloneDate(date);
+		this.date = date != null ? LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()) : null;
+	}
+
+	public VersionDateSoftInfo(File file, String softName, Version version, LocalDateTime date) {
+		super(file, softName, version);
+		this.date = date;
 	}
 
 	public Optional<Date> getDate() {
-		return Optional.ofNullable(cloneDate(date));
+		return Optional.ofNullable(date)
+				.map(d -> Date.from(d.atZone(ZoneId.systemDefault()).toInstant()));
 	}
 
-	// ************************************
+	public Optional<LocalDateTime> getLocalDateTime() {
+		return Optional.ofNullable(date);
+	}
 
-	private static Date cloneDate(Date date) {
-		return date != null ? (Date)date.clone() : null;
+	public Optional<LocalDate> getLocalDate() {
+		return Optional.ofNullable(date)
+				.map(LocalDateTime::toLocalDate);
 	}
 
 }

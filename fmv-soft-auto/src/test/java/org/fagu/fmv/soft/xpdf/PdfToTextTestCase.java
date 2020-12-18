@@ -33,9 +33,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.SystemUtils;
-import org.fagu.fmv.soft.ExecuteDelegateRepository;
-import org.fagu.fmv.soft.LogExecuteDelegate;
+import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftTestCase;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -45,9 +45,15 @@ import org.junit.Test;
 public class PdfToTextTestCase {
 
 	@Test
+	@Ignore
 	public void testSearch() {
-		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
-		PdfToText.search();
+		// ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
+		Soft soft = PdfToText.search();
+		soft.getFounds().getFounds().forEach(softFound -> {
+			System.out.println(softFound.getFile() + "   " + ((XPdfVersionSoftInfo)softFound.getSoftInfo()).getProvider());
+		});
+		XPdfVersionSoftInfo softInfo = (XPdfVersionSoftInfo)soft.getFirstInfo();
+		System.out.println(softInfo.getProvider());
 	}
 
 	@Test

@@ -52,7 +52,7 @@ public class FFInfo extends VersionDateSoftInfo {
 
 	protected FFInfo(File file, Version version, String softName, Date builtDate, Integer builtVersion, Set<String> configSet,
 			Map<String, Version> libVersionMap) {
-		super(file, softName, null, null);
+		super(file, softName, null, (Date)null);
 		this.version = version;
 		this.builtVersion = builtVersion;
 		this.builtDate = estimateBuildDate(version, builtVersion, builtDate);
