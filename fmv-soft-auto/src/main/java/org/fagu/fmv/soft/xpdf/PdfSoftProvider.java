@@ -50,6 +50,8 @@ import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.utils.SearchPropertiesHelper;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.fmv.soft.xpdf.exception.XpdfExceptionKnownAnalyzer;
+import org.fagu.fmv.utils.PlaceHolder;
+import org.fagu.fmv.utils.Replacers;
 import org.fagu.version.Version;
 import org.fagu.version.VersionParserManager;
 
@@ -193,7 +195,11 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	// ***********************************************************************
 
 	Parser createParser(File file) {
-		return createParser(file, Pattern.compile(DEFAULT_PATTERN_VERSION));
+		String pattern = PlaceHolder.format(
+				DEFAULT_PATTERN_VERSION,
+				Replacers.chain()
+						.keyValue("soft.name", getName()));
+		return createParser(file, Pattern.compile(pattern));
 	}
 
 	Parser createParser(File file, Pattern pattern) {

@@ -65,7 +65,7 @@ public class PdfInfoSoftProviderTestCase {
 	@Test
 	public void testSoftPolicy() throws IOException {
 		PdfInfoSoftProvider softProvider = new PdfInfoSoftProvider();
-		assertEquals("xpdf[>= v3] ; poppler[>= v0.12] ; All platforms[>= v0.12]", softProvider.getMinVersion());
+		assertEquals("xpdf[>= v4] ; poppler[>= v0.12] ; All platforms[>= v0.12]", softProvider.getMinVersion());
 	}
 
 	// *******************************************************
