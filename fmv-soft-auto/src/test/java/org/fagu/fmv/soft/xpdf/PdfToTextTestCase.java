@@ -79,7 +79,7 @@ public class PdfToTextTestCase {
 			} else if(size == 3) {
 				assertEquals("Salut,", output.get(0));
 				assertEquals("", output.get(1));
-				assertEquals("Eééé de test", output.get(2));
+				assertEquals("E\u00E9\u00E9\u00E9 de test", output.get(2));
 			} else {
 				fail("Output size should be 1 or 3: " + size);
 			}
