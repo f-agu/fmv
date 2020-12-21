@@ -21,14 +21,14 @@ package org.fagu.fmv.soft.spring;
  */
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.find.Locator;
 import org.fagu.fmv.soft.spring.config.FmvProperties;
-import org.fagu.fmv.soft.spring.config.FmvProperties.Soft;
+import org.fagu.fmv.soft.spring.config.FmvProperties.SoftProperties;
 
 
 /**
@@ -45,15 +45,11 @@ public class SpringLocator implements Locator {
 
 	@Override
 	public List<File> locate(String softName) {
-		Soft soft = properties.getSoft().get(softName);
-		if(soft == null) {
-			return Collections.emptyList();
-		}
-		String path = soft.getPath();
-		if(StringUtils.isBlank(path)) {
-			return Collections.emptyList();
-		}
-		return Collections.singletonList(new File(path));
+		return properties.findSoftByName(softName)
+				.map(SoftProperties::getPath)
+				.filter(StringUtils::isNotBlank)
+				.map(File::new)
+				.collect(Collectors.toList());
 	}
 
 }

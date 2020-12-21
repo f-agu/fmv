@@ -41,6 +41,7 @@ import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftInfo;
@@ -61,8 +62,6 @@ import org.fagu.version.VersionParserManager;
  * @author f.agu
  */
 public abstract class PdfSoftProvider extends SoftProvider {
-
-	private static final String PROP_VERSION_PATTERN = "soft.xpdf.search.versionPattern";
 
 	private static final String DEFAULT_PATTERN_VERSION = "${soft.name} version ([0-9\\\\.]+)";
 
@@ -85,9 +84,14 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	}
 
 	@Override
+	public SearchBehavior getSearchBehavior() {
+		return SearchBehavior.onlyVersion();
+	}
+
+	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		final Pattern pattern = Pattern.compile(new SearchPropertiesHelper(searchProperties, getName())
-				.getOrDefault(DEFAULT_PATTERN_VERSION, PROP_VERSION_PATTERN));
+		final Pattern pattern = new SearchPropertiesHelper(searchProperties, this)
+				.toPatternVersion(DEFAULT_PATTERN_VERSION);
 		return prepareSoftFoundFactory()
 				.withParameters("-v")
 				.parseFactory((file, softPolicy) -> createParser(file, pattern))

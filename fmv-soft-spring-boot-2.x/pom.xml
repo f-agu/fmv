@@ -12,10 +12,6 @@
 	<name>fmv-soft-spring-boot-2.x</name>
 	<description />
 	
-	<properties>
-		<spring-boot.version>2.3.2.RELEASE</spring-boot.version>
-	</properties>
-	
 	<dependencies>
 		<dependency>
 			<groupId>org.fagu</groupId>
@@ -26,7 +22,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
-			<version>${spring-boot.version}</version>
+			<version>${spring-boot2.version}</version>
 			<optional>true</optional>
 		</dependency>
 

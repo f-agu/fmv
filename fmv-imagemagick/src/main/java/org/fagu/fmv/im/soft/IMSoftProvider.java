@@ -41,6 +41,7 @@ import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
+import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftInfo;
 import org.fagu.fmv.soft.find.SoftLocator;
@@ -59,14 +60,6 @@ import org.fagu.version.VersionParserManager;
  * @author f.agu
  */
 public abstract class IMSoftProvider extends SoftProvider {
-
-	private static final String PROP_VERSION_PATTERN = "soft.im.search.versionPattern";
-
-	private static final String PROP_VERSION_SOFT_PATTERN = "soft.im.${soft.name}.search.versionPattern";
-
-	private static final String PROP_DATE_PATTERN = "soft.gs.search.datePattern";
-
-	private static final String PROP_DATE_SOFT_PATTERN = "soft.gs.${soft.name}.search.datePattern";
 
 	private static final String SOFT_MAGICK_NAME = "magick";
 
@@ -93,9 +86,14 @@ public abstract class IMSoftProvider extends SoftProvider {
 	}
 
 	@Override
+	public SearchBehavior getSearchBehavior() {
+		return SearchBehavior.versionAndDate();
+	}
+
+	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, getName())
-				.forMatching(DEFAULT_PATTERN_VERSION, PROP_VERSION_SOFT_PATTERN, PROP_VERSION_PATTERN);
+		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, this)
+				.forMatchingVersion(DEFAULT_PATTERN_VERSION);
 		return prepareSoftFoundFactory()
 				.withParameters("-version")
 				.parseVersionDate(line -> searchMatching.ifMatches(line, matcher -> {
@@ -162,8 +160,8 @@ public abstract class IMSoftProvider extends SoftProvider {
 	// ******************************************************
 
 	private Date parseDate(Properties searchProperties, String remainLine) {
-		SearchPropertiesHelper searchPropertiesHelper = new SearchPropertiesHelper(searchProperties, getName());
-		Pattern pattern = Pattern.compile(searchPropertiesHelper.getOrDefault(DEFAULT_PATTERN_DATE_1, PROP_DATE_SOFT_PATTERN, PROP_DATE_PATTERN));
+		SearchPropertiesHelper searchPropertiesHelper = new SearchPropertiesHelper(searchProperties, this);
+		Pattern pattern = searchPropertiesHelper.toPatternDate(DEFAULT_PATTERN_DATE_1);
 		Matcher matcher = pattern.matcher(remainLine);
 		if(matcher.matches()) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

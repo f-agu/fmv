@@ -107,6 +107,7 @@ public class Soft {
 			public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 				throw new RuntimeException("Not available !");
 			}
+
 		};
 		TreeSet<SoftFound> founds = new TreeSet<>(Collections.singleton(SoftFound.found(file)));
 		return new Soft(new Founds(softProvider.getName(), founds, null, null), softProvider);

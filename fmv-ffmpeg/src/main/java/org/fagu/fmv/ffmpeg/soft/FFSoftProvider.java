@@ -42,6 +42,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.ffmpeg.exception.FFExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
@@ -78,6 +79,11 @@ public abstract class FFSoftProvider extends SoftProvider {
 	@Override
 	public Optional<String> getGroupTitle() {
 		return Optional.of("FFmpeg");
+	}
+
+	@Override
+	public SearchBehavior getSearchBehavior() {
+		return SearchBehavior.empty();
 	}
 
 	@Override

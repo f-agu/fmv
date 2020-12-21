@@ -64,6 +64,9 @@
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
+		<spring-boot1.version>1.5.21.RELEASE</spring-boot1.version>
+		<spring-boot2.version>2.3.2.RELEASE</spring-boot2.version>
+		
 		<commons-cli.version>1.4</commons-cli.version>
 		<commons-codec.version>1.13</commons-codec.version>
 		<commons-collections4.version>4.4</commons-collections4.version>

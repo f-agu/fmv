@@ -31,6 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
@@ -46,10 +47,6 @@ import org.fagu.version.VersionParserManager;
  * @created 5 juin 2017 09:57:00
  */
 public abstract class MSoftProvider extends SoftProvider {
-
-	private static final String PROP_VERSION_PATTERN = "soft.mplayer.search.versionPattern";
-
-	private static final String PROP_VERSION_SOFT_PATTERN = "soft.mplayer.${soft.name}.search.versionPattern";
 
 	private static final String DEFAULT_SUFFIX_PATTERN_VERSION = "${soft.name} sherpya-r(\\d+)+.*-[\\d\\.]+ \\(C\\).*";
 
@@ -69,14 +66,18 @@ public abstract class MSoftProvider extends SoftProvider {
 	}
 
 	@Override
+	public SearchBehavior getSearchBehavior() {
+		return SearchBehavior.onlyVersion();
+	}
+
+	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		final Pattern winPattern = Pattern.compile(new SearchPropertiesHelper(searchProperties, getName())
-				.getOrDefault(DEFAULT_SUFFIX_PATTERN_VERSION, PROP_VERSION_SOFT_PATTERN, PROP_VERSION_PATTERN),
-				Pattern.CASE_INSENSITIVE);
+		final Pattern pattern = new SearchPropertiesHelper(searchProperties, this)
+				.toPatternVersion(DEFAULT_SUFFIX_PATTERN_VERSION);
 		return prepareSoftFoundFactory()
 				.withoutParameter()
 				.parseVersion(line -> {
-					Matcher matcher = winPattern.matcher(line);
+					Matcher matcher = pattern.matcher(line);
 					return matcher.matches() ? VersionParserManager.parse(matcher.group(1)) : null;
 				})
 				.exitValue(MEncoderSoftProvider.NAME.equals(getName()) ? 1 : 0)

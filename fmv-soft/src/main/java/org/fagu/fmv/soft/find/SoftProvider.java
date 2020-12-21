@@ -78,6 +78,10 @@ public abstract class SoftProvider {
 
 	// --------------------------------------
 
+	public SearchBehavior getSearchBehavior() {
+		return SearchBehavior.empty();
+	}
+
 	public SoftPolicy getSoftPolicy() {
 		return softPolicy;
 	}

@@ -32,11 +32,13 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
+import org.fagu.fmv.soft.utils.SearchPropertiesHelper;
 import org.fagu.fmv.soft.win32.ProgramFilesLocatorSupplier;
 import org.fagu.version.VersionParserManager;
 
@@ -45,6 +47,8 @@ import org.fagu.version.VersionParserManager;
  * @author f.agu
  */
 public abstract class GPACSoftProvider extends SoftProvider {
+
+	private static final String DEFAULT_PATTERN_VERSION = ".*GPAC version ([\\d+\\.]+).*";
 
 	private final String foundParameter;
 
@@ -60,9 +64,15 @@ public abstract class GPACSoftProvider extends SoftProvider {
 	}
 
 	@Override
+	public SearchBehavior getSearchBehavior() {
+		return SearchBehavior.onlyVersion();
+	}
+
+	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
 		// GPAC version 0.7.2-DEV-rev1143-g1c540fec-master
-		final Pattern pattern = Pattern.compile(".*GPAC version ([\\d+\\.]+).*");
+		final Pattern pattern = new SearchPropertiesHelper(searchProperties, this)
+				.toPatternVersion(DEFAULT_PATTERN_VERSION);
 		return prepareSoftFoundFactory()
 				.withParameters(foundParameter)
 				.parseVersion(line -> {

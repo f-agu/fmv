@@ -35,6 +35,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
 import org.fagu.fmv.soft.find.Locator;
 import org.fagu.fmv.soft.find.Locators;
+import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
@@ -51,10 +52,6 @@ import org.fagu.version.VersionParserManager;
  * @author f.agu
  */
 public class JavaSoftProvider extends SoftProvider {
-
-	private static final String PROP_VERSION_PATTERN = "soft.java.search.versionPattern";
-
-	private static final String PROP_DATE_PATTERN = "soft.java.search.datePattern";
 
 	private static final String DEFAULT_PATTERN_VERSION = "(.*) version \"(.*)\"(.*)";
 
@@ -82,9 +79,14 @@ public class JavaSoftProvider extends SoftProvider {
 	}
 
 	@Override
+	public SearchBehavior getSearchBehavior() {
+		return SearchBehavior.versionAndDate();
+	}
+
+	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, getName())
-				.forMatching(DEFAULT_PATTERN_VERSION, PROP_VERSION_PATTERN);
+		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, this)
+				.forMatchingVersion(DEFAULT_PATTERN_VERSION);
 		return prepareSoftFoundFactory()
 				.withParameters("-version")
 				.parseVersionDate(line -> searchMatching.ifMatches(line, matcher -> {
@@ -144,8 +146,8 @@ public class JavaSoftProvider extends SoftProvider {
 	// *****************************************************
 
 	private Date parseDate(Properties searchProperties, String remainLine) {
-		return new SearchPropertiesHelper(searchProperties, getName())
-				.forMatching(DEFAULT_PATTERN_DATE, PROP_DATE_PATTERN)
+		return new SearchPropertiesHelper(searchProperties, this)
+				.forMatchingDate(DEFAULT_PATTERN_DATE)
 				.ifMatches(remainLine, matcher -> {
 					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 					try {

@@ -22,7 +22,11 @@ package org.fagu.fmv.soft.spring.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 
+import org.fagu.fmv.soft.utils.SearchPropertiesHelper;
+import org.fagu.fmv.utils.PlaceHolder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
@@ -33,21 +37,36 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("fmv")
 public class FmvProperties {
 
-	private Map<String, Soft> soft = new HashMap<>();
+	public static final String PATTERN = "fmv.soft.${group.name}.${soft.name}";
 
-	public Map<String, Soft> getSoft() {
+	// Map<group-name, Map<soft-name, SoftProperties>>
+	private Map<String, Map<String, SoftProperties>> soft = new HashMap<>();
+
+	public Map<String, Map<String, SoftProperties>> getSoft() {
 		return soft;
 	}
 
-	public void setSoft(Map<String, Soft> soft) {
+	public void setSoft(Map<String, Map<String, SoftProperties>> soft) {
 		this.soft = soft;
+	}
+
+	public Stream<SoftProperties> findSoftByName(String name) {
+		return soft.values().stream()
+				.map(m -> m.get(name))
+				.filter(Objects::nonNull);
+	}
+
+	public static String getDefaultPropertyKeys(String groupName, String softName) {
+		return PlaceHolder.with(PATTERN).format(SearchPropertiesHelper.replacer(groupName, softName));
 	}
 
 	// -------------------------------------
 
-	public static class Soft {
+	public static class SoftProperties {
 
 		private String path;
+
+		private SearchProperties search = new SearchProperties();
 
 		public String getPath() {
 			return path;
@@ -55,6 +74,39 @@ public class FmvProperties {
 
 		public void setPath(String path) {
 			this.path = path;
+		}
+
+		public SearchProperties getSearch() {
+			return search;
+		}
+
+		public void setSearch(SearchProperties search) {
+			this.search = search;
+		}
+
+		// -------------------------------------
+
+		public static class SearchProperties {
+
+			private String versionPattern;
+
+			private String datePattern;
+
+			public String getVersionPattern() {
+				return versionPattern;
+			}
+
+			public void setVersionPattern(String versionPattern) {
+				this.versionPattern = versionPattern;
+			}
+
+			public String getDatePattern() {
+				return datePattern;
+			}
+
+			public void setDatePattern(String datePattern) {
+				this.datePattern = datePattern;
+			}
 		}
 	}
 

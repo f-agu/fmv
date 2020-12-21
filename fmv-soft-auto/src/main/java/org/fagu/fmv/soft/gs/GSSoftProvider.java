@@ -37,6 +37,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
+import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
@@ -54,10 +55,6 @@ import org.fagu.version.VersionParserManager;
  * @author f.agu
  */
 public class GSSoftProvider extends SoftProvider {
-
-	private static final String PROP_VERSION_PATTERN = "soft.gs.search.versionPattern";
-
-	private static final String PROP_DATE_PATTERN = "soft.gs.search.datePattern";
 
 	private static final String DEFAULT_PATTERN_VERSION = "GPL Ghostscript ([0-9\\.\\-]+) (.*)";
 
@@ -80,9 +77,14 @@ public class GSSoftProvider extends SoftProvider {
 	}
 
 	@Override
+	public SearchBehavior getSearchBehavior() {
+		return SearchBehavior.versionAndDate();
+	}
+
+	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, getName())
-				.forMatching(DEFAULT_PATTERN_VERSION, PROP_VERSION_PATTERN);
+		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, this)
+				.forMatchingVersion(DEFAULT_PATTERN_VERSION);
 		return prepareSoftFoundFactory()
 				.withParameters("-version", "-q")
 				.parseVersionDate(line -> searchMatching.ifMatches(line, matcher -> {
@@ -144,8 +146,8 @@ public class GSSoftProvider extends SoftProvider {
 	// *****************************************************
 
 	private Date parseDate(Properties searchProperties, String remainLine) {
-		return new SearchPropertiesHelper(searchProperties, getName())
-				.forMatching(DEFAULT_PATTERN_DATE, PROP_DATE_PATTERN)
+		return new SearchPropertiesHelper(searchProperties, this)
+				.forMatchingDate(DEFAULT_PATTERN_DATE)
 				.ifMatches(remainLine, matcher -> {
 					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 					try {
