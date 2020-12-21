@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -175,7 +176,29 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	// ---------------------------------
 
 	public enum Provider {
-		POPPLER, XPDF
+
+		POPPLER() {
+
+			@Override
+			public List<String> getDefaultOptionParameters() {
+				if(SystemUtils.IS_OS_WINDOWS) {
+					return Arrays.asList("-enc", "Latin1");
+				}
+				return Collections.emptyList();
+			}
+		},
+		XPDF() {
+
+			@Override
+			public List<String> getDefaultOptionParameters() {
+				if(SystemUtils.IS_OS_WINDOWS) {
+					return Arrays.asList("-enc", "UTF-8");
+				}
+				return Collections.emptyList();
+			}
+		};
+
+		public abstract List<String> getDefaultOptionParameters();
 	}
 
 	// ---------------------------------

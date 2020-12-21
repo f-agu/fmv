@@ -190,7 +190,7 @@ public class SoftFound implements Comparable<SoftFound> {
 		StringBuilder buf = new StringBuilder();
 		buf.append(foundReason.name());
 		if(file != null) {
-			buf.append(':').append(file);
+			buf.append(": ").append(file);
 		}
 		if(softInfo != null) {
 			buf.append(' ').append('(').append(softInfo).append(')');

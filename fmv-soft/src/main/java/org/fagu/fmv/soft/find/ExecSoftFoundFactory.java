@@ -109,7 +109,10 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 				@Override
 				public void readLine(String line) {
-					version = parseVersion.readLineAndParse(line);
+					Version v = parseVersion.readLineAndParse(line);
+					if(v != null) {
+						version = v;
+					}
 				}
 
 				@Override

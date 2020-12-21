@@ -33,7 +33,6 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftTestCase;
 import org.junit.Ignore;
@@ -66,25 +65,29 @@ public class PdfToTextTestCase {
 			File srcFile = extractResource(folder, "salut.pdf");
 
 			List<String> output = new ArrayList<>();
-			PdfToText.search()
-					.withParameters(getParameters(srcFile.getPath(), "-"))
-					// .logCommandLine(System.out::println)
+			Soft soft = PdfToText.search();
+			soft
+					.withParameters(getParameters(soft, srcFile.getPath(), "-"))
+					.logCommandLine(System.out::println)
 					.addCommonReadLine(output::add)
-					.addCommonReadLine(System.out::println)
+					// .addCommonReadLine(System.out::println)
 					.execute();
-			output.forEach(l -> System.out.println("[" + l + "]"));
+			// output.forEach(l -> System.out.println("[" + l + "]"));
 			int size = output.size();
+
 			if(size == 1) { // provider = XPDF
 				assertEquals("Salut, E\u00E9\u00E9\u00E9 de test", output.get(0));
-			} else if(size == 3) {
+
+			} else if(size == 3) { // provider = POPPLER
+				String s = output.get(2);
 				assertEquals("Salut,", output.get(0));
 				assertEquals("", output.get(1));
-				assertEquals("E\u00E9\u00E9\u00E9 de test", output.get(2));
+				assertEquals("E\u00E9\u00E9\u00E9 de test", s);
+
 			} else {
 				fail("Output size should be 1 or 3: " + size);
 			}
 
-			// System.out.println(output.get(0));
 		} finally {
 			FileUtils.deleteDirectory(folder);
 		}
@@ -92,12 +95,10 @@ public class PdfToTextTestCase {
 
 	// ******************************************
 
-	private List<String> getParameters(String... parameters) {
+	private List<String> getParameters(Soft soft, String... parameters) {
+		XPdfVersionSoftInfo softInfo = (XPdfVersionSoftInfo)soft.getFirstFound().getSoftInfo();
 		List<String> params = new ArrayList<>(4);
-		if(SystemUtils.IS_OS_WINDOWS) {
-			// params.add("-enc");
-			// params.add("UTF-8");
-		}
+		params.addAll(softInfo.getProvider().getDefaultOptionParameters());
 		for(String param : parameters) {
 			params.add(param);
 		}

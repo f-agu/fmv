@@ -50,7 +50,10 @@ public class SoftTestCase {
 				NavigableSet<SoftFound> founds = s.getFounds().getFounds();
 				if(founds.isEmpty() || (founds.size() == 1 && FoundReasons.NOT_FOUND == founds.first().getFoundReason())) {
 					System.out.println(prefix + " ==== NOT FOUND ==== " + s.getSoftProvider().getDownloadURL());
+				} else if(founds.size() == 1) {
+					System.out.println(prefix + "############## " + founds.first());
 				} else {
+					System.out.println(prefix);
 					for(SoftFound softFound : founds) {
 						System.out.println("    " + softFound);
 					}

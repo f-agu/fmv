@@ -1,5 +1,8 @@
 package org.fagu.fmv.soft.gpac;
 
+import org.fagu.fmv.soft.ExecuteDelegateRepository;
+import org.fagu.fmv.soft.LogExecuteDelegate;
+
 /*-
  * #%L
  * fmv-soft-auto
@@ -34,6 +37,7 @@ public class GPACSoftProviderTestCase {
 	@Test
 	@Ignore
 	public void testSearchMP4Box() {
+		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Soft soft = MP4Box.search();
 		System.out.println(soft.isFound());
 		System.out.println(soft.getFile());
