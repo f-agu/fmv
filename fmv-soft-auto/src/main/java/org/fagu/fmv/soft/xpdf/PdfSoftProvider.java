@@ -102,7 +102,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 	@Override
 	public String getDownloadURL() {
-		return "http://www.xpdfreader.com/download.html, https://blog.alivate.com.au/tag/pdftotext/, http://www.foolabs.com/xpdf/download.html, http://poppler.freedesktop.org";
+		return "http://www.xpdfreader.com/download.html, https://blog.alivate.com.au/tag/pdftotext/, http://poppler.freedesktop.org";
 	}
 
 	@Override
@@ -196,7 +196,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 			@Override
 			public List<String> getDefaultOptionParameters() {
 				if(SystemUtils.IS_OS_WINDOWS) {
-					return Arrays.asList("-enc", "UTF-8");
+					return Arrays.asList("-enc", "Latin1");
 				}
 				return Collections.emptyList();
 			}

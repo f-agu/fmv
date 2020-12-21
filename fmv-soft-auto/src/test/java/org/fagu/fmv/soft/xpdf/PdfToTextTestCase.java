@@ -35,7 +35,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftTestCase;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -45,7 +44,7 @@ import org.junit.Test;
 public class PdfToTextTestCase {
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testSearch() {
 		// ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Soft soft = PdfToText.search();
