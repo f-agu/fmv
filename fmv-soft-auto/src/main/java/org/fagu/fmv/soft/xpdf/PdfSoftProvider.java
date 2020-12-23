@@ -186,7 +186,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 			@Override
 			public List<String> getDefaultOptionParameters() {
 				if(SystemUtils.IS_OS_WINDOWS) {
-					return Arrays.asList("-enc", "Latin1");
+					return Arrays.asList("-enc", "UTF-8");
 				}
 				return Collections.emptyList();
 			}
@@ -196,7 +196,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 			@Override
 			public List<String> getDefaultOptionParameters() {
 				if(SystemUtils.IS_OS_WINDOWS) {
-					return Arrays.asList("-enc", "Latin1");
+					return Arrays.asList("-enc", "UTF-8");
 				}
 				return Collections.emptyList();
 			}
