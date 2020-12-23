@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +70,7 @@ public class PdfToTextTestCase {
 					.withParameters(getParameters(soft, srcFile.getPath(), "-"))
 					.logCommandLine(System.out::println)
 					.addCommonReadLine(output::add)
+					.charset(StandardCharsets.UTF_8)
 					// .addCommonReadLine(System.out::println)
 					.execute();
 			// output.forEach(l -> System.out.println("[" + l + "]"));
