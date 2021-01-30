@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -127,10 +126,11 @@ public class EBooksFile {
 	public File writeMetadatas(Map<String, String> metadataMap) throws IOException {
 		String fileName = file.getName();
 		File outFile = File.createTempFile(FilenameUtils.getBaseName(fileName), '.' + FilenameUtils.getExtension(fileName), file.getParentFile());
-		try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file));
+
+		try (ZipArchiveInputStream zipArchiveInputStream = new ZipArchiveInputStream(new FileInputStream(file));
 				ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(outFile), StandardCharsets.UTF_8)) {
-			ZipEntry zipEntry = null;
-			while((zipEntry = zipInputStream.getNextEntry()) != null) {
+			ZipArchiveEntry zipEntry = null;
+			while((zipEntry = zipArchiveInputStream.getNextZipEntry()) != null) {
 				// System.out.println(zipEntry.getName());
 
 				ZipEntry newZipEntry = new ZipEntry(zipEntry.getName());
@@ -138,13 +138,13 @@ public class EBooksFile {
 				zipOutputStream.putNextEntry(newZipEntry);
 
 				if(zipEntry.getName().endsWith(".opf")) {
-					byte[] opfData = overwriteMetadata(new UnclosedInputStream(zipInputStream), metadataMap);
+					byte[] opfData = overwriteMetadata(new UnclosedInputStream(zipArchiveInputStream), metadataMap);
 					zipEntry.setSize(opfData.length);
 					try (ByteArrayInputStream bais = new ByteArrayInputStream(opfData)) {
 						IOUtils.copyLarge(bais, zipOutputStream);
 					}
 				} else {
-					IOUtils.copyLarge(zipInputStream, zipOutputStream);
+					IOUtils.copyLarge(zipArchiveInputStream, zipOutputStream);
 				}
 				zipOutputStream.closeEntry();
 			}
