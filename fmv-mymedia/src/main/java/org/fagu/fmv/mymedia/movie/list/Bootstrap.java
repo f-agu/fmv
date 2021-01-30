@@ -46,8 +46,6 @@ import org.fagu.fmv.media.FileTypeUtils;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.mymedia.logger.Loggers;
-import org.fagu.fmv.mymedia.movie.list.column.AgeLegalColumn;
-import org.fagu.fmv.mymedia.movie.list.column.AgeSuggestedColumn;
 import org.fagu.fmv.mymedia.movie.list.column.AudioCodecLongNameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.AudioCodecNameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.AudioColumn;
@@ -56,8 +54,6 @@ import org.fagu.fmv.mymedia.movie.list.column.FMVTreatedColumn;
 import org.fagu.fmv.mymedia.movie.list.column.LastModifiedDateColumn;
 import org.fagu.fmv.mymedia.movie.list.column.NameColumn;
 import org.fagu.fmv.mymedia.movie.list.column.PathColumn;
-import org.fagu.fmv.mymedia.movie.list.column.SagaNameColumn;
-import org.fagu.fmv.mymedia.movie.list.column.SagaOrderColumn;
 import org.fagu.fmv.mymedia.movie.list.column.SizeBytesColumn;
 import org.fagu.fmv.mymedia.movie.list.column.StreamTypeCountColumn;
 import org.fagu.fmv.mymedia.movie.list.column.VideoCodecLongNameColumn;
@@ -161,8 +157,8 @@ public class Bootstrap implements Closeable {
 	 */
 	private void populateDefaultColumns() {
 		columns.add(new NameColumn());
-		columns.add(new SagaNameColumn());
-		columns.add(new SagaOrderColumn());
+		// columns.add(new SagaNameColumn());
+		// columns.add(new SagaOrderColumn());
 		columns.add(new VideoHDColumn());
 		columns.add(new VideoSizeColumn());
 		columns.add(new VideoSizeNameColumn());
@@ -177,8 +173,8 @@ public class Bootstrap implements Closeable {
 		columns.add(new CategoryColumn(0));
 		columns.add(new CategoryColumn(1));
 		columns.add(new CategoryColumn(2));
-		columns.add(new AgeLegalColumn());
-		columns.add(new AgeSuggestedColumn(logger));
+		// columns.add(new AgeLegalColumn());
+		// columns.add(new AgeSuggestedColumn(logger));
 		columns.add(new SizeBytesColumn());
 		columns.add(new LastModifiedDateColumn());
 		columns.add(new AudioColumn());
