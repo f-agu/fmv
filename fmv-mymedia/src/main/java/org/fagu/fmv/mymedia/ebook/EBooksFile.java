@@ -31,13 +31,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -56,27 +59,18 @@ public class EBooksFile {
 
 	private final Map<String, String> metadataMap;
 
-	/**
-	 * @param file
-	 * @param metadataMap
-	 */
 	private EBooksFile(File file, Map<String, String> metadataMap) {
 		this.file = file;
 		this.metadataMap = metadataMap;
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
 	public static EBooksFile open(File file) throws IOException {
-		try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file))) {
-			ZipEntry zipEntry = null;
-			while((zipEntry = zipInputStream.getNextEntry()) != null) {
+		try (ZipArchiveInputStream zipArchiveInputStream = new ZipArchiveInputStream(new FileInputStream(file))) {
+			ZipArchiveEntry zipEntry = null;
+			while((zipEntry = zipArchiveInputStream.getNextZipEntry()) != null) {
 				if(zipEntry.getName().endsWith(".opf")) {
 					SAXReader reader = new SAXReader();
-					Document document = reader.read(zipInputStream);
+					Document document = reader.read(zipArchiveInputStream);
 					Element rootElement = document.getRootElement();
 					Element metadataElement = rootElement.element("metadata");
 
@@ -92,7 +86,7 @@ public class EBooksFile {
 
 					return new EBooksFile(file, metadataMap);
 				} else {
-					IOUtils.copyLarge(zipInputStream, NullOutputStream.NULL_OUTPUT_STREAM);
+					IOUtils.copyLarge(zipArchiveInputStream, NullOutputStream.NULL_OUTPUT_STREAM);
 				}
 			}
 		} catch(DocumentException e) {
@@ -102,47 +96,41 @@ public class EBooksFile {
 		throw new RuntimeException("OPF file not found in " + file);
 	}
 
-	/**
-	 * @return
-	 */
+	public boolean needToWriteMetadatas(Map<String, String> map) {
+		for(Entry<String, String> entry : map.entrySet()) {
+			String expected = StringUtils.defaultString(entry.getValue());
+			String current = StringUtils.defaultString(metadataMap.get(entry.getKey()));
+			if( ! expected.equals(current) && ! "".equals(current)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public File getFile() {
 		return file;
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public String getMetadata(String name) {
 		return metadataMap.get(name);
 	}
 
-	/**
-	 * @return
-	 */
 	public String getAuthor() {
 		return metadataMap.get("creator");
 	}
 
-	/**
-	 * @return
-	 */
 	public String getTitle() {
 		return metadataMap.get("title");
 	}
 
-	/**
-	 * @param metadataMap
-	 * @return
-	 * @throws IOException
-	 */
 	public File writeMetadatas(Map<String, String> metadataMap) throws IOException {
 		String fileName = file.getName();
 		File outFile = File.createTempFile(FilenameUtils.getBaseName(fileName), '.' + FilenameUtils.getExtension(fileName), file.getParentFile());
-		try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file));
+
+		try (ZipArchiveInputStream zipArchiveInputStream = new ZipArchiveInputStream(new FileInputStream(file));
 				ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(outFile), StandardCharsets.UTF_8)) {
-			ZipEntry zipEntry = null;
-			while((zipEntry = zipInputStream.getNextEntry()) != null) {
+			ZipArchiveEntry zipEntry = null;
+			while((zipEntry = zipArchiveInputStream.getNextZipEntry()) != null) {
 				// System.out.println(zipEntry.getName());
 
 				ZipEntry newZipEntry = new ZipEntry(zipEntry.getName());
@@ -150,13 +138,13 @@ public class EBooksFile {
 				zipOutputStream.putNextEntry(newZipEntry);
 
 				if(zipEntry.getName().endsWith(".opf")) {
-					byte[] opfData = overwriteMetadata(new UnclosedInputStream(zipInputStream), metadataMap);
+					byte[] opfData = overwriteMetadata(new UnclosedInputStream(zipArchiveInputStream), metadataMap);
 					zipEntry.setSize(opfData.length);
 					try (ByteArrayInputStream bais = new ByteArrayInputStream(opfData)) {
 						IOUtils.copyLarge(bais, zipOutputStream);
 					}
 				} else {
-					IOUtils.copyLarge(zipInputStream, zipOutputStream);
+					IOUtils.copyLarge(zipArchiveInputStream, zipOutputStream);
 				}
 				zipOutputStream.closeEntry();
 			}
@@ -164,12 +152,6 @@ public class EBooksFile {
 		return outFile;
 	}
 
-	/**
-	 * @param inputStream
-	 * @param metadataMap
-	 * @param outputStream
-	 * @throws IOException
-	 */
 	private byte[] overwriteMetadata(InputStream inputStream, Map<String, String> metadataMap) throws IOException {
 		try {
 			SAXReader reader = new SAXReader();
@@ -199,17 +181,17 @@ public class EBooksFile {
 
 	}
 
-	public static void main(String[] args) throws Exception {
-		File file = new File(args[0]);
-		EBooksFile eBooksFile = open(file);
-		eBooksFile.metadataMap.forEach((k, v) -> System.out.println(k + " : " + v));
-
-		Map<String, String> metadataMap = new HashMap<>();
-		metadataMap.put("creator", "X creator");
-		metadataMap.put("title", "X title");
-		metadataMap.put("publisher", "nobody");
-		metadataMap.put("contributor", "");
-		eBooksFile.writeMetadatas(metadataMap);
-
-	}
+	// public static void main(String[] args) throws Exception {
+	// File file = new File(args[0]);
+	// EBooksFile eBooksFile = open(file);
+	// eBooksFile.metadataMap.forEach((k, v) -> System.out.println(k + " : " + v));
+	//
+	// Map<String, String> metadataMap = new HashMap<>();
+	// metadataMap.put("creator", "X creator");
+	// metadataMap.put("title", "X title");
+	// metadataMap.put("publisher", "nobody");
+	// metadataMap.put("contributor", "");
+	// eBooksFile.writeMetadatas(metadataMap);
+	//
+	// }
 }

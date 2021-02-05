@@ -76,6 +76,7 @@
 		<commons-lang3.version>3.9</commons-lang3.version>
 		<commons-net.version>3.6</commons-net.version>
 		<commons-text.version>1.6</commons-text.version>
+		<commons-compress.version>1.20</commons-compress.version>
 		
 		<dom4j.version>1.6.1</dom4j.version>
 		<jline.version>2.12</jline.version>
@@ -288,6 +289,11 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-text</artifactId>
 				<version>${commons-text.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-compress</artifactId>
+				<version>${commons-compress.version}</version>
 			</dependency>
 						
 			<dependency>

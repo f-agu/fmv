@@ -21,10 +21,15 @@ package org.fagu.fmv.mymedia.ebook.updateauthor;
  */
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.fagu.fmv.mymedia.ebook.EBooksFile;
 
 
@@ -33,48 +38,80 @@ import org.fagu.fmv.mymedia.ebook.EBooksFile;
  */
 public class Bootstrap {
 
-	private static void updateForfolder(File folder) {
-
+	private static void updateForFolder(File folder) {
+		File[] listFolders = folder.listFiles(f -> f.isDirectory());
+		File[] listFiles = folder.listFiles(epubFilter());
+		if(ArrayUtils.isEmpty(listFolders)) {
+			if(ArrayUtils.isNotEmpty(listFiles)) {
+				updateAuthor(folder);
+				return;
+			}
+			System.out.println("Empty folder : " + folder.getAbsolutePath());
+		} else {
+			if(ArrayUtils.isEmpty(listFiles)) {
+				for(File subFolder : listFolders) {
+					updateForFolder(subFolder);
+				}
+			} else {
+				System.out.println("Folder contains folders and files ! : " + folder.getAbsolutePath());
+			}
+		}
 	}
 
 	private static void updateAuthor(File folder) {
-		File[] files = folder.listFiles(f -> f.isFile() && "epub".equalsIgnoreCase(FilenameUtils.getExtension(f.getName())));
+		File[] files = folder.listFiles(epubFilter());
 		if(files == null) {
 			return;
 		}
+		updateAuthor(Arrays.asList(files), folder.getName());
+	}
 
+	private static void updateAuthor(Collection<File> files, String author) {
 		Map<String, String> metadataMap = new HashMap<>();
-		metadataMap.put("creator", folder.getName());
+		metadataMap.put("creator", author);
 		metadataMap.put("publisher", "nobody");
 		metadataMap.put("contributor", "");
 
-		System.out.println("Update author with " + folder.getName());
 		System.out.println();
+		System.out.println("Update author with '" + author + '\'');
 
 		for(File file : files) {
-			System.out.println(file.getName() + "...");
+			if( ! file.isFile()) {
+				return;
+			}
+			System.out.print("    " + file.getName() + "...");
 			try {
 				EBooksFile eBooksFile = EBooksFile.open(file);
-				File newFile = eBooksFile.writeMetadatas(metadataMap);
-				file.delete();
-				newFile.renameTo(file);
+				if(eBooksFile.needToWriteMetadatas(metadataMap)) {
+					System.out.println("   [updating]");
+					File newFile = eBooksFile.writeMetadatas(metadataMap);
+					file.delete();
+					newFile.renameTo(file);
+				} else {
+					System.out.println();
+				}
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	/**
-	 * @param args
-	 */
+	private static FileFilter epubFilter() {
+		return f -> f.isFile() && "epub".equalsIgnoreCase(FilenameUtils.getExtension(f.getName()));
+	}
+
 	public static void main(String[] args) {
 		if(args.length != 1) {
-			System.err.println("Usage: java " + Bootstrap.class.getName() + " <folder>");
+			System.err.println("Usage: java " + Bootstrap.class.getName() + " <folder|file>");
 			return;
 		}
 
-		File folder = new File(args[0]);
-
+		File file = new File(args[0]);
+		if(epubFilter().accept(file)) {
+			updateAuthor(Collections.singletonList(file), file.getParentFile().getName());
+		} else if(file.isDirectory()) {
+			updateForFolder(file);
+		}
 	}
 
 }
