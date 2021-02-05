@@ -41,13 +41,17 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.apache.commons.exec.CommandLine;
@@ -242,7 +246,7 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 	public Size getResolution() {
 		try {
 			String resolution = getString("xy");
-			if(resolution.length() > 0) {
+			if(StringUtils.isNotEmpty(resolution)) {
 				String[] resolutionTab = resolution.split(" ");
 				if(resolutionTab.length == 4) {
 					return Size.valueOf(Integer.parseInt(resolutionTab[0]), Integer.parseInt(resolutionTab[2]));
@@ -258,23 +262,47 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 	@Override
 	public Size getDimension() {
+		BiFunction<String, String, Size> sizeConverter = (w, h) -> StringUtils.isNotBlank(w) && StringUtils.isNotBlank(h) ? Size.valueOf((int)Double
+				.parseDouble(w), (int)Double.parseDouble(h)) : null;
+		List<Supplier<Size>> sizeSuppliers = new ArrayList<>(4);
+		AtomicReference<Orientation> orientation = new AtomicReference<>(getOrientation().orElse(Orientation.HORIZONTAL));
+		// first is ps
+		sizeSuppliers.add(() -> getStringOpt("ps:hiresboundingbox")
+				.map(d -> {
+					StringTokenizer stringTokenizer = new StringTokenizer(d, "x+");
+					return sizeConverter.apply(stringTokenizer.nextToken(), stringTokenizer.nextToken());
+				})
+				.orElse(null));
+		sizeSuppliers.add(() -> sizeConverter.apply(getString("exif:exifimagewidth"), getString("exif:exifimagelength")));
+		sizeSuppliers.add(() -> getStringOpt("wh")
+				.map(d -> {
+					String[] dimensionsTab = d.split(" ");
+					return sizeConverter.apply(dimensionsTab[0], dimensionsTab[1]);
+				})
+				.orElse(null));
+		sizeSuppliers.add(() -> {
+			Size size = sizeConverter.apply(getString("exif:pixelxdimension"), getString("exif:pixelydimension"));
+			if(size != null) {
+				orientation.set(Orientation.HORIZONTAL);
+			}
+			return size;
+		});
+
 		try {
-			Orientation orientation = getOrientation().orElse(Orientation.HORIZONTAL);
-			String dimensions = getString("wh");
-			if(StringUtils.isBlank(dimensions)) {
-				dimensions = getString("exif:exifimagewidth") + ' ' + getString("exif:exifimagelength");
-			}
-			if(StringUtils.isBlank(dimensions)) {
-				dimensions = getString("exif:pixelxdimension") + ' ' + getString("exif:pixelydimension");
-				orientation = Orientation.HORIZONTAL;
-			}
-			if(dimensions.length() > 0) {
-				String[] dimensionsTab = dimensions.split(" ");
-				if(dimensionsTab.length >= 2) {
-					Size size = Size.valueOf(Integer.parseInt(dimensionsTab[0]), Integer.parseInt(dimensionsTab[1]));
-					return orientation.rotateSize(size);
-				}
-			}
+			return sizeSuppliers.stream()
+					.peek(s -> System.out.println("Supplier: " + s))
+					.map(s -> {
+						try {
+							return s.get();
+						} catch(Exception e) {
+							return null;
+						}
+					})
+					.peek(s -> System.out.println("size: " + s))
+					.filter(Objects::nonNull)
+					.map(orientation.get()::rotateSize)
+					.findFirst()
+					.orElse(null);
 		} catch(Exception ignored) {
 			// ignore
 		}
@@ -429,9 +457,12 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 	// *****************************************
 
 	private String getString(String prop) {
+		return getStringOpt(prop).orElse(null);
+	}
+
+	private Optional<String> getStringOpt(String prop) {
 		return getFirstString(prop)
-				.map(s -> "Undefined".equalsIgnoreCase(s) ? null : s)
-				.orElse(null);
+				.map(s -> "Undefined".equalsIgnoreCase(s) ? null : s);
 	}
 
 	private static <T> Map<T, IMIdentifyImageMetadatas> extract(

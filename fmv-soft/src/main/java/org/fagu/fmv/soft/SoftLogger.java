@@ -49,6 +49,10 @@ public class SoftLogger {
 
 		private SoftLogListener softLogListener;
 
+		private boolean colorize;
+
+		private SoftLoggerColorizer softLoggerColorizer;
+
 		private Builder(List<Soft> softs) {
 			this.softs = softs;
 		}
@@ -58,8 +62,18 @@ public class SoftLogger {
 			return this;
 		}
 
+		public Builder withColorization(boolean enabled) {
+			this.colorize = enabled;
+			return this;
+		}
+
+		public Builder withSoftLoggerColorizer(SoftLoggerColorizer softLoggerColorizer) {
+			this.softLoggerColorizer = softLoggerColorizer;
+			return this;
+		}
+
 		public SoftLogger build() {
-			return new SoftLogger(softs, softLogListener);
+			return new SoftLogger(this);
 		}
 	}
 
@@ -69,15 +83,23 @@ public class SoftLogger {
 
 	private final SoftLogListener softLogListener;
 
-	private SoftLogger(List<Soft> softs, SoftLogListener softLogListener) {
-		this.softs = softs;
-		this.softLogListener = softLogListener != null ? softLogListener : new SoftLogListener() {};
+	private final boolean colorize;
+
+	private final SoftLoggerColorizer softLoggerColorizer;
+
+	private SoftLogger(Builder builder) {
+		this.softs = Collections.unmodifiableList(new ArrayList<>(builder.softs));
+		this.softLogListener = builder.softLogListener != null ? builder.softLogListener : new SoftLogListener() {};
+		this.colorize = builder.colorize;
+		this.softLoggerColorizer = builder.softLoggerColorizer != null ? builder.softLoggerColorizer : this::getColor;
 	}
 
 	public SoftLogger(List<Soft> softs) {
 		this.softs = new ArrayList<>(softs);
 		Collections.sort(this.softs, (s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
 		this.softLogListener = new SoftLogListener() {};
+		this.colorize = false;
+		this.softLoggerColorizer = this::getColor;
 	}
 
 	public static Builder withSofts(List<Soft> softs) {
@@ -165,13 +187,38 @@ public class SoftLogger {
 
 	private String getReasonName(SoftFound softFound) {
 		FoundReason foundReason = softFound != null ? softFound.getFoundReason() : FoundReasons.NOT_FOUND;
-		return StringUtils.center(foundReason.name(), 11);
+		return getReasonNameColorized(foundReason);
 	}
 
 	private StringBuilder startLine(int maxLength, String name, SoftFound softFound) {
 		return new StringBuilder()
 				.append(StringUtils.rightPad(name != null ? name : "", maxLength))
 				.append('[').append(getReasonName(softFound)).append(']');
+	}
+
+	private String getReasonNameColorized(FoundReason foundReason) {
+		String s = StringUtils.center(foundReason.name(), 11);
+		if(colorize) {
+			Integer colorCode = softLoggerColorizer.getColor(foundReason);
+			if(colorCode != null) {
+				return "\u001b[1;" + colorCode + "m" + s + "\u001b[0m";
+			}
+		}
+		return s;
+	}
+
+	private Integer getColor(FoundReason foundReason) {
+		// https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+		if(foundReason == FoundReasons.BAD_SOFT
+				|| foundReason == FoundReasons.ERROR
+				|| foundReason == FoundReasons.NOT_FOUND) {
+			return 31; // Red
+		} else if(foundReason == FoundReasons.BAD_VERSION) {
+			return 33; // Yellow
+		} else if(foundReason == FoundReasons.FOUND) {
+			return 32; // Green
+		}
+		return null;
 	}
 
 	private void toLine(StringBuilder line, SoftProvider softProvider, SoftFound softFound, Consumer<String> formatConsumer) {

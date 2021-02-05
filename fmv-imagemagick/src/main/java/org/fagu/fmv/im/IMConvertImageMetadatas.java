@@ -380,30 +380,8 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		if(opt.isPresent()) {
 			return opt;
 		}
-		return Optional.empty(); // TODO
-		// return getFirstString("orientation") // See values with commandline: magick identify -list Orientation
-		// .map(s -> {
-		// switch(s) {
-		// case "TopLeft":
-		// return Orientation.HORIZONTAL;
-		// case "TopRight":
-		// return Orientation.ROTATE_90_CW;
-		// case "BottomRight":
-		// return Orientation.ROTATE_180;
-		// case "BottomLeft":
-		// return Orientation.ROTATE_270_CW;
-		// case "LeftTop":
-		// return Orientation.?;
-		// case "RightTop":
-		// return Orientation.?;
-		// case "RightBottom":
-		// return Orientation.?;
-		// case "LeftBottom":
-		// return Orientation.?;
-		// default:
-		// }
-		// throw new IllegalArgumentException("Undefined orientation: " + s);
-		// });
+		return getFirstString("orientation")
+				.map(Orientation::parse);
 	}
 
 	@Override
