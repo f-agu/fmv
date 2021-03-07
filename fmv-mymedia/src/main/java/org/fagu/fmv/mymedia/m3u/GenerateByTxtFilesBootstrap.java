@@ -2,9 +2,9 @@ package org.fagu.fmv.mymedia.m3u;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -68,8 +68,7 @@ public class GenerateByTxtFilesBootstrap {
 		File m3uFile = new File(file.toFile().getParentFile(), "Michel Sardou - " + file.getFileName().toString().replace(".txt", ".m3u8"));
 		System.out.println("======= " + m3uFile);
 		try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()));
-				PrintStream printStream = new PrintStream(m3uFile, "UTF-8")) {
-			printStream.println("#EXTM3U");
+				M3U8Writer m3u8Writer = new M3U8Writer(new FileOutputStream(m3uFile))) {
 			String line = null;
 			while((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -78,14 +77,13 @@ public class GenerateByTxtFilesBootstrap {
 				}
 				String origTitle = line.split("\t")[1];
 				String title = simplifyName(origTitle);
-				printStream.println("#EXTINF:-1," + origTitle);
 				Path path = foundFiles.get(title);
 				if(path == null) {
 					System.out.println(file.getFileName().toString() + " / " + title + "    " + (path != null ? path : "?"));
 					System.out.println("   " + foundFiles.lowerEntry(title));
 					System.out.println("   " + foundFiles.higherEntry(title));
 				} else {
-					printStream.println(path.toString().substring(baseLength));
+					m3u8Writer.addTitle(origTitle, path.toString().substring(baseLength));
 				}
 			}
 		}

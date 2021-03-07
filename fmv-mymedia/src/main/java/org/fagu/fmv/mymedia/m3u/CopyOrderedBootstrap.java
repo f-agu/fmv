@@ -22,8 +22,10 @@ package org.fagu.fmv.mymedia.m3u;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.FileUtils;
@@ -34,7 +36,13 @@ import org.apache.commons.lang3.ArrayUtils;
 public class CopyOrderedBootstrap {
 
 	public static void main(String... args) throws Exception {
-		File file = new File(args[0]);
+		for(String arg : args) {
+			copy(arg);
+		}
+	}
+
+	public static void copy(String folder) throws Exception {
+		File file = new File(folder);
 		if(file.isDirectory()) {
 			File[] files = file.listFiles(f -> "m3u".equals(FilenameUtils.getExtension(f.getName())));
 			if(ArrayUtils.isEmpty(files)) {
@@ -43,11 +51,12 @@ public class CopyOrderedBootstrap {
 			file = files[0];
 		}
 
-		File destFolder = new File(args[1]);
+		// File destFolder = new File(args[1]);
+		File destFolder = new File("D:\\tmp\\cd-auto\\auto-x2", file.getName());
 		FileUtils.forceMkdir(destFolder);
 
 		File srcFolder = file.getParentFile();
-		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.ISO_8859_1))) {
 			AtomicInteger index = new AtomicInteger();
 			reader.lines()
 					.filter(l -> ! l.startsWith("#"))
