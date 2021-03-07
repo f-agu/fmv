@@ -40,7 +40,7 @@ public class DominantColorTestCase {
 		File file = ImageResourceUtils.extractFile(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL);
 		try {
 			Color dominantColor = DominantColor.getInstance().getDominantColor(file, s -> {});
-			assertEquals(new Color(85, 70, 70), dominantColor);
+			assertEquals(new Color(85, 69, 70), dominantColor);
 		} finally {
 			if(file != null) {
 				file.delete();
@@ -59,12 +59,13 @@ public class DominantColorTestCase {
 				.getDominantColor(
 						() -> ImageResourceUtils.getInputStream(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL),
 						s -> {});
-		assertEquals(new Color(85, 70, 70), dominantColor);
+		assertEquals(new Color(85, 69, 70), dominantColor);
 	}
 
 	@Test
 	public void testParseRGB() throws IOException {
 		assertColor(DominantColor.parse("srgb(130,125,119)"), 130, 125, 119, 255);
+		assertColor(DominantColor.parse("srgb(33.489%,27.3838%,27.5563%)"), 85, 69, 70, 255);
 		assertColor(DominantColor.parse("srgba(130,125,119,0.4)"), 130, 125, 119, 102);
 		assertColor(DominantColor.parse("srgba(49%,48%,47%,0.785565)"), 124, 122, 119, 200);
 	}

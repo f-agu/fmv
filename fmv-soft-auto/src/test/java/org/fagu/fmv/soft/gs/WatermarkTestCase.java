@@ -32,12 +32,14 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.soft.Resource;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
 /**
  * @author fagu
  */
+@Ignore
 public class WatermarkTestCase {
 
 	@Test

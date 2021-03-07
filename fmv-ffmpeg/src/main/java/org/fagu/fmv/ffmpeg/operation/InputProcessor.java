@@ -49,22 +49,12 @@ public class InputProcessor extends Processor<InputProcessor> implements FilterI
 
 	private final InputParameters inputParameters;
 
-	/**
-	 * @param inputParameters
-	 * @param input
-	 * @param index
-	 * @param require
-	 */
 	protected InputProcessor(InputParameters inputParameters, MediaInput input, int index, Require require) {
 		super(inputParameters, input, index, require);
 		this.inputParameters = inputParameters;
 		this.input = input;
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	public MovieMetadatas getMovieMetadatas() throws IOException {
 		if(videoMetadatas == null) {
 			InfoOperation infoOperation = new InfoOperation(input);
@@ -75,23 +65,14 @@ public class InputProcessor extends Processor<InputProcessor> implements FilterI
 		return videoMetadatas;
 	}
 
-	/**
-	 * @param videoMetadatas
-	 */
 	public void setMovieMetadatas(MovieMetadatas videoMetadatas) {
 		this.videoMetadatas = videoMetadatas;
 	}
 
-	/**
-	 * @return
-	 */
 	public MediaInput getInput() {
 		return input;
 	}
 
-	/**
-	 * @return
-	 */
 	public InputParameters getInputParameters() {
 		return inputParameters;
 	}
@@ -125,42 +106,27 @@ public class InputProcessor extends Processor<InputProcessor> implements FilterI
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Processor#codec(org.fagu.fmv.ffmpeg.operation.Type, java.lang.String)
-	 */
 	@Override
 	public InputProcessor codec(Type type, String codec) {
 		require().decoder(codec);
 		return super.codec(type, codec);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getInputs()
-	 */
 	@Override
 	public List<MediaInput> getInputs() {
 		return Collections.singletonList(getInput());
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getInputKeys()
-	 */
 	@Override
 	public Set<IOKey> getInputKeys() {
 		return Collections.emptySet(); // ????
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getDuration()
-	 */
 	@Override
 	public Optional<Duration> getDuration() {
 		return input.getDuration();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#contains(org.fagu.fmv.ffmpeg.operation.Type)
-	 */
 	@Override
 	public boolean contains(Type type) {
 		try {
@@ -170,17 +136,11 @@ public class InputProcessor extends Processor<InputProcessor> implements FilterI
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getOutputKeys()
-	 */
 	@Override
 	public List<OutputKey> getOutputKeys() {
 		return Collections.singletonList(new OutputKey(this, Label.input(getIndex())));
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Input[" + input + "]";
