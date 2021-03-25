@@ -169,7 +169,7 @@ public class Reduce {
 
 		// video
 		if(doVideo) {
-			outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(23));
+			outputProcessor.codec(H264.findRecommanded().map(c -> c.strict(Strict.EXPERIMENTAL).quality(23)).orElse(null));
 		} else {
 			outputProcessor.codecCopy(Type.VIDEO);
 		}

@@ -100,7 +100,7 @@ public class Reducer implements Closeable {
 		outputProcessor.qualityScale(0);
 		outputProcessor.duration(maxDuration);
 
-		outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(crf));
+		outputProcessor.codec(H264.findRecommanded().map(c -> c.strict(Strict.EXPERIMENTAL).quality(crf)).orElse(null));
 
 		outputProcessor.overwrite();
 

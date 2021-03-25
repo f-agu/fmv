@@ -208,7 +208,7 @@ public abstract class Processor<P extends Processor<?>> {
 	 * @return
 	 */
 	public P codec(Coder<?> coder) {
-		if( ! coderMap.containsKeys(coder.name(), coder.type())) {
+		if(coder != null && ! coderMap.containsKeys(coder.name(), coder.type())) {
 			coderMap.add(coder.name(), coder.type(), coder);
 			codec(coder.type(), coder.name());
 			coder.eventAdded(this, ioEntity);

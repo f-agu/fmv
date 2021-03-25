@@ -372,7 +372,7 @@ public class Ripper implements Closeable {
 		filterAndMap(inputProcessor, outputProcessor, movieMetadatas.getSubtitleStreams().iterator(),
 				mPlayerDump.getSubtitles());
 
-		outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(21)).overwrite();
+		outputProcessor.codec(H264.findRecommanded().map(c -> c.strict(Strict.EXPERIMENTAL).quality(21)).orElse(null)).overwrite();
 
 		int nbFrames = 0;
 		Optional<Integer> countEstimateFrames = movieMetadatas.getVideoStream().countEstimateFrames();

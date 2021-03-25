@@ -106,7 +106,7 @@ public class PreparedImages implements Closeable {
 		builder.filter(filter);
 
 		OutputProcessor outputProcessor = builder.addMediaOutputFile(destVideo);
-		outputProcessor.codec(H264.findRecommanded());
+		outputProcessor.codec(H264.findRecommanded().orElse(null));
 		outputProcessor.overwrite();
 		outputProcessor.map().allStreams().input(filter);
 

@@ -280,7 +280,7 @@ public class Encoders extends Coders {
 	public static final Encoders LIBWEBP = new Encoders("libwebp", SubType.IMAGE);
 
 	// libx264 H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (codec h264)
-	// public static final Encoders LIBX264 = new Encoders("libx264");
+	public static final Encoders LIBX264 = new Encoders("libx264");
 
 	// libx264 H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 RGB (codec h264)
 	public static final Encoders LIBX264RGB = new Encoders("libx264rgb");

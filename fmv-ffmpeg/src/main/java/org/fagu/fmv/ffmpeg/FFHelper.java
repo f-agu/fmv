@@ -134,7 +134,7 @@ public class FFHelper {
 		builder.addMediaInputFile(inFile);
 
 		builder.mux(MP4Muxer.to(outFile)) //
-				.codec(H264.findRecommanded().mostCompatible()) //
+				.codec(H264.findRecommanded().map(H264::mostCompatible).orElse(null)) //
 				// .codec(Libx264.build().mostCompatible()) //
 				.overwrite();
 
@@ -439,7 +439,7 @@ public class FFHelper {
 
 		// ouput
 		builder.mux(MP4Muxer.to(outFile).avoidNegativeTs(AvoidNegativeTs.MAKE_NON_NEGATIVE)).duration(duration)
-				.qualityScale(0).codec(H264.findRecommanded().mostCompatible()).overwrite();
+				.qualityScale(0).codec(H264.findRecommanded().map(H264::mostCompatible).orElse(null)).overwrite();
 
 		// execute
 		builder.build().execute();
@@ -491,7 +491,7 @@ public class FFHelper {
 		builder.filter(concat);
 
 		builder.mux(MP4Muxer.to(outFile).movflags(Movflags.FASTSTART)).qualityScale(0)
-				.codec(H264.findRecommanded().mostCompatible()).overwrite();
+				.codec(H264.findRecommanded().map(H264::mostCompatible).orElse(null)).overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -530,7 +530,7 @@ public class FFHelper {
 		builder.filter(concat);
 
 		builder.addMediaOutputFile(outFile).qualityScaleAudio(0).qualityScaleVideo(0)
-				.codec(H264.findRecommanded().mostCompatible()).format("mp4").overwrite();
+				.codec(H264.findRecommanded().map(H264::mostCompatible).orElse(null)).format("mp4").overwrite();
 
 		FFExecutor<Object> executor = builder.build();
 		executor.execute();
@@ -911,7 +911,8 @@ public class FFHelper {
 			outputProcessor.map().streams(stream).input(inputProcessor);
 		}
 
-		outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(23))
+		outputProcessor.codec(
+				H264.findRecommanded().map(c -> c.strict(Strict.EXPERIMENTAL).quality(23)).orElse(null))
 				// .codecCopy(Type.AUDIO)
 				.codecAutoSelectAAC().codecCopy(Type.SUBTITLE).overwrite();
 
@@ -955,7 +956,7 @@ public class FFHelper {
 		// output
 		builder.mux(MP4Muxer.to(outFile) //
 				.movflags(Movflags.FASTSTART)) // , Movflags.FRAG_KEYFRAME, Movflags.EMPTY_MOOV
-				.codec(H264.findRecommanded().mostCompatible()) //
+				.codec(H264.findRecommanded().map(H264::mostCompatible).orElse(null)) //
 				.pixelFormat(PixelFormat.YUV420P) // pour quicktime/safari
 				.codecAutoSelectAAC() //
 				.audioChannel(audioChannel) //
@@ -963,6 +964,7 @@ public class FFHelper {
 				.overwrite();
 
 		FFExecutor<Object> executor = builder.build();
+		System.out.println(executor.getCommandLineString());
 		executor.execute();
 	}
 

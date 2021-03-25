@@ -396,7 +396,7 @@ public class FFReducer extends AbstractReducer {
 
 		// -------------------------- codec -------------------------
 
-		outputProcessor.codec(H264.findRecommanded().strict(Strict.EXPERIMENTAL).quality(crf));
+		outputProcessor.codec(H264.findRecommanded().map(c -> c.strict(Strict.EXPERIMENTAL).quality(crf)).orElse(null));
 
 		// audio
 		if(hasAudio) {

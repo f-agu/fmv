@@ -23,11 +23,13 @@ package org.fagu.fmv.ffmpeg.coder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.fagu.fmv.ffmpeg.format.IO;
 import org.fagu.fmv.ffmpeg.operation.LibLog;
 import org.fagu.fmv.ffmpeg.operation.Type;
+
 
 /**
  * ffmpeg -h encoder=libx264
@@ -48,8 +50,10 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	public static class AqMode {
 
 		public static final AqMode NONE = new AqMode("none", IO.OUTPUT);
+
 		// Variance AQ (complexity mask)
 		public static final AqMode VARIANCE = new AqMode("variance", IO.OUTPUT);
+
 		// Auto-variance AQ (experimental)
 		public static final AqMode AUTOVARIANCE = new AqMode("autovariance", IO.OUTPUT);
 
@@ -89,7 +93,9 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	public static class Weightp {
 
 		public static final Weightp NONE = new Weightp("none", IO.OUTPUT);
+
 		public static final Weightp SIMPLE = new Weightp("simple", IO.OUTPUT);
+
 		public static final Weightp SMART = new Weightp("smart", IO.OUTPUT);
 
 		private final String flag;
@@ -128,8 +134,10 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	public static class BPyramid {
 
 		public static final BPyramid NONE = new BPyramid("none", IO.OUTPUT);
+
 		// Strictly hierarchical pyramid
 		public static final BPyramid STRICT = new BPyramid("strict", IO.OUTPUT);
+
 		// Non-strict (not Blu-ray compatible)
 		public static final BPyramid NORMAL = new BPyramid("normal", IO.OUTPUT);
 
@@ -169,8 +177,11 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	public static class DirectPred {
 
 		public static final DirectPred NONE = new DirectPred("none", IO.OUTPUT);
+
 		public static final DirectPred SPATIAL = new DirectPred("spatial", IO.OUTPUT);
+
 		public static final DirectPred TEMPORAL = new DirectPred("temporal", IO.OUTPUT);
+
 		public static final DirectPred AUTO = new DirectPred("auto", IO.OUTPUT);
 
 		private final String flag;
@@ -208,20 +219,35 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	public static class Level {
 
 		public static final Level L_1 = new Level("1");
+
 		public static final Level L_1b = new Level("1");
+
 		public static final Level L_1_1 = new Level("1.1");
+
 		public static final Level L_1_2 = new Level("1.2");
+
 		public static final Level L_1_3 = new Level("1.3");
+
 		public static final Level L_2 = new Level("2");
+
 		public static final Level L_2_1 = new Level("2.1");
+
 		public static final Level L_2_2 = new Level("2.2");
+
 		public static final Level L_3_0 = new Level("3.0");
+
 		public static final Level L_3_1 = new Level("3.1");
+
 		public static final Level L_3_2 = new Level("3.2");
+
 		public static final Level L_4_0 = new Level("4.0");
+
 		public static final Level L_4_1 = new Level("4.1");
+
 		public static final Level L_4_2 = new Level("4.2");
+
 		public static final Level L_5 = new Level("5");
+
 		public static final Level L_5_1 = new Level("5.1");
 
 		private final String value;
@@ -250,7 +276,9 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	public static class NalHrd {
 
 		public static final NalHrd NONE = new NalHrd("none", IO.OUTPUT);
+
 		public static final NalHrd VBR = new NalHrd("vbr", IO.OUTPUT);
+
 		public static final NalHrd CBR = new NalHrd("cbr", IO.OUTPUT);
 
 		private final String flag;
@@ -291,14 +319,23 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	public static class Preset {
 
 		public static final Preset ULTRAFAST = new Preset("ultrafast");
+
 		public static final Preset SUPERFAST = new Preset("superfast");
+
 		public static final Preset VERYFAST = new Preset("veryfast");
+
 		public static final Preset FASTER = new Preset("faster");
+
 		public static final Preset FAST = new Preset("fast");
+
 		public static final Preset MEDIUM = new Preset("medium");
+
 		public static final Preset SLOW = new Preset("slow");
+
 		public static final Preset SLOWER = new Preset("slower");
+
 		public static final Preset VERYSLOW = new Preset("veryslow");
+
 		public static final Preset PLACEBO = new Preset("placebo");
 
 		private final String value;
@@ -325,10 +362,15 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	public static class Profile {
 
 		public static final Profile BASELINE = new Profile("baseline");
+
 		public static final Profile MAIN = new Profile("main");
+
 		public static final Profile HIGH = new Profile("high");
+
 		public static final Profile HIGH10 = new Profile("high10");
+
 		public static final Profile HIGH422 = new Profile("high422");
+
 		public static final Profile HIGH444 = new Profile("high444");
 
 		private final String value;
@@ -356,12 +398,19 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	public static class Tune {
 
 		public static final Tune FILM = new Tune("film");
+
 		public static final Tune AIMATION = new Tune("animation");
+
 		public static final Tune GRAIN = new Tune("grain");
+
 		public static final Tune STILLIMAGE = new Tune("stillimage");
+
 		public static final Tune PSNR = new Tune("psnr");
+
 		public static final Tune SSIM = new Tune("ssim");
+
 		public static final Tune FASTDECODE = new Tune("fastdecode");
+
 		public static final Tune ZEROLATENCY = new Tune("zerolatency");
 
 		private final String value;
@@ -386,11 +435,8 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 
 	/**
 	 * {@link http://trac.ffmpeg.org/wiki/Encode/H.264}<br>
-	 * {@link https ://developer.apple
-	 * .com/library/mac/documentation/NetworkingInternet/Conceptual
-	 * /StreamingMediaGuide
-	 * /UsingHTTPLiveStreaming/UsingHTTPLiveStreaming.html#//apple_ref
-	 * /doc/uid/TP40008332-CH102-SW8}
+	 * {@link https ://developer.apple .com/library/mac/documentation/NetworkingInternet/Conceptual /StreamingMediaGuide
+	 * /UsingHTTPLiveStreaming/UsingHTTPLiveStreaming.html#//apple_ref /doc/uid/TP40008332-CH102-SW8}
 	 *
 	 * @author f.agu
 	 */
@@ -401,8 +447,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 		 */
 		ALL_DEVICES(Profile.BASELINE, Level.L_3_0),
 		/**
-		 * H.264 Baseline 3.1: iPhone 3G and later, and iPod touch 2nd generation and
-		 * later.
+		 * H.264 Baseline 3.1: iPhone 3G and later, and iPod touch 2nd generation and later.
 		 */
 		IPHONE_3G_OR_MORE(Profile.BASELINE, Level.L_3_1),
 		/**
@@ -465,12 +510,11 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	/**
 	 * @return
 	 */
-	public static H264<?> findRecommanded() {
-		return Arrays.asList(/* H264NVEnc.build(), */ Libx264.build()) //
+	public static Optional<H264<?>> findRecommanded() {
+		return Arrays.<H264<?>>asList(/* H264NVEnc.build(), */ Libx264.build()) //
 				.stream() //
 				.filter(c -> Encoders.exists(c.name())) //
-				.findFirst() //
-				.orElseThrow(() -> new RuntimeException("Codec not found for H264"));
+				.findFirst();
 	}
 
 	// ****************************************
@@ -592,14 +636,13 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	}
 
 	/**
-	 * In CRF mode, prevents VBV from lowering quality beyond this point. (from -1
-	 * to FLT_MAX) (default -1)
+	 * In CRF mode, prevents VBV from lowering quality beyond this point. (from -1 to FLT_MAX) (default -1)
 	 *
 	 * @param crfMax
 	 * @return
 	 */
 	public H264<M> crfMax(float crfMax) {
-		if (-1.0 > crfMax || crfMax > 3.4028235E38) {
+		if( - 1.0 > crfMax || crfMax > 3.4028235E38) {
 			throw new IllegalArgumentException("crfMax must be between -1.0 and 3.4028235E38: " + name);
 		}
 		parameter("-crf_max", Float.toString(crfMax));
@@ -607,14 +650,13 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	}
 
 	/**
-	 * Constant quantization parameter rate control method (from -1 to INT_MAX)
-	 * (default -1)
+	 * Constant quantization parameter rate control method (from -1 to INT_MAX) (default -1)
 	 *
 	 * @param qp
 	 * @return
 	 */
 	public H264<M> qp(int qp) {
-		if (-1 > qp || qp > 2147483647) {
+		if( - 1 > qp || qp > 2147483647) {
 			throw new IllegalArgumentException("qp must be between -1 and 2147483647: " + name);
 		}
 		parameter("-qp", Integer.toString(qp));
@@ -628,7 +670,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> aqMode(AqMode aqMode) {
-		if (!aqMode.io().isOutput()) {
+		if( ! aqMode.io().isOutput()) {
 			throw new IllegalArgumentException("IO is wrong: " + aqMode.io() + ": " + io);
 		}
 		parameter("-aq-mode", aqMode.flag());
@@ -636,14 +678,13 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	}
 
 	/**
-	 * AQ strength. Reduces blocking and blurring in flat and textured areas. (from
-	 * -1 to FLT_MAX) (default -1)
+	 * AQ strength. Reduces blocking and blurring in flat and textured areas. (from -1 to FLT_MAX) (default -1)
 	 *
 	 * @param aqStrength
 	 * @return
 	 */
 	public H264<M> aqStrength(float aqStrength) {
-		if (-1.0 > aqStrength || aqStrength > 3.4028235E38) {
+		if( - 1.0 > aqStrength || aqStrength > 3.4028235E38) {
 			throw new IllegalArgumentException("aqStrength must be between -1.0 and 3.4028235E38: " + name);
 		}
 		parameter("-aq-strength", Float.toString(aqStrength));
@@ -657,7 +698,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> psy(int psy) {
-		if (-1 > psy || psy > 1) {
+		if( - 1 > psy || psy > 1) {
 			throw new IllegalArgumentException("psy must be between -1 and 1: " + name);
 		}
 		parameter("-psy", Integer.toString(psy));
@@ -676,14 +717,13 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	}
 
 	/**
-	 * Number of frames to look ahead for frametype and ratecontrol (from -1 to
-	 * INT_MAX) (default -1)
+	 * Number of frames to look ahead for frametype and ratecontrol (from -1 to INT_MAX) (default -1)
 	 *
 	 * @param rcLookahead
 	 * @return
 	 */
 	public H264<M> rcLookahead(int rcLookahead) {
-		if (-1 > rcLookahead || rcLookahead > 2147483647) {
+		if( - 1 > rcLookahead || rcLookahead > 2147483647) {
 			throw new IllegalArgumentException("rcLookahead must be between -1 and 2147483647: " + name);
 		}
 		parameter("-rc-lookahead", Integer.toString(rcLookahead));
@@ -697,7 +737,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> weightb(int weightb) {
-		if (-1 > weightb || weightb > 1) {
+		if( - 1 > weightb || weightb > 1) {
 			throw new IllegalArgumentException("weightb must be between -1 and 1: " + name);
 		}
 		parameter("-weightb", Integer.toString(weightb));
@@ -711,7 +751,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> weightp(Weightp weightp) {
-		if (!weightp.io().isOutput()) {
+		if( ! weightp.io().isOutput()) {
 			throw new IllegalArgumentException("IO is wrong: " + weightp.io() + ": " + io);
 		}
 		parameter("-weightp", weightp.flag());
@@ -725,7 +765,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> ssim(int ssim) {
-		if (-1 > ssim || ssim > 1) {
+		if( - 1 > ssim || ssim > 1) {
 			throw new IllegalArgumentException("ssim must be between -1 and 1: " + name);
 		}
 		parameter("-ssim", Integer.toString(ssim));
@@ -739,7 +779,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> intraRefresh(int intraRefresh) {
-		if (-1 > intraRefresh || intraRefresh > 1) {
+		if( - 1 > intraRefresh || intraRefresh > 1) {
 			throw new IllegalArgumentException("intraRefresh must be between -1 and 1: " + name);
 		}
 		parameter("-intra-refresh", Integer.toString(intraRefresh));
@@ -753,7 +793,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> blurayCompat(int blurayCompat) {
-		if (-1 > blurayCompat || blurayCompat > 1) {
+		if( - 1 > blurayCompat || blurayCompat > 1) {
 			throw new IllegalArgumentException("blurayCompat must be between -1 and 1: " + name);
 		}
 		parameter("-bluray-compat", Integer.toString(blurayCompat));
@@ -761,14 +801,13 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	}
 
 	/**
-	 * Influences how often B-frames are used (from INT_MIN to INT_MAX) (default
-	 * INT_MIN)
+	 * Influences how often B-frames are used (from INT_MIN to INT_MAX) (default INT_MIN)
 	 *
 	 * @param bBias
 	 * @return
 	 */
 	public H264<M> bBias(int bBias) {
-		if (bBias > 2147483647) {
+		if(bBias > 2147483647) {
 			throw new IllegalArgumentException("bBias must be at most 2147483647: " + name);
 		}
 		parameter("-b-bias", Integer.toString(bBias));
@@ -782,7 +821,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> bPyramid(BPyramid bPyramid) {
-		if (!bPyramid.io().isOutput()) {
+		if( ! bPyramid.io().isOutput()) {
 			throw new IllegalArgumentException("IO is wrong: " + bPyramid.io() + ": " + io);
 		}
 		parameter("-b-pyramid", bPyramid.flag());
@@ -790,14 +829,13 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	}
 
 	/**
-	 * One reference per partition, as opposed to one reference per macroblock (from
-	 * -1 to 1) (default -1)
+	 * One reference per partition, as opposed to one reference per macroblock (from -1 to 1) (default -1)
 	 *
 	 * @param mixedRefs
 	 * @return
 	 */
 	public H264<M> mixedRefs(int mixedRefs) {
-		if (-1 > mixedRefs || mixedRefs > 1) {
+		if( - 1 > mixedRefs || mixedRefs > 1) {
 			throw new IllegalArgumentException("mixedRefs must be between -1 and 1: " + name);
 		}
 		parameter("-mixed-refs", Integer.toString(mixedRefs));
@@ -811,7 +849,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> _8x8dct(int _8x8dct) {
-		if (-1 > _8x8dct || _8x8dct > 1) {
+		if( - 1 > _8x8dct || _8x8dct > 1) {
 			throw new IllegalArgumentException("_8x8dct must be between -1 and 1: " + name);
 		}
 		parameter("-8x8dct", Integer.toString(_8x8dct));
@@ -825,7 +863,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> fastPskip(int fastPskip) {
-		if (-1 > fastPskip || fastPskip > 1) {
+		if( - 1 > fastPskip || fastPskip > 1) {
 			throw new IllegalArgumentException("fastPskip must be between -1 and 1: " + name);
 		}
 		parameter("-fast-pskip", Integer.toString(fastPskip));
@@ -839,7 +877,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> aud(int aud) {
-		if (-1 > aud || aud > 1) {
+		if( - 1 > aud || aud > 1) {
 			throw new IllegalArgumentException("aud must be between -1 and 1: " + name);
 		}
 		parameter("-aud", Integer.toString(aud));
@@ -853,7 +891,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> mbtree(int mbtree) {
-		if (-1 > mbtree || mbtree > 1) {
+		if( - 1 > mbtree || mbtree > 1) {
 			throw new IllegalArgumentException("mbtree must be between -1 and 1: " + name);
 		}
 		parameter("-mbtree", Integer.toString(mbtree));
@@ -872,14 +910,13 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	}
 
 	/**
-	 * Reduce fluctuations in QP (before curve compression) (from -1 to FLT_MAX)
-	 * (default -1)
+	 * Reduce fluctuations in QP (before curve compression) (from -1 to FLT_MAX) (default -1)
 	 *
 	 * @param cplxblur
 	 * @return
 	 */
 	public H264<M> cplxblur(float cplxblur) {
-		if (-1.0 > cplxblur || cplxblur > 3.4028235E38) {
+		if( - 1.0 > cplxblur || cplxblur > 3.4028235E38) {
 			throw new IllegalArgumentException("cplxblur must be between -1.0 and 3.4028235E38: " + name);
 		}
 		parameter("-cplxblur", Float.toString(cplxblur));
@@ -887,8 +924,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	}
 
 	/**
-	 * A comma-separated list of partitions to consider. Possible values: p8x8,
-	 * p4x4, b8x8, i8x8, i4x4, none, all
+	 * A comma-separated list of partitions to consider. Possible values: p8x8, p4x4, b8x8, i8x8, i4x4, none, all
 	 *
 	 * @param partitions
 	 * @return
@@ -905,7 +941,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> directPred(DirectPred directPred) {
-		if (!directPred.io().isOutput()) {
+		if( ! directPred.io().isOutput()) {
 			throw new IllegalArgumentException("IO is wrong: " + directPred.io() + ": " + io);
 		}
 		parameter("-direct-pred", directPred.flag());
@@ -919,7 +955,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> sliceMaxSize(int sliceMaxSize) {
-		if (-1 > sliceMaxSize || sliceMaxSize > 2147483647) {
+		if( - 1 > sliceMaxSize || sliceMaxSize > 2147483647) {
 			throw new IllegalArgumentException("sliceMaxSize must be between -1 and 2147483647: " + name);
 		}
 		parameter("-slice-max-size", Integer.toString(sliceMaxSize));
@@ -938,14 +974,13 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	}
 
 	/**
-	 * Signal HRD information (requires vbv-bufsize; cbr not allowed in .mp4) (from
-	 * -1 to INT_MAX) (default -1)
+	 * Signal HRD information (requires vbv-bufsize; cbr not allowed in .mp4) (from -1 to INT_MAX) (default -1)
 	 *
 	 * @param nalHrd
 	 * @return
 	 */
 	public H264<M> nalHrd(NalHrd nalHrd) {
-		if (!nalHrd.io().isOutput()) {
+		if( ! nalHrd.io().isOutput()) {
 			throw new IllegalArgumentException("IO is wrong: " + nalHrd.io() + ": " + io);
 		}
 		parameter("-nal-hrd", nalHrd.flag());
@@ -959,7 +994,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	 * @return
 	 */
 	public H264<M> avcintraClass(Integer avcintraClass) {
-		if (-1 > avcintraClass || avcintraClass > 200) {
+		if( - 1 > avcintraClass || avcintraClass > 200) {
 			throw new IllegalArgumentException("avcintraClass must be between -1 and 200: " + name);
 		}
 		parameter("-avcintra-class", Integer.toString(avcintraClass));
@@ -967,8 +1002,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	}
 
 	/**
-	 * Override the x264 configuration using a :-separated list of key=value
-	 * parameters
+	 * Override the x264 configuration using a :-separated list of key=value parameters
 	 *
 	 * @param x264Params
 	 * @return
@@ -979,8 +1013,7 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 	}
 
 	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.LibLog#log(java.lang.String,
-	 *      java.lang.String, java.lang.String)
+	 * @see org.fagu.fmv.ffmpeg.operation.LibLog#log(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void log(String title, String somethings, String log) {
