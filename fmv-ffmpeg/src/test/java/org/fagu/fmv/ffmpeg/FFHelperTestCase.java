@@ -22,8 +22,6 @@ package org.fagu.fmv.ffmpeg;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.util.Arrays;
@@ -47,6 +45,9 @@ import org.fagu.fmv.utils.time.Time;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 
 /**
@@ -206,6 +207,7 @@ public class FFHelperTestCase {
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore
 	public void testConcat() throws Exception {
 		movieMetadatasSupplier = fileName -> {
 			MockMovieMetadatas builder = MockMovieMetadatas.builder();
@@ -239,6 +241,7 @@ public class FFHelperTestCase {
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore
 	public void testExtract() throws Exception {
 		FFHelper.extractPart(new File("left.mp4"), new File("out.mp4"), Time.valueOf(2), Duration.valueOf(3.4));
 		assertCmd(
@@ -405,6 +408,7 @@ public class FFHelperTestCase {
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore
 	public void testOo_Rotate180() throws Exception {
 		final MovieMetadatas movieMetadatas = mock(MovieMetadatas.class);
 		VideoStream videoStream = mock(VideoStream.class);
@@ -429,6 +433,7 @@ public class FFHelperTestCase {
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore
 	public void testOo_Rotate270() throws Exception {
 		final MovieMetadatas movieMetadatas = mock(MovieMetadatas.class);
 		VideoStream videoStream = mock(VideoStream.class);
@@ -453,6 +458,7 @@ public class FFHelperTestCase {
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore
 	public void testOo_NoRotate() throws Exception {
 		movieMetadatasSupplier = fileName -> null;
 
