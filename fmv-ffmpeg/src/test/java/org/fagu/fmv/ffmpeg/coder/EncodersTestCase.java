@@ -37,14 +37,6 @@ import org.junit.Test;
  */
 public class EncodersTestCase {
 
-	/**
-	 * 
-	 */
-	public EncodersTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
 	@Ignore
 	public void generator() {
@@ -65,9 +57,6 @@ public class EncodersTestCase {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void testCache() {
 		assertFalse(Encoders.LIBX264.isCodecExperimental());
@@ -78,11 +67,6 @@ public class EncodersTestCase {
 
 	// *************************************************
 
-	/**
-	 * @param name
-	 * @param codecClass
-	 * @return
-	 */
 	private void addEncoder(Set<Encoders> available, String name, Class<?> codecClass) {
 		Encoders byName = Encoders.byName(name);
 		if(byName != null) {

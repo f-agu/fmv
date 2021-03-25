@@ -82,6 +82,7 @@ import org.fagu.fmv.ffmpeg.format.Image2Muxer;
 import org.fagu.fmv.ffmpeg.format.MP4Muxer;
 import org.fagu.fmv.ffmpeg.format.NullMuxer;
 import org.fagu.fmv.ffmpeg.ioe.FileMediaInput;
+import org.fagu.fmv.ffmpeg.metadatas.AudioStream;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.Stream;
 import org.fagu.fmv.ffmpeg.metadatas.SubtitleStream;
@@ -1063,6 +1064,33 @@ public class FFHelper {
 		subtitleStream.language().ifPresent(lg -> joiner.append('-').append(lg));
 		subtitleStream.title().ifPresent(t -> joiner.append('-').append(t));
 		joiner.append('-').append(subtitleStream.index()).append(".srt");
+		return new File(srcFile.getParentFile(), joiner.toString());
+	}
+
+	public static void extractAudios(File videoFile) throws IOException {
+		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
+		builder.hideBanner();
+		InputProcessor inputProcessor = builder.addMediaInputFile(videoFile);
+		MovieMetadatas videoMetadatas = inputProcessor.getMovieMetadatas();
+		for(AudioStream audioStream : videoMetadatas.getAudioStreams()) {
+			OutputProcessor outputProcessor = builder.addMediaOutputFile(getAudioOutputFile(videoFile, audioStream));
+			outputProcessor.map().streams(audioStream).input(inputProcessor);
+			outputProcessor
+					.blockAllSubtitleStreams()
+					.blockAllDataStreams()
+					.blockAllVideoStreams();
+		}
+
+		FFExecutor<Object> executor = builder.build();
+		System.out.println(executor.getCommandLineString());
+		executor.execute();
+	}
+
+	private static File getAudioOutputFile(File srcFile, Stream audioStream) {
+		StringBuilder joiner = new StringBuilder("")
+				.append(FilenameUtils.getBaseName(srcFile.getName()))
+				.append('-')
+				.append(audioStream.index()).append(".mp3");
 		return new File(srcFile.getParentFile(), joiner.toString());
 	}
 

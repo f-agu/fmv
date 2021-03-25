@@ -290,7 +290,6 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 		try {
 			return sizeSuppliers.stream()
-					.peek(s -> System.out.println("Supplier: " + s))
 					.map(s -> {
 						try {
 							return s.get();
@@ -298,7 +297,6 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 							return null;
 						}
 					})
-					.peek(s -> System.out.println("size: " + s))
 					.filter(Objects::nonNull)
 					.map(orientation.get()::rotateSize)
 					.findFirst()
