@@ -1,5 +1,8 @@
 package org.fagu.fmv.media;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * fmv-media
@@ -28,6 +31,7 @@ import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeSet;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.math.Fraction;
@@ -164,6 +168,30 @@ public interface MetadatasContainer extends Metadatas, MetadataProperties {
 
 	default Optional<Fraction> getFirstFraction(String... propertyNames) {
 		return getFractions(propertyNames).findFirst();
+	}
+
+	default Stream<UUID> getUUIDs(String... propertyNames) {
+		return getObjects(UUID.class, Parsers.objectToUUID(), propertyNames);
+	}
+
+	default Optional<UUID> getFirstUUID(String... propertyNames) {
+		return getUUIDs(propertyNames).findFirst();
+	}
+
+	default Stream<LocalDateTime> getLocalDateTimes(String... propertyNames) {
+		return getObjects(LocalDateTime.class, Parsers.objectToLocalDateTime(), propertyNames);
+	}
+
+	default Optional<LocalDateTime> getFirstLocalDateTime(String... propertyNames) {
+		return getLocalDateTimes(propertyNames).findFirst();
+	}
+
+	default Stream<OffsetDateTime> getOffsetDateTimes(String... propertyNames) {
+		return getObjects(OffsetDateTime.class, Parsers.objectToOffsetDateTime(), propertyNames);
+	}
+
+	default Optional<OffsetDateTime> getFirstOffsetDateTime(String... propertyNames) {
+		return getOffsetDateTimes(propertyNames).findFirst();
 	}
 
 	default Stream<MetadatasContainer> getMetadatass(String... propertyNames) {

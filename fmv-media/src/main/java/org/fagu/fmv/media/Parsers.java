@@ -1,5 +1,13 @@
 package org.fagu.fmv.media;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
+
 /*-
  * #%L
  * fmv-media
@@ -24,6 +32,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.commons.lang3.math.Fraction;
 
@@ -296,6 +305,160 @@ public class Parsers {
 			@Override
 			public Fraction parse(Object o) {
 				return Fraction.getFraction((String)o);
+			}
+		};
+	}
+
+	public static Parser<LocalDate> objectToLocalDate() {
+		return Parsers.objectTo(LocalDate.class, stringToLocalDate());
+	}
+
+	public static Optional<LocalDate> parseToLocalDate(Object object) {
+		return Optional.ofNullable(objectToLocalDate().parse(object));
+	}
+
+	public static Parser<LocalDate> stringToLocalDate() {
+		return new StringParser<LocalDate>() {
+
+			@Override
+			public LocalDate parse(Object i) {
+				try {
+					return LocalDate.parse((String)i);
+				} catch(DateTimeParseException e) {
+					return null;
+				}
+			}
+		};
+	}
+
+	public static Parser<LocalTime> objectToLocalTime() {
+		return Parsers.objectTo(LocalTime.class, stringToLocalTime());
+	}
+
+	public static Optional<LocalTime> parseToLocalTime(Object object) {
+		return Optional.ofNullable(objectToLocalTime().parse(object));
+	}
+
+	public static Parser<LocalTime> stringToLocalTime() {
+		return new StringParser<LocalTime>() {
+
+			@Override
+			public LocalTime parse(Object i) {
+				try {
+					return LocalTime.parse((String)i);
+				} catch(DateTimeParseException e) {
+					return null;
+				}
+			}
+		};
+	}
+
+	public static Parser<LocalDateTime> objectToLocalDateTime() {
+		return Parsers.objectTo(LocalDateTime.class, stringToLocalDateTime());
+	}
+
+	public static Optional<LocalDateTime> parseToLocalDateTime(Object object) {
+		return Optional.ofNullable(objectToLocalDateTime().parse(object));
+	}
+
+	public static Parser<LocalDateTime> stringToLocalDateTime() {
+		return new StringParser<LocalDateTime>() {
+
+			@Override
+			public LocalDateTime parse(Object i) {
+				try {
+					return LocalDateTime.parse((String)i);
+				} catch(DateTimeParseException e) {
+					return null;
+				}
+			}
+		};
+	}
+
+	public static Parser<OffsetTime> objectToOffsetTime() {
+		return Parsers.objectTo(OffsetTime.class, stringToOffsetTime());
+	}
+
+	public static Optional<OffsetTime> parseToOffsetTime(Object object) {
+		return Optional.ofNullable(objectToOffsetTime().parse(object));
+	}
+
+	public static Parser<OffsetTime> stringToOffsetTime() {
+		return new StringParser<OffsetTime>() {
+
+			@Override
+			public OffsetTime parse(Object i) {
+				try {
+					return OffsetTime.parse((String)i);
+				} catch(DateTimeParseException e) {
+					return null;
+				}
+			}
+		};
+	}
+
+	public static Parser<OffsetDateTime> objectToOffsetDateTime() {
+		return Parsers.objectTo(OffsetDateTime.class, stringToOffsetDateTime());
+	}
+
+	public static Optional<OffsetDateTime> parseToOffsetDateTime(Object object) {
+		return Optional.ofNullable(objectToOffsetDateTime().parse(object));
+	}
+
+	public static Parser<OffsetDateTime> stringToOffsetDateTime() {
+		return new StringParser<OffsetDateTime>() {
+
+			@Override
+			public OffsetDateTime parse(Object i) {
+				try {
+					return OffsetDateTime.parse((String)i);
+				} catch(DateTimeParseException e) {
+					return null;
+				}
+			}
+		};
+	}
+
+	public static Parser<ZonedDateTime> objectToZonedDateTime() {
+		return Parsers.objectTo(ZonedDateTime.class, stringToZonedDateTime());
+	}
+
+	public static Optional<ZonedDateTime> parseToZonedDateTime(Object object) {
+		return Optional.ofNullable(objectToZonedDateTime().parse(object));
+	}
+
+	public static Parser<ZonedDateTime> stringToZonedDateTime() {
+		return new StringParser<ZonedDateTime>() {
+
+			@Override
+			public ZonedDateTime parse(Object i) {
+				try {
+					return ZonedDateTime.parse((String)i);
+				} catch(DateTimeParseException e) {
+					return null;
+				}
+			}
+		};
+	}
+
+	public static Parser<UUID> objectToUUID() {
+		return Parsers.objectTo(UUID.class, stringToUUID());
+	}
+
+	public static Optional<UUID> parseToUUID(Object object) {
+		return Optional.ofNullable(objectToUUID().parse(object));
+	}
+
+	public static Parser<UUID> stringToUUID() {
+		return new StringParser<UUID>() {
+
+			@Override
+			public UUID parse(Object i) {
+				try {
+					return UUID.fromString((String)i);
+				} catch(IllegalArgumentException e) {
+					return null;
+				}
 			}
 		};
 	}
