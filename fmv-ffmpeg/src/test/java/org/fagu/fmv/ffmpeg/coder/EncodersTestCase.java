@@ -59,8 +59,8 @@ public class EncodersTestCase {
 
 	@Test
 	public void testCache() {
-		assertFalse(Encoders.LIBX264.isCodecExperimental());
-		assertSame(Type.VIDEO, Encoders.LIBX264.getType());
+		assertFalse(Encoders.H264_AMF.isCodecExperimental());
+		assertSame(Type.VIDEO, Encoders.H264_AMF.getType());
 		assertSame(Type.AUDIO, Encoders.FLAC.getType());
 		assertFalse(Encoders.FLAC.isSliceLevelMultithreading());
 	}
