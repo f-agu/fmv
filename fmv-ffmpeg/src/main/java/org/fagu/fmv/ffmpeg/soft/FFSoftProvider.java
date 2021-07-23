@@ -61,7 +61,9 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 	private static final Pattern LIBVERSION_PATTERN = Pattern.compile("([\\w]+)\\ +\\ ([0-9]+\\.\\ *[0-9]+\\.[0-9]+).*");
 
-	private static final Pattern NVERSION_PATTERN = Pattern.compile("[N|n]-?(.+)-[a-zA-Z0-9]+");
+	private static final Pattern NVERSION_SHORT_PATTERN = Pattern.compile("[N|n]-?(.+)-[a-zA-Z0-9]+");
+
+	private static final Pattern NVERSION_DATE_PATTERN = Pattern.compile("[N|n]-?([0-9]+)-([a-zA-Z0-9]+)-([0-9]{4})([0-9]{2})([0-9]{2})");
 
 	private static final Pattern GITBUILDDATE_PATTERN = Pattern.compile("git-([0-9]+)-([0-9]+)-([0-9]+).*");
 
@@ -228,9 +230,14 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 	static Version getVersion(String line) {
 		String sver = StringUtils.substringBefore(line, " ");
-		Matcher matcher = NVERSION_PATTERN.matcher(sver);
+		Matcher matcher = NVERSION_DATE_PATTERN.matcher(sver);
 		if(matcher.matches()) {
 			sver = matcher.group(1);
+		} else {
+			matcher = NVERSION_SHORT_PATTERN.matcher(sver);
+			if(matcher.matches()) {
+				sver = matcher.group(1);
+			}
 		}
 		try {
 			return VersionParserManager.parse(sver);
@@ -242,7 +249,15 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 	static Date getBuiltDate(String line) {
 		String sbuilt = StringUtils.substringBefore(line, " ");
-		Matcher matcher = GITBUILDDATE_PATTERN.matcher(sbuilt);
+		Matcher matcher = NVERSION_DATE_PATTERN.matcher(sbuilt);
+		if(matcher.matches()) {
+			int year = Integer.parseInt(matcher.group(3));
+			int month = Integer.parseInt(matcher.group(4));
+			int day = Integer.parseInt(matcher.group(5));
+			return new Date(year - 1900, month - 1, day);
+		}
+
+		matcher = GITBUILDDATE_PATTERN.matcher(sbuilt);
 		if(matcher.matches()) {
 			int year = Integer.parseInt(matcher.group(1));
 			int month = Integer.parseInt(matcher.group(2));
@@ -291,4 +306,5 @@ public abstract class FFSoftProvider extends SoftProvider {
 			// ignore
 		}
 	}
+
 }

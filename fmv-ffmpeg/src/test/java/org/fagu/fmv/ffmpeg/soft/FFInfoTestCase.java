@@ -291,6 +291,28 @@ public class FFInfoTestCase {
 		assertFull(parser, null, date(2020, 6, 1), null);
 	}
 
+	@Test
+	public void testFFMpeg_2021_07_22() throws Exception {
+		Parser parser = newParserFFMpeg();
+
+		parser.readLine("ffmpeg version N-103035-g73b847e136-20210722 Copyright (c) 2000-2021 the FFmpeg developers");
+		parser.readLine("  built with gcc 10-win32 (GCC) 20210408");
+		parser.readLine(
+				"  configuration: --prefix=/ffbuild/prefix --pkg-config-flags=--static --pkg-config=pkg-config --cross-prefix=x86_64-w64-mingw32- --arch=x86_64 --target-os=mingw32 --enable-gpl --enable-version3 --disable-debug --disable-w32threads --enable-pthreads --enable-iconv --enable-libxml2 --enable-zlib --enable-libfreetype --enable-libfribidi --enable-gmp --enable-lzma --enable-fontconfig --enable-libvorbis --enable-opencl --enable-libvmaf --enable-vulkan --disable-libxcb --disable-xlib --enable-amf --enable-libaom --enable-avisynth --enable-libdav1d --enable-libdavs2 --disable-libfdk-aac --enable-ffnvcodec --enable-cuda-llvm --enable-libglslang --enable-libgme --enable-libass --enable-libbluray --enable-libmp3lame --enable-libopus --enable-libtheora --enable-libvpx --enable-libwebp --enable-lv2 --enable-libmfx --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-librav1e --enable-librubberband --enable-schannel --enable-sdl2 --enable-libsoxr --enable-libsrt --enable-libsvtav1 --enable-libtwolame --enable-libuavs3d --disable-libdrm --disable-vaapi --enable-libvidstab --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxvid --enable-libzimg --extra-cflags=-DLIBTWOLAME_STATIC --extra-cxxflags= --extra-ldflags=-pthread --extra-ldexeflags= --extra-libs=-lgomp --extra-version=20210722");
+		parser.readLine("  libavutil      57.  1.100 / 57.  1.100");
+		parser.readLine("  libavcodec     59.  3.102 / 59.  3.102");
+		parser.readLine("  libavformat    59.  4.101 / 59.  4.101");
+		parser.readLine("  libavdevice    59.  0.100 / 59.  0.100");
+		parser.readLine("  libavfilter     8.  0.103 /  8.  0.103");
+		parser.readLine("  libswscale      6.  0.100 /  6.  0.100");
+		parser.readLine("  libswresample   4.  0.100 /  4.  0.100");
+		parser.readLine("  libpostproc    56.  0.100 / 56.  0.100");
+		parser.readLine("Hyper fast Audio and Video encoder");
+		parser.readLine("usage: ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...");
+
+		assertFull(parser, null, date(2021, 7, 22), 103035);
+	}
+
 	// ********************************************************
 
 	private Date date(int year, int month, int day) {

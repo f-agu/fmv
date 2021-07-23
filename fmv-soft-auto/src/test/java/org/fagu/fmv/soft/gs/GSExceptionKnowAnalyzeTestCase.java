@@ -46,7 +46,7 @@ import org.junit.Test;
 public class GSExceptionKnowAnalyzeTestCase {
 
 	@Test
-	// @Ignore
+	//@Ignore
 	public void testMerge() throws IOException {
 		File folder = new File(System.getProperty("java.io.tmpdir"), "gs-merge-test");
 		FileUtils.deleteDirectory(folder);
