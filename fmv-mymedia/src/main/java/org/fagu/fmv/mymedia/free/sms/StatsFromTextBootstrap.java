@@ -3,6 +3,7 @@ package org.fagu.fmv.mymedia.free.sms;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -69,6 +70,10 @@ public class StatsFromTextBootstrap {
 		favoritePhoneNumber(smsList);
 		System.out.println();
 		favoriteTime(smsList);
+		System.out.println();
+		byDate(smsList);
+		System.out.println();
+		firstHourByDate(smsList);
 	}
 
 	private static void favoritePhoneNumber(List<SMS> smsList) {
@@ -86,6 +91,22 @@ public class StatsFromTextBootstrap {
 		Map<LocalTime, SMSByHourQuarter> byTimeSMS = new TreeMap<>();
 		smsList.forEach(sms -> byTimeSMS.computeIfAbsent(SMSByHourQuarter.cutByQuarter(sms.localDateTime), SMSByHourQuarter::new).smsList.add(sms));
 		byTimeSMS.forEach((t, s) -> System.out.println(t + "\t" + s.smsList.size()));
+	}
+
+	private static void byDate(List<SMS> smsList) {
+		Map<LocalDate, SMSByDate> byDateSMS = new TreeMap<>();
+		smsList.forEach(sms -> byDateSMS.computeIfAbsent(SMSByDate.cutByDate(sms.localDateTime), SMSByDate::new).smsList.add(sms));
+		byDateSMS.forEach((t, s) -> System.out.println(t + "\t" + s.smsList.size()));
+	}
+
+	private static void firstHourByDate(List<SMS> smsList) {
+		Map<LocalDate, SMS> byDateSMS = new TreeMap<>();
+		smsList.forEach(sms -> byDateSMS.merge(
+				SMSByDate.cutByDate(sms.localDateTime),
+				sms,
+				(old, nw) -> old.localDateTime.isBefore(nw.localDateTime) ? old : nw));
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+		byDateSMS.forEach((t, s) -> System.out.println(t + "\t" + formatter.format(s.localDateTime.toLocalTime())));
 	}
 
 	// -------------------------------------------------------
@@ -135,6 +156,27 @@ public class StatsFromTextBootstrap {
 		private static LocalTime cutByQuarter(LocalDateTime localDateTime) {
 			int minMinute = 15 * (localDateTime.getMinute() / 15);
 			return LocalTime.of(localDateTime.getHour(), minMinute);
+		}
+
+		public int count() {
+			return smsList.size();
+		}
+	}
+
+	// -------------------------------------------------------
+
+	public static final class SMSByDate {
+
+		private final LocalDate localDate;
+
+		private final List<SMS> smsList = new ArrayList<>();
+
+		private SMSByDate(LocalDate localDate) {
+			this.localDate = Objects.requireNonNull(localDate);
+		}
+
+		private static LocalDate cutByDate(LocalDateTime localDateTime) {
+			return localDateTime.toLocalDate();
 		}
 
 		public int count() {
