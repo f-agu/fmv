@@ -1,5 +1,7 @@
 package org.fagu.fmv.im;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /*-
  * #%L
  * fmv-imagemagick
@@ -60,6 +62,45 @@ class IMIdentifyImageMetadatasTestCase extends TestAllImageMetadatasTest {
 			}
 			if(file2 != null) {
 				file2.delete();
+			}
+		}
+	}
+
+	@Test
+	void testMultipleStatic_animatedCheck() throws IOException {
+		File file1 = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
+		File file2 = ImageResourceUtils.extractFile("wei-ass.jpg");
+
+		try {
+			Map<File, IMIdentifyImageMetadatas> map = IMIdentifyImageMetadatas.with(Arrays.asList(file2, file1))
+					.withAnimated(true)
+					.extractAll();
+			Iterator<IMIdentifyImageMetadatas> iterator = map.values().iterator();
+			assertMetadatas_WeiAss(iterator.next(), true);
+			assertMetadatas_BadAssTottooFail(iterator.next(), true);
+		} finally {
+			if(file1 != null) {
+				file1.delete();
+			}
+			if(file2 != null) {
+				file2.delete();
+			}
+		}
+	}
+
+	@Test
+	void testAnimatedGif_checkEnabled() throws IOException {
+		File file = ImageResourceUtils.extractFile("animated.gif");
+
+		try {
+			IMIdentifyImageMetadatas metadatas = IMIdentifyImageMetadatas
+					.with(file)
+					.withAnimated(true)
+					.extract();
+			assertTrue(metadatas.isAnimated().get());
+		} finally {
+			if(file != null) {
+				file.delete();
 			}
 		}
 	}

@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -45,8 +46,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.exec.CommandLine;
@@ -93,6 +92,8 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 
 		Consumer<CommandLine> logger;
 
+		boolean checkAnimated;
+
 		private ImageMetadatasSourcesBuilder(Sources<T> sources) {
 			this.sources = sources;
 			convertSoft = Convert.search();
@@ -109,9 +110,14 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 			return getThis();
 		}
 
+		public B withAnimated(boolean check) {
+			this.checkAnimated = check;
+			return getThis();
+		}
+
 		@Override
 		public IMConvertImageMetadatas extract() throws IOException {
-			Map<T, IMConvertImageMetadatas> extract = IMConvertImageMetadatas.extract(convertSoft, sources, logger, this);
+			Map<T, IMConvertImageMetadatas> extract = IMConvertImageMetadatas.extract(convertSoft, sources, logger, this, checkAnimated);
 			return extract.values().iterator().next();
 		}
 
@@ -143,7 +149,7 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		}
 
 		public Map<File, IMConvertImageMetadatas> extractAll() throws IOException {
-			return IMConvertImageMetadatas.extract(convertSoft, sources, logger, this);
+			return IMConvertImageMetadatas.extract(convertSoft, sources, logger, this, checkAnimated);
 		}
 
 	}
@@ -162,9 +168,18 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 
 	private final String json;
 
+	private final List<IMConvertImageMetadatas> animatedMetadatas;
+
 	protected IMConvertImageMetadatas(Map<String, Object> metadatas, String json) {
 		super(metadatas);
 		this.json = Objects.requireNonNull(json);
+		this.animatedMetadatas = null;
+	}
+
+	private IMConvertImageMetadatas(Map<String, Object> metadatas, String json, List<IMConvertImageMetadatas> animatedMetadatas) {
+		super(metadatas);
+		this.json = Objects.requireNonNull(json);
+		this.animatedMetadatas = animatedMetadatas != null ? Collections.unmodifiableList(animatedMetadatas) : null;
 	}
 
 	@Override
@@ -414,6 +429,14 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 	}
 
 	@Override
+	public Optional<Boolean> isAnimated() {
+		if(animatedMetadatas == null) {
+			return Optional.empty();
+		}
+		return Optional.of( ! animatedMetadatas.isEmpty());
+	}
+
+	@Override
 	public String toJSON() {
 		return json;
 	}
@@ -470,7 +493,8 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 			Soft identifySoft,
 			Sources<T> sources,
 			Consumer<CommandLine> logger,
-			SoftExecutorHelper<?> softExecutorHelper)
+			SoftExecutorHelper<?> softExecutorHelper,
+			boolean checkAnimated)
 			throws IOException {
 
 		Objects.requireNonNull(identifySoft);
@@ -479,7 +503,11 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		}
 
 		IMOperation op = new IMOperation();
-		sources.addImages(op);
+		if(checkAnimated) {
+			sources.addImageAllPages(op);
+		} else {
+			sources.addImageFirstPage(op);
+		}
 		op.add("json:-");
 
 		StringBuilder output = new StringBuilder();
@@ -491,11 +519,26 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		softExecutor.execute();
 
 		Gson gson = new Gson();
-		List<Object> map = gson.fromJson(output.toString(), List.class);
+		String json = output.toString();
+		List<Object> objects = gson.fromJson(json, List.class);
 		Iterator<Source<T>> iterator = sources.iterator();
-		return map.stream()
-				.map(m -> new IMConvertImageMetadatas((Map<String, Object>)((Map<String, Object>)m).get("image"), output.toString()))
-				.collect(Collectors.toMap(m -> iterator.next().value, Function.identity()));
+		Map<String, List<IMConvertImageMetadatas>> mergedMetadatas = new LinkedHashMap<>();
+		for(Object object : objects) {
+			IMConvertImageMetadatas metadatas = new IMConvertImageMetadatas((Map<String, Object>)((Map<String, Object>)object).get("image"), json);
+			String fileName = metadatas.getFirstString("name").orElseThrow(IllegalStateException::new);
+			mergedMetadatas.computeIfAbsent(fileName, k -> new ArrayList<>())
+					.add(metadatas);
+		}
+		Map<T, IMConvertImageMetadatas> map = new LinkedHashMap<>();
+		mergedMetadatas.values().stream()
+				.forEach(list -> {
+					IMConvertImageMetadatas metadatas = list.get(0);
+					if(list.size() > 1) {
+						metadatas = new IMConvertImageMetadatas(metadatas.getData(), metadatas.json, list.subList(1, list.size() - 1));
+					}
+					map.put(iterator.next().value, metadatas);
+				});
+		return map;
 	}
 
 	private Double parseCoordinate(String value) {
@@ -532,7 +575,9 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 
 		boolean has();
 
-		void addImages(IMOperation imOperation);
+		void addImageFirstPage(IMOperation imOperation);
+
+		void addImageAllPages(IMOperation imOperation);
 
 		default Consumer<SoftExecutor> getSoftExecutor() {
 			return c -> {};
@@ -571,8 +616,13 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		}
 
 		@Override
-		public void addImages(IMOperation imOperation) {
+		public void addImageFirstPage(IMOperation imOperation) {
 			sourceFiles.forEach(file -> imOperation.image(file, "[0]"));
+		}
+
+		@Override
+		public void addImageAllPages(IMOperation imOperation) {
+			sourceFiles.forEach(imOperation::image);
 		}
 
 		@Override
@@ -600,10 +650,16 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 		}
 
 		@Override
-		public void addImages(IMOperation imOperation) {
+		public void addImageFirstPage(IMOperation imOperation) {
 			// - : standard input
 			// [0] : first page of the image
 			imOperation.image("-[0]");
+		}
+
+		@Override
+		public void addImageAllPages(IMOperation imOperation) {
+			// - : standard input
+			imOperation.image("-");
 		}
 
 		@Override

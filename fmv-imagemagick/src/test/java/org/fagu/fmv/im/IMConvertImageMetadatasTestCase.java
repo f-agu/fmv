@@ -45,8 +45,8 @@ class IMConvertImageMetadatasTestCase extends TestAllImageMetadatasTest {
 
 	@Test
 	void testMultiple() throws IOException {
-		File file1 = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
-		File file2 = ImageResourceUtils.extractFile("wei-ass.jpg");
+		File file1 = ImageResourceUtils.extractFile(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL);
+		File file2 = ImageResourceUtils.extractFile(ImageResourceUtils.WEI_ASS);
 
 		try {
 			Map<File, IMConvertImageMetadatas> map = IMConvertImageMetadatas.with(Arrays.asList(file2, file1)).extractAll();
@@ -63,9 +63,25 @@ class IMConvertImageMetadatasTestCase extends TestAllImageMetadatasTest {
 	}
 
 	@Test
+	void testFile_animated_gif_animatedChecked() throws IOException {
+		File file = ImageResourceUtils.extractFile(ImageResourceUtils.ANIMATED_GIF);
+
+		try {
+			IMConvertImageMetadatas metadatas = IMConvertImageMetadatas.with(file)
+					.withAnimated(true)
+					.extract();
+			assertMetadatas_AnimatedGif(metadatas, true);
+		} finally {
+			if(file != null) {
+				file.delete();
+			}
+		}
+	}
+
+	@Test
 	@Disabled
 	void testExtractSingleton() throws Exception {
-		final File file = ImageResourceUtils.extractFile("plan4-550Mpixels.tif");
+		final File file = ImageResourceUtils.extractFile(ImageResourceUtils.PLAN4_550MPIXELS);
 		try {
 			Runnable runnable = new Runnable() {
 

@@ -50,6 +50,11 @@ public abstract class TestAllImageMetadatasTest extends ImageBaseMetadatasTest {
 	}
 
 	@Test
+	public void testFile_animated_gif() throws IOException {
+		singleDoAndDelete(ImageResourceUtils.ANIMATED_GIF, this::assertMetadatas_AnimatedGif);
+	}
+
+	@Test
 	public void testFile_rabbitmq() throws IOException {
 		singleDoAndDelete(ImageResourceUtils.RABBITMQ, this::assertMetadatas_Rabbitmq);
 	}
