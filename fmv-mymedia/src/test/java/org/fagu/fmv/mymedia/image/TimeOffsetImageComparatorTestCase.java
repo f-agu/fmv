@@ -1,5 +1,23 @@
 package org.fagu.fmv.mymedia.image;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+import java.io.File;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.Iterator;
+import java.util.TreeSet;
+
+import org.fagu.fmv.im.IMIdentifyImageMetadatas;
+import org.fagu.fmv.im.Image;
+import org.fagu.fmv.mymedia.classify.image.TimeOffsetImageComparator;
+import org.fagu.fmv.utils.file.FileFinder;
+import org.fagu.fmv.utils.file.FileFinder.InfosFile;
+import org.junit.jupiter.api.Test;
+
 /*
  * #%L
  * fmv-mymedia
@@ -20,34 +38,17 @@ package org.fagu.fmv.mymedia.image;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-
-import java.io.File;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.util.Iterator;
-import java.util.TreeSet;
-
-import org.fagu.fmv.im.IMIdentifyImageMetadatas;
-import org.fagu.fmv.im.Image;
-import org.fagu.fmv.mymedia.classify.image.TimeOffsetImageComparator;
-import org.fagu.fmv.utils.file.FileFinder;
-import org.fagu.fmv.utils.file.FileFinder.InfosFile;
-import org.junit.Test;
 
 
 /**
  * @author f.agu
  */
-public class TimeOffsetImageComparatorTestCase {
+class TimeOffsetImageComparatorTestCase {
 
 	@Test
-	public void testEmpty() {
+	void testEmpty() {
 		TimeOffsetImageComparator comparator = new TimeOffsetImageComparator();
 		FileFinder<Image>.InfosFile image1 = mockImage(1, "1");
 		FileFinder<Image>.InfosFile image2 = mockImage(2, "2");
@@ -58,7 +59,7 @@ public class TimeOffsetImageComparatorTestCase {
 	}
 
 	@Test
-	public void testSome() {
+	void testSome() {
 		TimeOffsetImageComparator comparator = new TimeOffsetImageComparator();
 		comparator.addFilter(im -> "a".equals(im.getDevice()), 17);
 		FileFinder<Image>.InfosFile imageA1 = mockImage(1, "a", "a", "A1"); // 18 = 1 + 17

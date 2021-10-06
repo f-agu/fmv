@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.gs;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*
  * #%L
  * fmv-image
@@ -20,8 +22,6 @@ package org.fagu.fmv.soft.gs;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -37,23 +37,23 @@ import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class GSSoftProviderTestCase {
+class GSSoftProviderTestCase {
 
 	@Test
-	public void testSearch() {
+	void testSearch() {
 		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Soft soft = GS.search();
 		System.out.println(soft);
 	}
 
 	@Test
-	public void testParseOnWindows() throws IOException {
+	void testParseOnWindows() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("GPL Ghostscript 9.16 (2015-03-30)");
 		parser.readLine("Copyright (C) 2015 Artifex Software, Inc.  All rights reserved.");
@@ -61,7 +61,7 @@ public class GSSoftProviderTestCase {
 	}
 
 	@Test
-	public void testParseOnMac() throws IOException {
+	void testParseOnMac() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("GPL Ghostscript 9.18 (2015-10-05)");
 		parser.readLine("Copyright (C) 2015 Artifex Software, Inc.  All rights reserved.");

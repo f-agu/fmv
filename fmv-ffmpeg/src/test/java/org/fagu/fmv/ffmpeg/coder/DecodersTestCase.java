@@ -1,5 +1,9 @@
 package org.fagu.fmv.ffmpeg.coder;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,27 +24,23 @@ package org.fagu.fmv.ffmpeg.coder;
  * #L%
  */
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.srcgen.ClassNameUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class DecodersTestCase {
+class DecodersTestCase {
 
 	@Test
-	@Ignore
-	public void generator() {
+	@Disabled
+	void generator() {
 		Set<Decoders> available = new TreeSet<Decoders>((e1, e2) -> e1.getName().compareTo(e2.getName()));
 		available.addAll(Decoders.available());
 		// addDecoder(available, "...", MyDecoder.class);
@@ -57,7 +57,7 @@ public class DecodersTestCase {
 	}
 
 	@Test
-	public void testCache() {
+	void testCache() {
 		assertFalse(Decoders.H264.isCodecExperimental());
 		assertTrue(Decoders.H264.isFrameLevelMultithreading());
 		assertSame(Type.VIDEO, Decoders.H264.getType());

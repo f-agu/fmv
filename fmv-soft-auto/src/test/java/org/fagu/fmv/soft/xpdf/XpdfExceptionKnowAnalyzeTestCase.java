@@ -1,5 +1,8 @@
 package org.fagu.fmv.soft.xpdf;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*-
  * #%L
  * fmv-soft-auto
@@ -19,8 +22,6 @@ package org.fagu.fmv.soft.xpdf;
  * limitations under the License.
  * #L%
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,17 +35,17 @@ import org.apache.commons.io.IOUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftTestCase;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 24 janv. 2017 13:23:07
  */
-public class XpdfExceptionKnowAnalyzeTestCase {
+class XpdfExceptionKnowAnalyzeTestCase {
 
 	@Test
-	public void testInfo() throws IOException {
+	void testInfo() throws IOException {
 		extract(null, "Couldn't open file");
 		extract("cheese.zip", "May not be a PDF file");
 		extract("mp4.mp4", "May not be a PDF file");
@@ -76,12 +77,6 @@ public class XpdfExceptionKnowAnalyzeTestCase {
 		}
 	}
 
-	/**
-	 * @param tmpFolder
-	 * @param resource
-	 * @return
-	 * @throws IOException
-	 */
 	private File extractResource(File tmpFolder, String resource) throws IOException {
 		File file = File.createTempFile(FilenameUtils.getBaseName(resource), "." + FilenameUtils.getExtension(resource), tmpFolder);
 		try (InputStream inputStream = SoftTestCase.class.getResourceAsStream(resource);

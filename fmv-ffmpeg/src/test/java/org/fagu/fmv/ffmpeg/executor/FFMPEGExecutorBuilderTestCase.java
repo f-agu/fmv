@@ -1,5 +1,8 @@
 package org.fagu.fmv.ffmpeg.executor;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,11 +23,6 @@ package org.fagu.fmv.ffmpeg.executor;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
@@ -38,53 +36,39 @@ import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.utils.media.Size;
 import org.fagu.fmv.utils.time.Duration;
 import org.fagu.fmv.utils.time.Time;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 
 /**
  * @author f.agu
  */
-@RunWith(MockitoJUnitRunner.class)
-public class FFMPEGExecutorBuilderTestCase {
+@ExtendWith(MockitoExtension.class)
+class FFMPEGExecutorBuilderTestCase {
 
-	/**
-	 * 
-	 */
 	private FFMPEGExecutorBuilder ffmpegExecutorBuilder;
 
-	/**
-	 * 
-	 */
-	public FFMPEGExecutorBuilderTestCase() {}
-
-	/**
-	 * 
-	 */
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		ffmpegExecutorBuilder = FFMPEGExecutorBuilder.create();
 	}
 
 	// ======================== INPUT ========================
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testInputFile() {
+	void testInputFile() {
 		File file = mockFile("/path/file");
 		ffmpegExecutorBuilder.addMediaInputFile(file);
 		assertArgs("-i", "/path/file");
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testInput() {
+	void testInput() {
 		MediaInput input = mockInput("/path/file");
 		ffmpegExecutorBuilder.addMediaInput(input);
 		assertArgs("-i", "/path/file");
@@ -92,65 +76,47 @@ public class FFMPEGExecutorBuilderTestCase {
 
 	// ======================== INPUT PROCESSOR ========================
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testInputProcessor_duration() {
+	void testInputProcessor_duration() {
 		MediaInput input = mockInput("/path/file");
 		InputProcessor inputProcessor = ffmpegExecutorBuilder.addMediaInput(input);
 		inputProcessor.duration(new Duration(1, 2, 3.4));
 		assertArgs("-t", "01:02:03.400", "-i", "/path/file");
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testInputProcessor_format() {
+	void testInputProcessor_format() {
 		MediaInput input = mockInput("/path/file");
 		InputProcessor inputProcessor = ffmpegExecutorBuilder.addMediaInput(input);
 		inputProcessor.format("forMAT");
 		assertArgs("-f", "forMAT", "-i", "/path/file");
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testInputProcessor_frameRate() {
+	void testInputProcessor_frameRate() {
 		MediaInput input = mockInput("/path/file");
 		InputProcessor inputProcessor = ffmpegExecutorBuilder.addMediaInput(input);
 		inputProcessor.frameRate(FrameRate.PAL);
 		assertArgs("-r", "25", "-i", "/path/file");
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testInputProcessor_getInput() {
-		MediaInput input = mockInput("/path/file");
+	void testInputProcessor_getInput() {
+		MediaInput input = mock(MediaInput.class);
 		InputProcessor inputProcessor = ffmpegExecutorBuilder.addMediaInput(input);
 		assertSame(input, inputProcessor.getInput());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testInputProcessor_size() {
+	void testInputProcessor_size() {
 		MediaInput input = mockInput("/path/file");
 		InputProcessor inputProcessor = ffmpegExecutorBuilder.addMediaInput(input);
 		inputProcessor.size(Size.HD720);
 		assertArgs("-s", "hd720", "-i", "/path/file");
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testInputProcessor_timeSeek() {
+	void testInputProcessor_timeSeek() {
 		MediaInput input = mockInput("/path/file");
 		InputProcessor inputProcessor = ffmpegExecutorBuilder.addMediaInput(input);
 		inputProcessor.timeSeek(new Time(1, 2, 3.4));
@@ -159,21 +125,15 @@ public class FFMPEGExecutorBuilderTestCase {
 
 	// ======================== OUTPUT ========================
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testOutputFile() {
+	void testOutputFile() {
 		File file = mockFile("/path/file");
 		ffmpegExecutorBuilder.addMediaOutputFile(file);
 		assertArgs("/path/file");
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testOutput() {
+	void testOutput() {
 		MediaOutput output = mockOutput("/path/file");
 		ffmpegExecutorBuilder.addMediaOutput(output);
 		assertArgs("/path/file");
@@ -181,22 +141,16 @@ public class FFMPEGExecutorBuilderTestCase {
 
 	// ======================== OUTPUT PROCESSOR ========================
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testOutputProcessor_duration() {
+	void testOutputProcessor_duration() {
 		MediaOutput output = mockOutput("/path/file");
 		OutputProcessor outputProcessor = ffmpegExecutorBuilder.addMediaOutput(output);
 		outputProcessor.duration(new Duration(1, 2, 3.4));
 		assertArgs("-t", "01:02:03.400", "/path/file");
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testOutputProcessor_format() {
+	void testOutputProcessor_format() {
 		MediaOutput output = mockOutput("/path/file");
 		OutputProcessor outputProcessor = ffmpegExecutorBuilder.addMediaOutput(output);
 		outputProcessor.format("forMAT");
@@ -205,44 +159,29 @@ public class FFMPEGExecutorBuilderTestCase {
 
 	// ***********************************************************
 
-	/**
-	 * @param strs
-	 */
 	private void assertArgs(String... strs) {
 		FFMPEGOperation<?> ffmpegOperation = ffmpegExecutorBuilder.getFFMPEGOperation();
 		List<String> arguments = ffmpegOperation.toArguments();
-		assertEquals("size", strs.length, arguments.size());
+		assertEquals(strs.length, arguments.size());
 		Iterator<String> iterator = arguments.iterator();
 		int pos = 0;
 		for(String str : strs) {
-			assertEquals("arg n" + Integer.toString(pos++), str, iterator.next());
+			assertEquals(str, iterator.next(), "arg n" + Integer.toString(pos++));
 		}
 	}
 
-	/**
-	 * @param location
-	 * @return
-	 */
 	private MediaInput mockInput(String location) {
 		MediaInput input = mock(MediaInput.class);
 		doReturn(location).when(input).toString();
 		return input;
 	}
 
-	/**
-	 * @param location
-	 * @return
-	 */
 	private MediaOutput mockOutput(String location) {
 		MediaOutput output = mock(MediaOutput.class);
 		doReturn(location).when(output).toString();
 		return output;
 	}
 
-	/**
-	 * @param path
-	 * @return
-	 */
 	private File mockFile(String path) {
 		File file = mock(File.class);
 		doReturn(path).when(file).getPath();

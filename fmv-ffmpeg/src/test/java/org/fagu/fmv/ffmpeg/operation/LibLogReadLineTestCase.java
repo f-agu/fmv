@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.operation;
 
+import org.junit.jupiter.api.Test;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,37 +22,23 @@ package org.fagu.fmv.ffmpeg.operation;
  * #L%
  */
 
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
-import org.junit.Test;
 
 
 /**
  * @author f.agu
  */
-public class LibLogReadLineTestCase {
+class LibLogReadLineTestCase {
 
-	/**
-	 *
-	 */
-	public LibLogReadLineTestCase() {}
-
-	/**
-	 *
-	 */
 	@Test
-	public void testEmpty() {
+	void testEmpty() {
 		LibLogReadLine llrl = new LibLogReadLine();
 		llrl.read("[libx264 @ 03c64160] profile High, level 3.0");
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testSimplelibx264() {
+	void testSimplelibx264() {
 		LibLog libLog = mock(LibLog.class);
 		LibLogReadLine llrl = new LibLogReadLine();
 		llrl.add(s -> true, libLog);
@@ -60,11 +48,8 @@ public class LibLogReadLineTestCase {
 		verify(libLog).log("libx264", "03c64160", "profile High, level 3.0");
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testSimplelibx264_2_Filters_for_1_LibLog() {
+	void testSimplelibx264_2_Filters_for_1_LibLog() {
 		LibLog libLog = mock(LibLog.class);
 		LibLogReadLine llrl = new LibLogReadLine();
 		llrl.add(s -> s.startsWith("libx"), libLog);
@@ -75,11 +60,8 @@ public class LibLogReadLineTestCase {
 		verify(libLog).log("libx264", "03c64160", "profile High, level 3.0");
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testSimpleVolumedetect() {
+	void testSimpleVolumedetect() {
 		LibLog libLog = mock(LibLog.class);
 		LibLogReadLine llrl = new LibLogReadLine();
 		llrl.add(s -> s.startsWith("Parsed_volumedetect"), libLog);

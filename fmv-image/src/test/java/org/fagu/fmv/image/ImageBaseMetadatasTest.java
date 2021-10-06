@@ -1,5 +1,9 @@
 package org.fagu.fmv.image;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 /*
  * #%L
  * fmv-image
@@ -19,9 +23,6 @@ package org.fagu.fmv.image;
  * limitations under the License.
  * #L%
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,13 +35,13 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.fagu.fmv.media.BaseMetadatasTest;
 import org.fagu.fmv.media.TestMetadataExtractor;
 import org.fagu.fmv.utils.media.Size;
-import org.junit.AfterClass;
+import org.junit.jupiter.api.AfterAll;
 
 
 /**
  * @author f.agu
  */
-public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
+class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 
 	private static final Map<String, Set<String>> FAILED_KEYS = new HashMap<>();
 
@@ -53,7 +54,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 				ImageBaseMetadatasTest.class::getResourceAsStream);
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void debugFailedKeys() {
 		if(DEBUG) {
 			System.out.println();
@@ -316,7 +317,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 	private void mdAssertNull(String fileName, String message, Object obj) {
 		if(assertFilter().test(fileName, message)) {
 			try {
-				assertNull(message, obj);
+				assertNull(obj, message);
 			} catch(AssertionError e) {
 				assertion(e, fileName, message);
 			}
@@ -326,7 +327,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 	private void mdAssertNotNull(String fileName, String message, Object obj) {
 		if(assertFilter().test(fileName, message)) {
 			try {
-				assertNotNull(message, obj);
+				assertNotNull(obj, message);
 			} catch(AssertionError e) {
 				assertion(e, fileName, message);
 			}
@@ -346,7 +347,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 	private void mdAssertEquals(String fileName, String message, double expected, double actual, double delta) {
 		if(assertFilter().test(fileName, message)) {
 			try {
-				assertEquals(message, expected, actual, delta);
+				assertEquals(expected, actual, delta, message);
 			} catch(AssertionError e) {
 				assertion(e, fileName, message);
 			}
@@ -360,7 +361,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 		}
 		if(assertFilter().test(fileName, message)) {
 			try {
-				assertEquals(message, expected, actual);
+				assertEquals(expected, actual, message);
 			} catch(AssertionError e) {
 				assertion(e, fileName, message);
 			}

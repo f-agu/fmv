@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.filter.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,30 +22,16 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-@RunWith(MockitoJUnitRunner.class)
-public class HFlipTestCase {
+class HFlipTestCase {
 
-	/**
-	 * 
-	 */
-	public HFlipTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	public void testFitToBox() {
+	void testFitToBox() {
 		HFlip hFlip = new HFlip();
 		assertEquals("hflip", hFlip.toString());
 	}

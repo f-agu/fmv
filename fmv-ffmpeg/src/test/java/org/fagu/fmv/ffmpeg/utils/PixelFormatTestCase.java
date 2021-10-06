@@ -1,5 +1,9 @@
 package org.fagu.fmv.ffmpeg.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,32 +24,19 @@ package org.fagu.fmv.ffmpeg.utils;
  * #L%
  */
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.fagu.fmv.ffmpeg.utils.srcgen.ClassNameUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class PixelFormatTestCase {
+class PixelFormatTestCase {
 
-	/**
-	 * 
-	 */
-	public PixelFormatTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	@Ignore
-	public void generator() {
+	@Disabled
+	void generator() {
 		for(PixelFormat pixelFormat : PixelFormat.available()) {
 			String name = pixelFormat.getName();
 			String fieldName = ClassNameUtils.fieldStatic(name);
@@ -54,11 +45,8 @@ public class PixelFormatTestCase {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testCache() {
+	void testCache() {
 		assertEquals(12, PixelFormat.YUV420P.getBitsPerPixel());
 		assertEquals(3, PixelFormat.YUV420P.getNbComponents());
 		assertTrue(PixelFormat.YUV420P.isSupportedInput());

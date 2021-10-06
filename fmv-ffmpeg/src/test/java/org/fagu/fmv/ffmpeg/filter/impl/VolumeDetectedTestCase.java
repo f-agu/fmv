@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.filter.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,33 +22,23 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class VolumeDetectedTestCase {
+class VolumeDetectedTestCase {
 
-	/**
-	 *
-	 */
-	public VolumeDetectedTestCase() {}
-
-	/**
-	 *
-	 */
 	@Test
-	public void testToString() {
+	void testToString() {
 		SortedMap<Integer, Long> histogram = new TreeMap<>();
 		histogram.put(0, 1L);
 		histogram.put(2, 3L);
@@ -54,11 +46,8 @@ public class VolumeDetectedTestCase {
 		assertEquals("count:4,mean:2.0,max:3.0,histogram:[0=1;2=3]", volumeDetected.toString());
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testParse() {
+	void testParse() {
 		VolumeDetected volumeDetected = VolumeDetected.parse("count:4,mean:2.0,max:3.0,histogram:[0=1;2=3]");
 		assertEquals(4, volumeDetected.countSample());
 		assertEquals(2, volumeDetected.getMean(), 0.00001D);
@@ -70,12 +59,9 @@ public class VolumeDetectedTestCase {
 		assertEquals(histogram, volumeDetected.getHistogram());
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	@Ignore
-	public void testx() {
+	@Disabled
+	void testx() {
 		List<String> v = new ArrayList<>();
 		v.add("count:3872768,mean:-39.1,max:-0.0,histogram:[0=156;1=136;2=22;3=22;4=20;5=18;6=16;7=16;8=8;9=14;10=14;11=10;12=14;13=232;14=169;15=398;16=407;17=688;18=440;19=829;20=977]");
 		v.add("count:1548288,mean:-38.2,max:-4.4,histogram:[4=2;5=10;6=8;7=14;8=56;9=82;10=107;11=87;12=83;13=444;14=393;15=357]");

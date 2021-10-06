@@ -20,28 +20,19 @@ package org.fagu.fmv.ffmpeg.utils;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.utils.srcgen.ClassNameUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class BitStreamFilterTestCase {
+class BitStreamFilterTestCase {
 
-	/**
-	 * 
-	 */
-	public BitStreamFilterTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	@Ignore
-	public void generator() {
+	@Disabled
+	void generator() {
 		for(BitStreamFilter bitStreamFilter : BitStreamFilter.available()) {
 			String name = bitStreamFilter.getName();
 			String fieldName = ClassNameUtils.fieldStatic(name);
@@ -49,12 +40,5 @@ public class BitStreamFilterTestCase {
 			System.out.println("public static final BitStreamFilter " + fieldName + " = new BitStreamFilter(\"" + name + "\");");
 		}
 	}
-
-	/**
-	 * 
-	 */
-	// @Test
-	// public void testCache() {
-	// }
 
 }

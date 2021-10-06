@@ -31,21 +31,21 @@ import java.util.function.BiPredicate;
 import org.fagu.fmv.image.ImageMetadatas;
 import org.fagu.fmv.image.ImageResourceUtils;
 import org.fagu.fmv.image.TestAllImageMetadatasTest;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class IMIdentifyImageMetadatasTestCase extends TestAllImageMetadatasTest {
+class IMIdentifyImageMetadatasTestCase extends TestAllImageMetadatasTest {
 
 	public IMIdentifyImageMetadatasTestCase() {
 		super(new IMIdentifyImageTestMetadataExtractor());
 	}
 
 	@Test
-	public void testMultiple() throws IOException {
+	void testMultiple() throws IOException {
 		File file1 = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
 		File file2 = ImageResourceUtils.extractFile("wei-ass.jpg");
 
@@ -65,8 +65,8 @@ public class IMIdentifyImageMetadatasTestCase extends TestAllImageMetadatasTest 
 	}
 
 	@Test
-	@Ignore
-	public void testExtractSingleton() throws Exception {
+	@Disabled
+	void testExtractSingleton() throws Exception {
 		final File file = ImageResourceUtils.extractFile("plan4-550Mpixels.tif");
 		try {
 			Runnable runnable = new Runnable() {

@@ -11,11 +11,7 @@
 	<packaging>jar</packaging>
 	<name>fmv-ui-web</name>
 	<description>FMV command line</description>
-	
-	<properties>
-		<spring-boot.version>2.0.0.RELEASE</spring-boot.version>
-	</properties>
-    
+	    
 	<dependencies>
 		<dependency>
 			<groupId>org.fagu</groupId>
@@ -26,31 +22,30 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-actuator-autoconfigure</artifactId>
-			<version>${spring-boot.version}</version>
+			<version>${spring-boot2.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
-			<version>${spring-boot.version}</version>
+			<version>${spring-boot2.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<version>${spring-boot.version}</version>
+			<version>${spring-boot2.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<version>${spring-boot.version}</version>
+			<version>${spring-boot2.version}</version>
 			<scope>test</scope>
 		</dependency>
 		
 		<!-- tests -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<type>jar</type>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -66,7 +61,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring-boot.version}</version>
+				<version>${spring-boot2.version}</version>
 				<executions>
 					<execution>
 						<goals>

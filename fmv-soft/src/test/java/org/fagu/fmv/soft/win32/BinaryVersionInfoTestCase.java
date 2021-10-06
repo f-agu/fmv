@@ -23,19 +23,19 @@ package org.fagu.fmv.soft.win32;
 import java.io.File;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 24 sept. 2019 09:12:22
  */
-public class BinaryVersionInfoTestCase {
+class BinaryVersionInfoTestCase {
 
 	@Test
-	@Ignore
-	public void test() {
+	@Disabled
+	void test() {
 		if( ! SystemUtils.IS_OS_WINDOWS) {
 			return;
 		}

@@ -1,5 +1,8 @@
 package org.fagu.fmv.utils.collection;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 /*
  * #%L
  * fmv-utils
@@ -20,36 +23,24 @@ package org.fagu.fmv.utils.collection;
  * #L%
  */
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class MultiValueMapsTestCase {
+class MultiValueMapsTestCase {
 
-	/**
-	 * 
-	 */
-	public MultiValueMapsTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	@Ignore
-	public void testPourMail() {
+	@Disabled
+	void testPourMail() {
 		Map<String, List<String>> map = new HashMap<String, List<String>>();
 		// ...
 		List<String> list = map.get("key");
@@ -65,11 +56,8 @@ public class MultiValueMapsTestCase {
 		listValueMap.add("key", "value");
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void test1() {
+	void test1() {
 		MapList<String, Integer> listValueMap = MultiValueMaps.<String, Integer>hashMapArrayList();
 		listValueMap.add("toto", 4);
 		listValueMap.add("toto", 3);

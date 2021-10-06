@@ -1,5 +1,10 @@
 package org.fagu.fmv.ffmpeg.flags;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+import org.junit.jupiter.api.Test;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -21,43 +26,23 @@ package org.fagu.fmv.ffmpeg.flags;
  */
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-
-import org.junit.Test;
-
-
 /**
  * @author f.agu
  */
-public class FlagsTestCase {
+class FlagsTestCase {
 
-	/**
-	 * 
-	 */
-	public FlagsTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	public void testToString() {
+	void testToString() {
 		assertEquals("+direct", Avioflags.DIRECT.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testInverse1ToString() {
+	void testInverse1ToString() {
 		assertEquals("-direct", Avioflags.DIRECT.inverse().toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testInverse_more() {
+	void testInverse_more() {
 		assertSame(Avioflags.DIRECT, Avioflags.DIRECT.inverse().inverse());
 		assertEquals("-direct", Avioflags.DIRECT.inverse().inverse().inverse().toString());
 		assertSame(Avioflags.DIRECT, Avioflags.DIRECT.inverse().inverse().inverse().inverse());

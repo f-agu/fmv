@@ -1,5 +1,11 @@
 package org.fagu.fmv.ffmpeg.filter.impl;
 
+import java.util.Optional;
+
+import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
+import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
+import org.junit.jupiter.api.Test;
+
 /*-
  * #%L
  * fmv-ffmpeg
@@ -23,26 +29,15 @@ package org.fagu.fmv.ffmpeg.filter.impl;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-import java.util.Optional;
-
-import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
-import org.junit.Test;
-
 
 /**
  * @author f.agu
  * @created 7 nov. 2016 14:36:03
  */
-public class AutoRotateTestCase {
-
-	/**
-	 * 
-	 */
-	public AutoRotateTestCase() {}
+class AutoRotateTestCase {
 
 	@Test
-	public void test() {
+	void test() {
 		MovieMetadatas movieMetadatas = mock(MovieMetadatas.class);
 		VideoStream videoStream = mock(VideoStream.class);
 

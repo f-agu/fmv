@@ -20,28 +20,19 @@ package org.fagu.fmv.ffmpeg.utils;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.utils.srcgen.ClassNameUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class AudioSampleFormatTestCase {
+class AudioSampleFormatTestCase {
 
-	/**
-	 * 
-	 */
-	public AudioSampleFormatTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	@Ignore
-	public void generator() {
+	@Disabled
+	void generator() {
 		for(AudioSampleFormat audioSampleFormat : AudioSampleFormat.available()) {
 			String name = audioSampleFormat.getName();
 			String fieldName = ClassNameUtils.fieldStatic(name);
@@ -50,12 +41,5 @@ public class AudioSampleFormatTestCase {
 			System.out.println("public static final AudioSampleFormat " + fieldName + " = new AudioSampleFormat(\"" + name + "\");");
 		}
 	}
-
-	/**
-	 * 
-	 */
-	// @Test
-	// public void testCache() {
-	// }
 
 }

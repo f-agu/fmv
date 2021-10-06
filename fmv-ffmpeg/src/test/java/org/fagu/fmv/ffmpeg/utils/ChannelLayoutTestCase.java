@@ -20,28 +20,19 @@ package org.fagu.fmv.ffmpeg.utils;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.utils.srcgen.ClassNameUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class ChannelLayoutTestCase {
+class ChannelLayoutTestCase {
 
-	/**
-	 * 
-	 */
-	public ChannelLayoutTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	@Ignore
-	public void generator() {
+	@Disabled
+	void generator() {
 		System.out.println("/**");
 		System.out.println(" * Same channel layout");
 		System.out.println(" */");
@@ -57,12 +48,5 @@ public class ChannelLayoutTestCase {
 			System.out.println("public static final ChannelLayout " + fieldName + " = new ChannelLayout(\"" + name + "\");");
 		}
 	}
-
-	/**
-	 * 
-	 */
-	// @Test
-	// public void testCache() {
-	// }
 
 }

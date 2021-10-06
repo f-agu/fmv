@@ -1,6 +1,6 @@
 package org.fagu.fmv.soft.gpac;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,19 +36,19 @@ import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 19 juin 2019 17:19:23
  */
-public class GPACSoftProviderTestCase {
+class GPACSoftProviderTestCase {
 
 	@Test
-	@Ignore
-	public void testSearchMP4Box() {
+	@Disabled
+	void testSearchMP4Box() {
 		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Soft soft = MP4Box.search();
 		System.out.println(soft.isFound());
@@ -56,15 +56,15 @@ public class GPACSoftProviderTestCase {
 	}
 
 	@Test
-	@Ignore
-	public void testSearchMP42TS() {
+	@Disabled
+	void testSearchMP42TS() {
 		Soft soft = MP42TS.search();
 		System.out.println(soft.isFound());
 		System.out.println(soft.getFile());
 	}
 
 	@Test
-	public void testParseMP4Box() throws IOException {
+	void testParseMP4Box() throws IOException {
 		Parser parser = newParserMP4Box();
 		parser.readLine("MP4Box - GPAC version 0.7.2-DEV-rev1167-g10c1f03b-master");
 		parser.readLine("(c) Telecom ParisTech 2000-2018 - Licence LGPL v2");

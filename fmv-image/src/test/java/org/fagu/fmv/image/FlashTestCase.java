@@ -1,5 +1,7 @@
 package org.fagu.fmv.image;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*-
  * #%L
  * fmv-image
@@ -20,20 +22,18 @@ package org.fagu.fmv.image;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import org.fagu.fmv.image.exif.Flash;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 7 nov. 2019 14:03:16
  */
-public class FlashTestCase {
+class FlashTestCase {
 
 	@Test
-	public void testComment() {
+	void testComment() {
 		assertComment(0x0, "No Flash");
 		assertComment(0x1, "Fired");
 		assertComment(0x5, "Fired, Return not detected");
@@ -73,7 +73,7 @@ public class FlashTestCase {
 		// System.out.println(" Mode: " + flash.getMode());
 		// System.out.println(" Function: " + flash.isNoFlashFunction());
 		// System.out.println(" Red-eye: " + flash.isRedEyeReduction());
-		assertEquals(flash.toString(), expectedText, flash.getComment());
+		assertEquals(expectedText, flash.getComment(), flash.toString());
 	}
 
 }

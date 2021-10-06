@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.filter.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,64 +22,41 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
-import static org.junit.Assert.assertEquals;
-
 import org.fagu.fmv.utils.media.Rotation;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class RotateTestCase {
+class RotateTestCase {
 
-	/**
-	 * 
-	 */
-	public RotateTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	public void testNull() {
+	void testNull() {
 		Rotate rotate = Rotate.create(null);
 		assertEquals("", rotate.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testR0() {
+	void testR0() {
 		Rotate rotate = Rotate.create(Rotation.R_0);
 		assertEquals("", rotate.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testR90() {
+	void testR90() {
 		Rotate rotate = Rotate.create(Rotation.R_90);
 		assertEquals("transpose=dir=clock", rotate.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testR180() {
+	void testR180() {
 		Rotate rotate = Rotate.create(Rotation.R_180);
 		assertEquals("transpose=dir=clock,transpose=dir=clock", rotate.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testR270() {
+	void testR270() {
 		Rotate rotate = Rotate.create(Rotation.R_270);
 		assertEquals("transpose=dir=cclock", rotate.toString());
 	}

@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.mediainfo;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*
  * #%L
  * fmv-image
@@ -20,8 +22,6 @@ package org.fagu.fmv.soft.mediainfo;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -32,16 +32,16 @@ import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class MediaInfoProviderTestCase {
+class MediaInfoProviderTestCase {
 
 	@Test
-	public void testParse() throws IOException {
+	void testParse() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("MediaInfo Command line,");
 		parser.readLine("MediaInfoLib - v18.03.1");
@@ -50,20 +50,12 @@ public class MediaInfoProviderTestCase {
 
 	// *******************************************************
 
-	/**
-	 * @return
-	 */
 	private Parser newParser() {
 		MediaInfoSoftProvider softProvider = new MediaInfoSoftProvider();
 		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory(ImmutableProperties.of())).getParserFactory();
 		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
-	/**
-	 * @param parser
-	 * @param expectedVersion
-	 * @throws IOException
-	 */
 	private void assertInfo(Parser parser, Version expectedVersion) throws IOException {
 		SoftFound softFound = parser.closeAndParse("", 0);
 		VersionSoftInfo softInfo = (VersionSoftInfo)softFound.getSoftInfo();

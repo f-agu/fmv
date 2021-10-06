@@ -1,5 +1,8 @@
 package org.fagu.fmv.image;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*-
  * #%L
  * fmv-image
@@ -20,14 +23,11 @@ package org.fagu.fmv.image;
  * #L%
  */
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.IOException;
 
 import org.fagu.fmv.media.TestMetadataExtractor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**

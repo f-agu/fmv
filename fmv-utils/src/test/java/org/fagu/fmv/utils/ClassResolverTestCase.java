@@ -20,43 +20,28 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-@Ignore
-public class ClassResolverTestCase {
+@Disabled
+class ClassResolverTestCase {
 
-	/**
-	 * 
-	 */
 	private ClassResolver resourceResolver;
 
-	/**
-	 * 
-	 */
-	public ClassResolverTestCase() {}
-
-	/**
-	 * 
-	 */
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		resourceResolver = new ClassResolver();
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
-	public void testJar() throws IOException {
+	void testJar() throws IOException {
 		for(Class<?> cls : resourceResolver.find("org.apache.commons.lang3", cls -> {
 			return Exception.class.isAssignableFrom(cls);
 		})) {

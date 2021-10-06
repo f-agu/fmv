@@ -1,5 +1,8 @@
 package org.fagu.fmv.soft.xpdf;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*-
  * #%L
  * fmv-soft-auto
@@ -19,8 +22,6 @@ package org.fagu.fmv.soft.xpdf;
  * limitations under the License.
  * #L%
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,17 +37,17 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class PdfToTextTestCase {
+class PdfToTextTestCase {
 
 	@Test
-	// @Ignore
-	public void testSearch() {
+	// @Disabled
+	void testSearch() {
 		// ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Soft soft = PdfToText.search();
 		soft.getFounds().getFounds().forEach(softFound -> {
@@ -57,7 +58,7 @@ public class PdfToTextTestCase {
 	}
 
 	@Test
-	public void testExtractText() throws IOException {
+	void testExtractText() throws IOException {
 		File folder = new File(System.getProperty("java.io.tmpdir"), "xpdf-pdftotext");
 		try {
 			FileUtils.deleteDirectory(folder);

@@ -26,19 +26,19 @@ import java.util.List;
 import java.util.Set;
 
 import org.fagu.fmv.utils.order.OrderComparator;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 31 juil. 2020 14:04:12
  */
-@Ignore
-public class OrderComparatorTestCase {
+@Disabled
+class OrderComparatorTestCase {
 
 	@Test
-	public void testDouble() {
+	void testDouble() {
 		List<ProcessOperator> list = new ArrayList<>();
 		list.add(new IgnoreNullOutputStreamProcessOperator());
 		list.add(new PIDProcessOperator());

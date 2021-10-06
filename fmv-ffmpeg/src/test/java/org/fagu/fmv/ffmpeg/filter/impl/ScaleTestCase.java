@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.filter.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,71 +22,43 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import org.fagu.fmv.utils.media.Size;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-@RunWith(MockitoJUnitRunner.class)
-public class ScaleTestCase {
+class ScaleTestCase {
 
-	/**
-	 * 
-	 */
 	private Scale scale;
 
-	/**
-	 * 
-	 */
-	public ScaleTestCase() {}
-
-	/**
-	 * 
-	 */
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		scale = new Scale();
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testFitToBox() {
+	void testFitToBox() {
 		scale.set(Size.HD720, ScaleMode.fitToBox());
 		assertEquals("scale=w='1280':h='720'", scale.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testFitToBoxKeepAspectRatio() {
+	void testFitToBoxKeepAspectRatio() {
 		scale.set(Size.HD720, ScaleMode.fitToBoxKeepAspectRatio());
 		assertEquals("scale=w='if(gt(dar,1280/720),1280,trunc(oh*dar/2)*2)':h='if(gt(dar,1280/720),trunc(ow/dar/2)*2,720)'", scale.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testFitToHeight() {
+	void testFitToHeight() {
 		scale.set(Size.HD720, ScaleMode.fitToHeight());
 		assertEquals("scale=w='trunc(oh*dar/2)*2':h='720'", scale.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testFitToWidth() {
+	void testFitToWidth() {
 		scale.set(Size.HD720, ScaleMode.fitToWidth());
 		assertEquals("scale=w='1280':h='trunc(ow/dar/2)*2'", scale.toString());
 	}

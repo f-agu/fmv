@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.find;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 /*
  * #%L
  * fmv-utils
@@ -20,53 +22,33 @@ package org.fagu.fmv.soft.find;
  * #L%
  */
 
-import static org.junit.Assert.assertSame;
-
 import java.util.Collection;
 
-import org.fagu.fmv.soft.find.SoftFound;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class SoftFoundTestCase {
+class SoftFoundTestCase {
 
-	/**
-	 * 
-	 */
-	public SoftFoundTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	public void testMultipleNull_Varargs() {
+	void testMultipleNull_Varargs() {
 		assertSame(SoftFound.notFound(), SoftFound.multiple((SoftFound)null));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testMultipleNull_Collection() {
+	void testMultipleNull_Collection() {
 		assertSame(SoftFound.notFound(), SoftFound.multiple((Collection<SoftFound>)null));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testMultiple0() {
+	void testMultiple0() {
 		assertSame(SoftFound.notFound(), SoftFound.multiple());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testMultiple1() {
+	void testMultiple1() {
 		SoftFound foundBadSoft = SoftFound.notFound();
 		assertSame(foundBadSoft, SoftFound.multiple(foundBadSoft));
 	}

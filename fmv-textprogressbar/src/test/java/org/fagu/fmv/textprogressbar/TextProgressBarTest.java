@@ -1,5 +1,7 @@
 package org.fagu.fmv.textprogressbar;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*-
  * #%L
  * fmv-textprogressbar
@@ -20,8 +22,6 @@ package org.fagu.fmv.textprogressbar;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.IntSupplier;
@@ -29,16 +29,16 @@ import java.util.function.Supplier;
 
 import org.fagu.fmv.textprogressbar.part.ProgressPart;
 import org.fagu.fmv.textprogressbar.part.ProgressPart.InsideProgressChar;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author fagu
  */
-public class TextProgressBarTest {
+class TextProgressBarTest {
 
 	@Test
-	public void testWidth() throws Exception {
+	void testWidth() throws Exception {
 		final int width = 30;
 		AtomicInteger value = new AtomicInteger();
 		IntSupplier progressInPercent = value::get;
@@ -66,7 +66,7 @@ public class TextProgressBarTest {
 	}
 
 	@Test
-	public void testWidthInside() throws Exception {
+	void testWidthInside() throws Exception {
 		final int width = 30;
 		AtomicInteger value = new AtomicInteger();
 		AtomicInteger inside = new AtomicInteger( - 1);

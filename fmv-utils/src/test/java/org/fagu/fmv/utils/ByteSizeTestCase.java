@@ -1,5 +1,7 @@
 package org.fagu.fmv.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*
  * #%L
  * fmv-utils
@@ -20,28 +22,18 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class ByteSizeTestCase {
+class ByteSizeTestCase {
 
-	/**
-	 * 
-	 */
-	public ByteSizeTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	public void test() {
+	void test() {
 		assertEquals("0 ko", ByteSize.formatSize(0));
 		assertEquals("1 o", ByteSize.formatSize(1));
 		assertEquals("-2 o", ByteSize.formatSize( - 2));

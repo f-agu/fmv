@@ -42,19 +42,19 @@ import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.BitStreamFilter;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
 import org.fagu.fmv.utils.media.Rotation;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 24 mai 2017 15:00:12
  */
-public class StreamTestCase {
+class StreamTestCase {
 
 	@Test
-	@Ignore
-	public void testInputPipeToFile() throws Exception {
+	@Disabled
+	void testInputPipeToFile() throws Exception {
 		File outFile = new File("c:\\tmp\\out.ts");
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -75,8 +75,8 @@ public class StreamTestCase {
 	}
 
 	@Test
-	@Ignore
-	public void testInputPipeForInfo() throws Exception {
+	@Disabled
+	void testInputPipeForInfo() throws Exception {
 		// StreamLog.debug(true);
 		extractInfoWithInputPipe("3gp.3gp");
 		extractInfoWithInputPipe("avi.avi");
@@ -96,8 +96,8 @@ public class StreamTestCase {
 	}
 
 	@Test
-	@Ignore
-	public void testInputPipeToFile2() throws Exception {
+	@Disabled
+	void testInputPipeToFile2() throws Exception {
 		File outFile = new File("C:\\Oodrive\\video\\mp4-2\\video_320x180_500k-piped.mp4");
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		// new PipeMediaInput().parameter("-movflags", "faststart");
@@ -123,8 +123,8 @@ public class StreamTestCase {
 	}
 
 	@Test
-	@Ignore
-	public void testOutputPipeFromFile() throws Exception {
+	@Disabled
+	void testOutputPipeFromFile() throws Exception {
 		File inFile = ResourceUtils.extract("mp4.mp4");
 		File outFile = new File("c:\\tmp\\mp4-3.mp4");
 		try (OutputStream outputStream = new FileOutputStream(outFile)) {

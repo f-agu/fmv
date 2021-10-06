@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.metadatas;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*-
  * #%L
  * fmv-ffmpeg
@@ -19,7 +21,6 @@ package org.fagu.fmv.ffmpeg.metadatas;
  * limitations under the License.
  * #L%
  */
-import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,17 +37,17 @@ import org.fagu.fmv.utils.media.Ratio;
 import org.fagu.fmv.utils.media.Rotation;
 import org.fagu.fmv.utils.media.Size;
 import org.fagu.fmv.utils.time.Duration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 25 janv. 2017 11:52:24
  */
-public class MovieMetadatasTestCase {
+class MovieMetadatasTestCase {
 
 	@Test
-	public void testParse() throws IOException {
+	void testParse() throws IOException {
 		StringBuilder sb = new StringBuilder();
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("VID_20190624_113754.json"),
 				StandardCharsets.UTF_8))) {
@@ -86,7 +87,7 @@ public class MovieMetadatasTestCase {
 	}
 
 	@Test
-	public void testExtractOnFile() throws IOException {
+	void testExtractOnFile() throws IOException {
 		File file = null;
 		try {
 			file = ResourceUtils.extract("mp4.mp4");
@@ -100,7 +101,7 @@ public class MovieMetadatasTestCase {
 	}
 
 	@Test
-	public void testExtractOnInputStream() throws IOException {
+	void testExtractOnInputStream() throws IOException {
 		try (InputStream inputStream = ResourceUtils.open("mp4.mp4")) {
 			MovieMetadatas movieMetadatas = MovieMetadatas.with(inputStream)
 					.extract();

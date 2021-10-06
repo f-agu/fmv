@@ -20,28 +20,19 @@ package org.fagu.fmv.ffmpeg.utils;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.utils.srcgen.ClassNameUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class ProtocolTestCase {
+class ProtocolTestCase {
 
-	/**
-	 * 
-	 */
-	public ProtocolTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	@Ignore
-	public void generator() {
+	@Disabled
+	void generator() {
 		for(Protocol protocol : Protocol.available()) {
 			String name = protocol.getName();
 			String fieldName = ClassNameUtils.fieldStatic(name);
@@ -52,12 +43,5 @@ public class ProtocolTestCase {
 			System.out.println("public static final Protocol " + fieldName + " = new Protocol(\"" + name + "\");");
 		}
 	}
-
-	/**
-	 * 
-	 */
-	// @Test
-	// public void testCache() {
-	// }
 
 }

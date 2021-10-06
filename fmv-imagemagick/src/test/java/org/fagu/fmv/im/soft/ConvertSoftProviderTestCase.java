@@ -23,25 +23,25 @@ import org.fagu.fmv.soft.LogExecuteDelegate;
  */
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.SoftFound;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 25 avr. 2017 12:45:28
  */
-public class ConvertSoftProviderTestCase {
+class ConvertSoftProviderTestCase {
 
 	@Test
-	public void testSearch() {
+	void testSearch() {
 		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Convert.search();
 	}
 
 	@Test
-	@Ignore
-	public void test() {
+	@Disabled
+	void test() {
 		Soft soft = Convert.search();
 		for(SoftFound softFound : soft.getFounds()) {
 			System.out.println(softFound.getLocalizedBy());

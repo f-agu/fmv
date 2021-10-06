@@ -1,5 +1,7 @@
 package org.fagu.fmv.im.soft;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*
  * #%L
  * fmv-image
@@ -20,8 +22,6 @@ package org.fagu.fmv.im.soft;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -34,16 +34,16 @@ import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class IMInfoTestCase {
+class IMInfoTestCase {
 
 	@Test
-	public void testParse_firstLines() throws IOException {
+	void testParse_firstLines() throws IOException {
 		assertInfo("Version: ImageMagick 6.6.0-4 2012-05-02 Q16 http://www.imagemagick.org", new Version(6, 6, 0, 4), d(2012, 5, 2), "6.6.0.4");
 		assertInfo("Version: ImageMagick 6.7.9-10 2012-10-08 Q16 http://www.imagemagick.org", new Version(6, 7, 9, 10), d(2012, 10, 8), "6.7.9.10");
 		assertInfo("Version: ImageMagick 6.8.7-1 2013-10-17 Q16 http://www.imagemagick.org", new Version(6, 8, 7, 1), d(2013, 10, 17), "6.8.7.1");
@@ -60,7 +60,7 @@ public class IMInfoTestCase {
 	}
 
 	@Test
-	public void testParseOnWindows() throws IOException {
+	void testParseOnWindows() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("Version: ImageMagick 6.8.7-1 2013-10-17 Q16 http://www.imagemagick.org");
 		parser.readLine("Copyright: Copyright (C) 1999-2013 ImageMagick Studio LLC");
@@ -70,7 +70,7 @@ public class IMInfoTestCase {
 	}
 
 	@Test
-	public void testParseOnMac() throws IOException {
+	void testParseOnMac() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("Version: ImageMagick 6.9.3-7 Q16 x86_64 2016-03-27 http://www.imagemagick.org");
 		parser.readLine("Copyright: Copyright (C) 1999-2016 ImageMagick Studio LLC");

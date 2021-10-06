@@ -24,19 +24,19 @@ import java.io.File;
 import java.io.IOException;
 
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 10 juin 2019 11:07:22
  */
-@Ignore
-public class VideoStreamTestCase {
+@Disabled
+class VideoStreamTestCase {
 
 	@Test
-	public void testDuration() throws IOException {
+	void testDuration() throws IOException {
 		File file = null;
 		try {
 			file = ResourceUtils.extract("melt.mpg");

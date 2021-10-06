@@ -1,5 +1,7 @@
 package org.fagu.fmv.textprogressbar.part;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*-
  * #%L
  * fmv-textprogressbar
@@ -20,22 +22,20 @@ package org.fagu.fmv.textprogressbar.part;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.fagu.fmv.textprogressbar.Part;
 import org.fagu.fmv.textprogressbar.ProgressStatus;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author fagu
  */
-public class ETAPartTest {
+class ETAPartTest {
 
 	@Test
-	public void testNotNull() {
+	void testNotNull() {
 		AtomicInteger value = new AtomicInteger();
 
 		Part part = new ETAPart(s -> value.get());
@@ -52,12 +52,6 @@ public class ETAPartTest {
 
 	// *******************************
 
-	/**
-	 * @param part
-	 * @param valueToSet
-	 * @param seconds
-	 * @param expectedText
-	 */
 	private void assertPart(Part part, AtomicInteger valueToSet, int seconds, String expectedText) {
 		valueToSet.set(seconds);
 		assertEquals(part.getWith(new ProgressStatus() {
