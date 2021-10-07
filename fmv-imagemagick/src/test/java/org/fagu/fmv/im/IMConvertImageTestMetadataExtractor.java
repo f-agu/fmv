@@ -42,14 +42,14 @@ public class IMConvertImageTestMetadataExtractor implements TestMetadataExtracto
 	@Override
 	public ImageMetadatas extract(File file, String name) throws IOException {
 		return IMConvertImageMetadatas.with(file)
-				.logger(cmd -> System.out.println(cmd))
+				// .logger(cmd -> System.out.println(cmd))
 				.extract();
 	}
 
 	@Override
 	public ImageMetadatas extract(InputStream inputStream, String name) throws IOException {
 		return IMConvertImageMetadatas.with(inputStream)
-				.logger(cmd -> System.out.println(cmd))
+				// .logger(cmd -> System.out.println(cmd))
 				.extract();
 	}
 
