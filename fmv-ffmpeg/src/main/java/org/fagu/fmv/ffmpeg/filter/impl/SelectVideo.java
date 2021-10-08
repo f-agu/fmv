@@ -23,6 +23,7 @@ package org.fagu.fmv.ffmpeg.filter.impl;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 import org.fagu.fmv.ffmpeg.filter.AbstractFilter;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
@@ -65,18 +66,23 @@ public class SelectVideo extends AbstractFilter {
 		if(countFrame <= 0) {
 			return Optional.empty();
 		}
-		Optional<Integer> countEstimateFrames = videoStream.countEstimateFrames();
-		if(countEstimateFrames.isPresent()) {
-			int everyFrame = (int)Math.ceil((float)countEstimateFrames.get() / (float)countFrame);
-			if(everyFrame > 0) {
-				return Optional.of(everyFrame(everyFrame));
-			}
-		}
-		return Optional.empty();
+		return countFrame(videoStream, (countFrames, selectVideo) -> {
+			int everyFrame = (int)Math.ceil((float)countFrames / (float)countFrame);
+			return everyFrame > 0 ? selectVideo.everyFrame(everyFrame) : null;
+		});
+	}
+
+	public Optional<SelectVideo> countFrame(VideoStream videoStream, BiFunction<Integer, SelectVideo, SelectVideo> framesToSelectVideo) {
+		return videoStream.countEstimateFrames()
+				.map(c -> framesToSelectVideo.apply(c, this));
 	}
 
 	public SelectVideo everyFrame(int every) {
-		return expr("'not(mod(n," + Integer.toString(every) + "))'");
+		return expr("'not(mod(n," + every + "))'");
+	}
+
+	public SelectVideo everyFrame(int every, int frameStart) {
+		return expr("'not(mod(n-" + frameStart + "," + every + "))'");
 	}
 
 	public SelectVideo onlyBetween(Time startTime, Time endTime) {
