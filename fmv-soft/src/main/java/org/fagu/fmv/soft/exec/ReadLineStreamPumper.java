@@ -44,21 +44,10 @@ public class ReadLineStreamPumper implements Runnable {
 
 	private final LookReader lookReader;
 
-	/**
-	 * @param inputStream
-	 * @param readLine
-	 * @param charset
-	 */
 	public ReadLineStreamPumper(InputStream inputStream, ReadLine readLine, Charset charset) {
 		this(inputStream, readLine, charset, null);
 	}
 
-	/**
-	 * @param inputStream
-	 * @param readLine
-	 * @param charset
-	 * @param lookReader
-	 */
 	public ReadLineStreamPumper(InputStream inputStream, ReadLine readLine, Charset charset, LookReader lookReader) {
 		this.inputStream = Objects.requireNonNull(inputStream);
 		this.readLine = Objects.requireNonNull(readLine);
@@ -66,9 +55,6 @@ public class ReadLineStreamPumper implements Runnable {
 		this.lookReader = lookReader;
 	}
 
-	/**
-	 * @see java.lang.Runnable#run()
-	 */
 	@Override
 	public void run() {
 		synchronized(this) {
@@ -115,9 +101,6 @@ public class ReadLineStreamPumper implements Runnable {
 
 	// *******************************************
 
-	/**
-	 * @return
-	 */
 	private Scanner openScanner() {
 		InputStreamReader inputStreamReader = charset != null ? new InputStreamReader(inputStream, charset) : new InputStreamReader(inputStream);
 		bufferLineReader = new BufferLineReader(inputStreamReader, lookReader);

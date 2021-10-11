@@ -26,8 +26,5 @@ package org.fagu.fmv.soft.exec;
 @FunctionalInterface
 public interface WritablePumpStreamNeed {
 
-	/**
-	 * @param writablePumpStreamHandler
-	 */
 	void apply(WritablePumpStreamHandler writablePumpStreamHandler);
 }

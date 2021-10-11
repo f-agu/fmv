@@ -29,12 +29,5 @@ import java.io.IOException;
  */
 public interface SoftFoundFactory {
 
-	/**
-	 * @param file
-	 * @param locator
-	 * @param softPolicy
-	 * @return
-	 * @throws IOException
-	 */
 	SoftFound create(File file, Locator locator, SoftPolicy softPolicy) throws IOException;
 }

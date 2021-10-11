@@ -39,30 +39,18 @@ public class PIDProcessOperator implements ProcessOperator {
 
 	private Long pid;
 
-	/**
-	 * 
-	 */
 	public PIDProcessOperator() {
 		pidConsumers = Collections.emptyList();
 	}
 
-	/**
-	 * @param pidConsumer
-	 */
 	public PIDProcessOperator(LongConsumer pidConsumer) {
 		pidConsumers = Collections.singletonList(Objects.requireNonNull(pidConsumer));
 	}
 
-	/**
-	 * @param pidConsumers
-	 */
 	public PIDProcessOperator(Collection<LongConsumer> pidConsumers) {
 		this.pidConsumers = Collections.unmodifiableList(new ArrayList<>(pidConsumers));
 	}
 
-	/**
-	 * @see org.fagu.fmv.soft.exec.ProcessOperator#operate(java.lang.Process)
-	 */
 	@Override
 	public Process operate(Process process) {
 		Class<? extends Process> cls = process.getClass();
@@ -83,22 +71,12 @@ public class PIDProcessOperator implements ProcessOperator {
 		return process;
 	}
 
-	/**
-	 * @return
-	 */
 	public OptionalLong getPID() {
 		return pid != null ? OptionalLong.of(pid) : OptionalLong.empty();
 	}
 
 	// *********************************************
 
-	/**
-	 * @param process
-	 * @param cls
-	 * @param field
-	 * @throws NoSuchFieldException
-	 * @throws IllegalAccessException
-	 */
 	private void consume(Process process, Class<? extends Process> cls, String field) throws NoSuchFieldException, IllegalAccessException {
 		Field f = cls.getDeclaredField(field);
 		f.setAccessible(true);

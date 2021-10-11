@@ -27,9 +27,6 @@ public class EmptyReadLine implements ReadLine {
 
 	public static final EmptyReadLine INSTANCE = new EmptyReadLine();
 
-	/**
-	 * @see org.fagu.fmv.soft.exec.ReadLine#read(java.lang.String)
-	 */
 	@Override
 	public void read(String line) {
 		// DO NOTHING

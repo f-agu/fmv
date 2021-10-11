@@ -30,10 +30,6 @@ import java.util.NavigableSet;
 @FunctionalInterface
 public interface Sorter {
 
-	/**
-	 * @param founds
-	 * @return
-	 */
 	NavigableSet<SoftFound> sort(Collection<SoftFound> founds);
 
 }
