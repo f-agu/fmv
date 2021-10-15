@@ -1,6 +1,7 @@
 package org.fagu.fmv.ffmpeg;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /*-
@@ -59,6 +60,7 @@ class FFExceptionKnowAnalyzeTestCase {
 						.customizeExecutor(e -> e.debug())
 						.customizeExecutor(e -> System.out.println(CommandLineUtils.toLine(e.getCommandLine())))
 						.extract();
+				assertNotNull(extract, resource);
 				fail(expectedMessage + ": " + extract.toJSON());
 			} catch(FMVExecuteException e) {
 				if(e.isKnown()) {
