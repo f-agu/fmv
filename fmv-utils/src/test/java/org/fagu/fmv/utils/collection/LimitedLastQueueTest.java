@@ -1,5 +1,10 @@
 package org.fagu.fmv.utils.collection;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+
 /*-
  * #%L
  * fmv-utils
@@ -20,28 +25,23 @@ package org.fagu.fmv.utils.collection;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-
-
 /**
  * @author fagu
  */
-public class LimitedLastQueueTest {
+class LimitedLastQueueTest {
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testNegative() {
-		new LimitedLastQueue<>( - 1);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void test0() {
-		new LimitedLastQueue<>(0);
+	@Test
+	void testNegative() {
+		assertThrows(IllegalArgumentException.class, () -> new LimitedLastQueue<>( - 1));
 	}
 
 	@Test
-	public void test1() {
+	void test0() {
+		assertThrows(IllegalArgumentException.class, () -> new LimitedLastQueue<>(0));
+	}
+
+	@Test
+	void test1() {
 		LimitedLastQueue<Integer> queue = new LimitedLastQueue<>(1);
 		queue.add(0);
 		queue.add(1);
@@ -53,7 +53,7 @@ public class LimitedLastQueueTest {
 	}
 
 	@Test
-	public void test5() {
+	void test5() {
 		LimitedLastQueue<Integer> queue = new LimitedLastQueue<>(5);
 		queue.add(0);
 		queue.add(1);

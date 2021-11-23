@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.xpdf;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*
  * #%L
  * fmv-image
@@ -20,8 +22,6 @@ package org.fagu.fmv.soft.xpdf;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -29,16 +29,16 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.version.Version;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class PdfInfoSoftProviderTestCase {
+class PdfInfoSoftProviderTestCase {
 
 	@Test
-	public void testParseOnLinux_original() throws IOException {
+	void testParseOnLinux_original() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("pdfinfo version 3.04");
 		parser.readLine("Copyright 1996-2014 Glyph & Cog, LLC");
@@ -46,7 +46,7 @@ public class PdfInfoSoftProviderTestCase {
 	}
 
 	@Test
-	public void testParseOnLinux_popplers() throws IOException {
+	void testParseOnLinux_popplers() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("pdfinfo version 0.12.4");
 		parser.readLine("Copyright 2005-2009 The Poppler Developers - http://poppler.freedesktop.org");
@@ -55,7 +55,7 @@ public class PdfInfoSoftProviderTestCase {
 	}
 
 	@Test
-	public void testParseOnWindows_original() throws IOException {
+	void testParseOnWindows_original() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("pdfinfo version 3.04");
 		parser.readLine("Copyright 1996-2014 Glyph & Cog, LLC");
@@ -63,7 +63,7 @@ public class PdfInfoSoftProviderTestCase {
 	}
 
 	@Test
-	public void testSoftPolicy() throws IOException {
+	void testSoftPolicy() throws IOException {
 		PdfInfoSoftProvider softProvider = new PdfInfoSoftProvider();
 		assertEquals("xpdf[>= v4] ; poppler[>= v0.12] ; All platforms[>= v0.12]", softProvider.getMinVersion());
 	}

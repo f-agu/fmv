@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.filter.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*-
  * #%L
  * fmv-ffmpeg
@@ -20,32 +22,20 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
-import static org.junit.Assert.assertEquals;
-
 import java.util.List;
 
 import org.fagu.fmv.ffmpeg.filter.impl.CropDetection.CropSize;
 import org.fagu.fmv.ffmpeg.operation.LibLogReadLine;
 import org.fagu.fmv.utils.time.Duration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 14 nov. 2016 16:32:21
  */
-public class CropDetectionTestCase {
+class CropDetectionTestCase {
 
-	/**
-	 * 
-	 */
-	public CropDetectionTestCase() {}
-
-	/**
-	 * 
-	 */
-	@Test
 	public void test1() {
 		CropDetect cropDetect = new CropDetect();
 		LibLogReadLine r = new LibLogReadLine();
@@ -387,11 +377,8 @@ public class CropDetectionTestCase {
 		// }
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void test2() {
+	void test2() {
 		CropDetect cropDetect = new CropDetect();
 		LibLogReadLine r = new LibLogReadLine();
 		r.add(cropDetect.getLibLogFilter(), cropDetect);

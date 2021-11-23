@@ -32,18 +32,18 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.soft.Resource;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author fagu
  */
-@Ignore
-public class WatermarkTestCase {
+@Disabled
+class WatermarkTestCase {
 
 	@Test
-	public void testWatermark_File2File() throws IOException {
+	void testWatermark_File2File() throws IOException {
 		File srcFile = Resource.extract_Pdf_Pdf();
 		String name = srcFile.getName();
 		File destFile = new File(srcFile.getParentFile(), FilenameUtils.getBaseName(name) + "-watermarked.pdf");
@@ -57,7 +57,7 @@ public class WatermarkTestCase {
 	}
 
 	@Test
-	public void testWatermark_InputStream2File() throws IOException {
+	void testWatermark_InputStream2File() throws IOException {
 		File destFile = new File(Resource.tmpFolder(), "inputstream-watermarked.pdf");
 		try (InputStream inputStream = Resource.open_Salut_Pdf()) {
 
@@ -70,11 +70,11 @@ public class WatermarkTestCase {
 	}
 
 	@Test
-	public void testWatermark_InputStream2OutputStream() throws IOException {
+	void testWatermark_InputStream2OutputStream() throws IOException {
 		String text = "\377\376\155\157";
 
 		File destFile = new File(Resource.tmpFolder(), "inputstream-outputstream-watermarked.pdf");
-		long startTime = System.currentTimeMillis();
+		// long startTime = System.currentTimeMillis();
 		try (InputStream inputStream = Resource.open_kenwood_Pdf();
 				OutputStream outputStream = new FileOutputStream(destFile)) {
 
@@ -90,10 +90,6 @@ public class WatermarkTestCase {
 
 	// **********************************************
 
-	/**
-	 * @param s
-	 * @return
-	 */
 	// private String toOctal(String s) {
 	// StringBuilder buf = new StringBuilder();
 	// for(char c : s.toCharArray()) {
@@ -102,12 +98,6 @@ public class WatermarkTestCase {
 	// return buf.toString();
 	// }
 
-	/**
-	 * @param watermarckText
-	 * @param input
-	 * @param output
-	 * @return
-	 */
 	private List<String> getParameters(String watermarckText, String input, String output) {
 		List<String> params = new ArrayList<>();
 		params.add("-dBATCH");
@@ -122,10 +112,6 @@ public class WatermarkTestCase {
 		return params;
 	}
 
-	/**
-	 * @param watermarckText
-	 * @return
-	 */
 	private String getWatermarkScript(String watermarckText) {
 		// for encoding :
 		// http://www.acumentraining.com/Acumen_Journal/AcumenJournal_Nov2001.zip

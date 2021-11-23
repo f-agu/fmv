@@ -1,5 +1,7 @@
 package org.fagu.fmv.textprogressbar.part;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*-
  * #%L
  * fmv-textprogressbar
@@ -20,20 +22,18 @@ package org.fagu.fmv.textprogressbar.part;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import org.fagu.fmv.textprogressbar.Part;
 import org.fagu.fmv.textprogressbar.ProgressStatus;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author fagu
  */
-public class PercentPartTest {
+class PercentPartTest {
 
 	@Test
-	public void testOK() {
+	void testOK() {
 		Part part = new PercentPart();
 		assertPart(part, - 1, "-1%");
 		assertPart(part, 0, "0%");
@@ -48,11 +48,6 @@ public class PercentPartTest {
 
 	// *******************************
 
-	/**
-	 * @param part
-	 * @param value
-	 * @param expectedText
-	 */
 	private void assertPart(Part part, int value, String expectedText) {
 		assertEquals(part.getWith(new ProgressStatus() {
 

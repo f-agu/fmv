@@ -37,6 +37,8 @@ public class ImageResourceUtils {
 
 	public static final String _203 = "203.jpg";
 
+	public static final String ANIMATED_GIF = "animated.gif";
+
 	public static final String BAD_ASS_TOTTOO_FAIL = "bad-ass-tattoo-fail.jpg";
 
 	public static final String MULTIPAGE_TIFF = "multipage_tiff.tif";

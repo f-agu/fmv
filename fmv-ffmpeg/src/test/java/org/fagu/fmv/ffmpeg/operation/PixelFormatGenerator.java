@@ -30,27 +30,19 @@ import java.util.regex.Pattern;
 
 import org.fagu.fmv.ffmpeg.soft.FFMpeg;
 import org.fagu.fmv.soft.exec.ReadLine;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-// @Ignore
-public class PixelFormatGenerator {
+// @Disabled
+class PixelFormatGenerator {
 
-	/**
-	 * 
-	 */
-	public PixelFormatGenerator() {}
-
-	/**
-	 * 
-	 */
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		String userName = System.getProperty("user.name");
 		if("f.agu".equals(userName)) { // taf
 			// FFLocator.setFFPath("C:/Program Files/FFMpeg/bin");
@@ -59,49 +51,38 @@ public class PixelFormatGenerator {
 		}
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
-	@Ignore
-	public void generate() throws IOException {
+	@Disabled
+	void generate() throws IOException {
 		final Pattern PATTERN = Pattern.compile("(I|\\.)(O|\\.)(H|\\.)(P|\\.)(B|\\.)\\s(\\w+)\\s+(\\d+)\\s+(\\d+).*");
 		List<String> arguments = Arrays.asList("-v", "quiet", "-pix_fmts");
 		final Map<String, String> map = new TreeMap<String, String>();
-		ReadLine readLine = new ReadLine() {
+		ReadLine readLine = line -> {
+			StringBuilder buf = new StringBuilder();
+			buf.append("public static final PixelFormat ");
 
-			/**
-			 * @see org.fagu.fmv.utils.exec.ReadLine#read(java.lang.String)
-			 */
-			@Override
-			public void read(String line) {
+			// System.out.println(line);
+			Matcher matcher = PATTERN.matcher(line);
+			if(matcher.matches()) {
+				boolean supportedInput = "I".equals(matcher.group(1));
+				boolean supportedOutput = "O".equals(matcher.group(2));
+				boolean hardwareAccelerated = "H".equals(matcher.group(3));
+				boolean paletted = "P".equals(matcher.group(4));
+				boolean bitstream = "B".equals(matcher.group(5));
 
-				StringBuilder buf = new StringBuilder();
-				buf.append("public static final PixelFormat ");
+				String name = matcher.group(6);
+				int nbComponents = Integer.parseInt(matcher.group(7));
+				int bitsPerPixel = Integer.parseInt(matcher.group(8));
 
-				// System.out.println(line);
-				Matcher matcher = PATTERN.matcher(line);
-				if(matcher.matches()) {
-					boolean supportedInput = "I".equals(matcher.group(1));
-					boolean supportedOutput = "O".equals(matcher.group(2));
-					boolean hardwareAccelerated = "H".equals(matcher.group(3));
-					boolean paletted = "P".equals(matcher.group(4));
-					boolean bitstream = "B".equals(matcher.group(5));
-
-					String name = matcher.group(6);
-					int nbComponents = Integer.parseInt(matcher.group(7));
-					int bitsPerPixel = Integer.parseInt(matcher.group(8));
-
-					if(Character.isDigit(name.charAt(0))) {
-						buf.append('_');
-					}
-					buf.append(name.toUpperCase());
-					buf.append(" = new PixelFormat(").append(supportedInput).append(", ").append(supportedOutput).append(", ");
-					buf.append(hardwareAccelerated).append(", ").append(paletted).append(", ");
-					buf.append(bitstream).append(", \"").append(name).append("\", ");
-					buf.append(nbComponents).append(", ").append(bitsPerPixel).append(");");
-					map.put(name, buf.toString());
+				if(Character.isDigit(name.charAt(0))) {
+					buf.append('_');
 				}
+				buf.append(name.toUpperCase());
+				buf.append(" = new PixelFormat(").append(supportedInput).append(", ").append(supportedOutput).append(", ");
+				buf.append(hardwareAccelerated).append(", ").append(paletted).append(", ");
+				buf.append(bitstream).append(", \"").append(name).append("\", ");
+				buf.append(nbComponents).append(", ").append(bitsPerPixel).append(");");
+				map.put(name, buf.toString());
 
 			}
 		};

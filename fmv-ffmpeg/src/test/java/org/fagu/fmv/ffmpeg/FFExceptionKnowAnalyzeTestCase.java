@@ -1,5 +1,9 @@
 package org.fagu.fmv.ffmpeg;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*-
  * #%L
  * fmv-ffmpeg
@@ -19,8 +23,6 @@ package org.fagu.fmv.ffmpeg;
  * limitations under the License.
  * #L%
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,17 +31,17 @@ import org.apache.commons.io.FileUtils;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 24 janv. 2017 14:39:11
  */
-public class FFExceptionKnowAnalyzeTestCase {
+class FFExceptionKnowAnalyzeTestCase {
 
 	@Test
-	public void test() throws IOException {
+	void test() throws IOException {
 		extractMetadatas(null, "Permission denied");
 		extractMetadatas("cheese.zip", "Invalid data");
 		extractMetadatas("pdf.pdf", "Invalid data");
@@ -58,6 +60,7 @@ public class FFExceptionKnowAnalyzeTestCase {
 						.customizeExecutor(e -> e.debug())
 						.customizeExecutor(e -> System.out.println(CommandLineUtils.toLine(e.getCommandLine())))
 						.extract();
+				assertNotNull(extract, resource);
 				fail(expectedMessage + ": " + extract.toJSON());
 			} catch(FMVExecuteException e) {
 				if(e.isKnown()) {

@@ -33,18 +33,18 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class SoftTestCase {
+class SoftTestCase {
 
 	@Test
-	@Ignore
-	public void test1() throws Exception {
+	@Disabled
+	void test1() throws Exception {
 		SoftFoundFactory ffSoftFoundFactory = ExecSoftFoundFactory.forProvider(new TestSoftProvider("ffprout"))
 				.withParameters("-version")
 				.parseFactory((file, softPolicy) -> new Parser() {
@@ -97,8 +97,8 @@ public class SoftTestCase {
 	}
 
 	@Test
-	@Ignore
-	public void test2() throws Exception {
+	@Disabled
+	void test2() throws Exception {
 		Soft soft = Soft.withExecFile("cmd");
 		System.out.println(soft);
 		System.out.println(soft.getFounds());

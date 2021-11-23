@@ -34,7 +34,7 @@ public abstract class SoftExecutorHelper<H extends SoftExecutorHelper<?>> {
 
 	private final List<Consumer<SoftExecutor>> softExecutorConsumers;
 
-	public SoftExecutorHelper() {
+	protected SoftExecutorHelper() {
 		this.softExecutorConsumers = new ArrayList<>();
 	}
 

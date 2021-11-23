@@ -1,5 +1,7 @@
 package org.fagu.fmv.im;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /*-
  * #%L
  * fmv-imagemagick
@@ -31,21 +33,21 @@ import java.util.function.BiPredicate;
 import org.fagu.fmv.image.ImageMetadatas;
 import org.fagu.fmv.image.ImageResourceUtils;
 import org.fagu.fmv.image.TestAllImageMetadatasTest;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class IMIdentifyImageMetadatasTestCase extends TestAllImageMetadatasTest {
+class IMIdentifyImageMetadatasTestCase extends TestAllImageMetadatasTest {
 
 	public IMIdentifyImageMetadatasTestCase() {
 		super(new IMIdentifyImageTestMetadataExtractor());
 	}
 
 	@Test
-	public void testMultiple() throws IOException {
+	void testMultiple() throws IOException {
 		File file1 = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
 		File file2 = ImageResourceUtils.extractFile("wei-ass.jpg");
 
@@ -65,8 +67,47 @@ public class IMIdentifyImageMetadatasTestCase extends TestAllImageMetadatasTest 
 	}
 
 	@Test
-	@Ignore
-	public void testExtractSingleton() throws Exception {
+	void testMultipleStatic_animatedCheck() throws IOException {
+		File file1 = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
+		File file2 = ImageResourceUtils.extractFile("wei-ass.jpg");
+
+		try {
+			Map<File, IMIdentifyImageMetadatas> map = IMIdentifyImageMetadatas.with(Arrays.asList(file2, file1))
+					.withAnimated(true)
+					.extractAll();
+			Iterator<IMIdentifyImageMetadatas> iterator = map.values().iterator();
+			assertMetadatas_WeiAss(iterator.next(), true);
+			assertMetadatas_BadAssTottooFail(iterator.next(), true);
+		} finally {
+			if(file1 != null) {
+				file1.delete();
+			}
+			if(file2 != null) {
+				file2.delete();
+			}
+		}
+	}
+
+	@Test
+	void testAnimatedGif_checkEnabled() throws IOException {
+		File file = ImageResourceUtils.extractFile("animated.gif");
+
+		try {
+			IMIdentifyImageMetadatas metadatas = IMIdentifyImageMetadatas
+					.with(file)
+					.withAnimated(true)
+					.extract();
+			assertTrue(metadatas.isAnimated().get());
+		} finally {
+			if(file != null) {
+				file.delete();
+			}
+		}
+	}
+
+	@Test
+	@Disabled
+	void testExtractSingleton() throws Exception {
 		final File file = ImageResourceUtils.extractFile("plan4-550Mpixels.tif");
 		try {
 			Runnable runnable = new Runnable() {

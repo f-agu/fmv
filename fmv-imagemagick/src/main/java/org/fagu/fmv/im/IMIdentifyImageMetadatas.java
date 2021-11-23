@@ -49,9 +49,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.exec.CommandLine;
@@ -104,6 +106,8 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 		Consumer<SoftExecutor> customizeExecutor;
 
+		boolean checkAnimated;
+
 		private ImageMetadatasSourcesBuilder(Sources<T> sources) {
 			this.sources = sources;
 			identifySoft = Identify.search();
@@ -126,9 +130,15 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 			return getThis();
 		}
 
+		public B withAnimated(boolean check) {
+			this.checkAnimated = check;
+			return getThis();
+		}
+
 		@Override
 		public IMIdentifyImageMetadatas extract() throws IOException {
-			Map<T, IMIdentifyImageMetadatas> extract = IMIdentifyImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
+			Map<T, IMIdentifyImageMetadatas> extract = IMIdentifyImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor,
+					checkAnimated);
 			return extract.values().iterator().next();
 		}
 
@@ -160,7 +170,7 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		}
 
 		public Map<File, IMIdentifyImageMetadatas> extractAll() throws IOException {
-			return IMIdentifyImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor);
+			return IMIdentifyImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor, checkAnimated);
 		}
 
 	}
@@ -177,8 +187,23 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 	// --------------------------------------------------------
 
+	private final List<IMIdentifyImageMetadatas> animatedMetadatas;
+
 	protected IMIdentifyImageMetadatas(Map<String, Object> metadatas) {
 		super(metadatas);
+		animatedMetadatas = null;
+	}
+
+	protected IMIdentifyImageMetadatas(List<Map<String, Object>> metadatasList) {
+		super(metadatasList.get(0));
+		if(metadatasList.size() == 1) {
+			animatedMetadatas = Collections.emptyList();
+		} else {
+			animatedMetadatas = Collections.unmodifiableList(metadatasList.stream()
+					.skip(1)
+					.map(IMIdentifyImageMetadatas::new)
+					.collect(Collectors.toList()));
+		}
 	}
 
 	@Override
@@ -211,10 +236,12 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		// psd
 		try {
 			String line = getString("xap:createdate");
-			int lastIndex = line.lastIndexOf(':');
-			String xapDate = line.substring(0, lastIndex) + line.substring(lastIndex + 1, line.length());
-			Date parse = dateFormat.parse(xapDate);
-			return parse.toInstant().atOffset(OffsetDateTime.now().getOffset());
+			if(line != null) {
+				int lastIndex = line.lastIndexOf(':');
+				String xapDate = line.substring(0, lastIndex) + line.substring(lastIndex + 1, line.length());
+				Date parse = dateFormat.parse(xapDate);
+				return parse.toInstant().atOffset(OffsetDateTime.now().getOffset());
+			}
 		} catch(Exception ignored) { // ignore
 		}
 
@@ -404,6 +431,14 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		return null;
 	}
 
+	@Override
+	public Optional<Boolean> isAnimated() {
+		if(animatedMetadatas == null) {
+			return Optional.empty();
+		}
+		return Optional.of( ! animatedMetadatas.isEmpty());
+	}
+
 	public static IMIdentifyImageMetadatas parseJSON(String json) {
 		Gson gson = new Gson();
 		@SuppressWarnings("unchecked")
@@ -467,7 +502,8 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 			Soft identifySoft,
 			Sources<T> sources,
 			Consumer<CommandLine> logger,
-			Consumer<SoftExecutor> customizeExecutor)
+			Consumer<SoftExecutor> customizeExecutor,
+			boolean checkAnimated)
 			throws IOException {
 
 		Objects.requireNonNull(identifySoft);
@@ -493,7 +529,11 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 		op.ping().format(joiner.toString());
 
-		sources.addImages(op);
+		if(checkAnimated) {
+			sources.addImageAllPages(op);
+		} else {
+			sources.addImageFirstPage(op);
+		}
 
 		List<String> outputs = new ArrayList<>();
 		SoftExecutor softExecutor = identifySoft.withParameters(op.toList())
@@ -509,14 +549,35 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		Map<T, IMIdentifyImageMetadatas> outMap = new LinkedHashMap<>();
 		Iterator<Source<T>> sourceIterator = sources.iterator();
 		TreeMap<String, Object> params = null;
+		List<Map<String, Object>> paramsList = new ArrayList<>();
 		Source<T> currentSource = null;
+
+		BiConsumer<Source<T>, TreeMap<String, Object>> appender = (src, p) -> {
+			IMIdentifyImageMetadatas imageMetadatas = null;
+			if( ! paramsList.isEmpty()) {
+				imageMetadatas = new IMIdentifyImageMetadatas(paramsList);
+				paramsList.clear();
+			} else if(checkAnimated) {
+				imageMetadatas = new IMIdentifyImageMetadatas(Collections.singletonList(p));
+			} else {
+				imageMetadatas = new IMIdentifyImageMetadatas(p);
+			}
+			outMap.put(src.value, imageMetadatas);
+		};
+
 		for(String line : outputs) {
 			if(StringUtils.isBlank(line) || boundary.equals(line)) {
 				continue;
 			}
 			if((line.startsWith("==") || line.startsWith(boundary + "==")) && line.endsWith("==")) {
 				if(currentSource != null) {
-					outMap.put(currentSource.value, new IMIdentifyImageMetadatas(params));
+					if(StringUtils.substringBetween(line, "==").equals(currentSource.name)) {
+						paramsList.add(params);
+						params = new TreeMap<>();
+						continue;
+					} else {
+						appender.accept(currentSource, params);
+					}
 				}
 				currentSource = sourceIterator.next();
 				if(StringUtils.substringBetween(line, "==").equals(currentSource.name)) {
@@ -539,7 +600,7 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 			}
 		}
 		if(currentSource != null) {
-			outMap.put(currentSource.value, new IMIdentifyImageMetadatas(params));
+			appender.accept(currentSource, params);
 		}
 		return outMap;
 	}
@@ -569,7 +630,9 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 		boolean has();
 
-		void addImages(IMOperation imOperation);
+		void addImageFirstPage(IMOperation imOperation);
+
+		void addImageAllPages(IMOperation imOperation);
 
 		default Consumer<SoftExecutor> getSoftExecutor() {
 			return c -> {};
@@ -608,8 +671,13 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		}
 
 		@Override
-		public void addImages(IMOperation imOperation) {
+		public void addImageFirstPage(IMOperation imOperation) {
 			sourceFiles.forEach(file -> imOperation.image(file, "[0]"));
+		}
+
+		@Override
+		public void addImageAllPages(IMOperation imOperation) {
+			sourceFiles.forEach(imOperation::image);
 		}
 
 		@Override
@@ -637,10 +705,16 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		}
 
 		@Override
-		public void addImages(IMOperation imOperation) {
+		public void addImageFirstPage(IMOperation imOperation) {
 			// - : standard input
 			// [0] : first page of the image
 			imOperation.image("-[0]");
+		}
+
+		@Override
+		public void addImageAllPages(IMOperation imOperation) {
+			// - : standard input
+			imOperation.image("-");
 		}
 
 		@Override

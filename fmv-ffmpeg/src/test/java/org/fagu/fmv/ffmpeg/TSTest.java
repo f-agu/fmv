@@ -29,15 +29,15 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.Stream;
 import org.fagu.fmv.ffmpeg.metadatas.VideoStream;
 import org.fagu.fmv.ffmpeg.operation.Type;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
-public class TSTest {
+class TSTest {
 
 	@Test
-	@Ignore
-	public void test() throws IOException {
+	@Disabled
+	void test() throws IOException {
 		MovieMetadatas metadatas = MovieMetadatas.with(new File("d:\\tmp\\dvdout.ts")).extract();
 		List<Stream> streams = metadatas.getStreams();
 		System.out.println("count: " + streams.size());

@@ -1,5 +1,9 @@
 package org.fagu.fmv.soft.exec;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*-
  * #%L
  * fmv-soft
@@ -19,43 +23,29 @@ package org.fagu.fmv.soft.exec;
  * limitations under the License.
  * #L%
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class ReadLineOutputStreamTestCase {
+class ReadLineOutputStreamTestCase {
 
-	/**
-	 * 
-	 */
-	public ReadLineOutputStreamTestCase() {}
-
-	/**
-	 * @throws IOException
-	 */
 	@Test
-	public void testEmpty() throws IOException {
+	void testEmpty() throws IOException {
 		try (ReadLineOutputStream outputStream = new ReadLineOutputStream(l -> fail())) {
 			// nothing
 		}
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
-	public void test1Line() throws IOException {
+	void test1Line() throws IOException {
 		List<String> expectedList = new ArrayList<>();
 		expectedList.add("hello world");
 		Iterator<String> expectedIterator = expectedList.iterator();
@@ -65,11 +55,8 @@ public class ReadLineOutputStreamTestCase {
 		assertFalse(expectedIterator.hasNext());
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
-	public void test2Lines_cr() throws IOException {
+	void test2Lines_cr() throws IOException {
 		List<String> expectedList = new ArrayList<>();
 		expectedList.add("hello world");
 		expectedList.add("2nd line");
@@ -81,11 +68,8 @@ public class ReadLineOutputStreamTestCase {
 		assertFalse(expectedIterator.hasNext());
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
-	public void test2Lines_crlf() throws IOException {
+	void test2Lines_crlf() throws IOException {
 		List<String> expectedList = new ArrayList<>();
 		expectedList.add("hello world");
 		expectedList.add("2nd line");
@@ -97,11 +81,8 @@ public class ReadLineOutputStreamTestCase {
 		assertFalse(expectedIterator.hasNext());
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
-	public void test2Lines_lf() throws IOException {
+	void test2Lines_lf() throws IOException {
 		List<String> expectedList = new ArrayList<>();
 		expectedList.add("hello world");
 		expectedList.add("2nd line");
@@ -113,11 +94,8 @@ public class ReadLineOutputStreamTestCase {
 		assertFalse(expectedIterator.hasNext());
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
-	public void testEmptyLines() throws IOException {
+	void testEmptyLines() throws IOException {
 		List<String> expectedList = new ArrayList<>();
 		expectedList.add("");
 		expectedList.add("");

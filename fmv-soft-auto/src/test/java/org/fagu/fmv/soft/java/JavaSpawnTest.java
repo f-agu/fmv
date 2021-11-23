@@ -1,5 +1,8 @@
 package org.fagu.fmv.soft.java;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /*-
  * #%L
  * fmv-soft-auto
@@ -20,9 +23,6 @@ package org.fagu.fmv.soft.java;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,18 +34,18 @@ import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.io.output.CountingOutputStream;
 import org.apache.commons.io.output.NullOutputStream;
 import org.fagu.fmv.soft.SoftExecutor;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 24 mai 2017 12:56:12
  */
-public class JavaSpawnTest {
+class JavaSpawnTest {
 
 	@Test
-	public void testExit0to3() throws IOException {
+	void testExit0to3() throws IOException {
 		// new TreeMap<>(System.getProperties()).forEach((k, v) -> System.out.println(k + " = " + v));
 		for(int i = 0; i < 4; ++i) {
 			final int fi = i;
@@ -58,7 +58,7 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	public void testExitUndefined() throws IOException {
+	void testExitUndefined() throws IOException {
 		try {
 			javaSimpleMain(999).execute();
 		} catch(ExecuteException e) {
@@ -67,7 +67,7 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	public void testReadLineOutputErr() throws IOException {
+	void testReadLineOutputErr() throws IOException {
 		AtomicReference<String> out = new AtomicReference<>();
 		AtomicReference<String> err = new AtomicReference<>();
 		javaSimpleMain(0)
@@ -79,7 +79,7 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	public void testOutputToOutputStream() throws IOException {
+	void testOutputToOutputStream() throws IOException {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		javaSimpleMain(0)
 				.output(os)
@@ -88,7 +88,7 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	public void testOutputToOutputStreamAndErrToReadLine() throws IOException {
+	void testOutputToOutputStreamAndErrToReadLine() throws IOException {
 		AtomicReference<String> err = new AtomicReference<>();
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 			javaSimpleMain(0)
@@ -101,7 +101,7 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	public void testOutputReadLineToAndErrToOutputStream() throws IOException {
+	void testOutputReadLineToAndErrToOutputStream() throws IOException {
 		AtomicReference<String> out = new AtomicReference<>();
 		try (ByteArrayOutputStream err = new ByteArrayOutputStream()) {
 			javaSimpleMain(0)
@@ -114,8 +114,8 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	@Ignore
-	public void testCommon() throws IOException {
+	@Disabled
+	void testCommon() throws IOException {
 		List<String> common = new ArrayList<>();
 		javaSimpleMain(0)
 				.addCommonReadLine(common::add)
@@ -124,7 +124,7 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	public void testException_err_size0() throws IOException {
+	void testException_err_size0() throws IOException {
 		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
 		List<String> err = new ArrayList<>();
 
@@ -142,7 +142,7 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	public void testException_err_size10() throws IOException {
+	void testException_err_size10() throws IOException {
 		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
 		CountingOutputStream errCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
 
@@ -158,7 +158,7 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	public void testException_err_size100M() throws IOException {
+	void testException_err_size100M() throws IOException {
 		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
 		CountingOutputStream errCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
 
@@ -174,7 +174,7 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	public void testException_out_size0() throws IOException {
+	void testException_out_size0() throws IOException {
 		try (CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM)) {
 			List<String> err = new ArrayList<>();
 
@@ -193,7 +193,7 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	public void testException_out_size10() throws IOException {
+	void testException_out_size10() throws IOException {
 		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
 		List<String> err = new ArrayList<>();
 
@@ -210,7 +210,7 @@ public class JavaSpawnTest {
 	}
 
 	@Test
-	public void testException_out_size100M() throws IOException {
+	void testException_out_size100M() throws IOException {
 		CountingOutputStream outCountingOutputStream = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
 		List<String> err = new ArrayList<>();
 

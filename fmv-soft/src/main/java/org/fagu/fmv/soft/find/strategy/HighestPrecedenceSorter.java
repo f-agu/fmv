@@ -34,9 +34,6 @@ import org.fagu.fmv.soft.find.Sorter;
  */
 public class HighestPrecedenceSorter implements Sorter {
 
-	/**
-	 * @see org.fagu.fmv.soft.find.Sorter#sort(java.util.Collection)
-	 */
 	@Override
 	public NavigableSet<SoftFound> sort(Collection<SoftFound> founds) {
 		if(founds == null || founds.isEmpty()) {

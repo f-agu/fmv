@@ -21,7 +21,10 @@ package org.fagu.fmv.ffmpeg.operation;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -33,26 +36,19 @@ public class ExtractThumbnail {
 
 	private final List<File> files;
 
-	/**
-	 * @param files
-	 */
 	public ExtractThumbnail(List<File> files) {
 		this.files = files;
 	}
 
-	/**
-	 * @return
-	 */
 	public List<File> getFiles() {
 		return files;
 	}
 
-	/**
-	 * @param folder
-	 * @param spattern
-	 * @return
-	 */
 	public static ExtractThumbnail find(File folder, String spattern) {
+		return find(folder, spattern, null);
+	}
+
+	public static ExtractThumbnail find(File folder, String spattern, Comparator<File> comparator) {
 		final Pattern pattern = Pattern.compile(spattern);
 		File[] files = folder.listFiles(pathname -> {
 			if( ! pathname.isFile()) {
@@ -60,7 +56,8 @@ public class ExtractThumbnail {
 			}
 			return pattern.matcher(pathname.getName()).matches();
 		});
-		Arrays.sort(files);
+		List<File> list = new ArrayList<>(Arrays.asList(files));
+		Collections.sort(list, comparator);
 		return new ExtractThumbnail(Arrays.asList(files));
 	}
 

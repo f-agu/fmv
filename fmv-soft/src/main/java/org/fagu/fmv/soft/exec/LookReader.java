@@ -29,10 +29,5 @@ import java.io.IOException;
 @FunctionalInterface
 public interface LookReader {
 
-	/**
-	 * @param line
-	 * @return
-	 * @throws IOException
-	 */
 	boolean look(String line) throws IOException;
 }

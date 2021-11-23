@@ -1,5 +1,12 @@
 package org.fagu.fmv.utils.media;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+
 /*
  * #%L
  * fmv-utils
@@ -20,42 +27,36 @@ package org.fagu.fmv.utils.media;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertSame;
-
-import org.junit.Test;
-
 
 /**
  * @author f.agu
  */
-public class RatioTestCase {
+class RatioTestCase {
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testConstructor_nok_nm5() {
-		Ratio.valueOf( - 5, 1);
-	}
-
-	@Test(expected = ArithmeticException.class)
-	public void testConstructor_nok_d0() {
-		Ratio.valueOf(1, 0);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testConstructor_nok_dm5() {
-		Ratio.valueOf(1, - 5);
+	@Test
+	void testConstructor_nok_nm5() {
+		assertThrows(IllegalArgumentException.class, () -> Ratio.valueOf( - 5, 1));
 	}
 
 	@Test
-	public void testSimple_ok() {
+	void testConstructor_nok_d0() {
+		assertThrows(ArithmeticException.class, () -> Ratio.valueOf(1, 0));
+	}
+
+	@Test
+	void testConstructor_nok_dm5() {
+		assertThrows(IllegalArgumentException.class, () -> Ratio.valueOf(1, - 5));
+	}
+
+	@Test
+	void testSimple_ok() {
 		Ratio ratio = Ratio.valueOf(16, 9);
 		assertEquals("16:9", ratio.toString());
 		assertEquals((double)16 / 9, ratio.toDouble(), 0.00001);
 	}
 
 	@Test
-	public void testEquals() {
+	void testEquals() {
 		assertEquals(Ratio.valueOf(16, 9), Ratio.valueOf(16, 9));
 		assertEquals(Ratio.valueOf(1, 1), Ratio.valueOf(1, 1));
 		assertNotEquals(Ratio.valueOf(4, 3), Ratio.valueOf(4, 2));
@@ -63,57 +64,57 @@ public class RatioTestCase {
 	}
 
 	@Test
-	public void testCalculateWidth() {
+	void testCalculateWidth() {
 		assertEquals(700, Ratio.TRADITIONAL_TELEVISION.calculateWidth(525));
 		assertEquals(960, Ratio.TRADITIONAL_TELEVISION.calculateWidth(Size.HD720));
 	}
 
 	@Test
-	public void testCalculateHeight() {
+	void testCalculateHeight() {
 		assertEquals(1080, Ratio._16_9.calculateHeight(1920));
 		assertEquals(1067, Ratio._16_9.calculateWidth(Size.SVGA));
 	}
 
 	@Test
-	public void testApproximate_InList() {
+	void testApproximate_InList() {
 		assertEquals(Ratio.valueOf(3, 2), Size.valueOf(3008, 1960).getRatio().approximate());
 		assertEquals(Ratio.valueOf(3, 2), Size.valueOf(3008, 2000).getRatio().approximate());
 	}
 
 	@Test
-	public void testApproximate_create() {
+	void testApproximate_create() {
 		assertEquals(Ratio.valueOf(2.96), Size.valueOf(8000, 2700).getRatio().approximate());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testApproximate_failed_1() {
-		Ratio._16_9.approximate(1);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testApproximate_failed_0() {
-		Ratio._16_9.approximate(0);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testApproximate_failed_over1() {
-		Ratio._16_9.approximate(100);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testApproximate_failed_under0() {
-		Ratio._16_9.approximate( - 8);
+	@Test
+	void testApproximate_failed_1() {
+		assertThrows(IllegalArgumentException.class, () -> Ratio._16_9.approximate(1));
 	}
 
 	@Test
-	public void testReduce() {
+	void testApproximate_failed_0() {
+		assertThrows(IllegalArgumentException.class, () -> Ratio._16_9.approximate(0));
+	}
+
+	@Test
+	void testApproximate_failed_over1() {
+		assertThrows(IllegalArgumentException.class, () -> Ratio._16_9.approximate(100));
+	}
+
+	@Test
+	void testApproximate_failed_under0() {
+		assertThrows(IllegalArgumentException.class, () -> Ratio._16_9.approximate( - 8));
+	}
+
+	@Test
+	void testReduce() {
 		assertSame(Ratio._16_9, Ratio._16_9.reduce());
 		assertSame(Ratio.ISO_216, Ratio.ISO_216.reduce());
 		assertEquals(Ratio.valueOf(8, 5), Ratio.COMMON_COMPUTER_SCREEN.reduce());
 	}
 
 	@Test
-	public void testParse_ddots() {
+	void testParse_ddots() {
 		assertSame(Ratio._16_9, Ratio.parse("16:9"));
 		assertSame(Ratio._16_9, Ratio.parse("16/9"));
 		assertEquals(0.618046D, Ratio.parse("1:1.618").toDouble(), 0.000001D);
@@ -121,18 +122,18 @@ public class RatioTestCase {
 	}
 
 	@Test
-	public void testInvert() {
+	void testInvert() {
 		assertEquals(Ratio.valueOf(9, 16), Ratio._16_9.invert());
 		assertEquals(Ratio.valueOf(0.707106D), Ratio.ISO_216.invert());
 	}
 
-	@Test(expected = ArithmeticException.class)
-	public void testInvert_failed() {
-		Ratio.valueOf(0, 1).invert();
+	@Test
+	void testInvert_failed() {
+		assertThrows(ArithmeticException.class, () -> Ratio.valueOf(0, 1).invert());
 	}
 
 	@Test
-	public void testKeepRatio() {
+	void testKeepRatio() {
 		Ratio ratio = Size.valueOf(467, 700).getRatio();
 		assertEquals(Ratio.valueOf(467, 700), ratio);
 		Size newSize = ratio.getSizeIn(Size.valueOf(600, 600));

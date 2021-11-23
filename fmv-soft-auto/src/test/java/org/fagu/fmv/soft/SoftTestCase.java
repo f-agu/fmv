@@ -10,8 +10,6 @@ import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.gs.GSSoftProvider;
 import org.fagu.version.Version;
-import org.junit.Ignore;
-import org.junit.Test;
 /*-
  * #%L
  * fmv-soft-auto
@@ -31,6 +29,8 @@ import org.junit.Test;
  * limitations under the License.
  * #L%
  */
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -40,7 +40,7 @@ public class SoftTestCase {
 
 	@Test
 	// @Ignore
-	public void testFindAll() throws Exception {
+	void testFindAll() throws Exception {
 		// System.getProperties().forEach((k, v) -> System.out.println(k + " : " + v));
 		Soft.searchAll().forEach(s -> {
 			String prefix = "[" + s.getSoftProvider().getGroupName() + "] " + s.getName() + ' ';
@@ -64,8 +64,8 @@ public class SoftTestCase {
 	}
 
 	@Test
-	@Ignore
-	public void testGS() throws Exception {
+	@Disabled
+	void testGS() throws Exception {
 		GSSoftProvider gsSoftProvider = new GSSoftProvider();
 		Soft soft = gsSoftProvider.searchConfigurable(ss -> {
 			ss.withPolicy(new VersionSoftPolicy().onAllPlatforms(maxVersion(new Version(8))));

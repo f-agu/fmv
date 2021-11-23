@@ -1,5 +1,8 @@
 package org.fagu.fmv.ffmpeg.utils;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,31 +23,20 @@ package org.fagu.fmv.ffmpeg.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.fagu.fmv.ffmpeg.format.Formats;
 import org.fagu.fmv.ffmpeg.utils.srcgen.ClassNameUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class FormatsTestCase {
+class FormatsTestCase {
 
-	/**
-	 * 
-	 */
-	public FormatsTestCase() {}
-
-	/*
-	 * 
-	 */
 	@Test
-	@Ignore
-	public void generator() {
+	@Disabled
+	void generator() {
 		for(Formats muxFormat : Formats.available()) {
 			String name = muxFormat.getName();
 			String fieldName = ClassNameUtils.fieldStatic(name);
@@ -56,11 +48,8 @@ public class FormatsTestCase {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testCache() {
+	void testCache() {
 		assertTrue(Formats.MP4.isDemuxingSupported());
 		assertTrue(Formats.MP4.isMuxingSupported());
 		assertFalse(Formats.MP2.isDemuxingSupported());

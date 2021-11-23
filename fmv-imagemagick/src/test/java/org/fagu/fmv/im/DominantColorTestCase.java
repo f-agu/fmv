@@ -1,5 +1,7 @@
 package org.fagu.fmv.im;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*-
  * #%L
  * fmv-image
@@ -19,24 +21,23 @@ package org.fagu.fmv.im;
  * limitations under the License.
  * #L%
  */
-import static org.junit.Assert.assertEquals;
 
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
 import org.fagu.fmv.image.ImageResourceUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 11 janv. 2017 13:02:17
  */
-public class DominantColorTestCase {
+class DominantColorTestCase {
 
 	@Test
-	public void testRealImageRGB_File() throws IOException {
+	void testRealImageRGB_File() throws IOException {
 		File file = ImageResourceUtils.extractFile(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL);
 		try {
 			Color dominantColor = DominantColor.getInstance().getDominantColor(file, s -> {});
@@ -49,7 +50,7 @@ public class DominantColorTestCase {
 	}
 
 	@Test
-	public void testRealImageRGB_InputStream() throws IOException {
+	void testRealImageRGB_InputStream() throws IOException {
 		// StreamLog.debug(true);
 		// Package pkg = DominantColor.class.getPackage();
 		// String resourcePath = Resources.getResourcePath(pkg, "bad-ass-tattoo-fail.jpg");
@@ -63,7 +64,7 @@ public class DominantColorTestCase {
 	}
 
 	@Test
-	public void testParseRGB() throws IOException {
+	void testParseRGB() throws IOException {
 		assertColor(DominantColor.parse("srgb(130,125,119)"), 130, 125, 119, 255);
 		assertColor(DominantColor.parse("srgb(33.489%,27.3838%,27.5563%)"), 85, 69, 70, 255);
 		assertColor(DominantColor.parse("srgba(130,125,119,0.4)"), 130, 125, 119, 102);
@@ -71,7 +72,7 @@ public class DominantColorTestCase {
 	}
 
 	@Test
-	public void testParseCMYK() throws IOException {
+	void testParseCMYK() throws IOException {
 		assertColor("black", DominantColor.parse("cmyk(0,0,0,255)"), 0, 0, 0, 255);
 		assertColor("white", DominantColor.parse("cmyk(0,0,0,0)"), 255, 255, 255, 255);
 		assertColor("red", DominantColor.parse("cmyk(0,255,255,0)"), 255, 0, 0, 255);
@@ -89,10 +90,10 @@ public class DominantColorTestCase {
 	}
 
 	private void assertColor(String title, Color color, int expectedRed, int expectedGreen, int expectedBlue, int expectedAlpha) {
-		assertEquals(title + "[red]", expectedRed, color.getRed());
-		assertEquals(title + "[green]", expectedGreen, color.getGreen());
-		assertEquals(title + "[blue]", expectedBlue, color.getBlue());
-		assertEquals(title + "[transparency]", expectedAlpha, color.getAlpha());
+		assertEquals(expectedRed, color.getRed(), title + "[red]");
+		assertEquals(expectedGreen, color.getGreen(), title + "[green]");
+		assertEquals(expectedBlue, color.getBlue(), title + "[blue]");
+		assertEquals(expectedAlpha, color.getAlpha(), title + "[transparency]");
 	}
 
 }

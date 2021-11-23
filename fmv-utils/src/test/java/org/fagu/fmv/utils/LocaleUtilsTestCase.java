@@ -1,5 +1,8 @@
 package org.fagu.fmv.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 /*
  * #%L
  * fmv-utils
@@ -20,62 +23,38 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import java.util.Locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class LocaleUtilsTestCase {
+class LocaleUtilsTestCase {
 
-	/**
-	 * 
-	 */
-	public LocaleUtilsTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	public void testGetParent_null() {
+	void testGetParent_null() {
 		assertNull(LocaleUtils.getParent(null));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testGetParent_onlyLanguage() {
+	void testGetParent_onlyLanguage() {
 		assertNull(LocaleUtils.getParent(Locale.KOREAN));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testGetParent_LanguageCountry() {
+	void testGetParent_LanguageCountry() {
 		assertEquals(Locale.KOREAN, LocaleUtils.getParent(Locale.KOREA));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testGetParent_LanguageCountryVariant() {
+	void testGetParent_LanguageCountryVariant() {
 		assertEquals(Locale.KOREA, LocaleUtils.getParent(new Locale("ko", "KR", "xxx")));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testGetParent_LanguageVariant() {
+	void testGetParent_LanguageVariant() {
 		assertEquals(Locale.KOREAN, LocaleUtils.getParent(new Locale("ko", "", "xxx")));
 	}
 

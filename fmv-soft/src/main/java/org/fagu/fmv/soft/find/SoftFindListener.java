@@ -20,7 +20,6 @@ package org.fagu.fmv.soft.find;
  * #L%
  */
 
-
 import org.fagu.fmv.soft.Soft;
 
 
@@ -29,9 +28,5 @@ import org.fagu.fmv.soft.Soft;
  */
 public interface SoftFindListener {
 
-	/**
-	 * @param softLocator
-	 * @param soft
-	 */
 	void eventFound(SoftLocator softLocator, Soft soft);
 }

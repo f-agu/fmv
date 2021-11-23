@@ -1,5 +1,8 @@
 package org.fagu.fmv.image;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*-
  * #%L
  * fmv-image
@@ -20,14 +23,11 @@ package org.fagu.fmv.image;
  * #L%
  */
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.IOException;
 
 import org.fagu.fmv.media.TestMetadataExtractor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -47,6 +47,11 @@ public abstract class TestAllImageMetadatasTest extends ImageBaseMetadatasTest {
 	@Test
 	public void testFile_wei_ass() throws IOException {
 		singleDoAndDelete(ImageResourceUtils.WEI_ASS, this::assertMetadatas_WeiAss);
+	}
+
+	@Test
+	public void testFile_animated_gif() throws IOException {
+		singleDoAndDelete(ImageResourceUtils.ANIMATED_GIF, this::assertMetadatas_AnimatedGif);
 	}
 
 	@Test

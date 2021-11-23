@@ -1,5 +1,17 @@
 package org.fagu.fmv.ffmpeg.filter.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Collections;
+
+import org.fagu.fmv.ffmpeg.operation.InputProcessor;
+import org.fagu.fmv.ffmpeg.operation.MediaInput;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,62 +32,34 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-
-import java.util.Collections;
-
-import org.fagu.fmv.ffmpeg.operation.InputProcessor;
-import org.fagu.fmv.ffmpeg.operation.MediaInput;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 
 /**
  * @author f.agu
  */
-@RunWith(MockitoJUnitRunner.class)
-@Ignore
-public class ConcatTestCase {
+@ExtendWith(MockitoExtension.class)
+@Disabled
+class ConcatTestCase {
 
-	/**
-	 *
-	 */
 	private Concat concat;
 
-	/**
-	 *
-	 */
-	public ConcatTestCase() {}
-
-	/**
-	 *
-	 */
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		concat = new Concat(null);
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void test2Inputs() {
+	void test2Inputs() {
 		concat.addInput(mockInputProcessor(0));
 		concat.addInput(mockInputProcessor(1));
 
 		assertEquals("[0][1] concat=n=2:v=1:a=1 [con_a]", concat.toString());
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void test10Inputs() {
+	void test10Inputs() {
 		for(int i = 9; i >= 0; --i) {
 			concat.addInput(mockInputProcessor(i));
 		}
@@ -84,10 +68,6 @@ public class ConcatTestCase {
 
 	// *****************************************************
 
-	/**
-	 * @param index
-	 * @return
-	 */
 	private InputProcessor mockInputProcessor(int index) {
 		InputProcessor inputProcessor = mock(InputProcessor.class);
 		doReturn(Collections.singletonList(Integer.toString(index))).when(inputProcessor).getOutputKeys();

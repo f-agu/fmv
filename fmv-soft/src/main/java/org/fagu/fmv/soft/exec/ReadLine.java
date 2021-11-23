@@ -23,11 +23,9 @@ package org.fagu.fmv.soft.exec;
 /**
  * @author f.agu
  */
+@FunctionalInterface
 public interface ReadLine {
 
-	/**
-	 * @param line
-	 */
 	void read(String line);
 
 }

@@ -1,5 +1,10 @@
 package org.fagu.fmv.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /*
  * #%L
  * fmv-utils
@@ -20,128 +25,89 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class ReplacersTestCase {
+class ReplacersTestCase {
 
 	private PlaceHolder placeHolder;
 
-	/**
-	 *
-	 */
-	public ReplacersTestCase() {}
-
-	/**
-	 *
-	 */
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		placeHolder = PlaceHolder.with("toto");
 	}
 
-	/**
-	 *
-	 */
-	@Test(expected = PlaceHolderException.class)
-	public void testEmpty() {
+	@Test
+	void testEmpty() {
 		Replacer replacer = Replacers.chain();
 		replacer.init(placeHolder);
-		replacer.replace("key");
+		assertThrows(PlaceHolderException.class, () -> replacer.replace("key"));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testMap_OK() {
+	void testMap_OK() {
 		Replacer replacer = Replacers.chain().map(Collections.singletonMap("key", "value"));
 		replacer.init(placeHolder);
 		assertEquals("value", replacer.replace("key"));
 	}
 
-	/**
-	 *
-	 */
-	@Test(expected = PlaceHolderException.class)
-	public void testMap_notFound() {
+	@Test
+	void testMap_notFound() {
 		Replacer replacer = Replacers.chain().map(Collections.singletonMap("key", "value"));
 		replacer.init(placeHolder);
-		replacer.replace("testMap_notFound");
+		assertThrows(PlaceHolderException.class, () -> replacer.replace("testMap_notFound"));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testOf() {
+	void testOf() {
 		Replacer replacer = Replacers.chain().of(s -> s.toUpperCase());
 		replacer.init(placeHolder);
 		assertEquals("KEY", replacer.replace("key"));
 		assertEquals("XXX0", replacer.replace("xxx0"));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testOfEnv() {
+	void testOfEnv() {
 		String firstKey = System.getenv().keySet().iterator().next();
 		Replacer replacer = Replacers.chain().ofEnv();
 		replacer.init(placeHolder);
 		assertNotNull(replacer.replace(firstKey));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testOfSystemProperties() {
+	void testOfSystemProperties() {
 		String firstKey = String.valueOf(System.getProperties().keySet().iterator().next());
 		Replacer replacer = Replacers.chain().ofSystemProperties();
 		replacer.init(placeHolder);
 		assertNotNull(replacer.replace(firstKey));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testUnresolvableCopy() {
+	void testUnresolvableCopy() {
 		Replacer replacer = Replacers.chain().unresolvableCopy();
 		replacer.init(placeHolder);
 		assertEquals("${not-found}", replacer.replace("not-found"));
 	}
 
-	/**
-	 *
-	 */
-	@Test(expected = PlaceHolderException.class)
-	public void testUnresolvableThrow() {
+	@Test
+	void testUnresolvableThrow() {
 		Replacer replacer = Replacers.chain().unresolvableThrow();
 		replacer.init(placeHolder);
-		replacer.replace("not-found");
+		assertThrows(PlaceHolderException.class, () -> replacer.replace("not-found"));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testMap_of_ofEnv() {
+	void testMap_of_ofEnv() {
 		Entry<String, String> firstEnv = System.getenv().entrySet().iterator().next();
 		Replacer replacer = Replacers.chain()
 				.map(Collections.singletonMap("key", "value"))
@@ -153,11 +119,8 @@ public class ReplacersTestCase {
 		assertEquals("KEY4", replacer.replace("key4"));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testMap_of_unresolvableCopy() {
+	void testMap_of_unresolvableCopy() {
 		Entry<String, String> firstEnv = System.getenv().entrySet().iterator().next();
 		Replacer replacer = Replacers.chain()
 				.map(Collections.singletonMap("key", "value"))
@@ -169,20 +132,14 @@ public class ReplacersTestCase {
 		assertEquals("${key4}", replacer.replace("key4"));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testKeyValue() {
+	void testKeyValue() {
 		Replacer replacer = Replacers.chain().keyValue("key", "value");
 		assertEquals("value", replacer.replace("key"));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testFunctionNamed() {
+	void testFunctionNamed() {
 		Replacer replacer = Replacers.chain().functionNamed("date", s -> s).unresolvableCopy();
 		assertEquals("now", replacer.replace("date:now"));
 
@@ -195,11 +152,8 @@ public class ReplacersTestCase {
 		assertEquals("the date is 2016-02-19 before you or everybody", k);
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testToString_1() {
+	void testToString_1() {
 		assertEquals("unresolvableCopy", Replacers.chain().unresolvableCopy().toString());
 		assertEquals("unresolvableIgnore()", Replacers.chain().unresolvableIgnored().toString());
 		assertEquals("unresolvableIgnore(PRouT4)", Replacers.chain().unresolvableIgnored("PRouT4").toString());
@@ -215,12 +169,10 @@ public class ReplacersTestCase {
 		assertEquals("touppercase", Replacers.chain().of(k -> k.toUpperCase(), "touppercase").toString());
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testToString_multi() {
-		assertEquals("[keyValue{k=v}, keyValue{A=5}, unresolvableIgnore()]", Replacers.chain().keyValue("k", "v").keyValue("A", "5").unresolvableIgnored().toString());
+	void testToString_multi() {
+		assertEquals("[keyValue{k=v}, keyValue{A=5}, unresolvableIgnore()]", Replacers.chain().keyValue("k", "v").keyValue("A", "5")
+				.unresolvableIgnored().toString());
 	}
 
 }

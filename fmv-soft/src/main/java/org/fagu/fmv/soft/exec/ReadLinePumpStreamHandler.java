@@ -42,29 +42,14 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 
 	private final LookReader lookReader;
 
-	/**
-	 * @param outAndErrReadLine
-	 * @param charset
-	 */
 	public ReadLinePumpStreamHandler(ReadLine outAndErrReadLine, Charset charset) {
 		this(outAndErrReadLine, outAndErrReadLine, charset);
 	}
 
-	/**
-	 * @param outReadLine
-	 * @param errReadLine
-	 * @param charset
-	 */
 	public ReadLinePumpStreamHandler(ReadLine outReadLine, ReadLine errReadLine, Charset charset) {
 		this(outReadLine, errReadLine, charset, null);
 	}
 
-	/**
-	 * @param outReadLine
-	 * @param errReadLine
-	 * @param charset
-	 * @param lookReader
-	 */
 	public ReadLinePumpStreamHandler(ReadLine outReadLine, ReadLine errReadLine, Charset charset, LookReader lookReader) {
 		this.outReadLine = outReadLine;
 		this.errReadLine = errReadLine;
@@ -72,45 +57,28 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 		this.lookReader = lookReader;
 	}
 
-	/**
-	 * @see org.apache.commons.exec.PumpStreamHandler#setProcessOutputStream(java.io.InputStream)
-	 */
 	@Override
 	public void setProcessOutputStream(InputStream is) {
 		createProcessOutputPump(new ReadLineInputStream(StreamLog.wrap(is, StreamLogConsumer.out()), outReadLine), null);
 	}
 
-	/**
-	 * @see org.apache.commons.exec.PumpStreamHandler#setProcessErrorStream(java.io.InputStream)
-	 */
 	@Override
 	public void setProcessErrorStream(InputStream is) {
 		createProcessErrorPump(new ReadLineInputStream(StreamLog.wrap(is, StreamLogConsumer.err()), errReadLine), null);
 	}
 
-	/**
-	 * @return
-	 */
 	public Charset getCharset() {
 		return charset;
 	}
 
 	// *************************************************
 
-	/**
-	 * @see org.apache.commons.exec.PumpStreamHandler#createPump(java.io.InputStream, java.io.OutputStream)
-	 */
 	@Override
 	protected Thread createPump(InputStream is, OutputStream os) {
 		ReadLineInputStream myInputStream = (ReadLineInputStream)is;
 		return createPump(myInputStream.delegate, myInputStream.readLine);
 	}
 
-	/**
-	 * @param is
-	 * @param readLine
-	 * @return
-	 */
 	protected Thread createPump(InputStream is, ReadLine readLine) {
 		final Thread result = new Thread(new ReadLineStreamPumper(is, readLine, charset, lookReader), "ReadLineStreamPumper");
 		result.setDaemon(true);
@@ -133,18 +101,11 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 
 		private final InputStream delegate;
 
-		/**
-		 * @param delegate
-		 * @param readLine
-		 */
 		ReadLineInputStream(InputStream delegate, ReadLine readLine) {
 			this.delegate = delegate;
 			this.readLine = readLine;
 		}
 
-		/**
-		 * @see java.io.InputStream#read()
-		 */
 		@Override
 		public int read() throws IOException {
 			return 0;

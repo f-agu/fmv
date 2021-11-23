@@ -35,24 +35,15 @@ public class WritablePumpStreamHandler extends PumpStreamHandler {
 
 	private OutputStream outputStream;
 
-	/**
-	 * 
-	 */
 	public WritablePumpStreamHandler() {
 		super(NullOutputStream.NULL_OUTPUT_STREAM);
 	}
 
-	/**
-	 * @see org.apache.commons.exec.PumpStreamHandler#setProcessInputStream(java.io.OutputStream)
-	 */
 	@Override
 	public void setProcessInputStream(OutputStream outputStream) {
 		this.outputStream = StreamLog.wrap(outputStream, StreamLogConsumer.in());
 	}
 
-	/**
-	 * @return
-	 */
 	public OutputStream getProcessInputStream() {
 		return outputStream;
 	}

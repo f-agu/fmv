@@ -91,23 +91,14 @@ public class ExecStats {
 
 	private final Map<String, Stats> statsMap = new HashMap<>();
 
-	/**
-	 * @return
-	 */
 	public static ExecStats getInstance() {
 		return INSTANCE;
 	}
 
-	/**
-	 * @return
-	 */
 	public FMVExecListener getExecListener() {
 		return new StatsListener();
 	}
 
-	/**
-	 * @return
-	 */
 	public Map<String, Stats> getStats() {
 		return Collections.unmodifiableMap(statsMap);
 	}

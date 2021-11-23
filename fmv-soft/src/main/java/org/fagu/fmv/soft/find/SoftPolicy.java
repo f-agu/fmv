@@ -73,18 +73,10 @@ public abstract class SoftPolicy {
 
 	// -------------------------------------------------
 
-	/**
-	 * 
-	 */
-	public SoftPolicy() {
+	protected SoftPolicy() {
 		list = new ArrayList<>();
 	}
 
-	/**
-	 * @param platform
-	 * @param validate
-	 * @return
-	 */
 	public SoftPolicy with(OnPlatform platform, Predicate<SoftInfo> validate) {
 		Objects.requireNonNull(platform);
 		Objects.requireNonNull(validate);
@@ -92,69 +84,37 @@ public abstract class SoftPolicy {
 		return this;
 	}
 
-	/**
-	 * @param platformName
-	 * @param platformPredicate
-	 * @param subPredicate
-	 * @return
-	 */
 	public SoftPolicy on(String platformName, Predicate<SoftInfo> platformPredicate, Predicate<SoftInfo> subPredicate) {
 		return with(new OnPlatform(platformName, platformPredicate), subPredicate);
 	}
 
-	/**
-	 * @param sorter
-	 * @return
-	 */
 	public SoftPolicy withSorter(Sorter sorter) {
 		this.sorter = sorter;
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftPolicy onAllPlatforms(Predicate<SoftInfo> subPredicate) {
 		return on("All platforms", s -> true, subPredicate);
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftPolicy onWindows(Predicate<SoftInfo> subPredicate) {
 		return on("Windows", s -> SystemUtils.IS_OS_WINDOWS, subPredicate);
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftPolicy onLinux(Predicate<SoftInfo> subPredicate) {
 		return on("Linux", s -> SystemUtils.IS_OS_LINUX, subPredicate);
 	}
 
-	/**
-	 * @return
-	 */
 	public SoftPolicy onMac(Predicate<SoftInfo> subPredicate) {
 		return on("Mac", s -> SystemUtils.IS_OS_MAC, subPredicate);
 	}
 
-	/**
-	 * @param softInfo
-	 * @return
-	 */
 	public abstract SoftFound toSoftFound(Object softInfo);
 
-	/**
-	 * @return
-	 */
 	public Sorter getSorter() {
 		return sorter;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringJoiner joiner = new StringJoiner(" ; ");
@@ -166,9 +126,6 @@ public abstract class SoftPolicy {
 
 	// **********************************************************
 
-	/**
-	 * @return
-	 */
 	protected static String osCode() {
 		if(SystemUtils.IS_OS_WINDOWS) {
 			return "windows";
@@ -182,11 +139,6 @@ public abstract class SoftPolicy {
 		return null;
 	}
 
-	/**
-	 * @param softInfo
-	 * @param name
-	 * @return
-	 */
 	protected static Optional<String> getProperty(SoftInfo softInfo, String name) {
 		// global
 		String key = softInfo.getName() + '.' + name;

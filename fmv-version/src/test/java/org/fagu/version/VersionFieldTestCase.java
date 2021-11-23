@@ -1,5 +1,11 @@
 package org.fagu.version;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.Test;
+
 /*-
  * #%L
  * fmv-version
@@ -20,39 +26,22 @@ package org.fagu.version;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
 
 /**
  * @author fagu
  */
-public class VersionFieldTestCase {
+class VersionFieldTestCase {
 
-	/**
-	 *
-	 */
-	public VersionFieldTestCase() {}
-
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testConstructorNull() throws Exception {
+	void testConstructorNull() throws Exception {
 		try {
 			new VersionField(null, 0);
 			fail("versionUnit null");
 		} catch(NullPointerException npe) {}
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testConstructorNegative() throws Exception {
+	void testConstructorNegative() throws Exception {
 		try {
 			new VersionField(VersionUnit.VF_0_MAJOR, - 1);
 			fail("value -1");
@@ -64,11 +53,8 @@ public class VersionFieldTestCase {
 		} catch(IllegalArgumentException npe) {}
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testSimple() throws Exception {
+	void testSimple() throws Exception {
 		assertOK("0", new VersionField(VersionUnit.VF_0_MAJOR, 1), VersionUnit.VF_0_MAJOR, 1);
 		assertOK("1", new VersionField(VersionUnit.VF_1_MINOR, 54), VersionUnit.VF_1_MINOR, 54);
 		assertOK("2", new VersionField(VersionUnit.VF_2_REVISION, 10), VersionUnit.VF_2_REVISION, 10);
@@ -77,34 +63,25 @@ public class VersionFieldTestCase {
 		assertOK("5", new VersionField(VersionUnit.VF_5, 888), VersionUnit.VF_5, 888);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testValueOfEquals() throws Exception {
-		assertEquals("0", new VersionField(VersionUnit.VF_0_MAJOR, 1), VersionField.valueOf(0, 1));
-		assertEquals("1", new VersionField(VersionUnit.VF_1_MINOR, 54), VersionField.valueOf(1, 54));
-		assertEquals("2", new VersionField(VersionUnit.VF_2_REVISION, 10), VersionField.valueOf(2, 10));
-		assertEquals("3", new VersionField(VersionUnit.VF_3_BUILD, 777), VersionField.valueOf(3, 777));
-		assertEquals("4", new VersionField(VersionUnit.VF_4, 666), VersionField.valueOf(4, 666));
-		assertEquals("5", new VersionField(VersionUnit.VF_5, 888), VersionField.valueOf(5, 888));
+	void testValueOfEquals() throws Exception {
+		assertEquals(new VersionField(VersionUnit.VF_0_MAJOR, 1), VersionField.valueOf(0, 1));
+		assertEquals(new VersionField(VersionUnit.VF_1_MINOR, 54), VersionField.valueOf(1, 54));
+		assertEquals(new VersionField(VersionUnit.VF_2_REVISION, 10), VersionField.valueOf(2, 10));
+		assertEquals(new VersionField(VersionUnit.VF_3_BUILD, 777), VersionField.valueOf(3, 777));
+		assertEquals(new VersionField(VersionUnit.VF_4, 666), VersionField.valueOf(4, 666));
+		assertEquals(new VersionField(VersionUnit.VF_5, 888), VersionField.valueOf(5, 888));
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testValueOfNagetivePosition() throws Exception {
+	void testValueOfNagetivePosition() throws Exception {
 		try {
 			VersionField.valueOf( - 1, 1);
 		} catch(IllegalArgumentException iae) {}
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testValueOfNagetiveValue() throws Exception {
+	void testValueOfNagetiveValue() throws Exception {
 		try {
 			VersionField.valueOf(1, - 1);
 		} catch(IllegalArgumentException iae) {}
@@ -112,16 +89,10 @@ public class VersionFieldTestCase {
 
 	// **************************************************************************
 
-	/**
-	 * @param message
-	 * @param versionField
-	 * @param versionUnit
-	 * @param value
-	 */
 	private void assertOK(String message, VersionField versionField, VersionUnit versionUnit, int value) {
-		assertEquals("value", versionField.getValue(), value);
-		assertSame("VersionUnit", versionField.getVersionUnit(), versionUnit);
-		assertEquals("toString", versionField.toString(), versionUnit.toString() + "=" + value);
+		assertEquals(versionField.getValue(), value, message);
+		assertSame(versionField.getVersionUnit(), versionUnit, message);
+		assertEquals(versionField.toString(), versionUnit.toString() + "=" + value, message);
 	}
 
 }

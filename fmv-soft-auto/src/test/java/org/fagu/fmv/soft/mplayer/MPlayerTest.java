@@ -23,31 +23,31 @@ package org.fagu.fmv.soft.mplayer;
 import org.fagu.fmv.soft.ExecuteDelegateRepository;
 import org.fagu.fmv.soft.LogExecuteDelegate;
 import org.fagu.fmv.soft.find.SoftFound;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author fagu
  */
-@Ignore
-public class MPlayerTest {
+@Disabled
+class MPlayerTest {
 
 	@Test
-	public void testSearch() {
+	void testSearch() {
 		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		MPlayer.search();
 	}
 
 	@Test
-	public void testMPlayer() {
+	void testMPlayer() {
 		for(SoftFound softFound : MPlayer.search().getFounds()) {
 			System.out.println(softFound);
 		}
 	}
 
 	@Test
-	public void testMEncoder() {
+	void testMEncoder() {
 		for(SoftFound softFound : MEncoder.search().getFounds()) {
 			System.out.println(softFound);
 		}

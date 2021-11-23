@@ -27,17 +27,17 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author fagu
  * @created 6 oct. 2019 16:25:05
  */
-public class PdfImagesExtractorTextCase {
+class PdfImagesExtractorTextCase {
 
 	@Test
-	public void test() throws IOException {
+	void test() throws IOException {
 		File inFile = null;
 		List<File> extractedFiles = null;
 		try {

@@ -117,6 +117,10 @@ public interface ImageMetadatas extends MetadatasContainer {
 		return null;
 	}
 
+	default Optional<Boolean> isAnimated() {
+		return Optional.empty();
+	}
+
 	// -------------------------------------
 
 	public static class LTude {

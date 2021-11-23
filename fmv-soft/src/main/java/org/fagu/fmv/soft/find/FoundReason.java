@@ -20,14 +20,10 @@ package org.fagu.fmv.soft.find;
  * #L%
  */
 
-
 /**
  * @author f.agu
  */
 public interface FoundReason {
 
-	/**
-	 * @return
-	 */
 	String name();
 }

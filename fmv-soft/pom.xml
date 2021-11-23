@@ -13,7 +13,7 @@
 	<description>Utils for software</description>
 	
 	<properties>
-		<jna.version>4.4.0</jna.version>
+		<jna.version>5.9.0</jna.version>
 	</properties>
 	
 	<dependencies>
@@ -47,9 +47,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<type>jar</type>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

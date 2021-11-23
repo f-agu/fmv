@@ -27,9 +27,5 @@ package org.fagu.fmv.soft.exec;
 @FunctionalInterface
 public interface ProcessOperator {
 
-	/**
-	 * @param process
-	 * @return
-	 */
 	Process operate(Process process);
 }

@@ -22,24 +22,16 @@ package org.fagu.fmv.mymedia.sync.file;
 
 import java.util.Properties;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class FileStorageFactoryTestCase {
+class FileStorageFactoryTestCase {
 
-	/**
-	 * 
-	 */
-	public FileStorageFactoryTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	public void test1() {
+	void test1() {
 		Properties properties = new Properties();
 		properties.put("path", "${(?i)device_name_[0-9]+}folder");
 		FileStorageFactory fileStorageFactory = new FileStorageFactory();

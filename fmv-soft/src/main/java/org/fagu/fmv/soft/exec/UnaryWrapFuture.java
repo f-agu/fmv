@@ -28,9 +28,6 @@ import java.util.function.Function;
  */
 public class UnaryWrapFuture<V> extends WrapFuture<V, V> {
 
-	/**
-	 * @param future
-	 */
 	public UnaryWrapFuture(Future<V> future) {
 		super(future, Function.identity());
 	}

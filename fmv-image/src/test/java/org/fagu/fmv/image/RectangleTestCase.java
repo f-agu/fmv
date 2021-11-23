@@ -1,5 +1,9 @@
 package org.fagu.fmv.image;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /*-
  * #%L
  * fmv-image
@@ -20,10 +24,6 @@ package org.fagu.fmv.image;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -35,20 +35,20 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 10 avr. 2018 13:25:10
  */
-public class RectangleTestCase {
+class RectangleTestCase {
 
 	private static final boolean DEBUG = true;
 
 	@Test
-	public void testFieldValues() {
+	void testFieldValues() {
 		Rectangle r = new Rectangle(1, 2, 3, 4);
 		assertEquals(1, r.getX());
 		assertEquals(2, r.getY());
@@ -59,12 +59,12 @@ public class RectangleTestCase {
 	}
 
 	@Test
-	public void testContains() {
+	void testContains() {
 		int count = 0;
 		Rectangle r = new Rectangle(10, 20, 3, 4);
 		for(int x = 10; x < 13; ++x) {
 			for(int y = 20; y < 24; ++y) {
-				assertTrue("[" + x + ", " + y + "]", r.contains(x, y));
+				assertTrue(r.contains(x, y), "[" + x + ", " + y + "]");
 				++count;
 			}
 		}
@@ -73,13 +73,13 @@ public class RectangleTestCase {
 		for(int x = 0; x < 50; ++x) {
 			for(int y = 0; y < 50; ++y) {
 				boolean expected = 10 <= x && x <= 12 && 20 <= y && y <= 23;
-				assertEquals("[" + x + ", " + y + "]", expected, r.contains(x, y));
+				assertEquals(expected, r.contains(x, y), "[" + x + ", " + y + "]");
 			}
 		}
 	}
 
 	@Test
-	public void testIntersects_outside() {
+	void testIntersects_outside() {
 		Rectangle r1 = new Rectangle(10, 20, 30, 40);
 		Rectangle r2 = new Rectangle(50, 50, 10, 10);
 		draw("Intersects_outside", r1, r2);
@@ -88,7 +88,7 @@ public class RectangleTestCase {
 	}
 
 	@Test
-	public void testIntersects_inside() {
+	void testIntersects_inside() {
 		Rectangle r1 = new Rectangle(10, 20, 30, 40); // bigger
 		Rectangle r2 = new Rectangle(11, 21, 10, 10); // smaller
 		draw("Intersects_inside", r1, r2);
@@ -97,7 +97,7 @@ public class RectangleTestCase {
 	}
 
 	@Test
-	public void testIntersects_north() {
+	void testIntersects_north() {
 		Rectangle r1 = new Rectangle(10, 20, 30, 40);
 		Rectangle r2 = new Rectangle(11, 18, 10, 50);
 		draw("Intersects_north", r1, r2);
@@ -106,7 +106,7 @@ public class RectangleTestCase {
 	}
 
 	@Test
-	public void testIntersects_south() {
+	void testIntersects_south() {
 		Rectangle r1 = new Rectangle(10, 20, 30, 40);
 		Rectangle r2 = new Rectangle(11, 21, 10, 50);
 		draw("Intersects_south", r1, r2);
@@ -115,22 +115,22 @@ public class RectangleTestCase {
 	}
 
 	@Test
-	public void testCanJoinWith() {
+	void testCanJoinWith() {
 		Rectangle r1 = new Rectangle(10, 20, 30, 40);
 		Rectangle r2 = new Rectangle(5, 10, 14, 10);
 		draw("CanJoinWith", r1, r2);
 	}
 
 	@Test
-	public void testIntersect() {
+	void testIntersect() {
 		Rectangle r1 = new Rectangle(285, 285, 95, 95);
 		Rectangle r2 = new Rectangle(386, 236, 103, 103);
 		draw("Intersect", r1, r2);
 	}
 
 	@Test
-	@Ignore
-	public void testSample() {
+	@Disabled
+	void testSample() {
 		Rectangle r1 = new Rectangle(912, 658, 361, 55);
 		Rectangle r2 = new Rectangle(957, 658, 21, 54);
 		Rectangle r3 = new Rectangle(981, 658, 2, 54);

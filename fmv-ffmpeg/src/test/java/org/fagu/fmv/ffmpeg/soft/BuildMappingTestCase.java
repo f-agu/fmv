@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.soft;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*-
  * #%L
  * fmv-ffmpeg
@@ -19,24 +21,23 @@ package org.fagu.fmv.ffmpeg.soft;
  * limitations under the License.
  * #L%
  */
-import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.fagu.version.Version;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  * @created 24 janv. 2017 12:36:47
  */
-public class BuildMappingTestCase {
+class BuildMappingTestCase {
 
 	@Test
-	public void testDate() {
+	void testDate() {
 		assertEquals(LocalDate.of(2010, 3, 2), BuildMapping.versionToLocalDate(new Version(0, 0, 0)));
 		assertEquals(date(2010, 3, 2), BuildMapping.versionToDate(new Version(0, 0, 0)));
 	}

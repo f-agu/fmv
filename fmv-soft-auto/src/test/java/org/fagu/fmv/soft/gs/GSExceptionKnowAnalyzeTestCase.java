@@ -1,5 +1,8 @@
 package org.fagu.fmv.soft.gs;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*-
  * #%L
  * fmv-soft-auto
@@ -19,8 +22,6 @@ package org.fagu.fmv.soft.gs;
  * limitations under the License.
  * #L%
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,18 +37,18 @@ import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
 import org.fagu.fmv.soft.exec.exception.NestedException;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class GSExceptionKnowAnalyzeTestCase {
+class GSExceptionKnowAnalyzeTestCase {
 
 	@Test
-	//@Ignore
-	public void testMerge() throws IOException {
+	// @Disabled
+	void testMerge() throws IOException {
 		File folder = new File(System.getProperty("java.io.tmpdir"), "gs-merge-test");
 		FileUtils.deleteDirectory(folder);
 		folder.mkdirs();
@@ -85,12 +86,9 @@ public class GSExceptionKnowAnalyzeTestCase {
 
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Test
-	@Ignore
-	public void testPDFToImage() throws IOException {
+	@Disabled
+	void testPDFToImage() throws IOException {
 		StringJoiner joiner = new StringJoiner(";");
 		List<Consumer<SoftExecutor>> consumers = Arrays.asList(null, se -> se.ifExceptionIsKnownDo(ek -> ek.onMessage(joiner::add).doThrow()));
 		// List<Consumer<SoftExecutor>> consumers = Arrays.asList(se -> se.ifExceptionIsKnownDo(ek -> {
@@ -108,12 +106,6 @@ public class GSExceptionKnowAnalyzeTestCase {
 
 	// *************************************
 
-	/**
-	 * @param srcResource
-	 * @param expectedMessage
-	 * @param consumer
-	 * @throws IOException
-	 */
 	private void runPdfToImage(String srcResource, String expectedMessage, Consumer<SoftExecutor> consumer) throws IOException {
 		File folder = new File(System.getProperty("java.io.tmpdir"), "gs-pdf2img-test");
 		try {

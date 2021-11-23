@@ -30,23 +30,23 @@ import java.util.function.BiPredicate;
 import org.fagu.fmv.image.ImageMetadatas;
 import org.fagu.fmv.image.ImageResourceUtils;
 import org.fagu.fmv.image.TestAllImageMetadatasTest;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class IMConvertImageMetadatasTestCase extends TestAllImageMetadatasTest {
+class IMConvertImageMetadatasTestCase extends TestAllImageMetadatasTest {
 
-	public IMConvertImageMetadatasTestCase() {
+	IMConvertImageMetadatasTestCase() {
 		super(new IMConvertImageTestMetadataExtractor());
 	}
 
 	@Test
-	public void testMultiple() throws IOException {
-		File file1 = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
-		File file2 = ImageResourceUtils.extractFile("wei-ass.jpg");
+	void testMultiple() throws IOException {
+		File file1 = ImageResourceUtils.extractFile(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL);
+		File file2 = ImageResourceUtils.extractFile(ImageResourceUtils.WEI_ASS);
 
 		try {
 			Map<File, IMConvertImageMetadatas> map = IMConvertImageMetadatas.with(Arrays.asList(file2, file1)).extractAll();
@@ -63,9 +63,25 @@ public class IMConvertImageMetadatasTestCase extends TestAllImageMetadatasTest {
 	}
 
 	@Test
-	@Ignore
-	public void testExtractSingleton() throws Exception {
-		final File file = ImageResourceUtils.extractFile("plan4-550Mpixels.tif");
+	void testFile_animated_gif_animatedChecked() throws IOException {
+		File file = ImageResourceUtils.extractFile(ImageResourceUtils.ANIMATED_GIF);
+
+		try {
+			IMConvertImageMetadatas metadatas = IMConvertImageMetadatas.with(file)
+					.withAnimated(true)
+					.extract();
+			assertMetadatas_AnimatedGif(metadatas, true);
+		} finally {
+			if(file != null) {
+				file.delete();
+			}
+		}
+	}
+
+	@Test
+	@Disabled
+	void testExtractSingleton() throws Exception {
+		final File file = ImageResourceUtils.extractFile(ImageResourceUtils.PLAN4_550MPIXELS);
 		try {
 			Runnable runnable = new Runnable() {
 
@@ -95,7 +111,6 @@ public class IMConvertImageMetadatasTestCase extends TestAllImageMetadatasTest {
 		} finally {
 			file.delete();
 		}
-
 	}
 
 	// ********************************************

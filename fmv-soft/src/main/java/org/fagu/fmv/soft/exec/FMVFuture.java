@@ -32,41 +32,23 @@ public class FMVFuture<V> extends UnaryWrapFuture<V> {
 
 	private final OutputStream processInputStream;
 
-	/**
-	 * @param delegated
-	 * @param processInputStream
-	 */
 	FMVFuture(Future<V> delegated, OutputStream processInputStream) {
 		super(delegated);
 		this.processInputStream = processInputStream;
 	}
 
-	/**
-	 * @param b
-	 * @throws IOException
-	 */
 	public void write(int b) throws IOException {
 		if(processInputStream != null) {
 			processInputStream.write(b);
 		}
 	}
 
-	/**
-	 * @param b
-	 * @throws IOException
-	 */
 	public void write(byte[] b) throws IOException {
 		if(processInputStream != null) {
 			processInputStream.write(b);
 		}
 	}
 
-	/**
-	 * @param b
-	 * @param off
-	 * @param len
-	 * @throws IOException
-	 */
 	public void write(byte[] b, int off, int len) throws IOException {
 		if(processInputStream != null) {
 			processInputStream.write(b, off, len);

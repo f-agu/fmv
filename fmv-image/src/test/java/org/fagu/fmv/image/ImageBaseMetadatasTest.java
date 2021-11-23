@@ -1,5 +1,11 @@
 package org.fagu.fmv.image;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /*
  * #%L
  * fmv-image
@@ -19,9 +25,6 @@ package org.fagu.fmv.image;
  * limitations under the License.
  * #L%
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,13 +37,13 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.fagu.fmv.media.BaseMetadatasTest;
 import org.fagu.fmv.media.TestMetadataExtractor;
 import org.fagu.fmv.utils.media.Size;
-import org.junit.AfterClass;
+import org.junit.jupiter.api.AfterAll;
 
 
 /**
  * @author f.agu
  */
-public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
+class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 
 	private static final Map<String, Set<String>> FAILED_KEYS = new HashMap<>();
 
@@ -53,7 +56,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 				ImageBaseMetadatasTest.class::getResourceAsStream);
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void debugFailedKeys() {
 		if(DEBUG) {
 			System.out.println();
@@ -125,12 +128,16 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 		mdAssertEquals(fileName, "Software", "bullhead-user 8.1.0 OPM7.181205.001 5080180 release-keys", metadatas.getSoftware());
 	}
 
+	public void assertMetadatas_BadAssTottooFail(ImageMetadatas metadatas) {
+
+	}
+
 	/**
 	 * bad-ass-tattoo-fail.jpg
 	 * 
 	 * @param metadatas assertMetadatas_104
 	 */
-	public void assertMetadatas_BadAssTottooFail(ImageMetadatas metadatas) {
+	public void assertMetadatas_BadAssTottooFail(ImageMetadatas metadatas, boolean animatedAdded) {
 		// display(metadatas);
 		final String fileName = ImageResourceUtils.BAD_ASS_TOTTOO_FAIL;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
@@ -152,6 +159,42 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
 		mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
 		mdAssertEquals(fileName, "Software", "Adobe Photoshop CS3 Windows", metadatas.getSoftware());
+
+		assertNotAnimated(metadatas, animatedAdded);
+	}
+
+	public void assertMetadatas_AnimatedGif(ImageMetadatas metadatas) {
+		assertMetadatas_AnimatedGif(metadatas, false);
+	}
+
+	public void assertMetadatas_AnimatedGif(ImageMetadatas metadatas, boolean animatedAdded) {
+		// display(metadatas);
+		final String fileName = ImageResourceUtils.BAD_ASS_TOTTOO_FAIL;
+		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
+		mdAssertEquals(fileName, "ApertureFormat", "", metadatas.getApertureFormat());
+		mdAssertEquals(fileName, "ColorDepth", Integer.valueOf(8), metadatas.getColorDepth());
+		mdAssertEquals(fileName, "ColorSpace", "sRGB", metadatas.getColorSpace());
+		mdAssertEquals(fileName, "Compression", "LZW", metadatas.getCompression());
+		// mdAssertEquals(fileName, "CompressionQuality", 92, metadatas.getCompressionQuality());
+		mdAssertNull(fileName, "Coordinates", metadatas.getCoordinates());
+		// mdAssertEquals(fileName, "Date", "2021-10-06T09:57:26Z", metadatas.getDate().toString());
+		mdAssertNull(fileName, "Device", metadatas.getDevice());
+		mdAssertNull(fileName, "DeviceModel", metadatas.getDeviceModel());
+		mdAssertEquals(fileName, "Dimension", Size.valueOf(1024, 512), metadatas.getDimension());
+		mdAssertNull(fileName, "ExposureTime", metadatas.getExposureTime());
+		mdAssertEquals(fileName, "ExposureTimeFormat", "", metadatas.getExposureTimeFormat());
+		mdAssertNull(fileName, "Flash", metadatas.getFlash());
+		mdAssertNull(fileName, "FocalLength", metadatas.getFocalLength());
+		mdAssertEquals(fileName, "Format", "GIF", String.valueOf(metadatas.getFormat()).toUpperCase());
+		mdAssertNull(fileName, "ISO", metadatas.getISOSpeed());
+		// mdAssertEquals(fileName, "Resolution", Size.valueOf(72, 72), metadatas.getResolution());
+		mdAssertNull(fileName, "Software", metadatas.getSoftware());
+
+		assertAnimated(metadatas, animatedAdded);
+	}
+
+	public void assertMetadatas_WeiAss(ImageMetadatas metadatas) {
+		assertMetadatas_WeiAss(metadatas, false);
 	}
 
 	/**
@@ -159,7 +202,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 	 * 
 	 * @param metadatas
 	 */
-	public void assertMetadatas_WeiAss(ImageMetadatas metadatas) {
+	public void assertMetadatas_WeiAss(ImageMetadatas metadatas, boolean animatedAdded) {
 		// display(metadatas);
 		final String fileName = ImageResourceUtils.WEI_ASS;
 		mdAssertNull(fileName, "Aperture", metadatas.getAperture());
@@ -185,6 +228,8 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 
 		mdAssertEquals(fileName, "jpeg:colorspace", "2", metadatas.get("jpeg:colorspace"));
 		mdAssertEquals(fileName, "jpeg:sampling-factor", "2x1,1x1,1x1", metadatas.get("jpeg:sampling-factor"));
+
+		assertNotAnimated(metadatas, animatedAdded);
 	}
 
 	/**
@@ -316,7 +361,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 	private void mdAssertNull(String fileName, String message, Object obj) {
 		if(assertFilter().test(fileName, message)) {
 			try {
-				assertNull(message, obj);
+				assertNull(obj, message);
 			} catch(AssertionError e) {
 				assertion(e, fileName, message);
 			}
@@ -326,7 +371,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 	private void mdAssertNotNull(String fileName, String message, Object obj) {
 		if(assertFilter().test(fileName, message)) {
 			try {
-				assertNotNull(message, obj);
+				assertNotNull(obj, message);
 			} catch(AssertionError e) {
 				assertion(e, fileName, message);
 			}
@@ -346,7 +391,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 	private void mdAssertEquals(String fileName, String message, double expected, double actual, double delta) {
 		if(assertFilter().test(fileName, message)) {
 			try {
-				assertEquals(message, expected, actual, delta);
+				assertEquals(expected, actual, delta, message);
 			} catch(AssertionError e) {
 				assertion(e, fileName, message);
 			}
@@ -360,7 +405,7 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 		}
 		if(assertFilter().test(fileName, message)) {
 			try {
-				assertEquals(message, expected, actual);
+				assertEquals(expected, actual, message);
 			} catch(AssertionError e) {
 				assertion(e, fileName, message);
 			}
@@ -374,6 +419,22 @@ public class ImageBaseMetadatasTest extends BaseMetadatasTest<ImageMetadatas> {
 					.add(message);
 		} else {
 			throw error;
+		}
+	}
+
+	private void assertNotAnimated(ImageMetadatas metadatas, boolean animatedAdded) {
+		if(animatedAdded) {
+			assertFalse(metadatas.isAnimated().get());
+		} else {
+			assertFalse(metadatas.isAnimated().isPresent());
+		}
+	}
+
+	private void assertAnimated(ImageMetadatas metadatas, boolean animatedAdded) {
+		if(animatedAdded) {
+			assertTrue(metadatas.isAnimated().get());
+		} else {
+			assertFalse(metadatas.isAnimated().isPresent());
 		}
 	}
 

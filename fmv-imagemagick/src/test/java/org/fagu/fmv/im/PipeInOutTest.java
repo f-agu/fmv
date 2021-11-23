@@ -1,5 +1,7 @@
 package org.fagu.fmv.im;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*-
  * #%L
  * fmv-imagemagick
@@ -19,7 +21,6 @@ package org.fagu.fmv.im;
  * limitations under the License.
  * #L%
  */
-import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,18 +34,18 @@ import org.fagu.fmv.im.soft.Convert;
 import org.fagu.fmv.image.ImageResourceUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.utils.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class PipeInOutTest {
+class PipeInOutTest {
 
 	private static final String EXPECTED_SHA1 = "a9d6644b49a3f9c660a702f46bd44640967999ae";
 
 	@Test
-	public void testPipe_no() throws Exception {
+	void testPipe_no() throws Exception {
 		File srcFile = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
 		File destFile = new File(srcFile.getPath() + ".piped." + FilenameUtils.getExtension(srcFile.getName()));
 
@@ -66,7 +67,7 @@ public class PipeInOutTest {
 	}
 
 	@Test
-	public void testPipeInOut() throws Exception {
+	void testPipeInOut() throws Exception {
 		File srcFile = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
 		File destFile = new File(srcFile.getPath() + ".piped." + FilenameUtils.getExtension(srcFile.getName()));
 
@@ -93,7 +94,7 @@ public class PipeInOutTest {
 	}
 
 	@Test
-	public void testPipeIn() throws Exception {
+	void testPipeIn() throws Exception {
 		File srcFile = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
 		File destFile = new File(srcFile.getPath() + ".piped." + FilenameUtils.getExtension(srcFile.getName()));
 
@@ -118,7 +119,7 @@ public class PipeInOutTest {
 	}
 
 	@Test
-	public void testPipeOut() throws Exception {
+	void testPipeOut() throws Exception {
 		File srcFile = ImageResourceUtils.extractFile("bad-ass-tattoo-fail.jpg");
 		File destFile = new File(srcFile.getPath() + ".piped." + FilenameUtils.getExtension(srcFile.getName()));
 

@@ -1,5 +1,8 @@
 package org.fagu.fmv.ffmpeg.filter.impl;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -21,26 +24,14 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  */
 
 
-import org.junit.Ignore;
-import org.junit.Test;
-
-
 /**
  * @author f.agu
  */
-public class DrawtextTestCase {
+class DrawtextTestCase {
 
-	/**
-	 * 
-	 */
-	public DrawtextTestCase() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	@Ignore
-	public void testFont() {
+	@Disabled
+	void testFont() {
 		// System.out.println(Font.ge);
 		// Drawtext drawtext = new Drawtext();
 	}

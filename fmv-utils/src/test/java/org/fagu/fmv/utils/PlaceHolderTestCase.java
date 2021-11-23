@@ -20,10 +20,11 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,155 +36,114 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class PlaceHolderTestCase {
+class PlaceHolderTestCase {
 
-	/**
-	 *
-	 */
-	public PlaceHolderTestCase() {}
-
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testEmptyPattern() throws Exception {
+	void testEmptyPattern() throws Exception {
 		assertEquals("", PlaceHolder.with("").format(Collections.emptyMap()));
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testNullPattern() throws Exception {
+	void testNullPattern() throws Exception {
 		assertEquals("", PlaceHolder.with(null).format(Collections.emptyMap()));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testOK_None() {
+	void testOK_None() {
 		assertEquals("toto is big or fat", PlaceHolder.format("toto is big or fat", s -> s));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testOK_One_middle() {
+	void testOK_One_middle() {
 		assertEquals("toto is BIG or fat", PlaceHolder.format("toto is ${big} or fat", s -> s.toUpperCase()));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testOK_One_start() {
+	void testOK_One_start() {
 		assertEquals("BIG or fat", PlaceHolder.format("${big} or fat", s -> s.toUpperCase()));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testOK_One_end() {
+	void testOK_One_end() {
 		assertEquals("toto is BIG", PlaceHolder.format("toto is ${big}", s -> s.toUpperCase()));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testOK_3_end() {
+	void testOK_3_end() {
 		Map<String, String> map = new HashMap<>();
 		map.put("un", "1");
 		map.put("deux", "2");
 		map.put("trois", "3");
-		assertEquals("replace", PlaceHolder.format("bonjour, ${trois} suivi de [${un}]", map), "bonjour, 3 suivi de [1]");
+		assertEquals(PlaceHolder.format("bonjour, ${trois} suivi de [${un}]", map), "bonjour, 3 suivi de [1]");
 	}
 
 	@Test
-	public void testSystemEnv() throws Exception {
+	void testSystemEnv() throws Exception {
 		Map<String, String> map = System.getenv();
-		assertFalse("env empty", map.isEmpty());
+		assertFalse(map.isEmpty());
 		for(Entry<String, String> entry : map.entrySet()) {
 			assertEquals(
-					entry.toString(),
 					PlaceHolder.format(
 							PlaceHolder.wrapKey(entry.getKey()),
 							Replacers.chain()
 									.ofSystemProperties()
 									.ofEnv()
 									.unresolvableCopy()),
-					entry.getValue());
+					entry.getValue(),
+					entry.toString());
 		}
 	}
 
 	@Test
-	public void testDefined() throws Exception {
+	void testDefined() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("un", "1");
 		map.put("deux", "2");
 		map.put("trois", "3");
-		assertEquals("replace", PlaceHolder.format("bonjour, ${trois} suivi de [${un}]", map), "bonjour, 3 suivi de [1]");
+		assertEquals(PlaceHolder.format("bonjour, ${trois} suivi de [${un}]", map), "bonjour, 3 suivi de [1]");
 	}
 
-	/**
-	 * @throws Exception
-	 */
-	@Test(expected = PlaceHolderException.class)
-	public void testUndefined() throws Exception {
-		Map<String, String> map = new HashMap<>();
-		map.put("un", "1");
-		map.put("deux", "2");
-		map.put("trois", "3");
-		PlaceHolder.format("bonjour, ${quatre} suivi de [${un}]", map);
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	@Test(expected = PlaceHolderException.class)
-	public void testUnclosed_alone() throws Exception {
-		Map<String, String> map = new HashMap<>();
-		map.put("un", "1");
-		map.put("deux", "2");
-		map.put("trois", "3");
-		PlaceHolder.format("bonjour, ${trois", map);
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	@Test(expected = PlaceHolderException.class)
-	public void testUnclosed_after() throws Exception {
-		Map<String, String> map = new HashMap<>();
-		map.put("un", "1");
-		map.put("deux", "2");
-		map.put("trois", "3");
-		PlaceHolder.format("bonjour, ${trois suivi de [${un}]", map);
-	}
-
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testInstanciate() throws Exception {
+	void testUndefined() throws Exception {
+		Map<String, String> map = new HashMap<>();
+		map.put("un", "1");
+		map.put("deux", "2");
+		map.put("trois", "3");
+		assertThrows(PlaceHolderException.class, () -> PlaceHolder.format("bonjour, ${quatre} suivi de [${un}]", map));
+	}
+
+	@Test
+	void testUnclosed_alone() throws Exception {
+		Map<String, String> map = new HashMap<>();
+		map.put("un", "1");
+		map.put("deux", "2");
+		map.put("trois", "3");
+		assertThrows(PlaceHolderException.class, () -> PlaceHolder.format("bonjour, ${trois", map));
+	}
+
+	@Test
+	void testUnclosed_after() throws Exception {
+		Map<String, String> map = new HashMap<>();
+		map.put("un", "1");
+		map.put("deux", "2");
+		map.put("trois", "3");
+		assertThrows(PlaceHolderException.class, () -> PlaceHolder.format("bonjour, ${trois suivi de [${un}]", map));
+	}
+
+	@Test
+	void testInstanciate() throws Exception {
 		assertEquals("bonjour, TROIS suivi de UN et ${deux}", PlaceHolder.with("bonjour, [trois] suivi de [un] et ${deux}").prefix("[").suffix("]")
 				.format(s -> s.toUpperCase()));
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testRecursive_1() throws Exception {
+	void testRecursive_1() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("un", "UN");
 		map.put("deux", "${un}");
@@ -192,11 +152,8 @@ public class PlaceHolderTestCase {
 		assertEquals("bonjour, UN doit etre 1", placeHolder.formatUnresolvableIgnored(map));
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testRecursive_2() throws Exception {
+	void testRecursive_2() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("un", "UN");
 		map.put("deux", "${un}");
@@ -205,11 +162,8 @@ public class PlaceHolderTestCase {
 		assertEquals("bonjour, UN doit etre UN", placeHolder.formatUnresolvableIgnored(map));
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testRecursiveLoop() throws Exception {
+	void testRecursiveLoop() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("un", "${trois}");
 		map.put("deux", "${un}");
@@ -222,11 +176,8 @@ public class PlaceHolderTestCase {
 		}
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testInner0() throws Exception {
+	void testInner0() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("environment", "local");
 		map.put("local.datasource.url", "myurl");
@@ -235,11 +186,8 @@ public class PlaceHolderTestCase {
 		assertEquals("myurl", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testInner1() throws Exception {
+	void testInner1() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("environment", "local");
 		map.put("local.datasource.url", "myurl");
@@ -248,11 +196,8 @@ public class PlaceHolderTestCase {
 		assertEquals("0myurl1", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testInner2() throws Exception {
+	void testInner2() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "b");
 		map.put("b", "c");
@@ -264,11 +209,8 @@ public class PlaceHolderTestCase {
 		assertEquals("f", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testInner3() throws Exception {
+	void testInner3() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "B");
 		map.put("B", "c");
@@ -280,11 +222,8 @@ public class PlaceHolderTestCase {
 		assertEquals("[the end !]", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testInner4() throws Exception {
+	void testInner4() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("a", "B");
 		map.put("B", "c");
@@ -295,11 +234,8 @@ public class PlaceHolderTestCase {
 		assertEquals("[the end !}]", PlaceHolder.format("[${${${a}}}}]", map));
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testVerif() throws Exception {
+	void testVerif() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("configkey", "negative");
 		map.put("graph.graph_title", "Tomcat-Postfiles Traffic");
@@ -323,11 +259,8 @@ public class PlaceHolderTestCase {
 		assertEquals("archive_download.negative catalina_bytes_received", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDoc0() throws Exception {
+	void testDoc0() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("name", "toto");
 
@@ -335,21 +268,15 @@ public class PlaceHolderTestCase {
 		assertEquals("my name is toto", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDoc1() throws Exception {
+	void testDoc1() throws Exception {
 		String str = PlaceHolder.with("my name is ${name}")
 				.format(s -> s.toUpperCase());
 		assertEquals("my name is NAME", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDoc2() throws Exception {
+	void testDoc2() throws Exception {
 		String str = PlaceHolder
 				.with("the date is ${date:yyyy-MM-dd} before ${one} or ${two}")
 				.format(s -> {
@@ -361,11 +288,8 @@ public class PlaceHolderTestCase {
 		assertEquals("the date is 2015-11-30 before you or everybody", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDoc3() throws Exception {
+	void testDoc3() throws Exception {
 		String str = PlaceHolder
 				.with("[one], [two], ${three}")
 				.prefix("[")
@@ -374,11 +298,8 @@ public class PlaceHolderTestCase {
 		assertEquals("ONE, TWO, ${three}", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDoc4() throws Exception {
+	void testDoc4() throws Exception {
 		String str = PlaceHolder
 				.with("[one], ${two}, ${user.name} QQ-${not-found}-WW")
 				.format(Replacers.chain()
@@ -389,22 +310,16 @@ public class PlaceHolderTestCase {
 		assertEquals("[one], TWO, " + System.getProperty("user.name") + " QQ-NOT-FOUND-WW", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testSuffixConflict() throws Exception {
+	void testSuffixConflict() throws Exception {
 		String str = PlaceHolder
 				.with("one}two")
 				.format(Replacers.chain().of(s -> s.toUpperCase()));
 		assertEquals("one}two", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testPrefixConflict1() throws Exception {
+	void testPrefixConflict1() throws Exception {
 		String str = PlaceHolder
 				.with(" < {$one} ${two} >")
 				.prefix("{$").suffix("}")
@@ -413,11 +328,8 @@ public class PlaceHolderTestCase {
 		assertEquals(" < ONE ${two} >", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testPrefixConflict2() throws Exception {
+	void testPrefixConflict2() throws Exception {
 		String str = PlaceHolder
 				.with(" < ${two} {$one} >")
 				.prefix("{$").suffix("}")
@@ -426,11 +338,8 @@ public class PlaceHolderTestCase {
 		assertEquals(" < ${two} ONE >", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testPrefixConflict3() throws Exception {
+	void testPrefixConflict3() throws Exception {
 		String str = PlaceHolder
 				.with(" < {$one} ${two} >")
 				.format(Replacers.chain()
@@ -438,11 +347,8 @@ public class PlaceHolderTestCase {
 		assertEquals(" < {$one} TWO >", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testPrefixConflict4() throws Exception {
+	void testPrefixConflict4() throws Exception {
 		String str = PlaceHolder
 				.with(" < ${two} {$one} >")
 				.format(Replacers.chain()
@@ -450,22 +356,16 @@ public class PlaceHolderTestCase {
 		assertEquals(" < TWO {$one} >", str);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testListNames0() throws Exception {
+	void testListNames0() throws Exception {
 		List<String> listNames = PlaceHolder
 				.with(" < {two} {one} >")
 				.listNames();
 		assertTrue(listNames.isEmpty());
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testListNames2() throws Exception {
+	void testListNames2() throws Exception {
 		List<String> listNames = PlaceHolder
 				.with(" < ${two} ${one} >")
 				.listNames();

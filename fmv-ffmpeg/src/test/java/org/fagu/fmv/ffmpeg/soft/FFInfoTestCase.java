@@ -1,5 +1,11 @@
 package org.fagu.fmv.ffmpeg.soft;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,12 +26,6 @@ package org.fagu.fmv.ffmpeg.soft;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -39,18 +39,18 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.version.Version;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class FFInfoTestCase {
+class FFInfoTestCase {
 
 	@Test
-	@Ignore
-	public void testFindFFMpeg() throws Exception {
+	@Disabled
+	void testFindFFMpeg() throws Exception {
 		Founds founds = FFMpeg.search().getFounds();
 		founds.forEach(softFound -> {
 			FFInfo ffInfo = (FFInfo)softFound.getSoftInfo();
@@ -63,8 +63,8 @@ public class FFInfoTestCase {
 	}
 
 	@Test
-	@Ignore
-	public void testFindFFProbe() throws Exception {
+	@Disabled
+	void testFindFFProbe() throws Exception {
 		Founds founds = FFProbe.search().getFounds();
 		founds.forEach(softFound -> {
 			FFInfo ffInfo = (FFInfo)softFound.getSoftInfo();
@@ -77,13 +77,13 @@ public class FFInfoTestCase {
 	}
 
 	@Test
-	public void testGetVersion_OK() throws Exception {
+	void testGetVersion_OK() throws Exception {
 		String line = "1.0";
 		assertEquals(new Version(1), FFSoftProvider.getVersion(line));
 	}
 
 	@Test
-	public void testGetConfiguration_Mark() throws Exception {
+	void testGetConfiguration_Mark() throws Exception {
 		String s = "--prefix=/usr --libdir=/usr/lib64 --shlibdir=/usr/lib64 --mandir=/usr/share/man --incdir=/usr/include --disable-avisynth --extra-cflags='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m64 -mtune=generic -fPIC' --enable-avfilter --enable-libdc1394 --enable-libfaac --enable-libgsm --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-librtmp --enable-libschroedinger --enable-libtheora --enable-libx264 --enable-gpl --enable-nonfree --enable-postproc --enable-pthreads --enable-shared --enable-swscale --enable-vdpau --enable-version3 --enable-x11grab";
 		Set<String> configuration = FFSoftProvider.getConfiguration(s);
 		Iterator<String> it = configuration.iterator();
@@ -120,7 +120,7 @@ public class FFInfoTestCase {
 	}
 
 	@Test
-	public void testFFMPEGFull_N70767() throws Exception {
+	void testFFMPEGFull_N70767() throws Exception {
 		Parser parser = newParserFFMpeg();
 
 		parser.readLine("ffmpeg version N-70767-gd24af70 Copyright (c) 2000-2015 the FFmpeg developers");
@@ -140,7 +140,7 @@ public class FFInfoTestCase {
 	}
 
 	@Test
-	public void testFFProbeFull_N70767() throws Exception {
+	void testFFProbeFull_N70767() throws Exception {
 		Parser parser = newParserProbe();
 
 		parser.readLine("ffprobe version N-70767-gd24af70 Copyright (c) 2000-2015 the FFmpeg developers");
@@ -165,7 +165,7 @@ public class FFInfoTestCase {
 	 * @throws Exception
 	 */
 	@Test
-	public void testFFMPEGFull_N2210() throws Exception {
+	void testFFMPEGFull_N2210() throws Exception {
 		Parser parser = newParserFFMpeg();
 
 		parser.readLine("ffmpeg version n2.2.10-2-g418e9a6");
@@ -187,7 +187,7 @@ public class FFInfoTestCase {
 	}
 
 	@Test
-	public void testFFMPEGFull_N63696() throws Exception {
+	void testFFMPEGFull_N63696() throws Exception {
 		Parser parser = newParserFFMpeg();
 
 		parser.readLine("ffmpeg version N-63696-g2c23f87");
@@ -209,7 +209,7 @@ public class FFInfoTestCase {
 	}
 
 	@Test
-	public void testFFMPEGFull_N65107() throws Exception {
+	void testFFMPEGFull_N65107() throws Exception {
 		Parser parser = newParserFFMpeg();
 
 		parser.readLine("ffmpeg version N-65107-ga507623 Copyright (c) 2000-2014 the FFmpeg developers");
@@ -231,7 +231,7 @@ public class FFInfoTestCase {
 	}
 
 	@Test
-	public void testFFMPEGFull_v2_6_1() throws Exception {
+	void testFFMPEGFull_v2_6_1() throws Exception {
 		Parser parser = newParserFFMpeg();
 
 		parser.readLine("ffmpeg version 2.6.1 Copyright (c) 2000-2015 the FFmpeg developers");
@@ -251,7 +251,7 @@ public class FFInfoTestCase {
 	}
 
 	@Test
-	public void testFFProbeFull_v2_6_1() throws Exception {
+	void testFFProbeFull_v2_6_1() throws Exception {
 		Parser parser = newParserProbe();
 
 		parser.readLine("ffprobe version 2.6.1 Copyright (c) 2007-2015 the FFmpeg developers");
@@ -272,7 +272,7 @@ public class FFInfoTestCase {
 	}
 
 	@Test
-	public void testFFProbe_2020_06_01() throws Exception {
+	void testFFProbe_2020_06_01() throws Exception {
 		Parser parser = newParserProbe();
 
 		parser.readLine("ffprobe version git-2020-06-01-dd76226 Copyright (c) 2007-2020 the FFmpeg developers");
@@ -292,7 +292,7 @@ public class FFInfoTestCase {
 	}
 
 	@Test
-	public void testFFMpeg_2021_07_22() throws Exception {
+	void testFFMpeg_2021_07_22() throws Exception {
 		Parser parser = newParserFFMpeg();
 
 		parser.readLine("ffmpeg version N-103035-g73b847e136-20210722 Copyright (c) 2000-2021 the FFmpeg developers");

@@ -1,5 +1,8 @@
 package org.fagu.fmv.soft.java;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 /*
  * #%L
  * fmv-image
@@ -20,9 +23,6 @@ package org.fagu.fmv.soft.java;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -38,23 +38,23 @@ import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class JavaSoftProviderTestCase {
+class JavaSoftProviderTestCase {
 
 	@Test
-	public void testSearch() {
+	void testSearch() {
 		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Java.search();
 	}
 
 	@Test
-	public void testParse18OnWindows() throws IOException {
+	void testParse18OnWindows() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("java version \"1.8.0_20\"");
 		parser.readLine("Java(TM) SE Runtime Environment (build 1.8.0_20-b26)");
@@ -63,7 +63,7 @@ public class JavaSoftProviderTestCase {
 	}
 
 	@Test
-	public void testParse18OnLinux() throws IOException {
+	void testParse18OnLinux() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("openjdk version \"1.8.0_45\"");
 		parser.readLine("OpenJDK Runtime Environment (build 1.8.0_45-b13)");
@@ -72,7 +72,7 @@ public class JavaSoftProviderTestCase {
 	}
 
 	@Test
-	public void testParse18_262OnLinux() throws IOException {
+	void testParse18_262OnLinux() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("openjdk version \"1.8.0_262\"");
 		parser.readLine("OpenJDK Runtime Environment (build 1.8.0_262-b10)");
@@ -81,7 +81,7 @@ public class JavaSoftProviderTestCase {
 	}
 
 	@Test
-	public void testParseOpenJDK9Internal() throws IOException {
+	void testParseOpenJDK9Internal() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("openjdk version \"9-internal\"");
 		parser.readLine("OpenJDK Runtime Environment (build 9-internal+0-2016-04-14-195246.buildd.src)");
@@ -90,7 +90,7 @@ public class JavaSoftProviderTestCase {
 	}
 
 	@Test
-	public void testParseOpenJDK1106() throws IOException {
+	void testParseOpenJDK1106() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("openjdk version \"11.0.6\" 2020-01-14");
 		parser.readLine("OpenJDK Runtime Environment (build 11.0.6+10-post-Ubuntu-1ubuntu118.04.1)");
@@ -99,7 +99,7 @@ public class JavaSoftProviderTestCase {
 	}
 
 	@Test
-	public void testParseJava1302() throws IOException {
+	void testParseJava1302() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("java version \"13.0.2\" 2020-01-14");
 		parser.readLine("Java(TM) SE Runtime Environment (build 13.0.2+8)");
@@ -108,7 +108,7 @@ public class JavaSoftProviderTestCase {
 	}
 
 	@Test
-	public void testParseJava1402() throws IOException {
+	void testParseJava1402() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("java version \"14.0.2\" 2020-07-14");
 		parser.readLine("Java(TM) SE Runtime Environment (build 14.0.2+12-46)");
@@ -117,8 +117,8 @@ public class JavaSoftProviderTestCase {
 	}
 
 	@Test
-	@Ignore
-	public void testFind() {
+	@Disabled
+	void testFind() {
 		Soft java = Java.search();
 		for(SoftFound softFound : java.getFounds()) {
 			System.out.println(softFound);

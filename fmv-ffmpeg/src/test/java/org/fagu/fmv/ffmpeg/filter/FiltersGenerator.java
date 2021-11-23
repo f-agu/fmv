@@ -1,5 +1,8 @@
 package org.fagu.fmv.ffmpeg.filter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,9 +23,6 @@ package org.fagu.fmv.ffmpeg.filter;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -34,26 +34,18 @@ import org.fagu.fmv.ffmpeg.filter.Filters.IOType;
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.srcgen.ClassNameUtils;
 import org.fagu.fmv.utils.ClassResolver;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-@Ignore
-public class FiltersGenerator {
+@Disabled
+class FiltersGenerator {
 
-	/**
-	 * 
-	 */
-	public FiltersGenerator() {}
-
-	/**
-	 * 
-	 */
 	@Test
-	public void generator() {
+	void generator() {
 		Map<String, org.fagu.fmv.ffmpeg.filter.Filter> findFilter = findFilter();
 		for(Filters filter : Filters.available()) {
 			// if(findFilter.containsKey(filter.getName())) {
@@ -73,11 +65,8 @@ public class FiltersGenerator {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	@Test
-	public void testCache() {
+	void testCache() {
 		assertTrue(Filters.exists("scale"));
 		assertEquals("", "");
 		// assertEquals(12, PixelFormat.YUV420P.getBitsPerPixel());
@@ -93,11 +82,6 @@ public class FiltersGenerator {
 
 	// ***********************************************
 
-	/**
-	 * @param filter
-	 * @param type
-	 * @return
-	 */
 	private boolean isApplicable(org.fagu.fmv.ffmpeg.filter.Filter filterI, Filters filterD) {
 		boolean check = true;
 		if(filterI instanceof GeneratedSource) {
@@ -112,11 +96,6 @@ public class FiltersGenerator {
 		return check;
 	}
 
-	/**
-	 * @param types
-	 * @param ioType
-	 * @return
-	 */
 	private boolean isApplicable(Collection<Type> types, IOType ioType) {
 		if(ioType.isNumber()) {
 			return true;
@@ -141,9 +120,6 @@ public class FiltersGenerator {
 		return true;
 	}
 
-	/**
-	 * @return
-	 */
 	private Map<String, org.fagu.fmv.ffmpeg.filter.Filter> findFilter() {
 		Map<String, org.fagu.fmv.ffmpeg.filter.Filter> filters = new HashMap<>();
 		ClassResolver classResolver = new ClassResolver();

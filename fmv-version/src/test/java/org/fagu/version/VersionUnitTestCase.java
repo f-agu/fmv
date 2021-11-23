@@ -1,5 +1,11 @@
 package org.fagu.version;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*-
  * #%L
  * fmv-version
@@ -20,274 +26,203 @@ package org.fagu.version;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
-
 import java.util.Iterator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class VersionUnitTestCase {
+class VersionUnitTestCase {
 
-	/**
-	 *
-	 */
-	public VersionUnitTestCase() {}
-
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDefined0() throws Exception {
+	void testDefined0() throws Exception {
 		VersionUnit unit = VersionUnit.VF_0_MAJOR;
-		assertEquals("name", unit.getName(), "major");
-		assertEquals("position", unit.getPosition(), 0);
-		assertEquals("next", unit.next(), VersionUnit.VF_1_MINOR);
+		assertEquals(unit.getName(), "major");
+		assertEquals(unit.getPosition(), 0);
+		assertEquals(unit.next(), VersionUnit.VF_1_MINOR);
 		try {
-			assertEquals("previous", unit.previous(), null);
+			assertEquals(unit.previous(), null);
 			fail("previous");
 		} catch(IllegalArgumentException iae) {}
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDefined1() throws Exception {
+	void testDefined1() throws Exception {
 		VersionUnit unit = VersionUnit.VF_1_MINOR;
-		assertEquals("name", unit.getName(), "minor");
-		assertEquals("position", unit.getPosition(), 1);
-		assertEquals("next", unit.next(), VersionUnit.VF_2_REVISION);
-		assertEquals("previous", unit.previous(), VersionUnit.VF_0_MAJOR);
+		assertEquals(unit.getName(), "minor");
+		assertEquals(unit.getPosition(), 1);
+		assertEquals(unit.next(), VersionUnit.VF_2_REVISION);
+		assertEquals(unit.previous(), VersionUnit.VF_0_MAJOR);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDefined2() throws Exception {
+	void testDefined2() throws Exception {
 		VersionUnit unit = VersionUnit.VF_2_REVISION;
-		assertEquals("name", unit.getName(), "revision");
-		assertEquals("position", unit.getPosition(), 2);
-		assertEquals("next", unit.next(), VersionUnit.VF_3_BUILD);
-		assertEquals("previous", unit.previous(), VersionUnit.VF_1_MINOR);
+		assertEquals(unit.getName(), "revision");
+		assertEquals(unit.getPosition(), 2);
+		assertEquals(unit.next(), VersionUnit.VF_3_BUILD);
+		assertEquals(unit.previous(), VersionUnit.VF_1_MINOR);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDefined3() throws Exception {
+	void testDefined3() throws Exception {
 		VersionUnit unit = VersionUnit.VF_3_BUILD;
-		assertEquals("name", unit.getName(), "build");
-		assertEquals("position", unit.getPosition(), 3);
-		assertEquals("next", unit.next(), VersionUnit.VF_4);
-		assertEquals("previous", unit.previous(), VersionUnit.VF_2_REVISION);
+		assertEquals(unit.getName(), "build");
+		assertEquals(unit.getPosition(), 3);
+		assertEquals(unit.next(), VersionUnit.VF_4);
+		assertEquals(unit.previous(), VersionUnit.VF_2_REVISION);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDefined4() throws Exception {
+	void testDefined4() throws Exception {
 		VersionUnit unit = VersionUnit.VF_4;
-		assertEquals("name", unit.getName(), "");
-		assertEquals("position", unit.getPosition(), 4);
-		assertEquals("next", unit.next(), VersionUnit.VF_5);
-		assertEquals("previous", unit.previous(), VersionUnit.VF_3_BUILD);
+		assertEquals(unit.getName(), "");
+		assertEquals(unit.getPosition(), 4);
+		assertEquals(unit.next(), VersionUnit.VF_5);
+		assertEquals(unit.previous(), VersionUnit.VF_3_BUILD);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDefined5() throws Exception {
+	void testDefined5() throws Exception {
 		VersionUnit unit = VersionUnit.VF_5;
-		assertEquals("name", unit.getName(), "");
-		assertEquals("position", unit.getPosition(), 5);
-		assertEquals("next", unit.next(), VersionUnit.VF_6);
-		assertEquals("previous", unit.previous(), VersionUnit.VF_4);
+		assertEquals(unit.getName(), "");
+		assertEquals(unit.getPosition(), 5);
+		assertEquals(unit.next(), VersionUnit.VF_6);
+		assertEquals(unit.previous(), VersionUnit.VF_4);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDefined6() throws Exception {
+	void testDefined6() throws Exception {
 		VersionUnit unit = VersionUnit.VF_6;
-		assertEquals("name", unit.getName(), "");
-		assertEquals("position", unit.getPosition(), 6);
-		assertEquals("next", unit.next(), VersionUnit.VF_7);
-		assertEquals("previous", unit.previous(), VersionUnit.VF_5);
+		assertEquals(unit.getName(), "");
+		assertEquals(unit.getPosition(), 6);
+		assertEquals(unit.next(), VersionUnit.VF_7);
+		assertEquals(unit.previous(), VersionUnit.VF_5);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDefined7() throws Exception {
+	void testDefined7() throws Exception {
 		VersionUnit unit = VersionUnit.VF_7;
-		assertEquals("name", unit.getName(), "");
-		assertEquals("position", unit.getPosition(), 7);
-		assertEquals("next", unit.next(), VersionUnit.VF_8);
-		assertEquals("previous", unit.previous(), VersionUnit.VF_6);
+		assertEquals(unit.getName(), "");
+		assertEquals(unit.getPosition(), 7);
+		assertEquals(unit.next(), VersionUnit.VF_8);
+		assertEquals(unit.previous(), VersionUnit.VF_6);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDefined8() throws Exception {
+	void testDefined8() throws Exception {
 		VersionUnit unit = VersionUnit.VF_8;
-		assertEquals("name", unit.getName(), "");
-		assertEquals("position", unit.getPosition(), 8);
-		assertEquals("next", unit.next(), VersionUnit.VF_9);
-		assertEquals("previous", unit.previous(), VersionUnit.VF_7);
+		assertEquals(unit.getName(), "");
+		assertEquals(unit.getPosition(), 8);
+		assertEquals(unit.next(), VersionUnit.VF_9);
+		assertEquals(unit.previous(), VersionUnit.VF_7);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testDefined9() throws Exception {
+	void testDefined9() throws Exception {
 		VersionUnit unit = VersionUnit.VF_9;
-		assertEquals("name", unit.getName(), "");
-		assertEquals("position", unit.getPosition(), 9);
-		assertNull("next", unit.next());
-		assertEquals("previous", unit.previous(), VersionUnit.VF_8);
+		assertEquals(unit.getName(), "");
+		assertEquals(unit.getPosition(), 9);
+		assertNull(unit.next());
+		assertEquals(unit.previous(), VersionUnit.VF_8);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testIterable() throws Exception {
+	void testIterable() throws Exception {
 		Iterator<VersionUnit> iterator = VersionUnit.iterable().iterator();
 
-		assertSame("0", iterator.next(), VersionUnit.VF_0_MAJOR);
-		assertSame("1", iterator.next(), VersionUnit.VF_1_MINOR);
-		assertSame("2", iterator.next(), VersionUnit.VF_2_REVISION);
-		assertSame("3", iterator.next(), VersionUnit.VF_3_BUILD);
-		assertSame("4", iterator.next(), VersionUnit.VF_4);
-		assertSame("5", iterator.next(), VersionUnit.VF_5);
-		assertSame("6", iterator.next(), VersionUnit.VF_6);
-		assertSame("7", iterator.next(), VersionUnit.VF_7);
-		assertSame("8", iterator.next(), VersionUnit.VF_8);
-		assertSame("9", iterator.next(), VersionUnit.VF_9);
+		assertSame(iterator.next(), VersionUnit.VF_0_MAJOR);
+		assertSame(iterator.next(), VersionUnit.VF_1_MINOR);
+		assertSame(iterator.next(), VersionUnit.VF_2_REVISION);
+		assertSame(iterator.next(), VersionUnit.VF_3_BUILD);
+		assertSame(iterator.next(), VersionUnit.VF_4);
+		assertSame(iterator.next(), VersionUnit.VF_5);
+		assertSame(iterator.next(), VersionUnit.VF_6);
+		assertSame(iterator.next(), VersionUnit.VF_7);
+		assertSame(iterator.next(), VersionUnit.VF_8);
+		assertSame(iterator.next(), VersionUnit.VF_9);
 
-		assertFalse("hasNext", iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testIterableBetween() throws Exception {
+	void testIterableBetween() throws Exception {
 		Iterator<VersionUnit> iterator = VersionUnit.iterable(VersionUnit.VF_1_MINOR, VersionUnit.VF_4).iterator();
 
-		assertSame("1", iterator.next(), VersionUnit.VF_1_MINOR);
-		assertSame("2", iterator.next(), VersionUnit.VF_2_REVISION);
-		assertSame("3", iterator.next(), VersionUnit.VF_3_BUILD);
-		assertSame("4", iterator.next(), VersionUnit.VF_4);
+		assertSame(iterator.next(), VersionUnit.VF_1_MINOR);
+		assertSame(iterator.next(), VersionUnit.VF_2_REVISION);
+		assertSame(iterator.next(), VersionUnit.VF_3_BUILD);
+		assertSame(iterator.next(), VersionUnit.VF_4);
 
-		assertFalse("hasNext", iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testIterableBetweenLast() throws Exception {
+	void testIterableBetweenLast() throws Exception {
 		Iterator<VersionUnit> iterator = VersionUnit.iterable(VersionUnit.VF_7, VersionUnit.VF_9).iterator();
 
-		assertSame("7", iterator.next(), VersionUnit.VF_7);
-		assertSame("8", iterator.next(), VersionUnit.VF_8);
-		assertSame("9", iterator.next(), VersionUnit.VF_9);
+		assertSame(iterator.next(), VersionUnit.VF_7);
+		assertSame(iterator.next(), VersionUnit.VF_8);
+		assertSame(iterator.next(), VersionUnit.VF_9);
 
-		assertFalse("hasNext", iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testMax() throws Exception {
-		assertSame("0 ? 1", VersionUnit.max(VersionUnit.VF_0_MAJOR, VersionUnit.VF_1_MINOR), VersionUnit.VF_0_MAJOR);
-		assertSame("1 ? 0", VersionUnit.max(VersionUnit.VF_1_MINOR, VersionUnit.VF_0_MAJOR), VersionUnit.VF_0_MAJOR);
+	void testMax() throws Exception {
+		assertSame(VersionUnit.max(VersionUnit.VF_0_MAJOR, VersionUnit.VF_1_MINOR), VersionUnit.VF_0_MAJOR);
+		assertSame(VersionUnit.max(VersionUnit.VF_1_MINOR, VersionUnit.VF_0_MAJOR), VersionUnit.VF_0_MAJOR);
 
-		assertSame("1 ? 2", VersionUnit.max(VersionUnit.VF_1_MINOR, VersionUnit.VF_2_REVISION), VersionUnit.VF_1_MINOR);
-		assertSame("2 ? 1", VersionUnit.max(VersionUnit.VF_2_REVISION, VersionUnit.VF_1_MINOR), VersionUnit.VF_1_MINOR);
+		assertSame(VersionUnit.max(VersionUnit.VF_1_MINOR, VersionUnit.VF_2_REVISION), VersionUnit.VF_1_MINOR);
+		assertSame(VersionUnit.max(VersionUnit.VF_2_REVISION, VersionUnit.VF_1_MINOR), VersionUnit.VF_1_MINOR);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testMin() throws Exception {
-		assertSame("0 ? 1", VersionUnit.min(VersionUnit.VF_0_MAJOR, VersionUnit.VF_1_MINOR), VersionUnit.VF_1_MINOR);
-		assertSame("1 ? 0", VersionUnit.min(VersionUnit.VF_1_MINOR, VersionUnit.VF_0_MAJOR), VersionUnit.VF_1_MINOR);
+	void testMin() throws Exception {
+		assertSame(VersionUnit.min(VersionUnit.VF_0_MAJOR, VersionUnit.VF_1_MINOR), VersionUnit.VF_1_MINOR);
+		assertSame(VersionUnit.min(VersionUnit.VF_1_MINOR, VersionUnit.VF_0_MAJOR), VersionUnit.VF_1_MINOR);
 
-		assertSame("1 ? 2", VersionUnit.min(VersionUnit.VF_1_MINOR, VersionUnit.VF_2_REVISION), VersionUnit.VF_2_REVISION);
-		assertSame("2 ? 1", VersionUnit.min(VersionUnit.VF_2_REVISION, VersionUnit.VF_1_MINOR), VersionUnit.VF_2_REVISION);
+		assertSame(VersionUnit.min(VersionUnit.VF_1_MINOR, VersionUnit.VF_2_REVISION), VersionUnit.VF_2_REVISION);
+		assertSame(VersionUnit.min(VersionUnit.VF_2_REVISION, VersionUnit.VF_1_MINOR), VersionUnit.VF_2_REVISION);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testParseInt() throws Exception {
-		assertSame("0", VersionUnit.parse(0), VersionUnit.VF_0_MAJOR);
-		assertSame("1", VersionUnit.parse(1), VersionUnit.VF_1_MINOR);
-		assertSame("2", VersionUnit.parse(2), VersionUnit.VF_2_REVISION);
-		assertSame("3", VersionUnit.parse(3), VersionUnit.VF_3_BUILD);
-		assertSame("4", VersionUnit.parse(4), VersionUnit.VF_4);
-		assertSame("5", VersionUnit.parse(5), VersionUnit.VF_5);
-		assertSame("6", VersionUnit.parse(6), VersionUnit.VF_6);
-		assertSame("7", VersionUnit.parse(7), VersionUnit.VF_7);
-		assertSame("8", VersionUnit.parse(8), VersionUnit.VF_8);
-		assertSame("9", VersionUnit.parse(9), VersionUnit.VF_9);
+	void testParseInt() throws Exception {
+		assertSame(VersionUnit.parse(0), VersionUnit.VF_0_MAJOR);
+		assertSame(VersionUnit.parse(1), VersionUnit.VF_1_MINOR);
+		assertSame(VersionUnit.parse(2), VersionUnit.VF_2_REVISION);
+		assertSame(VersionUnit.parse(3), VersionUnit.VF_3_BUILD);
+		assertSame(VersionUnit.parse(4), VersionUnit.VF_4);
+		assertSame(VersionUnit.parse(5), VersionUnit.VF_5);
+		assertSame(VersionUnit.parse(6), VersionUnit.VF_6);
+		assertSame(VersionUnit.parse(7), VersionUnit.VF_7);
+		assertSame(VersionUnit.parse(8), VersionUnit.VF_8);
+		assertSame(VersionUnit.parse(9), VersionUnit.VF_9);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testParseName() throws Exception {
-		assertSame("0", VersionUnit.parse("major"), VersionUnit.VF_0_MAJOR);
-		assertSame("1", VersionUnit.parse("minor"), VersionUnit.VF_1_MINOR);
-		assertSame("2", VersionUnit.parse("revision"), VersionUnit.VF_2_REVISION);
-		assertSame("3", VersionUnit.parse("build"), VersionUnit.VF_3_BUILD);
+	void testParseName() throws Exception {
+		assertSame(VersionUnit.parse("major"), VersionUnit.VF_0_MAJOR);
+		assertSame(VersionUnit.parse("minor"), VersionUnit.VF_1_MINOR);
+		assertSame(VersionUnit.parse("revision"), VersionUnit.VF_2_REVISION);
+		assertSame(VersionUnit.parse("build"), VersionUnit.VF_3_BUILD);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testParseNameNull() throws Exception {
-		assertNull("null", VersionUnit.parse(null));
+	void testParseNameNull() throws Exception {
+		assertNull(VersionUnit.parse(null));
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testParseNameEmpty() throws Exception {
-		assertNull("empty", VersionUnit.parse(""));
+	void testParseNameEmpty() throws Exception {
+		assertNull(VersionUnit.parse(""));
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	public void testParseNameUnknown() throws Exception {
-		assertNull("unknown", VersionUnit.parse("rsdf"));
+	void testParseNameUnknown() throws Exception {
+		assertNull(VersionUnit.parse("rsdf"));
 	}
 
 }

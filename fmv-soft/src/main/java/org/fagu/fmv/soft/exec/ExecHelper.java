@@ -65,9 +65,6 @@ public class ExecHelper<T extends ExecHelper<?>> {
 
 	protected Charset charset;
 
-	/**
-	 *
-	 */
 	public ExecHelper() {
 		commonReadLines = new ArrayList<>();
 		outReadLines = new ArrayList<>();
@@ -77,27 +74,14 @@ public class ExecHelper<T extends ExecHelper<?>> {
 		errDebugConsumer = line -> System.out.println("ERR  " + line);
 	}
 
-	/**
-	 * @return
-	 */
 	public T debug() {
 		return debug(true);
 	}
 
-	/**
-	 * @param debug
-	 * @return
-	 */
 	public T debug(boolean debug) {
 		return debug(debug, null, null);
 	}
 
-	/**
-	 * @param debug
-	 * @param outDebugConsumer
-	 * @param errDebugConsumer
-	 * @return
-	 */
 	public T debug(boolean debug, Consumer<String> outDebugConsumer, Consumer<String> errDebugConsumer) {
 		this.debug = debug;
 		if(outDebugConsumer != null) {
@@ -109,10 +93,6 @@ public class ExecHelper<T extends ExecHelper<?>> {
 		return getThis();
 	}
 
-	/**
-	 * @param readLine
-	 * @return
-	 */
 	public T addCommonReadLine(ReadLine readLine) {
 		if(readLine != null) {
 			commonReadLines.add(readLine);
@@ -120,10 +100,6 @@ public class ExecHelper<T extends ExecHelper<?>> {
 		return getThis();
 	}
 
-	/**
-	 * @param readLine
-	 * @return
-	 */
 	public T addOutReadLine(ReadLine readLine) {
 		if(readLine != null) {
 			outReadLines.add(readLine);
@@ -131,10 +107,6 @@ public class ExecHelper<T extends ExecHelper<?>> {
 		return getThis();
 	}
 
-	/**
-	 * @param readLine
-	 * @return
-	 */
 	public T addErrReadLine(ReadLine readLine) {
 		if(readLine != null) {
 			errReadLines.add(readLine);
@@ -142,10 +114,6 @@ public class ExecHelper<T extends ExecHelper<?>> {
 		return getThis();
 	}
 
-	/**
-	 * @param consumer
-	 * @return
-	 */
 	public T customizeExecutor(Consumer<FMVExecutor> consumer) {
 		if(consumer != null) {
 			customizeExecutors.add(consumer);
@@ -153,115 +121,63 @@ public class ExecHelper<T extends ExecHelper<?>> {
 		return getThis();
 	}
 
-	/**
-	 * @param executeStreamHandler
-	 * @return
-	 */
 	public T streamHandler(ExecuteStreamHandler executeStreamHandler) {
 		this.executeStreamHandler = executeStreamHandler;
 		return getThis();
 	}
 
-	/**
-	 * @param lookReader
-	 * @return
-	 */
 	public T lookReader(LookReader lookReader) {
 		this.lookReader = lookReader;
 		return getThis();
 	}
 
-	/**
-	 * @param input
-	 * @return
-	 */
 	public T input(InputStream input) {
 		this.input = input;
 		return getThis();
 	}
 
-	/**
-	 * @param out
-	 * @return
-	 */
 	public T output(OutputStream out) {
 		this.out = out;
 		return getThis();
 	}
 
-	/**
-	 * @param out
-	 * @return
-	 * @deprecated Use {@link #output(OutputStream)}
-	 */
 	@Deprecated
 	public T out(OutputStream out) {
 		return output(out);
 	}
 
-	/**
-	 * @param err
-	 * @return
-	 */
 	public T err(OutputStream err) {
 		this.err = err;
 		return getThis();
 	}
 
-	/**
-	 * @param charset
-	 * @return
-	 */
 	public T charset(Charset charset) {
 		this.charset = charset;
 		return getThis();
 	}
 
-	/**
-	 * @param value
-	 * @return
-	 */
 	public T exitValue(int value) {
 		return customizeExecutor(e -> e.setExitValue(value));
 	}
 
-	/**
-	 * @param value
-	 * @return
-	 */
 	public T exitValues(int... values) {
 		return customizeExecutor(e -> e.setExitValues(values));
 	}
 
-	/**
-	 * @param timeOutMilliSeconds
-	 * @return
-	 */
 	public T timeOut(long timeOutMilliSeconds) {
 		return customizeExecutor(e -> e.setTimeOut(timeOutMilliSeconds));
 	}
 
-	/**
-	 * @param workingDirectory
-	 * @return
-	 */
 	public T workingDirectory(File workingDirectory) {
 		return customizeExecutor(e -> e.setWorkingDirectory(workingDirectory));
 	}
 
-	/**
-	 * @return
-	 */
 	public Charset getCharset() {
 		return charset;
 	}
 
 	// *******************************************************
 
-	/**
-	 * @param readLines
-	 * @return
-	 */
 	protected ReadLine getOutReadLine(ReadLine... readLines) {
 		List<ReadLine> lines = new ArrayList<>();
 		if(debug) {
@@ -271,10 +187,6 @@ public class ExecHelper<T extends ExecHelper<?>> {
 		return MultiReadLine.createWith(lines);
 	}
 
-	/**
-	 * @param readLines
-	 * @return
-	 */
 	protected ReadLine getErrReadLine(ReadLine... readLines) {
 		List<ReadLine> lines = new ArrayList<>();
 		if(debug) {
@@ -284,10 +196,6 @@ public class ExecHelper<T extends ExecHelper<?>> {
 		return MultiReadLine.createWith(lines);
 	}
 
-	/**
-	 * @param toAddLines
-	 * @param externLines
-	 */
 	protected void populateReadLine(List<ReadLine> toAddLines, List<List<ReadLine>> externLines) {
 		toAddLines.addAll(commonReadLines);
 
@@ -300,16 +208,10 @@ public class ExecHelper<T extends ExecHelper<?>> {
 		}
 	}
 
-	/**
-	 * @param fmvExecutor
-	 */
 	protected void applyCustomizeExecutor(FMVExecutor fmvExecutor) {
 		customizeExecutors.forEach(c -> c.accept(fmvExecutor));
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	protected void checkStreamHandler() throws IOException {
 		if(executeStreamHandler != null && ( ! commonReadLines.isEmpty() || ! outReadLines.isEmpty() || ! errReadLines.isEmpty()) && (input != null
 				|| out != null || err != null)) {
@@ -317,12 +219,6 @@ public class ExecHelper<T extends ExecHelper<?>> {
 		}
 	}
 
-	/**
-	 * @param workingFolder
-	 * @param defaultReadLine
-	 * @return
-	 * @throws IOException
-	 */
 	protected FMVExecutor createFMVExecutor(File workingFolder, ReadLine defaultReadLine) throws IOException {
 		checkStreamHandler();
 

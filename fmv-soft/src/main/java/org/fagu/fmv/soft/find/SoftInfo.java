@@ -5,7 +5,6 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
-
 /*
  * #%L
  * fmv-utils
@@ -26,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
  * #L%
  */
 
+
 /**
  * @author f.agu
  */
@@ -35,7 +35,7 @@ public abstract class SoftInfo implements Comparable<SoftInfo> {
 
 	private final String softName;
 
-	public SoftInfo(File file, String softName) {
+	protected SoftInfo(File file, String softName) {
 		this.file = Objects.requireNonNull(file);
 		this.softName = Objects.requireNonNull(softName);
 	}

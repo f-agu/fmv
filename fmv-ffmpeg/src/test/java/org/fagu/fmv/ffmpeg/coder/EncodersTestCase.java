@@ -1,5 +1,8 @@
 package org.fagu.fmv.ffmpeg.coder;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -20,26 +23,23 @@ package org.fagu.fmv.ffmpeg.coder;
  * #L%
  */
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.fagu.fmv.ffmpeg.operation.Type;
 import org.fagu.fmv.ffmpeg.utils.srcgen.ClassNameUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author f.agu
  */
-public class EncodersTestCase {
+class EncodersTestCase {
 
 	@Test
-	@Ignore
-	public void generator() {
+	@Disabled
+	void generator() {
 		Set<Encoders> available = new TreeSet<Encoders>((e1, e2) -> e1.getName().compareTo(e2.getName()));
 		available.addAll(Encoders.available());
 		addEncoder(available, "libx264", Libx264.class);
@@ -58,7 +58,7 @@ public class EncodersTestCase {
 	}
 
 	@Test
-	public void testCache() {
+	void testCache() {
 		assertFalse(Encoders.H264_AMF.isCodecExperimental());
 		assertSame(Type.VIDEO, Encoders.H264_AMF.getType());
 		assertSame(Type.AUDIO, Encoders.FLAC.getType());

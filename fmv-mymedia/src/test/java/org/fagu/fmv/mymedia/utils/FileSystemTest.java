@@ -27,18 +27,18 @@ import java.nio.file.Files;
 
 import javax.swing.filechooser.FileSystemView;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * @author fagu
  */
-public class FileSystemTest {
+class FileSystemTest {
 
 	@Test
-	@Ignore
-	public void test() throws IOException {
+	@Disabled
+	void test() throws IOException {
 		FileSystemView fileSystemView = FileSystemView.getFileSystemView();
 		for(File f : File.listRoots()) {
 			System.out.println(f);

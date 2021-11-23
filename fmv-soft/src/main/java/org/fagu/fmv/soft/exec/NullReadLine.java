@@ -27,17 +27,11 @@ public class NullReadLine implements ReadLine {
 
 	public static final NullReadLine INSTANCE = new NullReadLine();
 
-	/**
-	 * @see org.fagu.fmv.utils.exec.ReadLine#read(java.lang.String)
-	 */
 	@Override
 	public void read(String line) {
 		// DO NOTHING
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Null";

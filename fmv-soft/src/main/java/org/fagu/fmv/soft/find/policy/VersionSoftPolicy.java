@@ -37,9 +37,6 @@ import org.fagu.version.Version;
  */
 public class VersionSoftPolicy extends SoftPolicy {
 
-	/**
-	 * @see org.fagu.fmv.soft.find.SoftPolicy#toSoftFound(org.fagu.fmv.soft.find.SoftInfo)
-	 */
 	@Override
 	public SoftFound toSoftFound(Object object) {
 		VersionSoftInfo versionSoftInfo = (VersionSoftInfo)object;
@@ -58,17 +55,17 @@ public class VersionSoftPolicy extends SoftPolicy {
 
 	// ----------------
 
-	/**
-	 * @param minVersion
-	 * @return
-	 */
 	public static Predicate<SoftInfo> minVersion(Version minVersion) {
 		return new Predicate<SoftInfo>() {
 
 			@Override
 			public boolean test(SoftInfo softInfo) {
 				VersionSoftInfo versionSoftInfo = (VersionSoftInfo)softInfo;
-				return minVersion.isLowerOrEqualsThan(versionSoftInfo.getVersion().get());
+				Optional<Version> versionOpt = versionSoftInfo.getVersion();
+				if(versionOpt.isPresent()) {
+					return minVersion.isLowerOrEqualsThan(versionOpt.get());
+				}
+				return false;
 			}
 
 			@Override
@@ -78,25 +75,21 @@ public class VersionSoftPolicy extends SoftPolicy {
 		};
 	}
 
-	/**
-	 * @param values
-	 * @return
-	 */
 	public static Predicate<SoftInfo> minVersion(int... values) {
 		return minVersion(new Version(values));
 	}
 
-	/**
-	 * @param maxVersion
-	 * @return
-	 */
 	public static Predicate<SoftInfo> maxVersion(Version maxVersion) {
 		return new Predicate<SoftInfo>() {
 
 			@Override
 			public boolean test(SoftInfo softInfo) {
 				VersionSoftInfo versionSoftInfo = (VersionSoftInfo)softInfo;
-				return maxVersion.isUpperThan(versionSoftInfo.getVersion().get());
+				Optional<Version> versionOpt = versionSoftInfo.getVersion();
+				if(versionOpt.isPresent()) {
+					return maxVersion.isUpperThan(versionOpt.get());
+				}
+				return false;
 			}
 
 			@Override
@@ -106,27 +99,16 @@ public class VersionSoftPolicy extends SoftPolicy {
 		};
 	}
 
-	/**
-	 * @param values
-	 * @return
-	 */
 	public static Predicate<SoftInfo> maxVersion(int... values) {
 		return maxVersion(new Version(values));
 	}
 
-	/**
-	 * @return
-	 */
 	public static Predicate<SoftInfo> allVersion() {
 		return v -> true;
 	}
 
 	// ****************************************************
 
-	/**
-	 * @param versionSoftInfo
-	 * @return
-	 */
 	private SoftFound byDefined(VersionSoftInfo versionSoftInfo) {
 		Optional<Version> version = versionSoftInfo.getVersion();
 		if(version.isPresent()) {
@@ -145,10 +127,6 @@ public class VersionSoftPolicy extends SoftPolicy {
 		return SoftFound.foundBadSoft(versionSoftInfo, "version not parsable");
 	}
 
-	/**
-	 * @param versionSoftInfo
-	 * @return
-	 */
 	private SoftFound byProperties(VersionSoftInfo versionSoftInfo) {
 		Optional<String> propertyMinVersion = getProperty(versionSoftInfo, "minversion");
 		if(propertyMinVersion.isPresent()) {
