@@ -34,10 +34,6 @@ import java.util.Optional;
  */
 public class Bootstrap {
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
 	public static void main(String[] args) throws IOException {
 		Optional<File> dvdDriveOpt = findDVDDrive();
 		if( ! dvdDriveOpt.isPresent()) {
@@ -52,10 +48,6 @@ public class Bootstrap {
 
 	// ***************************
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	private static Optional<File> findDVDDrive() {
 		List<File> dvdDrives = findDVDDrives();
 		if(dvdDrives.isEmpty()) {
@@ -69,9 +61,6 @@ public class Bootstrap {
 		return Optional.of(dvdDrives.get(0));
 	}
 
-	/**
-	 * @return
-	 */
 	private static List<File> findDVDDrives() {
 		List<File> drives = new ArrayList<>();
 		for(File f : File.listRoots()) {

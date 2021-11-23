@@ -31,27 +31,17 @@ public class Reduced {
 
 	private final File destFile;
 
-	private boolean forceReplace;
+	private final boolean forceReplace;
 
-	/**
-	 * @param destFile
-	 * @param forceReplace
-	 */
 	public Reduced(File destFile, boolean forceReplace) {
 		this.destFile = destFile;
 		this.forceReplace = forceReplace;
 	}
 
-	/**
-	 * @return
-	 */
 	public File getDestFile() {
 		return destFile;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isForceReplace() {
 		return forceReplace;
 	}

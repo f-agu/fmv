@@ -56,19 +56,11 @@ public class ByDuration extends By {
 
 	// -----------------------------------------------------
 
-	/**
-	 * @param progress
-	 * @param duration
-	 * @param fileSize
-	 */
 	ByDuration(ByDurationBuilder builder) {
 		super(builder);
 		this.duration = builder.duration;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public IntSupplier progressInPercent() {
 		double durTotal = duration.toSeconds();
@@ -82,9 +74,6 @@ public class ByDuration extends By {
 		};
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public Part etaPart() {
 		double durTotal = duration.toSeconds();

@@ -64,9 +64,6 @@ public abstract class By {
 		this.fileSize = builder.fileSize;
 	}
 
-	/**
-	 * @return
-	 */
 	public Part progressPart() {
 		ProgressPartBuilder builder = ProgressPart.width(32);
 		if(fileSize != null && fileSize.longValue() > 0) {
@@ -75,20 +72,10 @@ public abstract class By {
 		return builder.build();
 	}
 
-	/**
-	 * @return
-	 */
 	abstract IntSupplier progressInPercent();
 
-	/**
-	 * @return
-	 */
 	abstract Part etaPart();
 
-	/**
-	 * @param text
-	 * @return
-	 */
 	public TextProgressBar makeBar(String text) {
 		TextProgressBarBuilder builder = TextProgressBar.newBar();
 		return builder.fixWidth(60).withText(text)

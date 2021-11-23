@@ -35,16 +35,10 @@ public class ETAPart implements Part {
 
 	private final Function<ProgressStatus, Integer> etaInSecondsSupplier;
 
-	/**
-	 * @param etaInSecondsSupplier
-	 */
 	public ETAPart(Function<ProgressStatus, Integer> etaInSecondsSupplier) {
 		this.etaInSecondsSupplier = Objects.requireNonNull(etaInSecondsSupplier);
 	}
 
-	/**
-	 * @see org.fagu.fmv.textprogressbar.Part#getWith(ProgressStatus)
-	 */
 	@Override
 	public String getWith(ProgressStatus status) {
 		Integer etaInSeconds = etaInSecondsSupplier.apply(status);

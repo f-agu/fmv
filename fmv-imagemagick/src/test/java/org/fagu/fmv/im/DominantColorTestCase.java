@@ -41,7 +41,7 @@ class DominantColorTestCase {
 		File file = ImageResourceUtils.extractFile(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL);
 		try {
 			Color dominantColor = DominantColor.getInstance().getDominantColor(file, s -> {});
-			assertEquals(new Color(85, 69, 70), dominantColor);
+			assertEquals(new Color(85, 70, 70), dominantColor);
 		} finally {
 			if(file != null) {
 				file.delete();
@@ -60,7 +60,7 @@ class DominantColorTestCase {
 				.getDominantColor(
 						() -> ImageResourceUtils.getInputStream(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL),
 						s -> {});
-		assertEquals(new Color(85, 69, 70), dominantColor);
+		assertEquals(new Color(85, 70, 70), dominantColor);
 	}
 
 	@Test

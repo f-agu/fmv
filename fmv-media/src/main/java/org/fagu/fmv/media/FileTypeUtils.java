@@ -43,6 +43,8 @@ public class FileTypeUtils {
 
 	private static final Set<String> MOVIES = toSet("avi", "mov", "mp4", "wmv", "mpg", "3gp", "flv", "ts", "mkv", "vob");
 
+	private static final Set<String> COMIC_BOOKS = toSet("cbz");
+
 	private FileTypeUtils() {}
 
 	public static FileIs with(FileType fileType) {
@@ -56,6 +58,9 @@ public class FileTypeUtils {
 				break;
 			case VIDEO:
 				extensions = MOVIES;
+				break;
+			case COMIC_BOOK:
+				extensions = COMIC_BOOKS;
 				break;
 			default:
 				throw new RuntimeException("Undefined fileType: " + fileType);

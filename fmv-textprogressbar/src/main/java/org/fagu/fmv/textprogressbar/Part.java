@@ -29,15 +29,8 @@ import java.util.OptionalLong;
 @FunctionalInterface
 public interface Part {
 
-	/**
-	 * @param status
-	 * @return
-	 */
 	String getWith(ProgressStatus status);
 
-	/**
-	 * @return
-	 */
 	default OptionalLong getRefreshInMilliseconds() {
 		return OptionalLong.empty();
 	}

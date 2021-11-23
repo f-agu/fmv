@@ -44,9 +44,6 @@ public class IMReducer extends AbstractReducer {
 
 	private String format;
 
-	/**
-	 *
-	 */
 	public IMReducer() {
 		Convert.search();
 		try {
@@ -57,17 +54,11 @@ public class IMReducer extends AbstractReducer {
 		format = System.getProperty("fmv.reduce.format", DEFAULT_FORMAT);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.reduce.Reducer#getName()
-	 */
 	@Override
 	public String getName() {
 		return "ImageMagick";
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.reduce.Reducer#reduceMedia(java.io.File, String, Logger)
-	 */
 	@Override
 	public Reduced reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException {
 		File destFile = getTempFile(srcFile, format);

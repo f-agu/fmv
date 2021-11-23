@@ -24,5 +24,5 @@ package org.fagu.fmv.media;
  * @author f.agu
  */
 public enum FileType {
-	IMAGE, VIDEO, AUDIO;
+	IMAGE, VIDEO, AUDIO, COMIC_BOOK
 }

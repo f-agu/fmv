@@ -2,7 +2,7 @@
 
 cd %~dp0
 
-call mvn -U clean install
+call mvn -U clean install -DskipTests
 cd fmv-mymedia
 call mvn dependency:copy-dependencies
 cd ..
