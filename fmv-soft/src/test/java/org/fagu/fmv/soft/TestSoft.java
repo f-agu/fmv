@@ -29,10 +29,6 @@ import org.fagu.fmv.soft.find.SoftProvider;
  */
 public class TestSoft extends Soft {
 
-	/**
-	 * @param founds
-	 * @param softProvider
-	 */
 	public TestSoft(Founds founds, SoftProvider softProvider) {
 		super(founds, softProvider);
 	}

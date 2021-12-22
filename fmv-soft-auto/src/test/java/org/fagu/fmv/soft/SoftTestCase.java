@@ -39,7 +39,7 @@ import org.junit.jupiter.api.Test;
 public class SoftTestCase {
 
 	@Test
-	// @Ignore
+	@Disabled
 	void testFindAll() throws Exception {
 		// System.getProperties().forEach((k, v) -> System.out.println(k + " : " + v));
 		Soft.searchAll().forEach(s -> {

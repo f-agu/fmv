@@ -81,7 +81,7 @@ public class _7zSoftProvider extends SoftProvider {
 		SoftLocator softLocator = super.getSoftLocator();
 		if(SystemUtils.IS_OS_WINDOWS) {
 			ProgramFilesLocatorSupplier.with(softLocator)
-					.findFolder("7-Zip")
+					.findFolder(f -> f.getName().toLowerCase().startsWith("7-zip"))
 					.supplyIn();
 			softLocator.addDefaultLocator();
 		}

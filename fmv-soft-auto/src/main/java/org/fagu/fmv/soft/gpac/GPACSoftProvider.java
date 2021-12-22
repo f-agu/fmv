@@ -22,14 +22,13 @@ package org.fagu.fmv.soft.gpac;
 
 import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 
-import java.io.File;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -93,10 +92,7 @@ public abstract class GPACSoftProvider extends SoftProvider {
 		SoftLocator softLocator = super.getSoftLocator();
 		if(SystemUtils.IS_OS_WINDOWS) {
 			ProgramFilesLocatorSupplier.with(softLocator)
-					.find(programFile -> {
-						File gpacFolder = new File(programFile, "GPAC");
-						return gpacFolder.exists() ? Collections.singleton(gpacFolder) : Collections.emptyList();
-					})
+					.find(programFile -> streamInFolderStartsWith(programFile, "GPAC").collect(Collectors.toList()))
 					.supplyIn();
 			softLocator.addDefaultLocator();
 		}

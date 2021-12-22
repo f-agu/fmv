@@ -25,7 +25,6 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 import java.io.File;
 import java.io.FileFilter;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
@@ -112,11 +111,9 @@ public class GSSoftProvider extends SoftProvider {
 						if( ! folder.exists()) {
 							return Collections.emptyList();
 						}
-						File[] listFiles = folder.listFiles(f -> f.getName().startsWith("gs"));
-						return listFiles != null && listFiles.length > 0 ? Arrays.asList(listFiles).stream()
+						return streamInFolderStartsWith(folder, "gs")
 								.map(f -> new File(f, "bin"))
-								.collect(Collectors.toList())
-								: Collections.emptyList();
+								.collect(Collectors.toList());
 					})
 					.supplyIn();
 			softLocator.addDefaultLocator();
@@ -138,7 +135,7 @@ public class GSSoftProvider extends SoftProvider {
 
 	@Override
 	public String getDownloadURL() {
-		return "http://ghostscript.com/download/";
+		return "https://ghostscript.com/releases/gsdnld.html";
 	}
 
 	@Override

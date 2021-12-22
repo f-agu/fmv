@@ -171,7 +171,8 @@ public class Soft {
 
 	public SoftFound getFirstFound() {
 		if( ! founds.isFound()) {
-			throw new IllegalStateException("Soft " + getName() + " not found");
+			// throw new IllegalStateException("Soft " + getName() + " not found");
+			return null;
 		}
 		return founds.getFirstFound();
 	}

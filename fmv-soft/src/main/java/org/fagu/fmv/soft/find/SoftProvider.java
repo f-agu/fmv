@@ -21,6 +21,7 @@ package org.fagu.fmv.soft.find;
  */
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -165,6 +166,23 @@ public abstract class SoftProvider {
 			builderConsumer.accept(builder);
 		}
 		return builder;
+	}
+
+	protected static Stream<File> streamInFolder(File parentFolder, String expectedName) {
+		return streamInFolder(parentFolder, f -> f.getName().equalsIgnoreCase(expectedName));
+	}
+
+	protected static Stream<File> streamInFolderStartsWith(File parentFolder, String startsWith) {
+		final String lower = startsWith.toLowerCase();
+		return streamInFolder(parentFolder, f -> f.getName().toLowerCase().startsWith(lower));
+	}
+
+	protected static Stream<File> streamInFolder(File parentFolder, FileFilter folderFilter) {
+		File[] files = parentFolder.listFiles(folderFilter);
+		if(files == null || files.length == 0) {
+			return Stream.empty();
+		}
+		return Arrays.stream(files);
 	}
 
 	// ************************************************

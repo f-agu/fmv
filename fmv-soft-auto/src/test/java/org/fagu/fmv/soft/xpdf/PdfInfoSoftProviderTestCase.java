@@ -63,6 +63,14 @@ class PdfInfoSoftProviderTestCase {
 	}
 
 	@Test
+	void testParseOnWindows_xpdfreader() throws IOException {
+		Parser parser = newParser();
+		parser.readLine("pdfinfo version 4.03 [www.xpdfreader.com]");
+		parser.readLine("Copyright 1996-2021 Glyph & Cog, LLC");
+		assertInfo(parser, new Version(4, 3));
+	}
+
+	@Test
 	void testSoftPolicy() throws IOException {
 		PdfInfoSoftProvider softProvider = new PdfInfoSoftProvider();
 		assertEquals("xpdf[>= v4] ; poppler[>= v0.12] ; All platforms[>= v0.12]", softProvider.getMinVersion());

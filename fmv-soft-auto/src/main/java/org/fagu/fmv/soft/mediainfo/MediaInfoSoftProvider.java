@@ -23,13 +23,12 @@ package org.fagu.fmv.soft.mediainfo;
 import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -101,19 +100,9 @@ public class MediaInfoSoftProvider extends SoftProvider {
 		SoftLocator softLocator = super.getSoftLocator();
 		if(SystemUtils.IS_OS_WINDOWS) {
 			ProgramFilesLocatorSupplier.with(softLocator)
-					.find(programFile -> {
-						List<File> files = new ArrayList<>();
-						File[] folders = programFile.listFiles(f -> f.getName().toLowerCase().startsWith("mediainfo"));
-						if(folders != null) {
-							for(File folder : folders) {
-								File f = new File(folder, "MediaInfo.dll");
-								if( ! f.exists()) {
-									files.add(folder);
-								}
-							}
-						}
-						return files;
-					})
+					.find(programFile -> streamInFolderStartsWith(programFile, "mediainfo")
+							.filter(folder -> ! new File(folder, "MediaInfo.dll").exists())
+							.collect(Collectors.toList()))
 					.supplyIn();
 			softLocator.addDefaultLocator();
 		}

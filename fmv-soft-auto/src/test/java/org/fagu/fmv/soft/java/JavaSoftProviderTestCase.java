@@ -28,8 +28,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import org.fagu.fmv.soft.ExecuteDelegateRepository;
-import org.fagu.fmv.soft.LogExecuteDelegate;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
@@ -49,7 +47,7 @@ class JavaSoftProviderTestCase {
 
 	@Test
 	void testSearch() {
-		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
+		// ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Java.search();
 	}
 

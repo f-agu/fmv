@@ -65,7 +65,7 @@ import org.fagu.version.VersionParserManager;
  */
 public abstract class PdfSoftProvider extends SoftProvider {
 
-	private static final String DEFAULT_PATTERN_VERSION = "${soft.name} version ([0-9\\\\.]+)";
+	private static final String DEFAULT_PATTERN_VERSION = "${soft.name} version ([0-9\\\\.]+) ?(?:.*)";
 
 	protected PdfSoftProvider(String name) {
 		this(name, null);
@@ -105,7 +105,7 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 	@Override
 	public String getDownloadURL() {
-		return "http://www.xpdfreader.com/download.html, https://blog.alivate.com.au/tag/pdftotext/, http://poppler.freedesktop.org";
+		return "https://www.xpdfreader.com/download.html, https://blog.alivate.com.au/tag/pdftotext/, https://poppler.freedesktop.org";
 	}
 
 	@Override
@@ -124,9 +124,8 @@ public abstract class PdfSoftProvider extends SoftProvider {
 				newParams.add(0, "-enc");
 				newParams.add(1, "UTF-8");
 			}
-			SoftExecutor softExecutor = new SoftExecutor(this, execFile, newParams);
-			softExecutor.charset(StandardCharsets.UTF_8);
-			return softExecutor;
+			return new SoftExecutor(this, execFile, newParams)
+					.charset(StandardCharsets.UTF_8);
 		}
 
 		return super.createSoftExecutor(soft, execFile, parameters);
@@ -136,26 +135,20 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	public SoftLocator getSoftLocator() {
 		SoftLocator softLocator = super.getSoftLocator();
 		if(SystemUtils.IS_OS_WINDOWS) {
+			final String arch = "bin" + System.getProperty("sun.arch.data.model");
 			ProgramFilesLocatorSupplier.with(softLocator)
 					.find(programFile -> {
 						List<File> files = new ArrayList<>();
 
 						// poppler
-						File[] popplerFiles = programFile.listFiles(f -> f.getName().toLowerCase().startsWith("poppler"));
-						if(popplerFiles != null && popplerFiles.length != 0) {
-							Arrays.stream(popplerFiles)
-									.map(f -> new File(f, "bin"))
-									.forEach(files::add);
-						}
+						streamInFolderStartsWith(programFile, "poppler")
+								.map(f -> new File(f, "bin"))
+								.forEach(files::add);
 
 						// xpdf
-						File[] xpdfFiles = programFile.listFiles(f -> f.getName().toLowerCase().startsWith("xpdf"));
-						if(xpdfFiles != null && xpdfFiles.length != 0) {
-							String arch = "bin" + System.getProperty("sun.arch.data.model");
-							Arrays.asList(xpdfFiles).stream()
-									.map(f -> new File(f, arch))
-									.forEach(files::add);
-						}
+						streamInFolderStartsWith(programFile, "xpdf")
+								.map(f -> new File(f, arch))
+								.forEach(files::add);
 
 						return files;
 					})
@@ -241,7 +234,6 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 			@Override
 			public void readLine(String line) {
-
 				Matcher matcher = pattern.matcher(line);
 				if(matcher.matches()) {
 					version = VersionParserManager.parse(matcher.group(1));

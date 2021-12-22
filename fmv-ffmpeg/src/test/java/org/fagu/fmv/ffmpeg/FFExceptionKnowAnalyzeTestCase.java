@@ -29,8 +29,8 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
-import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
  * @author f.agu
  * @created 24 janv. 2017 14:39:11
  */
+@Disabled
 class FFExceptionKnowAnalyzeTestCase {
 
 	@Test
@@ -63,6 +64,7 @@ class FFExceptionKnowAnalyzeTestCase {
 				assertNotNull(extract, resource);
 				fail(expectedMessage + ": " + extract.toJSON());
 			} catch(FMVExecuteException e) {
+				System.out.println(0);
 				if(e.isKnown()) {
 					assertEquals(expectedMessage, e.getExceptionKnown().toString());
 				} else {

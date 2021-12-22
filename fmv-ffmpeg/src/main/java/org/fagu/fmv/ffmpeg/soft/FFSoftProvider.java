@@ -105,13 +105,11 @@ public abstract class FFSoftProvider extends SoftProvider {
 			ProgramFilesLocatorSupplier.with(softLocator)
 					.find(programFile -> {
 						List<File> files = new ArrayList<>();
-						File[] folders = programFile.listFiles(f -> f.getName().toLowerCase().startsWith("ffmpeg"));
-						if(folders != null) {
-							for(File folder : folders) {
-								files.add(folder);
-								files.add(new File(folder, "bin"));
-							}
-						}
+						streamInFolderStartsWith(programFile, "ffmpeg")
+								.forEach(folder -> {
+									files.add(folder);
+									files.add(new File(folder, "bin"));
+								});
 						return files;
 					})
 					.supplyIn();
