@@ -78,6 +78,7 @@ class FFInfoTestCase {
 	}
 
 	@Test
+	@Disabled
 	void testLoop() throws Exception {
 		Soft soft = FFProbe.search();
 		while(soft.isFound()) {
