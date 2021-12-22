@@ -212,9 +212,6 @@ public class Ripper implements Closeable {
 
 	private TextProgressBar textProgressBar;
 
-	/**
-	 * @param builder
-	 */
 	private Ripper(RipperBuilder builder) {
 		this.dvdDrive = builder.dvdDrive;
 		this.tmpDirectory = builder.tmpDirectory;
@@ -232,17 +229,10 @@ public class Ripper implements Closeable {
 		ffmpegService = Executors.newSingleThreadExecutor();
 	}
 
-	/**
-	 * @param dvdDrive
-	 * @return
-	 */
 	public static RipperBuilder fromDVDDrive(File dvdDrive) {
 		return new RipperBuilder(dvdDrive);
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	public void rip() throws IOException {
 		AppVersion.logMyVersion(logger::log);
 		logger.log("===========================================================");

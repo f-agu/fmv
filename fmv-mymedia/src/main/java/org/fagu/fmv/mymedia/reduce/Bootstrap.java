@@ -63,6 +63,7 @@ public class Bootstrap {
 		addReducer(FileTypeUtils.with(FileType.IMAGE)::verify, IMReducer::new);
 		addReducer(FileTypeUtils.with(FileType.AUDIO)::verify, FFReducer::new);
 		addReducer(FileTypeUtils.with(FileType.VIDEO)::verify, FFReducer::new);
+		addReducer(FileTypeUtils.with(FileType.COMIC_BOOK)::verify, CBReducer::new);
 	}
 
 	public void addReducer(Predicate<Path> verifyPath, Supplier<Reducer> reducer) {
@@ -104,6 +105,10 @@ public class Bootstrap {
 							}
 						} catch(IOException e) {
 							throw new UncheckedIOException(e);
+						}
+						if(reduced == null) {
+							System.out.print("Reduced not found");
+							return;
 						}
 						File destFile = reduced.getDestFile();
 						if(destFile != null && destFile.exists()) {

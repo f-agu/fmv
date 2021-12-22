@@ -95,13 +95,14 @@ public class H {
 	}
 
 	private static void cpl(String line) {
-		StringBuilder buf = new StringBuilder();
-		int p = line.indexOf(' ', 19);
-		buf.append(line.substring(0, 16)).append(TAB)
+		int o = line.indexOf(' ', 17);
+		int p = line.indexOf(' ', o + 1);
+		StringBuilder buf = new StringBuilder()
+				.append(line.substring(0, 16)).append(TAB)
 				.append(TAB)
 				.append(TAB)
-				.append(line.substring(19, p)).append(TAB)
-				.append(line.substring(17, 18)).append(TAB)
+				.append(line.substring(o + 1, p)).append(TAB)
+				.append(line.substring(17, o)).append(TAB)
 				.append(TAB)
 				.append("non").append(TAB)
 				.append(line.substring(p + 1));

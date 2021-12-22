@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.reduce;
  * #L%
  */
 
-
 import java.io.File;
 import java.io.IOException;
 
@@ -30,18 +29,10 @@ import java.io.IOException;
  */
 public abstract class AbstractReducer implements Reducer {
 
-	/**
-	 * 
-	 */
-	public AbstractReducer() {}
+	protected AbstractReducer() {}
 
 	// ***************************************
 
-	/**
-	 * @param srcFile
-	 * @param extension
-	 * @return
-	 */
 	protected File getTempFile(File srcFile, String extension) throws IOException {
 		String name = srcFile.getName();
 		return File.createTempFile(name, '.' + extension, srcFile.getParentFile());

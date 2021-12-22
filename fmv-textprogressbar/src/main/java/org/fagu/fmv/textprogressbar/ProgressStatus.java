@@ -25,14 +25,8 @@ package org.fagu.fmv.textprogressbar;
  */
 public interface ProgressStatus {
 
-	/**
-	 * @return
-	 */
 	boolean isFinished();
 
-	/**
-	 * @return
-	 */
 	int getPercent();
 
 }

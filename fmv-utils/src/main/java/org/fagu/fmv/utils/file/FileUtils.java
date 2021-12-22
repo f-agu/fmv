@@ -32,27 +32,12 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class FileUtils {
 
-	/**
-	 * 
-	 */
 	private FileUtils() {}
 
-	/**
-	 * @param prefix
-	 * @param suffix
-	 * @return
-	 * @throws IOException
-	 */
 	public static File getTempFolder(String prefix, String suffix) throws IOException {
 		return getTempFolder(prefix, suffix, null);
 	}
 
-	/**
-	 * @param prefix
-	 * @param suffix
-	 * @param directory
-	 * @return
-	 */
 	public static File getTempFolder(String prefix, String suffix, File directory) throws IOException {
 		if(prefix == null) {
 			throw new NullPointerException();
@@ -74,13 +59,6 @@ public class FileUtils {
 
 	// *******************************************************
 
-	/**
-	 * @param prefix
-	 * @param suffix
-	 * @param dir
-	 * @return
-	 * @throws IOException
-	 */
 	private static File generateFile(String prefix, String suffix, File dir) throws IOException {
 		long n = LazyInitialization.random.nextLong();
 		if(n == Long.MIN_VALUE) {
