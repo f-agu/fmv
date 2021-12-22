@@ -35,6 +35,7 @@ import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.soft.SoftSearch;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryPrepare;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
@@ -50,7 +51,7 @@ public abstract class SoftProvider {
 
 	private final SoftPolicy softPolicy;
 
-	public SoftProvider(String name, SoftPolicy softPolicy) {
+	protected SoftProvider(String name, SoftPolicy softPolicy) {
 		this.name = Objects.requireNonNull(name);
 		this.softPolicy = SoftPolicyProvider.find(name).orElse(softPolicy);
 	}
@@ -74,7 +75,11 @@ public abstract class SoftProvider {
 
 	// --------------------------------------
 
-	public abstract SoftFoundFactory createSoftFoundFactory(Properties searchProperties);
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+		return createSoftFoundFactory(searchProperties, null);
+	}
+
+	public abstract SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer);
 
 	// --------------------------------------
 
@@ -103,7 +108,7 @@ public abstract class SoftProvider {
 		if(softSearchConsumer != null) {
 			softSearchConsumer.accept(softSearch);
 		}
-		return softSearch.search(createSoftFoundFactory(ImmutableProperties.of()));
+		return softSearch.search(createSoftFoundFactory(ImmutableProperties.of(), null));
 	}
 
 	public String getDownloadURL() {
@@ -152,6 +157,14 @@ public abstract class SoftProvider {
 
 	public static Stream<SoftProvider> getSoftProviders() {
 		return StreamSupport.stream(ServiceLoader.load(SoftProvider.class).spliterator(), false);
+	}
+
+	protected static ExecSoftFoundFactoryBuilder prepareBuilder(ExecSoftFoundFactoryBuilder builder,
+			Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
+		if(builderConsumer != null) {
+			builderConsumer.accept(builder);
+		}
+		return builder;
 	}
 
 	// ************************************************

@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +42,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.ffmpeg.exception.FFExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFound;
@@ -71,10 +73,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 	private static final Pattern FF_FIRSTLINE_PATTERN = Pattern.compile("(ff[a-z]+) version (.*)");
 
-	/**
-	 * @param name
-	 */
-	public FFSoftProvider(String name) {
+	protected FFSoftProvider(String name) {
 		super(name, null);
 	}
 
@@ -89,11 +88,12 @@ public abstract class FFSoftProvider extends SoftProvider {
 	}
 
 	@Override
-	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		return prepareSoftFoundFactory()
-				.withParameters("-version")
-				.parseFactory((file, softPolicy) -> createParser(file))
-				.build();
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
+		return prepareBuilder(
+				prepareSoftFoundFactory().withParameters("-version"),
+				builderConsumer)
+						.parseFactory((file, softPolicy) -> createParser(file))
+						.build();
 	}
 
 	@Override

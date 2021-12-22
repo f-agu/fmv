@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
@@ -75,7 +76,7 @@ public class SoftFile {
 		return new SoftProvider(name, null) {
 
 			@Override
-			public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+			public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 				return (f, l, p) -> {
 					File file = fileSupplier.get();
 					if(file == null) {

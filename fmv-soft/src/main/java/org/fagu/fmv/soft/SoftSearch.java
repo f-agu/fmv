@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFindListener;
 import org.fagu.fmv.soft.find.SoftFound;
@@ -63,6 +64,8 @@ public class SoftSearch {
 
 	private Consumer<SoftLocator> softLocatorConsumer;
 
+	private Consumer<ExecSoftFoundFactoryBuilder> builderConsumer;
+
 	private final List<SearchListener> searchListeners;
 
 	SoftSearch(SoftProvider softProvider) {
@@ -90,6 +93,11 @@ public class SoftSearch {
 
 	public SoftSearch withLocator(SoftLocator softLocator) {
 		this.softLocator = softLocator;
+		return this;
+	}
+
+	public SoftSearch withExecSoftFoundFactoryBuilder(Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
+		this.builderConsumer = builderConsumer;
 		return this;
 	}
 
@@ -136,7 +144,7 @@ public class SoftSearch {
 	}
 
 	public Soft search() {
-		return searchByFactory(() -> getProvider().createSoftFoundFactory(searchProperties));
+		return searchByFactory(() -> getProvider().createSoftFoundFactory(searchProperties, builderConsumer));
 	}
 
 	public Soft search(SoftFoundFactory softFoundFactory) {

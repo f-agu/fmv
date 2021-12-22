@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,6 +41,7 @@ import org.fagu.fmv.im.exception.IMExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
 import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
@@ -71,11 +73,11 @@ public abstract class IMSoftProvider extends SoftProvider {
 
 	private static final Version V7 = new Version(7);
 
-	public IMSoftProvider(String name) {
+	protected IMSoftProvider(String name) {
 		this(name, null);
 	}
 
-	public IMSoftProvider(String name, SoftPolicy softPolicy) {
+	protected IMSoftProvider(String name, SoftPolicy softPolicy) {
 		super(name, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
 				.onAllPlatforms(minVersion(7, 0, 8, 50))));
 	}
@@ -91,7 +93,7 @@ public abstract class IMSoftProvider extends SoftProvider {
 	}
 
 	@Override
-	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, this)
 				.forMatchingVersion(DEFAULT_PATTERN_VERSION);
 		return prepareSoftFoundFactory()

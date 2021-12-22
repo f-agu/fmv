@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
+import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFound;
@@ -74,6 +75,20 @@ class FFInfoTestCase {
 			System.out.println();
 		});
 		System.out.println(founds.getFirstFound());
+	}
+
+	@Test
+	void testLoop() throws Exception {
+		Soft soft = FFProbe.search();
+		while(soft.isFound()) {
+			SoftFound softFound = soft.getFounds().getFirstFound();
+			if(soft.isFound()) {
+				// recheck soft
+				softFound = soft.reFind();
+			}
+			System.out.println(softFound);
+			Thread.sleep(1_000);
+		}
 	}
 
 	@Test

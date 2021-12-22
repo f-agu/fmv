@@ -31,7 +31,6 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -40,8 +39,6 @@ import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
-
-import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -154,11 +151,11 @@ public abstract class InfoBase implements MetadataProperties {
 		} catch(DateTimeParseException e) {
 			// ignore
 		}
-		try {
-			return Optional.of(DatatypeConverter.parseDateTime(tag).getTime());
-		} catch(IllegalArgumentException e) {
-			// ignore
-		}
+		// try {
+		// return Optional.of(DatatypeConverter.parseDateTime(tag).getTime());
+		// } catch(IllegalArgumentException e) {
+		// // ignore
+		// }
 		return Optional.empty();
 	}
 
@@ -181,12 +178,12 @@ public abstract class InfoBase implements MetadataProperties {
 			// ignore
 		}
 
-		try {
-			GregorianCalendar c = (GregorianCalendar)DatatypeConverter.parseDateTime(tag);
-			return Optional.of(c.toZonedDateTime().toOffsetDateTime());
-		} catch(IllegalArgumentException e) {
-			// ignore
-		}
+		// try {
+		// GregorianCalendar c = (GregorianCalendar)DatatypeConverter.parseDateTime(tag);
+		// return Optional.of(c.toZonedDateTime().toOffsetDateTime());
+		// } catch(IllegalArgumentException e) {
+		// // ignore
+		// }
 		return Optional.empty();
 	}
 

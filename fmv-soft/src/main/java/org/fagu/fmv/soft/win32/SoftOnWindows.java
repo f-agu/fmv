@@ -33,10 +33,6 @@ public class SoftOnWindows {
 
 	private SoftOnWindows() {}
 
-	/**
-	 * @param softName
-	 * @return
-	 */
 	public static SoftFoundFactory createSoftFoundFactory(String softName) {
 		return (file, locator, softPolicy) -> {
 			String versionStr = SoftOnWindows.getExeVersion(file);
@@ -45,10 +41,6 @@ public class SoftOnWindows {
 		};
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static String getExeVersion(File file) {
 		return WindowsFileVersionInfo.getVersion(file.getAbsolutePath());
 	}

@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,6 +41,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFound;
@@ -65,11 +67,11 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 	private static final String DEFAULT_PATTERN_VERSION = "${soft.name} version ([0-9\\\\.]+)";
 
-	public PdfSoftProvider(String name) {
+	protected PdfSoftProvider(String name) {
 		this(name, null);
 	}
 
-	public PdfSoftProvider(String name, SoftPolicy softPolicy) {
+	protected PdfSoftProvider(String name, SoftPolicy softPolicy) {
 		super(name, ObjectUtils.firstNonNull(softPolicy, getDefaultSoftPolicy()));
 	}
 
@@ -89,15 +91,16 @@ public abstract class PdfSoftProvider extends SoftProvider {
 	}
 
 	@Override
-	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 		final Pattern pattern = new SearchPropertiesHelper(searchProperties, this)
 				.toPatternVersion(DEFAULT_PATTERN_VERSION);
-		return prepareSoftFoundFactory()
-				.withParameters("-v")
-				.parseFactory((file, softPolicy) -> createParser(file, pattern))
-				.exitValues(exitValues())
-				.timeOut(10_000)
-				.build();
+		return prepareBuilder(
+				prepareSoftFoundFactory().withParameters("-v"),
+				builderConsumer)
+						.parseFactory((file, softPolicy) -> createParser(file, pattern))
+						.exitValues(exitValues())
+						.timeOut(10_000)
+						.build();
 	}
 
 	@Override

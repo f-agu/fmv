@@ -40,6 +40,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.SoftExecutor.Executed;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.Locator;
 import org.fagu.fmv.soft.find.Locators;
@@ -104,7 +105,7 @@ public class Soft {
 		SoftProvider softProvider = new SoftProvider(file.getName(), null) {
 
 			@Override
-			public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+			public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 				throw new RuntimeException("Not available !");
 			}
 
@@ -186,7 +187,11 @@ public class Soft {
 	}
 
 	public SoftFound reFind() throws IOException {
-		SoftFoundFactory softFoundFactory = getSoftProvider().createSoftFoundFactory(searchProperties);
+		return reFind(null);
+	}
+
+	public SoftFound reFind(Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) throws IOException {
+		SoftFoundFactory softFoundFactory = getSoftProvider().createSoftFoundFactory(searchProperties, builderConsumer);
 		return softFoundFactory.create(getFile(), null, getSoftPolicy());
 	}
 

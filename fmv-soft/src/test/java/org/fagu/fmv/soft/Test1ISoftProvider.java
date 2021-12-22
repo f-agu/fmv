@@ -20,7 +20,6 @@ package org.fagu.fmv.soft;
  * #L%
  */
 
-
 import org.fagu.fmv.utils.order.Ordered;
 
 
@@ -29,16 +28,10 @@ import org.fagu.fmv.utils.order.Ordered;
  */
 public class Test1ISoftProvider extends TestSoftProvider implements Ordered {
 
-	/**
-	 * 
-	 */
 	public Test1ISoftProvider() {
 		super("provider1");
 	}
 
-	/**
-	 * @see org.fagu.fmv.utils.order.Ordered#getOrder()
-	 */
 	@Override
 	public int getOrder() {
 		return 1;

@@ -20,7 +20,6 @@ package org.fagu.fmv.soft;
  * #L%
  */
 
-
 import org.fagu.fmv.utils.order.Order;
 
 
@@ -30,9 +29,6 @@ import org.fagu.fmv.utils.order.Order;
 @Order(4)
 public class Test2ASoftProvider extends TestSoftProvider {
 
-	/**
-	 * 
-	 */
 	public Test2ASoftProvider() {
 		super("provider2");
 	}

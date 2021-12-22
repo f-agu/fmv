@@ -27,10 +27,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
@@ -50,13 +52,13 @@ public abstract class MSoftProvider extends SoftProvider {
 
 	private static final String DEFAULT_SUFFIX_PATTERN_VERSION = "${soft.name} sherpya-r(\\d+)+.*-[\\d\\.]+ \\(C\\).*";
 
-	public MSoftProvider(String name) {
+	protected MSoftProvider(String name) {
 		this(name, new VersionSoftPolicy()
 				.onWindows(minVersion(37905))
 				.onLinux(minVersion(1, 3)));
 	}
 
-	public MSoftProvider(String name, SoftPolicy softPolicy) {
+	protected MSoftProvider(String name, SoftPolicy softPolicy) {
 		super(name, softPolicy);
 	}
 
@@ -71,17 +73,18 @@ public abstract class MSoftProvider extends SoftProvider {
 	}
 
 	@Override
-	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 		final Pattern pattern = new SearchPropertiesHelper(searchProperties, this)
 				.toPatternVersion(DEFAULT_SUFFIX_PATTERN_VERSION);
-		return prepareSoftFoundFactory()
-				.withoutParameter()
-				.parseVersion(line -> {
-					Matcher matcher = pattern.matcher(line);
-					return matcher.matches() ? VersionParserManager.parse(matcher.group(1)) : null;
-				})
-				.exitValue(MEncoderSoftProvider.NAME.equals(getName()) ? 1 : 0)
-				.build();
+		return prepareBuilder(
+				prepareSoftFoundFactory().withoutParameter(),
+				builderConsumer)
+						.parseVersion(line -> {
+							Matcher matcher = pattern.matcher(line);
+							return matcher.matches() ? VersionParserManager.parse(matcher.group(1)) : null;
+						})
+						.exitValue(MEncoderSoftProvider.NAME.equals(getName()) ? 1 : 0)
+						.build();
 	}
 
 	@Override

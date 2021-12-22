@@ -26,11 +26,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
@@ -66,11 +68,12 @@ public class _7zSoftProvider extends SoftProvider {
 	}
 
 	@Override
-	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
-		return prepareSoftFoundFactory()
-				.withParameters("-version", "-h")
-				.parseFactory((file, softPolicy) -> createParser(file))
-				.build();
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
+		return prepareBuilder(
+				prepareSoftFoundFactory().withParameters("-version", "-h"),
+				builderConsumer)
+						.parseFactory((file, softPolicy) -> createParser(file))
+						.build();
 	}
 
 	@Override

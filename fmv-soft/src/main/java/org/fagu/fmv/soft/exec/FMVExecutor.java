@@ -42,6 +42,7 @@ import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteResultHandler;
 import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.ProcessDestroyer;
 import org.apache.commons.exec.ShutdownHookProcessDestroyer;
 import org.fagu.fmv.soft.AroundExecute;
@@ -74,6 +75,8 @@ public class FMVExecutor extends DefaultExecutor {
 		private LookReader lookReader;
 
 		private ExecuteStreamHandler executeStreamHandler;
+
+		private boolean enabledDefaultInvalidExitValue;
 
 		private FMVExecutorBuilder(File workingFolder) {
 			this.workingFolder = Objects.requireNonNull(workingFolder);
@@ -108,6 +111,11 @@ public class FMVExecutor extends DefaultExecutor {
 			return this;
 		}
 
+		public FMVExecutorBuilder enableDefaultInvalidExitValue(boolean enabledDefaultInvalidExitValue) {
+			this.enabledDefaultInvalidExitValue = enabledDefaultInvalidExitValue;
+			return this;
+		}
+
 		public FMVExecutor build() {
 			if(executeStreamHandler == null && (outReadLine != null || errReadLine != null)) {
 				executeStreamHandler = new ReadLinePumpStreamHandler(outReadLine, errReadLine, charset, lookReader);
@@ -132,6 +140,8 @@ public class FMVExecutor extends DefaultExecutor {
 
 	private final FMVExecListener proxyFMVExecListener;
 
+	private final boolean enabledDefaultInvalidExitValue;
+
 	private List<ProcessOperator> processOperators = new ArrayList<>();
 
 	private AroundExecuteSupplier aroundExecuteSupplier;
@@ -146,6 +156,8 @@ public class FMVExecutor extends DefaultExecutor {
 
 		listenerProxifier = new Proxifier<>(FMVExecListener.class);
 		proxyFMVExecListener = listenerProxifier.proxify();
+
+		this.enabledDefaultInvalidExitValue = builder.enabledDefaultInvalidExitValue;
 
 		addProcessDestroyer(new ShutdownHookProcessDestroyer());
 		addListener(ExecStats.getInstance().getExecListener());
@@ -282,6 +294,14 @@ public class FMVExecutor extends DefaultExecutor {
 			executeWatchdog.destroyProcess();
 			executeWatchdog = null;
 		}
+	}
+
+	@Override
+	public boolean isFailure(int exitValue) {
+		if( ! enabledDefaultInvalidExitValue && Executor.INVALID_EXITVALUE == exitValue) {
+			return false;
+		}
+		return super.isFailure(exitValue);
 	}
 
 	public static AroundExecuteSupplier getGlobalAroundExecuteSupplier() {

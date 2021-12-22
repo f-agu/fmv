@@ -30,12 +30,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
 import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
@@ -82,21 +84,22 @@ public class GSSoftProvider extends SoftProvider {
 	}
 
 	@Override
-	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, this)
 				.forMatchingVersion(DEFAULT_PATTERN_VERSION);
-		return prepareSoftFoundFactory()
-				.withParameters("-version", "-q")
-				.parseVersionDate(line -> searchMatching.ifMatches(line, matcher -> {
-					Version version = VersionParserManager.parse(matcher.group(1));
-					Date date = null;
-					if(matcher.groupCount() > 1) {
-						date = parseDate(searchProperties, matcher.group(2));
-					}
-					return Optional.of(new VersionDate(version, date));
-				})
-						.orElse(null))
-				.build();
+		return prepareBuilder(
+				prepareSoftFoundFactory().withParameters("-version", "-q"),
+				builderConsumer)
+						.parseVersionDate(line -> searchMatching.ifMatches(line, matcher -> {
+							Version version = VersionParserManager.parse(matcher.group(1));
+							Date date = null;
+							if(matcher.groupCount() > 1) {
+								date = parseDate(searchProperties, matcher.group(2));
+							}
+							return Optional.of(new VersionDate(version, date));
+						})
+								.orElse(null))
+						.build();
 	}
 
 	@Override

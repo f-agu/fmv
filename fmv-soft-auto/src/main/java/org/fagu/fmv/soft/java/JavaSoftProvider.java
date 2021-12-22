@@ -29,9 +29,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
 import org.fagu.fmv.soft.find.Locator;
 import org.fagu.fmv.soft.find.Locators;
@@ -84,21 +86,22 @@ public class JavaSoftProvider extends SoftProvider {
 	}
 
 	@Override
-	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, this)
 				.forMatchingVersion(DEFAULT_PATTERN_VERSION);
-		return prepareSoftFoundFactory()
-				.withParameters("-version")
-				.parseVersionDate(line -> searchMatching.ifMatches(line, matcher -> {
-					Version version = VersionParserManager.parse(matcher.group(2));
-					Date date = null;
-					if(matcher.groupCount() > 2) {
-						date = parseDate(searchProperties, matcher.group(3));
-					}
-					return Optional.of(new VersionDate(version, date));
-				})
-						.orElse(null))
-				.build();
+		return prepareBuilder(
+				prepareSoftFoundFactory().withParameters("-version"),
+				builderConsumer)
+						.parseVersionDate(line -> searchMatching.ifMatches(line, matcher -> {
+							Version version = VersionParserManager.parse(matcher.group(2));
+							Date date = null;
+							if(matcher.groupCount() > 2) {
+								date = parseDate(searchProperties, matcher.group(3));
+							}
+							return Optional.of(new VersionDate(version, date));
+						})
+								.orElse(null))
+						.build();
 	}
 
 	@Override

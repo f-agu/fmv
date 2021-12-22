@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.soft;
  * #L%
  */
 
-
 /**
  * @author f.agu
  */
@@ -28,9 +27,6 @@ public class FFProbeSoftProvider extends FFSoftProvider {
 
 	public static final String NAME = "ffprobe";
 
-	/**
-	 * 
-	 */
 	public FFProbeSoftProvider() {
 		super(NAME);
 	}

@@ -22,7 +22,9 @@ package org.fagu.fmv.soft;
 
 import java.util.Collections;
 import java.util.Properties;
+import java.util.function.Consumer;
 
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftPolicy;
@@ -39,7 +41,7 @@ public class TestSoftProvider extends SoftProvider {
 	}
 
 	@Override
-	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 		return null;
 	}
 

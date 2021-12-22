@@ -27,11 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
@@ -63,19 +65,20 @@ public class MediaInfoSoftProvider extends SoftProvider {
 	}
 
 	@Override
-	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 		final Pattern pattern = new SearchPropertiesHelper(searchProperties, this)
 				.toPatternVersion(DEFAULT_PATTERN_VERSION);
-		return prepareSoftFoundFactory()
-				.withParameters("--Version")
-				.parseVersion(line -> {
-					Matcher matcher = pattern.matcher(line);
-					if(matcher.matches()) {
-						return new Version(VersionParserManager.parse(matcher.group(1)));
-					}
-					return null;
-				})
-				.build();
+		return prepareBuilder(
+				prepareSoftFoundFactory().withParameters("--Version"),
+				builderConsumer)
+						.parseVersion(line -> {
+							Matcher matcher = pattern.matcher(line);
+							if(matcher.matches()) {
+								return new Version(VersionParserManager.parse(matcher.group(1)));
+							}
+							return null;
+						})
+						.build();
 	}
 
 	@Override

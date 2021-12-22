@@ -25,9 +25,11 @@ import static org.fagu.fmv.soft.find.policy.VersionSoftPolicy.minVersion;
 import java.io.File;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
@@ -60,7 +62,7 @@ public class VLCSoftProvider extends SoftProvider {
 	}
 
 	@Override
-	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 		if(SystemUtils.IS_OS_WINDOWS) {
 			return SoftOnWindows.createSoftFoundFactory(getName());
 		}

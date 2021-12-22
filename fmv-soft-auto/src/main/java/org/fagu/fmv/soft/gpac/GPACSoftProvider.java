@@ -27,11 +27,13 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
@@ -52,7 +54,7 @@ public abstract class GPACSoftProvider extends SoftProvider {
 
 	private final String foundParameter;
 
-	public GPACSoftProvider(String name, SoftPolicy softPolicy, String foundParameter) {
+	protected GPACSoftProvider(String name, SoftPolicy softPolicy, String foundParameter) {
 		super(name, ObjectUtils.firstNonNull(softPolicy, new VersionSoftPolicy()
 				.onAllPlatforms(minVersion(0, 7))));
 		this.foundParameter = Objects.requireNonNull(foundParameter);
@@ -69,20 +71,21 @@ public abstract class GPACSoftProvider extends SoftProvider {
 	}
 
 	@Override
-	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties) {
+	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 		// GPAC version 0.7.2-DEV-rev1143-g1c540fec-master
 		final Pattern pattern = new SearchPropertiesHelper(searchProperties, this)
 				.toPatternVersion(DEFAULT_PATTERN_VERSION);
-		return prepareSoftFoundFactory()
-				.withParameters(foundParameter)
-				.parseVersion(line -> {
-					Matcher matcher = pattern.matcher(line);
-					if(matcher.matches()) {
-						return VersionParserManager.parse(matcher.group(1));
-					}
-					return null;
-				})
-				.build();
+		return prepareBuilder(
+				prepareSoftFoundFactory().withParameters(foundParameter),
+				builderConsumer)
+						.parseVersion(line -> {
+							Matcher matcher = pattern.matcher(line);
+							if(matcher.matches()) {
+								return VersionParserManager.parse(matcher.group(1));
+							}
+							return null;
+						})
+						.build();
 	}
 
 	@Override
