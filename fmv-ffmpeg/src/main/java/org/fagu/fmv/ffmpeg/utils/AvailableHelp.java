@@ -47,28 +47,16 @@ public class AvailableHelp<H extends Help> {
 
 	// ------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	@FunctionalInterface
 	public interface Reader {
 
-		/**
-		 * @param line
-		 * @return is read
-		 */
 		boolean read(String line);
 	}
 
 	// ------------------------------------
-	/**
-	 * @author f.agu
-	 */
+
 	protected static class UnlimitedReader implements Reader {
 
-		/**
-		 * @see org.fagu.fmv.ffmpeg.utils.AvailableHelp.Reader#read(java.lang.String)
-		 */
 		@Override
 		public boolean read(String line) {
 			return true;
@@ -77,16 +65,10 @@ public class AvailableHelp<H extends Help> {
 
 	// ------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	protected static class OneLineReader implements Reader {
 
 		protected String line;
 
-		/**
-		 * @see org.fagu.fmv.ffmpeg.utils.AvailableHelp.Reader#read(java.lang.String)
-		 */
 		@Override
 		public boolean read(String line) {
 			if(this.line != null) {
@@ -96,9 +78,6 @@ public class AvailableHelp<H extends Help> {
 			return true;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return "OneLineReader(" + (line == null ? "un" : "") + "read)";
@@ -107,18 +86,12 @@ public class AvailableHelp<H extends Help> {
 
 	// ------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	protected static class LinesReader implements Reader {
 
 		protected final int max;
 
 		protected int count;
 
-		/**
-		 * @param max
-		 */
 		protected LinesReader(int max) {
 			if(max <= 0) {
 				throw new IllegalArgumentException("Max must be positiv: " + max);
@@ -126,9 +99,6 @@ public class AvailableHelp<H extends Help> {
 			this.max = max;
 		}
 
-		/**
-		 * @see org.fagu.fmv.ffmpeg.utils.AvailableHelp.Reader#read(java.lang.String)
-		 */
 		@Override
 		public boolean read(String line) {
 			if(count >= max) {
@@ -138,9 +108,6 @@ public class AvailableHelp<H extends Help> {
 			return true;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return "LinesReader(" + count + "/" + max + ")";
@@ -149,21 +116,12 @@ public class AvailableHelp<H extends Help> {
 
 	// ------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	protected static class TitleReader extends OneLineReader {
 
-		/**
-		 * @return the title
-		 */
 		public String getTitle() {
 			return line;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return "TitleReader(" + (line == null ? "un" : "") + "read)";
@@ -172,9 +130,6 @@ public class AvailableHelp<H extends Help> {
 
 	// ------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	protected static class LegendReader implements Reader {
 
 		private static final Pattern LEGEND_PATTERN = Pattern.compile("(\\.*([A-Za-z0-9\\|])\\.*)\\s+=\\s+(\\w+.*)");
@@ -185,24 +140,15 @@ public class AvailableHelp<H extends Help> {
 
 		private boolean checkDot;
 
-		/**
-		 * @param checkDot
-		 */
 		public LegendReader(boolean checkDot) {
 			legendMap = new HashMap<>();
 			this.checkDot = checkDot;
 		}
 
-		/**
-		 * 
-		 */
 		public LegendReader() {
 			this(false);
 		}
 
-		/**
-		 * @see org.fagu.fmv.ffmpeg.utils.AvailableHelp.Reader#read(java.lang.String)
-		 */
 		@Override
 		public boolean read(String line) {
 			Matcher matcher = LEGEND_PATTERN.matcher(line);
@@ -224,16 +170,10 @@ public class AvailableHelp<H extends Help> {
 			return true;
 		}
 
-		/**
-		 * @return the title
-		 */
 		public Map<Character, String> getLegends() {
 			return legendMap;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return "LegendReader(" + legendMap.size() + ")";
@@ -242,12 +182,9 @@ public class AvailableHelp<H extends Help> {
 
 	// ------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	protected static class ValuesReader<H extends Help> implements Reader {
 
-		private static final Pattern VALUES_PATTERN = Pattern.compile("([\\w\\-,]+)[\\s\\.]+(.*)");
+		private static final Pattern VALUES_PATTERN = Pattern.compile("([\\w\\-,]+)(?:[\\s\\.]+(.*))?");
 
 		private LegendReader legendReader;
 
@@ -257,20 +194,12 @@ public class AvailableHelp<H extends Help> {
 
 		private int count = 0;
 
-		/**
-		 * @param legendReader
-		 * @param factory
-		 * @param consumer
-		 */
 		public ValuesReader(LegendReader legendReader, Function<String, H> factory, Consumer<H> consumer) {
 			this.legendReader = legendReader;
 			this.factory = factory;
 			this.consumer = consumer;
 		}
 
-		/**
-		 * @see org.fagu.fmv.ffmpeg.utils.AvailableHelp.Reader#read(java.lang.String)
-		 */
 		@Override
 		public boolean read(String line) {
 			String sline = StringUtils.substring(line, legendReader.countPossibilties).trim();
@@ -281,7 +210,7 @@ public class AvailableHelp<H extends Help> {
 			String startline = StringUtils.substring(line, 0, legendReader.countPossibilties).trim();
 			char[] chars = startline.replaceAll("[\\.\\s]", "").toCharArray();
 			String[] names = matcher.group(1).split(",");
-			String text = matcher.group(2);
+			String text = StringUtils.defaultString(matcher.group(2));
 			for(String name : names) {
 				H h = factory.apply(name);
 				Help help = h;
@@ -295,9 +224,6 @@ public class AvailableHelp<H extends Help> {
 			return true;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return "ValuesReader(" + count + ")";
@@ -305,36 +231,19 @@ public class AvailableHelp<H extends Help> {
 	}
 
 	// ------------------------------------
-	/**
-	 * 
-	 */
+
 	private List<Reader> readers;
 
-	/**
-	 * 
-	 */
 	private LegendReader legendReader;
 
-	/**
-	 * @param title
-	 * @param legendMap
-	 * @param helps
-	 */
 	private AvailableHelp() {
 		readers = new ArrayList<>();
 	}
 
-	/**
-	 * @return
-	 */
 	public static <H extends Help> AvailableHelp<H> create() {
 		return new AvailableHelp<>();
 	}
 
-	/**
-	 * @param reader
-	 * @return
-	 */
 	public AvailableHelp<H> reader(Reader reader) {
 		if(reader instanceof LegendReader) {
 			legendReader = (LegendReader)reader;
@@ -343,61 +252,34 @@ public class AvailableHelp<H extends Help> {
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	public AvailableHelp<H> title() {
 		return reader(new TitleReader());
 	}
 
-	/**
-	 * @return
-	 */
 	public AvailableHelp<H> legend() {
 		return reader(new LegendReader());
 	}
 
-	/**
-	 * @return
-	 */
 	public AvailableHelp<H> legend(boolean checkDot) {
 		return reader(new LegendReader(checkDot));
 	}
 
-	/**
-	 * @return
-	 */
 	public AvailableHelp<H> unreadLine() {
 		return reader(new OneLineReader());
 	}
 
-	/**
-	 * @return
-	 */
 	public AvailableHelp<H> unreadLines(int count) {
 		return reader(new LinesReader(count));
 	}
 
-	/**
-	 * @return
-	 */
 	public AvailableHelp<H> unlimited() {
 		return reader(new UnlimitedReader());
 	}
 
-	/**
-	 * @param factory
-	 * @return
-	 */
 	public AvailableHelp<H> values(Function<String, H> factory) {
 		return values(factory, null);
 	}
 
-	/**
-	 * @param factory
-	 * @param consumer
-	 * @return
-	 */
 	public AvailableHelp<H> values(Function<String, H> factory, Consumer<H> consumer) {
 		if(legendReader == null) {
 			throw new RuntimeException("Before, define a LegendReader");
@@ -405,10 +287,6 @@ public class AvailableHelp<H extends Help> {
 		return reader(new ValuesReader<H>(legendReader, factory, consumer));
 	}
 
-	/**
-	 * @param help
-	 * @return
-	 */
 	public void parse(List<String> help) {
 		Iterator<String> lineIterator = help.iterator();
 		Iterator<Reader> readerIterator = readers.iterator();
