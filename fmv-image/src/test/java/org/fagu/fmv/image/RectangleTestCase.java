@@ -177,12 +177,12 @@ class RectangleTestCase {
 			r1.intersection(r2).ifPresent(r -> drawRectangle(r, graphics, Color.WHITE));
 			r1.union(r2).ifPresent(r -> drawRectangle(r, graphics, Color.YELLOW));
 			boolean glued = r1.isGlued(r2);
-			System.out.println((glued ? "" : "NOT ") + "GLUED: " + title);
+			// System.out.println((glued ? "" : "NOT ") + "GLUED: " + title);
 		}
 
 		try {
 			File output = new File("rectangles-" + title + ".png");
-			System.out.println(output.getAbsolutePath());
+			// System.out.println(output.getAbsolutePath());
 			ImageIO.write(image, "png", output);
 		} catch(IOException e) {
 			e.printStackTrace();

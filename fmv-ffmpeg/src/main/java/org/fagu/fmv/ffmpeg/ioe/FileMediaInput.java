@@ -40,24 +40,15 @@ public class FileMediaInput extends AbstractIOEntity<FileMediaInput> implements 
 
 	private MovieMetadatas movieMetadatas;
 
-	/**
-	 * @param file
-	 */
 	public FileMediaInput(File file) {
 		super("file");
 		this.file = Objects.requireNonNull(file);
 	}
 
-	/**
-	 * @return the file
-	 */
 	public File getFile() {
 		return file;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.MediaInput#getDuration()
-	 */
 	@Override
 	public Optional<Duration> getDuration() {
 		if(movieMetadatas != null) {
@@ -70,9 +61,6 @@ public class FileMediaInput extends AbstractIOEntity<FileMediaInput> implements 
 		return MovieMetadatasUtils.getDuration(movieMetadatas);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return file.getPath();

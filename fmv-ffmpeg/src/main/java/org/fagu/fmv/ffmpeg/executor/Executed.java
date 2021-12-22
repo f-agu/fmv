@@ -25,13 +25,7 @@ package org.fagu.fmv.ffmpeg.executor;
  */
 public interface Executed<R> {
 
-	/**
-	 * @return
-	 */
 	long getDurationInMilliseconds();
 
-	/**
-	 * @return
-	 */
 	R getResult();
 }

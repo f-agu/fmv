@@ -268,9 +268,6 @@ public class FFExecutor<R> {
 
 	// ************************************************
 
-	/**
-	 * @return
-	 */
 	protected ReadLine getOutReadLine() {
 		if(operation.containsGlobalParameter("nostats")) {
 			return null;
@@ -293,9 +290,6 @@ public class FFExecutor<R> {
 		return MultiReadLine.createWith(lines);
 	}
 
-	/**
-	 * @return
-	 */
 	protected ReadLine getErrReadLine() {
 		List<ReadLine> lines = new ArrayList<>();
 		if(progressReadLine != null) {
@@ -320,33 +314,19 @@ public class FFExecutor<R> {
 		return MultiReadLine.createWith(lines);
 	}
 
-	/**
-	 * @param fmvExecutor
-	 */
 	protected void populateWithListeners(FMVExecutor fmvExecutor) {
 		ffExecListeners.forEach(fmvExecutor::addListener);
 		listeners.forEach(fmvExecutor::addListener);
 	}
 
-	/**
-	 * @param duration
-	 * @param result
-	 * @return
-	 */
 	protected Executed<R> createExecuted(long duration, R result) {
 		return new Executed<R>() {
 
-			/**
-			 * @see org.fagu.fmv.ffmpeg.executor.Executed#getDurationInMilliseconds()
-			 */
 			@Override
 			public long getDurationInMilliseconds() {
 				return duration;
 			}
 
-			/**
-			 * @see org.fagu.fmv.ffmpeg.executor.Executed#getResult()
-			 */
 			@Override
 			public R getResult() {
 				return result;
@@ -362,9 +342,6 @@ public class FFExecutor<R> {
 
 	// ---------------------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public class Prepare {
 
 		private final Soft soft;
@@ -476,10 +453,6 @@ public class FFExecutor<R> {
 			return null;
 		}
 
-		/**
-		 * @return
-		 * @throws IOException
-		 */
 		protected Executed<R> _execute() throws IOException {
 			org.fagu.fmv.soft.SoftExecutor.Executed executed = getSoftExecutor().execute();
 			return createExecuted(executed.getExecuteTime(), operation.getResult());

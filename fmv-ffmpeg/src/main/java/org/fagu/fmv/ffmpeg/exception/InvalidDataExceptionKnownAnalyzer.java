@@ -24,9 +24,6 @@ package org.fagu.fmv.ffmpeg.exception;
  */
 public class InvalidDataExceptionKnownAnalyzer extends FFSimpleExceptionKnownAnalyzer {
 
-	/**
-	 * 
-	 */
 	public InvalidDataExceptionKnownAnalyzer() {
 		super("Invalid data", ": Invalid data found when processing input");
 	}
