@@ -21,6 +21,7 @@ package org.fagu.fmv.soft.win32;
  */
 import java.io.File;
 
+import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.version.Version;
@@ -35,9 +36,13 @@ public class SoftOnWindows {
 
 	public static SoftFoundFactory createSoftFoundFactory(String softName) {
 		return (file, locator, softPolicy) -> {
-			String versionStr = SoftOnWindows.getExeVersion(file);
-			Version version = Version.parse(versionStr);
-			return softPolicy.toSoftFound(new VersionSoftInfo(file, softName, version));
+			try {
+				String versionStr = SoftOnWindows.getExeVersion(file);
+				Version version = Version.parse(versionStr);
+				return softPolicy.toSoftFound(new VersionSoftInfo(file, softName, version));
+			} catch(Error e) {
+				return SoftFound.foundError(file, e.toString());
+			}
 		};
 	}
 

@@ -96,21 +96,12 @@ public class ProgramFilesLocatorSupplier {
 
 	private final Function<File, Collection<File>> foldersToAnalyze;
 
-	/**
-	 * @param locatorConsumer
-	 * @param locators
-	 * @param foldersToAnalyze
-	 */
 	private ProgramFilesLocatorSupplier(Consumer<Locator> locatorConsumer, Locators locators, Function<File, Collection<File>> foldersToAnalyze) {
 		this.locatorConsumer = locatorConsumer;
 		this.locators = locators;
 		this.foldersToAnalyze = foldersToAnalyze;
 	}
 
-	/**
-	 * @param softLocator
-	 * @return
-	 */
 	public static ProgramFilesLocatorBuilder with(SoftLocator softLocator) {
 		if(SystemUtils.IS_OS_WINDOWS) {
 			return new ProgramFilesLocatorBuilder(softLocator::addLocator, softLocator.createLocators());
@@ -118,10 +109,6 @@ public class ProgramFilesLocatorSupplier {
 		return new ProgramFilesLocatorBuilder();
 	}
 
-	/**
-	 * @param softLocator
-	 * @return
-	 */
 	public static ProgramFilesLocatorBuilder with(Consumer<Locator> locatorConsumer, Locators locators) {
 		if(SystemUtils.IS_OS_WINDOWS) {
 			return new ProgramFilesLocatorBuilder(locatorConsumer, locators);
@@ -129,9 +116,6 @@ public class ProgramFilesLocatorSupplier {
 		return new ProgramFilesLocatorBuilder();
 	}
 
-	/**
-	 * 
-	 */
 	public void supplyIn() {
 		if(locatorConsumer != null && locators != null) {
 			for(File programPath : getProgramPaths()) {
@@ -147,9 +131,6 @@ public class ProgramFilesLocatorSupplier {
 
 	// ******************************************************
 
-	/**
-	 * @return
-	 */
 	private static Set<File> getProgramPaths() {
 		Set<File> paths = new HashSet<>(4);
 		addIfNotNullAndExists(paths, System.getenv("ProgramFiles"));
@@ -158,10 +139,6 @@ public class ProgramFilesLocatorSupplier {
 		return paths;
 	}
 
-	/**
-	 * @param paths
-	 * @param strToAdd
-	 */
 	private static void addIfNotNullAndExists(Set<File> paths, String strToAdd) {
 		if(strToAdd != null) {
 			File file = new File(strToAdd);

@@ -25,6 +25,7 @@ import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Properties;
 
+import org.fagu.fmv.soft.utils.FileUtils;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
 
 
@@ -75,7 +76,7 @@ public class Founds implements Iterable<SoftFound> {
 	public SoftFound getFirstFound(SoftFound defaultValue) {
 		return foundSet.descendingSet()
 				.stream()
-				.filter(f -> f.isFound() && f.getFile().exists())
+				.filter(f -> f.isFound() && FileUtils.exists(f.getFile()))
 				.findFirst()
 				.orElse(defaultValue);
 	}

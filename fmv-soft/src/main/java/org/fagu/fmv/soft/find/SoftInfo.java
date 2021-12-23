@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
+import org.fagu.fmv.soft.utils.FileUtils;
 
 /*
  * #%L
@@ -66,7 +67,7 @@ public abstract class SoftInfo implements Comparable<SoftInfo> {
 		File f = getFile();
 		if(f != null) {
 			buf.append(f.getAbsolutePath());
-			if( ! f.exists()) {
+			if( ! FileUtils.exists(f)) {
 				buf.append(" (not exists)");
 			}
 		} else {

@@ -92,7 +92,7 @@ public class MediaInfoSoftProvider extends SoftProvider {
 
 	@Override
 	public String getDownloadURL() {
-		return "https://mediaarea.net/fr/MediaInfo/Download";
+		return "https://mediaarea.net/fr/MediaInfo/Download  and select CLI";
 	}
 
 	@Override

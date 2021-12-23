@@ -109,7 +109,7 @@ public abstract class SoftProvider {
 		if(softSearchConsumer != null) {
 			softSearchConsumer.accept(softSearch);
 		}
-		return softSearch.search(createSoftFoundFactory(ImmutableProperties.of(), null));
+		return softSearch.search(createSoftFoundFactory(ImmutableProperties.of()));
 	}
 
 	public String getDownloadURL() {

@@ -103,7 +103,7 @@ public class ReadLinePumpStreamHandler extends WritablePumpStreamHandler {
 
 		ReadLineInputStream(InputStream delegate, ReadLine readLine) {
 			this.delegate = delegate;
-			this.readLine = readLine;
+			this.readLine = readLine != null ? readLine : l -> {};
 		}
 
 		@Override

@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.fagu.fmv.soft.utils.FileUtils;
+
 
 /**
  * @author f.agu
@@ -186,6 +188,23 @@ public class SoftFound implements Comparable<SoftFound> {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if( ! (obj instanceof SoftFound)) {
+			return false;
+		}
+		SoftFound other = (SoftFound)obj;
+		return file.equals(other.file);
+	}
+
+	@Override
+	public int hashCode() {
+		if(isFound()) {
+			return file.hashCode();
+		}
+		return super.hashCode();
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
 		buf.append(foundReason.name());
@@ -216,7 +235,7 @@ public class SoftFound implements Comparable<SoftFound> {
 	}
 
 	private static SoftFound foundCheck(File file, FoundReason foundReason, SoftInfo softInfo, String reason) {
-		if(file == null || ! file.exists()) {
+		if( ! FileUtils.exists(file)) {
 			return notFound();
 		}
 		return new SoftFound(foundReason, file, softInfo, reason);
