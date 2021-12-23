@@ -16,7 +16,7 @@ svn reset --hard
 
 -- push to maven repo
 git pull
-git checkout tags/0.13.0
+git checkout tags/0.23.0
 mvn -Dmaven.test.skip=true -DskipTests -U clean deploy
 
 
