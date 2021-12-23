@@ -3,9 +3,9 @@ git clone https://github.com/f-agu/fmv.git
 cd fmv
 del release.properties pom.xml.releaseBackup
 mvn compile test
-mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.22.6 -DreleaseVersion=0.22.6 -DdevelopmentVersion=0.23.0-SNAPSHOT -U -B release:prepare
+mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.23.0 -DreleaseVersion=0.23.0 -DdevelopmentVersion=0.24.0-SNAPSHOT -U -B release:prepare
 
-git checkout tags/0.22.6
+git checkout tags/0.23.0
 mvn -Dmaven.test.skip=true -DskipTests release:perform
 
 
