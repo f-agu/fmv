@@ -70,7 +70,7 @@ public class Bootstrap {
 		Map<String, String> metadataMap = new HashMap<>();
 		metadataMap.put("creator", author);
 		metadataMap.put("publisher", "nobody");
-		metadataMap.put("contributor", "");
+		metadataMap.put("contributor", " ");
 
 		System.out.println();
 		System.out.println("Update author with '" + author + '\'');
