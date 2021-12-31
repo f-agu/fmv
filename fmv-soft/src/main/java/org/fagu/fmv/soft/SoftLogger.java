@@ -236,8 +236,8 @@ public class SoftLogger {
 
 			FoundReason foundReason = softFound.getFoundReason();
 			if(foundReason == FoundReasons.BAD_VERSION) {
-				line.append(" (find version ").append(info != null ? info : "?").append(" but I need another version: ");
-				line.append(softFound.getReason()).append(')');
+				line.append(" (find version ").append(info != null ? info : "?").append(" but I need another version: ")
+						.append(softFound.getReason()).append(')');
 				formatConsumer.accept(line.toString());
 				return;
 			}

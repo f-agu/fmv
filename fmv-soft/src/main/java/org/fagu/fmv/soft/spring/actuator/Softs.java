@@ -58,4 +58,8 @@ public class Softs {
 		return Collections.unmodifiableCollection(healthIndicators.values());
 	}
 
+	public static void clearHealthIndicators() {
+		healthIndicators.clear();
+	}
+
 }

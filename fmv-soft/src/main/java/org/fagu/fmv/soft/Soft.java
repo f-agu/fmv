@@ -31,16 +31,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.SoftExecutor.Executed;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
+import org.fagu.fmv.soft.find.FoundReason;
+import org.fagu.fmv.soft.find.FoundReasons;
 import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.Locator;
 import org.fagu.fmv.soft.find.Locators;
@@ -238,9 +242,36 @@ public class Soft {
 			}
 			buf.append(" (").append(getFile().getAbsolutePath()).append(')');
 		} else {
-			buf.append(" <not found>");
+			NavigableSet<SoftFound> foundSet = getFounds().getFounds();
+			if(foundSet.isEmpty()) {
+				buf.append(" <unknown>");
+			} else {
+				buf.append(foundSet.stream()
+						.map(Soft::getReasonText)
+						.collect(Collectors.joining(" ; ", " <", ">")));
+			}
 		}
 		return buf.toString();
+	}
+
+	// ***********************************************
+
+	private static String getReasonText(SoftFound found) {
+		FoundReason foundReason = found.getFoundReason();
+		StringBuilder reasonBuilder = new StringBuilder(found.getFoundReason().name().replace('_', ' ').toLowerCase());
+		String reason = found.getReason();
+		if(foundReason == FoundReasons.BAD_VERSION) {
+			if(StringUtils.isNotBlank(reason)) {
+				reasonBuilder.append(" (").append(found.getFile().getAbsolutePath()).append(')')
+						.append(": I need at least ").append(reason);
+			}
+		} else if(StringUtils.isNotBlank(reason)) {
+			// FoundReasons.BAD_SOFT
+			// FoundReasons.ERROR
+			// FoundReasons.NOT_FOUND
+			reasonBuilder.append(": ").append(reason);
+		}
+		return reasonBuilder.toString();
 	}
 
 }

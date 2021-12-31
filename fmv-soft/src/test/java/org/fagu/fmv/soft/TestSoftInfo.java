@@ -1,5 +1,9 @@
 package org.fagu.fmv.soft;
 
+import java.io.File;
+
+import org.fagu.fmv.soft.find.SoftInfo;
+
 /*
  * #%L
  * fmv-soft
@@ -21,10 +25,6 @@ package org.fagu.fmv.soft;
  */
 
 import static org.mockito.Mockito.mock;
-
-import java.io.File;
-
-import org.fagu.fmv.soft.find.SoftInfo;
 
 
 /**

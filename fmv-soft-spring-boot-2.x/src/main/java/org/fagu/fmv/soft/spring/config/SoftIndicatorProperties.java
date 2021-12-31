@@ -61,6 +61,20 @@ public class SoftIndicatorProperties {
 
 	public static class Health extends Common {
 
+		public enum CheckPolicy {
+			ALWAYS,
+			ON_FILE_CHANGE
+		}
+
+		private CheckPolicy checkPolicy = CheckPolicy.ON_FILE_CHANGE;
+
+		public CheckPolicy getCheckPolicy() {
+			return checkPolicy;
+		}
+
+		public void setCheckPolicy(CheckPolicy checkPolicy) {
+			this.checkPolicy = checkPolicy;
+		}
 	}
 
 	// -----------------------------------------
