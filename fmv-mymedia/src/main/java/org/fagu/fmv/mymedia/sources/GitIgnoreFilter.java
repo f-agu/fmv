@@ -73,9 +73,7 @@ public class GitIgnoreFilter implements DirectoryStream.Filter<Path> {
 			public boolean accept(Path p) throws IOException {
 				String name = p.getFileName().toString();
 				return Files.isDirectory(p) && ".git".equals(name)
-						|| Files.isRegularFile(p)
-								&& (".gitignore".equals(name)
-										|| ".gitattributes".equals(name));
+						|| Files.isRegularFile(p) && ".gitattributes".equals(name);
 			}
 
 			@Override
