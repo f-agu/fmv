@@ -12,14 +12,17 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.textprogressbar.TextProgressBar.TextProgressBarBuilder;
 import org.fagu.fmv.textprogressbar.part.SpinnerPart;
+import org.fagu.fmv.utils.ByteSize;
 
 
 /**
@@ -48,19 +51,22 @@ public class BackupZipBootstrap {
 			return Collections.singletonList(path);
 		}
 		return Files.lines(path)
-				.filter(s -> ! s.isEmpty())
+				.map(String::trim)
+				.filter(s -> ! s.isEmpty() && ! s.startsWith("#"))
 				.map(Paths::get)
 				.collect(Collectors.toList());
 	}
 
 	private void searchProject(Path dir, Path outputFolder) throws IOException {
+		System.out.println(dir);
 		Files.walkFileTree(dir, new FileVisitor<Path>() {
 
 			@Override
 			public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes atts) throws IOException {
 				Path pomPath = path.resolve("pom.xml");
 				if(Files.exists(pomPath)) {
-					backupProject(dir, path, outputFolder);
+					ReadPomXML readPomXML = new ReadPomXML("version");
+					backupProject(dir, path, outputFolder, readPomXML.getInfo(pomPath));
 					return FileVisitResult.SKIP_SUBTREE;
 				}
 				return FileVisitResult.CONTINUE;
@@ -83,23 +89,30 @@ public class BackupZipBootstrap {
 		});
 	}
 
-	private void backupProject(Path rootPath, Path dir, Path outputFolder) throws IOException {
+	private void backupProject(Path rootPath, Path dir, Path outputFolder, String projectVersion) throws IOException {
 		Filter<Path> filter = GitIgnoreFilter.open(dir);
-		Path outputFile = outputFolder.resolve(dir.getFileName().toString() + ".zip");
-		Files.delete(outputFile);
+		Path outputFile = outputFolder.resolve(dir.getFileName().toString() + '_' + projectVersion + ".zip");
+		if(Files.exists(outputFile)) {
+			Files.delete(outputFile);
+		}
 
 		AtomicInteger countPath = new AtomicInteger();
+		AtomicReference<String> endText = new AtomicReference<>(StringUtils.EMPTY);
 		TextProgressBarBuilder builder = TextProgressBar.newBar()
+				.appendText("  ")
 				.fixWidth(40).withText(rootPath.relativize(dir).toString())
 				.fixWidth(13).with(status -> countPath.toString() + " item" + (countPath.get() > 1 ? "s" : ""))
-				.append(new SpinnerPart());
+				.append(new SpinnerPart())
+				.append(status -> endText.get());
 
 		TextProgressBar textProgressBar = builder.buildAndSchedule();
 		try (ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(outputFile))) {
 			zipOutputStream.setLevel(Deflater.BEST_COMPRESSION);
 			browseProject(rootPath, dir, filter, zipOutputStream, countPath);
 		} finally {
+			endText.set("    " + ByteSize.formatSize(Files.size(outputFile)));
 			textProgressBar.close();
+			System.out.println();
 		}
 	}
 

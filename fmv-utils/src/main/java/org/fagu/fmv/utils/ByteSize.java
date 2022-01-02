@@ -44,26 +44,14 @@ public class ByteSize {
 		UNITS_MAP.put(Locale.ENGLISH, new String[] {"B", "kB", "MB", "GB", "TB", "PB", "EB"});
 	}
 
-	/**
-	 * 
-	 */
 	private ByteSize() {
 		//
 	}
 
-	/**
-	 * @param size
-	 * @return
-	 */
 	public static String formatSize(long size) {
 		return formatSize(size, Locale.getDefault());
 	}
 
-	/**
-	 * @param size
-	 * @param locale
-	 * @return
-	 */
 	public static String formatSize(long size, Locale locale) {
 		String[] units = UNITS_MAP.get(locale);
 		if(units == null) {

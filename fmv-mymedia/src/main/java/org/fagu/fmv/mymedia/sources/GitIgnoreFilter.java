@@ -44,9 +44,9 @@ public class GitIgnoreFilter implements DirectoryStream.Filter<Path> {
 						return new EqualsFolderFilter(s.substring(0, s.length() - 1));
 					} else { // file
 						if(s.startsWith("*")) {
-							return new EndsWithFileFilter(s.substring(1));
+							return new EndsWithFilter(s.substring(1));
 						}
-						return new EqualsFileFilter(s);
+						return new EqualsFilter(s);
 					}
 				})
 				.collect(Collectors.toList());
@@ -129,26 +129,6 @@ public class GitIgnoreFilter implements DirectoryStream.Filter<Path> {
 
 	// -------------------------------------------------------------
 
-	private static class EqualsFileFilter extends EqualsFilter {
-
-		private EqualsFileFilter(String name) {
-			super(name);
-		}
-
-		@Override
-		public boolean accept(Path entry) throws IOException {
-			return Files.isRegularFile(entry) && super.accept(entry);
-		}
-
-		@Override
-		public String toString() {
-			return "Is file && " + super.toString();
-		}
-
-	}
-
-	// -------------------------------------------------------------
-
 	private static class EqualsFolderFilter extends EqualsFilter {
 
 		private EqualsFolderFilter(String name) {
@@ -165,24 +145,6 @@ public class GitIgnoreFilter implements DirectoryStream.Filter<Path> {
 			return "Is folder && " + super.toString();
 		}
 
-	}
-	// -------------------------------------------------------------
-
-	private static class EndsWithFileFilter extends EndsWithFilter {
-
-		private EndsWithFileFilter(String name) {
-			super(name);
-		}
-
-		@Override
-		public boolean accept(Path entry) throws IOException {
-			return Files.isRegularFile(entry) && super.accept(entry);
-		}
-
-		@Override
-		public String toString() {
-			return "Is file && " + super.toString();
-		}
 	}
 
 	// -------------------------------------------------------------
