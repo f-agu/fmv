@@ -26,6 +26,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.SoftFound;
@@ -59,6 +62,7 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 		}
 
 		builder.up();
+		Set<String> downSofts = new TreeSet<>();
 		for(Soft soft : softs) {
 			String msg = soft.toString();
 			if( ! checkOnFileChange || needToRecheck(soft)) {
@@ -69,6 +73,7 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 				}
 				if(softFound == null || ! softFound.isFound()) {
 					builder.down();
+					downSofts.add(soft.getName());
 					if(checkOnFileChange) {
 						fileInfos.remove(soft);
 					}
@@ -77,6 +82,9 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 				}
 			}
 			builder.withDetail(soft.getName(), msg);
+		}
+		if( ! downSofts.isEmpty()) {
+			builder.withDetail("Down soft list", downSofts.stream().collect(Collectors.toList()));
 		}
 	}
 
