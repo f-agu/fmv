@@ -97,6 +97,16 @@ class JavaSoftProviderTestCase {
 	}
 
 	@Test
+	void testParseOpenJDK11013() throws IOException {
+		Parser parser = newParser();
+		parser.readLine("Picked up JAVA_TOOL_OPTIONS: -XX:+UseG1GC -XX:+UseStringDeduplication -Dfile.encoding=UTF-8");
+		parser.readLine("openjdk 11.0.13 2021-10-19 LTS");
+		parser.readLine("OpenJDK Runtime Environment 18.9 (build 11.0.13+8-LTS)");
+		parser.readLine("OpenJDK 64-Bit Server VM 18.9 (build 11.0.13+8-LTS, mixed mode, sharing)");
+		assertInfo(parser, new Version(11, 0, 13), LocalDate.of(2021, 10, 19));
+	}
+
+	@Test
 	void testParseJava1302() throws IOException {
 		Parser parser = newParser();
 		parser.readLine("java version \"13.0.2\" 2020-01-14");

@@ -57,6 +57,8 @@ public class JavaSoftProvider extends SoftProvider {
 
 	private static final String DEFAULT_PATTERN_VERSION = "(.*) version \"(.*)\"(.*)";
 
+	private static final String VERSION_DATE_PATTERN_VERSION = "(.*) (.*) ([\\d]{4}-[\\d]{2}-[\\d]{2}).*";
+
 	private static final String DEFAULT_PATTERN_DATE = ".*([0-9]{4}\\-[0-9]{1,2}\\-[0-9]{1,2}).*";
 
 	public static final String NAME = "java";
@@ -87,20 +89,36 @@ public class JavaSoftProvider extends SoftProvider {
 
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
-		SearchMatching searchMatching = new SearchPropertiesHelper(searchProperties, this)
+		SearchMatching defaultVersionSearchMatching = new SearchPropertiesHelper(searchProperties, this)
 				.forMatchingVersion(DEFAULT_PATTERN_VERSION);
+		SearchMatching versionDateSearchMatching = new SearchPropertiesHelper(searchProperties, this)
+				.forMatchingVersion(VERSION_DATE_PATTERN_VERSION);
 		return prepareBuilder(
 				prepareSoftFoundFactory().withParameters("-version"),
 				builderConsumer)
-						.parseVersionDate(line -> searchMatching.ifMatches(line, matcher -> {
-							Version version = VersionParserManager.parse(matcher.group(2));
-							Date date = null;
-							if(matcher.groupCount() > 2) {
-								date = parseDate(searchProperties, matcher.group(3));
+						.parseVersionDate(line -> {
+							VersionDate vd = defaultVersionSearchMatching.ifMatches(line, matcher -> {
+								Version version = VersionParserManager.parse(matcher.group(2));
+								Date date = null;
+								if(matcher.groupCount() > 2) {
+									date = parseDate(searchProperties, matcher.group(3));
+								}
+								return Optional.of(new VersionDate(version, date));
+							})
+									.orElse(null);
+							if(vd != null) {
+								return vd;
 							}
-							return Optional.of(new VersionDate(version, date));
+							return versionDateSearchMatching.ifMatches(line, matcher -> {
+								Version version = VersionParserManager.parse(matcher.group(2));
+								Date date = null;
+								if(matcher.groupCount() > 2) {
+									date = parseDate(searchProperties, matcher.group(3));
+								}
+								return Optional.of(new VersionDate(version, date));
+							})
+									.orElse(null);
 						})
-								.orElse(null))
 						.build();
 	}
 
