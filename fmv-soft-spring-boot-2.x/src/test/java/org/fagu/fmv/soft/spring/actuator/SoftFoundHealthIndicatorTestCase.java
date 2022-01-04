@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import java.util.Collections;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -55,9 +55,10 @@ class SoftFoundHealthIndicatorTestCase {
 		TestSoftProvider testSoftProvider = new TestSoftProvider("test1", () -> null);
 		run(testSoftProvider, context, health -> {
 			assertEquals(Status.DOWN, health.getStatus());
-			assertEquals(
-					Collections.singletonMap("test1", "test1 <unknown>"),
-					health.getDetails());
+			Map<String, Object> details = health.getDetails();
+			assertEquals(2, details.size());
+			assertEquals(details.get("test1"), "test1 <unknown>");
+			assertEquals("test1", details.get("Down soft list"));
 		});
 	}
 
@@ -67,9 +68,10 @@ class SoftFoundHealthIndicatorTestCase {
 		TestSoftProvider testSoftProvider = new TestSoftProvider("test1", () -> SoftFound.notFound());
 		run(testSoftProvider, context, health -> {
 			assertEquals(Status.DOWN, health.getStatus());
-			assertEquals(
-					Collections.singletonMap("test1", "test1 <not found>"),
-					health.getDetails());
+			Map<String, Object> details = health.getDetails();
+			assertEquals(2, details.size());
+			assertEquals(details.get("test1"), "test1 <not found>");
+			assertEquals("test1", details.get("Down soft list"));
 		});
 	}
 
@@ -79,10 +81,12 @@ class SoftFoundHealthIndicatorTestCase {
 		TestSoftProvider testSoftProvider = new TestSoftProvider("test1", () -> SoftFound.foundBadVersion(new TestSoftInfo("1.2"), "1.3"));
 		run(testSoftProvider, context, health -> {
 			assertEquals(Status.DOWN, health.getStatus());
-			assertEquals(1, health.getDetails().size());
-			String details = health.getDetails().toString();
-			assertTrue(details.startsWith("{test1=test1 <bad version ("));
-			assertTrue(details.endsWith("): I need at least 1.3>}"));
+			Map<String, Object> details = health.getDetails();
+			assertEquals(2, details.size());
+			String detailTest1 = (String)details.get("test1");
+			assertTrue(detailTest1.startsWith("test1 <bad version ("));
+			assertTrue(detailTest1.contains("): I need at least 1.3>"));
+			assertEquals("test1", details.get("Down soft list"));
 		});
 	}
 
@@ -92,8 +96,10 @@ class SoftFoundHealthIndicatorTestCase {
 		TestSoftProvider testSoftProvider = new TestSoftProvider("test1", () -> SoftFound.foundBadSoft(new TestSoftInfo("1.2"), "crazy ?"));
 		run(testSoftProvider, context, health -> {
 			assertEquals(Status.DOWN, health.getStatus());
-			assertEquals(1, health.getDetails().size());
-			assertEquals("{test1=test1 <bad soft: crazy ?>}", health.getDetails().toString());
+			Map<String, Object> details = health.getDetails();
+			assertEquals(2, details.size());
+			assertEquals("test1 <bad soft: crazy ?>", details.get("test1"));
+			assertEquals("test1", details.get("Down soft list"));
 		});
 	}
 

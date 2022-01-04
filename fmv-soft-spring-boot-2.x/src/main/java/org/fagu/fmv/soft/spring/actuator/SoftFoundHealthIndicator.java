@@ -84,7 +84,7 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 			builder.withDetail(soft.getName(), msg);
 		}
 		if( ! downSofts.isEmpty()) {
-			builder.withDetail("Down soft list", downSofts.stream().collect(Collectors.toList()));
+			builder.withDetail("Down soft list", downSofts.stream().collect(Collectors.joining(", ")));
 		}
 	}
 
