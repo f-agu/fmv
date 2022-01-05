@@ -20,7 +20,7 @@
 	<scm>
 		<connection>scm:git:https://github.com/f-agu/fmv.git</connection>
 		<developerConnection>scm:git:https://github.com/f-agu/fmv.git</developerConnection>
-		<tag>0.23.1</tag>
+		<tag>0.23.2</tag>
 	</scm>
 	
 	<repositories>
