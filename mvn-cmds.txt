@@ -10,14 +10,14 @@ mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.23.2 -DreleaseVersion=0.23.2 -Dde
 
 # if git auth failed, do manually :
 git push origin master
-git tag -a 0.23.1 -m "0.23.1"
-git push origin 0.23.1
+git tag -a 0.23.2 -m "0.23.2"
+git push origin 0.23.2
 mvn versions:set -DnewVersion=0.24.0-SNAPSHOT
 git add .
 git commit -m "set version"
 git push origin master
 
-git checkout tags/0.23.1
+git checkout tags/0.23.2
 mvn install -DskipTests
 
 
