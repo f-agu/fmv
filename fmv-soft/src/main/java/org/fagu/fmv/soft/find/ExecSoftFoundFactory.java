@@ -130,7 +130,10 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 				@Override
 				public SoftFound closeAndParse(String cmdLineStr, int exitValue, Lines lines) throws IOException {
 					return softFoundSupplier.getWith(file, lines)
-							.orElseGet(() -> softPolicy.toSoftFound(new VersionSoftInfo(file, softProvider.getName(), version), lines));
+							.orElseGet(() -> softPolicy.toSoftFound(
+									new VersionSoftInfo(file, softProvider.getName(), version),
+									exitValue,
+									lines));
 				}
 			});
 		}
@@ -155,7 +158,10 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 				@Override
 				public SoftFound closeAndParse(String cmdLineStr, int exitValue, Lines lines) throws IOException {
 					return softFoundSupplier.getWith(file, lines)
-							.orElseGet(() -> softPolicy.toSoftFound(new VersionDateSoftInfo(file, softProvider.getName(), version, date), lines));
+							.orElseGet(() -> softPolicy.toSoftFound(
+									new VersionDateSoftInfo(file, softProvider.getName(), version, date),
+									exitValue,
+									lines));
 				}
 			});
 		}

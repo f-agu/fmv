@@ -27,10 +27,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -39,7 +40,6 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
 import org.fagu.fmv.soft.find.Locator;
 import org.fagu.fmv.soft.find.Locators;
 import org.fagu.fmv.soft.find.SearchBehavior;
-import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
@@ -57,9 +57,9 @@ import org.fagu.version.VersionParserManager;
  */
 public class JavaSoftProvider extends SoftProvider {
 
-	private static final String DEFAULT_PATTERN_VERSION = "(.*) version \"(.*)\"(.*)";
+	private static final String SIMPLE_VERSION_PATTERN = "(.*) version \"(.*)\"(.*)"; // "java -version
 
-	private static final String VERSION_DATE_PATTERN_VERSION = "(.*) (.*) ([\\d]{4}-[\\d]{2}-[\\d]{2}).*";
+	private static final String DOUBLE_VERSION_PATTERN = "(.*) (.*) ([\\d]{4}-[\\d]{2}-[\\d]{2}).*"; // java --version
 
 	private static final String DEFAULT_PATTERN_DATE = ".*([0-9]{4}\\-[0-9]{1,2}\\-[0-9]{1,2}).*";
 
@@ -91,42 +91,27 @@ public class JavaSoftProvider extends SoftProvider {
 
 	@Override
 	public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
-		SearchMatching defaultVersionSearchMatching = new SearchPropertiesHelper(searchProperties, this)
-				.forMatchingVersion(DEFAULT_PATTERN_VERSION);
-		SearchMatching versionDateSearchMatching = new SearchPropertiesHelper(searchProperties, this)
-				.forMatchingVersion(VERSION_DATE_PATTERN_VERSION);
+		SearchMatching simpleVersionSearchMatching = new SearchPropertiesHelper(searchProperties, this)
+				.forMatchingVersion(SIMPLE_VERSION_PATTERN);
+		SearchMatching doubleVersionSearchMatching = new SearchPropertiesHelper(searchProperties, this)
+				.forMatchingVersion(DOUBLE_VERSION_PATTERN);
 		return prepareBuilder(
 				prepareSoftFoundFactory().withParameters("-version"),
 				builderConsumer)
-						.withSoftFoundSupplier((file, lines) -> {
-							if(lines.lines().anyMatch(l -> l.getValue().startsWith("Error: "))) {
-								return Optional.of(SoftFound.foundError(file, lines.values().collect(Collectors.joining(", "))));
-							}
-							return Optional.empty();
-						})
-						.parseVersionDate(line -> {
-							VersionDate vd = defaultVersionSearchMatching.ifMatches(line, matcher -> {
-								Version version = VersionParserManager.parse(matcher.group(2));
-								Date date = null;
-								if(matcher.groupCount() > 2) {
-									date = parseDate(searchProperties, matcher.group(3));
-								}
-								return Optional.of(new VersionDate(version, date));
-							})
-									.orElse(null);
-							if(vd != null) {
-								return vd;
-							}
-							return versionDateSearchMatching.ifMatches(line, matcher -> {
-								Version version = VersionParserManager.parse(matcher.group(2));
-								Date date = null;
-								if(matcher.groupCount() > 2) {
-									date = parseDate(searchProperties, matcher.group(3));
-								}
-								return Optional.of(new VersionDate(version, date));
-							})
-									.orElse(null);
-						})
+						.parseVersionDate(line -> Stream.of(simpleVersionSearchMatching, doubleVersionSearchMatching)
+								.map(searchMatching -> searchMatching
+										.ifMatches(line, matcher -> {
+											Version version = VersionParserManager.parse(matcher.group(2));
+											Date date = null;
+											if(matcher.groupCount() > 2) {
+												date = parseDate(searchProperties, matcher.group(3));
+											}
+											return Optional.of(new VersionDate(version, date));
+										})
+										.orElse(null))
+								.filter(Objects::nonNull)
+								.findFirst()
+								.orElse(null))
 						.build();
 	}
 

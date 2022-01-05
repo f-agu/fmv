@@ -41,19 +41,19 @@ import org.fagu.version.Version;
 public class VersionSoftPolicy extends SoftPolicy {
 
 	@Override
-	public SoftFound toSoftFound(Object object, Lines lines) {
+	public SoftFound toSoftFound(Object object, Integer exitValue, Lines lines) {
 		VersionSoftInfo versionSoftInfo = (VersionSoftInfo)object;
 		if(list.isEmpty()) {
 			throw new IllegalStateException("No validator defined !");
 		}
 		// system properties
-		SoftFound byPropertiesFound = byProperties(versionSoftInfo, lines);
+		SoftFound byPropertiesFound = byProperties(versionSoftInfo, exitValue, lines);
 		if(byPropertiesFound != null && byPropertiesFound.isFound()) {
 			return byPropertiesFound;
 		}
 
 		// defined
-		return byDefined(versionSoftInfo, lines);
+		return byDefined(versionSoftInfo, exitValue, lines);
 	}
 
 	// ----------------
@@ -112,7 +112,7 @@ public class VersionSoftPolicy extends SoftPolicy {
 
 	// ****************************************************
 
-	private SoftFound byDefined(VersionSoftInfo versionSoftInfo, Lines lines) {
+	private SoftFound byDefined(VersionSoftInfo versionSoftInfo, Integer exitValue, Lines lines) {
 		Optional<Version> version = versionSoftInfo.getVersion();
 		if(version.isPresent()) {
 			for(Pair<OnPlatform, Predicate<SoftInfo>> pair : list) {
@@ -129,18 +129,21 @@ public class VersionSoftPolicy extends SoftPolicy {
 		}
 		String msg = lines.values().collect(Collectors.joining(System.lineSeparator()));
 		if(StringUtils.isBlank(msg)) {
-			msg = "version not parsable";
+			msg = "[stdout & stderr are empty]";
+		}
+		if(exitValue != null) {
+			msg += " (exitValue: " + exitValue + ')';
 		}
 		return SoftFound.foundError(versionSoftInfo, msg);
 	}
 
-	private SoftFound byProperties(VersionSoftInfo versionSoftInfo, Lines lines) {
+	private SoftFound byProperties(VersionSoftInfo versionSoftInfo, Integer exitValue, Lines lines) {
 		Optional<String> propertyMinVersion = getProperty(versionSoftInfo, "minversion");
 		if(propertyMinVersion.isPresent()) {
 			Version minVersion = Version.parse(propertyMinVersion.get());
 			SoftPolicy onAllPlatforms = new VersionSoftPolicy()
 					.onAllPlatforms(minVersion(minVersion));
-			return ((VersionSoftPolicy)onAllPlatforms).byDefined(versionSoftInfo, lines);
+			return ((VersionSoftPolicy)onAllPlatforms).byDefined(versionSoftInfo, exitValue, lines);
 		}
 		return null;
 	}

@@ -2,6 +2,7 @@ package org.fagu.fmv.soft.java;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /*
  * #%L
@@ -26,16 +27,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.NavigableSet;
 import java.util.Optional;
-import java.util.Properties;
-import java.util.TreeSet;
 
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
-import org.fagu.fmv.soft.find.Founds;
+import org.fagu.fmv.soft.find.FoundReasons;
 import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
@@ -176,11 +174,12 @@ class JavaSoftProviderTestCase {
 		Parser parser = newParser(softProvider);
 		parser.read(lines);
 		SoftFound softFound = parser.closeAndParse("", 0, lines);
-		NavigableSet<SoftFound> foundSet = new TreeSet<>();
-		foundSet.add(softFound);
-		Soft soft = softProvider.createSoft(new Founds(softProvider.getName(), foundSet, softProvider.getSoftPolicy(), new Properties()));
-
-		System.out.println(soft);
+		assertSame(FoundReasons.ERROR, softFound.getFoundReason());
+		assertEquals(
+				"Unrecognized option: -a"
+						+ "Error: Could not create the Java Virtual Machine."
+						+ "Error: A fatal exception has occurred. Program will exit. (exitValue: 0)",
+				softFound.getReason().replace("\n", "").replace("\r", ""));
 	}
 
 	private void assertInfo(Lines lines, Version expectedVersion, LocalDate date) throws IOException {

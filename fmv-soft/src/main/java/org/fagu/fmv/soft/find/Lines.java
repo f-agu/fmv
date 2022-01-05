@@ -1,5 +1,6 @@
 package org.fagu.fmv.soft.find;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -61,6 +62,8 @@ public class Lines {
 
 	// --------------------------------------------
 
+	private static final Lines EMPTY = new Lines(Collections.emptyList());
+
 	private final List<Line> list;
 
 	public Lines() {
@@ -69,6 +72,10 @@ public class Lines {
 
 	public Lines(List<Line> list) {
 		this.list = Objects.requireNonNull(list);
+	}
+
+	public static Lines empty() {
+		return EMPTY;
 	}
 
 	public Lines addOut(String value) {

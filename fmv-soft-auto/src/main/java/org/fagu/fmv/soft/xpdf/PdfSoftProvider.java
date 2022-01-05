@@ -245,7 +245,10 @@ public abstract class PdfSoftProvider extends SoftProvider {
 
 			@Override
 			public SoftFound closeAndParse(String cmdLineStr, int exitValue, Lines lines) throws IOException {
-				return getVersionPolicy(provider).toSoftFound(new XPdfVersionSoftInfo(file, getName(), version, provider), lines);
+				return getVersionPolicy(provider).toSoftFound(
+						new XPdfVersionSoftInfo(file, getName(), version, provider),
+						exitValue,
+						lines);
 			}
 
 		};
