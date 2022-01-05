@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.apache.commons.exec.CommandLine;
@@ -249,12 +250,20 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 		SoftFound closeAndParse(String cmdLineStr, int exitValue, Lines lines) throws IOException;
 
 		default SoftFound closeAndParse(IOException ioException, String cmdLineStr, Lines lines) throws IOException {
-			String msg = cmdLineStr + System.lineSeparator() + lines.values().collect(Collectors.joining(System.lineSeparator()));
+			String msg = new StringJoiner(System.lineSeparator())
+					.add(ioException.toString())
+					.add(cmdLineStr)
+					.add(lines.values().collect(Collectors.joining(System.lineSeparator())))
+					.toString();
 			throw new IOException(msg, ioException);
 		}
 
 		default SoftFound closeAndParse(ExecuteException executeException, String cmdLineStr, Lines lines) throws ExecuteException {
-			String msg = cmdLineStr + System.lineSeparator() + lines.values().collect(Collectors.joining(System.lineSeparator()));
+			String msg = new StringJoiner(System.lineSeparator())
+					.add(executeException.toString())
+					.add(cmdLineStr)
+					.add(lines.values().collect(Collectors.joining(System.lineSeparator())))
+					.toString();
 			throw new ExecuteException(msg, executeException.getExitValue(), executeException);
 		}
 

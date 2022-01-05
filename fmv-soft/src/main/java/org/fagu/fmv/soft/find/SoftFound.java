@@ -211,7 +211,7 @@ public class SoftFound implements Comparable<SoftFound> {
 
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder()
+		StringBuilder buf = new StringBuilder("SoftFound[")
 				.append(foundReason.name());
 		if(file != null) {
 			buf.append(": ").append(file);
@@ -222,7 +222,7 @@ public class SoftFound implements Comparable<SoftFound> {
 		if(StringUtils.isNotBlank(reason)) {
 			buf.append(' ').append(reason);
 		}
-		return buf.toString();
+		return buf.append(']').toString();
 	}
 
 	// **********************************************

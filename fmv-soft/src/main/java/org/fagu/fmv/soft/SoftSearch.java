@@ -219,7 +219,7 @@ public class SoftSearch {
 				}
 				return softFound;
 			} catch(IOException e) {
-				return SoftFound.foundError(file, e.getMessage()).setLocalizedBy(locator.toString());
+				return SoftFound.foundError(file, e.toString()).setLocalizedBy(locator.toString());
 			}
 		};
 	}
