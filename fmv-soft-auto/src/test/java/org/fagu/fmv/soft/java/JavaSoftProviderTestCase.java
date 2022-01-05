@@ -26,12 +26,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.NavigableSet;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.TreeSet;
 
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
+import org.fagu.fmv.soft.find.Founds;
+import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
@@ -46,6 +51,7 @@ import org.junit.jupiter.api.Test;
 class JavaSoftProviderTestCase {
 
 	@Test
+	@Disabled
 	void testSearch() {
 		// ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Java.search();
@@ -53,75 +59,94 @@ class JavaSoftProviderTestCase {
 
 	@Test
 	void testParse18OnWindows() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("java version \"1.8.0_20\"");
-		parser.readLine("Java(TM) SE Runtime Environment (build 1.8.0_20-b26)");
-		parser.readLine("Java HotSpot(TM) 64-Bit Server VM (build 25.20-b23, mixed mode)");
-		assertInfo(parser, new Version(1, 8, 0, 20), null);
+		Lines lines = new Lines();
+		lines.addErr("java version \"1.8.0_20\"");
+		lines.addErr("Java(TM) SE Runtime Environment (build 1.8.0_20-b26)");
+		lines.addErr("Java HotSpot(TM) 64-Bit Server VM (build 25.20-b23, mixed mode)");
+		assertInfo(lines, new Version(1, 8, 0, 20), null);
 	}
 
 	@Test
 	void testParse18OnLinux() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("openjdk version \"1.8.0_45\"");
-		parser.readLine("OpenJDK Runtime Environment (build 1.8.0_45-b13)");
-		parser.readLine("OpenJDK 64-Bit Server VM (build 25.45-b02, mixed mode)");
-		assertInfo(parser, new Version(1, 8, 0, 45), null);
+		Lines lines = new Lines();
+		lines.addErr("openjdk version \"1.8.0_45\"");
+		lines.addErr("OpenJDK Runtime Environment (build 1.8.0_45-b13)");
+		lines.addErr("OpenJDK 64-Bit Server VM (build 25.45-b02, mixed mode)");
+		assertInfo(lines, new Version(1, 8, 0, 45), null);
 	}
 
 	@Test
 	void testParse18_262OnLinux() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("openjdk version \"1.8.0_262\"");
-		parser.readLine("OpenJDK Runtime Environment (build 1.8.0_262-b10)");
-		parser.readLine("OpenJDK 64-Bit Server VM (build 25.262-b10, mixed mode)");
-		assertInfo(parser, new Version(1, 8, 0, 262), null);
+		Lines lines = new Lines();
+		lines.addErr("openjdk version \"1.8.0_262\"");
+		lines.addErr("OpenJDK Runtime Environment (build 1.8.0_262-b10)");
+		lines.addErr("OpenJDK 64-Bit Server VM (build 25.262-b10, mixed mode)");
+		assertInfo(lines, new Version(1, 8, 0, 262), null);
 	}
 
 	@Test
 	void testParseOpenJDK9Internal() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("openjdk version \"9-internal\"");
-		parser.readLine("OpenJDK Runtime Environment (build 9-internal+0-2016-04-14-195246.buildd.src)");
-		parser.readLine("OpenJDK 64-Bit Server VM (build 9-internal+0-2016-04-14-195246.buildd.src, mixed mode)");
-		assertInfo(parser, new Version(9), null);
+		Lines lines = new Lines();
+		lines.addErr("openjdk version \"9-internal\"");
+		lines.addErr("OpenJDK Runtime Environment (build 9-internal+0-2016-04-14-195246.buildd.src)");
+		lines.addErr("OpenJDK 64-Bit Server VM (build 9-internal+0-2016-04-14-195246.buildd.src, mixed mode)");
+		assertInfo(lines, new Version(9), null);
 	}
 
 	@Test
 	void testParseOpenJDK1106() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("openjdk version \"11.0.6\" 2020-01-14");
-		parser.readLine("OpenJDK Runtime Environment (build 11.0.6+10-post-Ubuntu-1ubuntu118.04.1)");
-		parser.readLine("OpenJDK 64-Bit Server VM (build 11.0.6+10-post-Ubuntu-1ubuntu118.04.1, mixed mode, sharing)");
-		assertInfo(parser, new Version(11, 0, 6), LocalDate.of(2020, 1, 14));
+		Lines lines = new Lines();
+		lines.addErr("openjdk version \"11.0.6\" 2020-01-14");
+		lines.addErr("OpenJDK Runtime Environment (build 11.0.6+10-post-Ubuntu-1ubuntu118.04.1)");
+		lines.addErr("OpenJDK 64-Bit Server VM (build 11.0.6+10-post-Ubuntu-1ubuntu118.04.1, mixed mode, sharing)");
+		assertInfo(lines, new Version(11, 0, 6), LocalDate.of(2020, 1, 14));
 	}
 
 	@Test
-	void testParseOpenJDK11013() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("Picked up JAVA_TOOL_OPTIONS: -XX:+UseG1GC -XX:+UseStringDeduplication -Dfile.encoding=UTF-8");
-		parser.readLine("openjdk 11.0.13 2021-10-19 LTS");
-		parser.readLine("OpenJDK Runtime Environment 18.9 (build 11.0.13+8-LTS)");
-		parser.readLine("OpenJDK 64-Bit Server VM 18.9 (build 11.0.13+8-LTS, mixed mode, sharing)");
-		assertInfo(parser, new Version(11, 0, 13), LocalDate.of(2021, 10, 19));
+	void testParseOpenJDK11013_1() throws IOException {
+		Lines lines = new Lines();
+		lines.addErr("Picked up JAVA_TOOL_OPTIONS: -XX:+UseG1GC -XX:+UseStringDeduplication -Dfile.encoding=UTF-8");
+		lines.addErr("openjdk 11.0.13 2021-10-19 LTS");
+		lines.addErr("OpenJDK Runtime Environment 18.9 (build 11.0.13+8-LTS)");
+		lines.addErr("OpenJDK 64-Bit Server VM 18.9 (build 11.0.13+8-LTS, mixed mode, sharing)");
+		assertInfo(lines, new Version(11, 0, 13), LocalDate.of(2021, 10, 19));
+	}
+
+	@Test
+	void testParseOpenJDK11013_2() throws IOException {
+		Lines lines = new Lines();
+		lines.addErr("Picked up JAVA_TOOL_OPTIONS: -XX:+UseG1GC -XX:+UseStringDeduplication -Dfile.encoding=UTF-8");
+		lines.addErr("openjdk version \"11.0.13\" 2021-10-19 LTS");
+		lines.addErr("OpenJDK Runtime Environment 18.9 (build 11.0.13+8-LTS)");
+		lines.addErr("OpenJDK 64-Bit Server VM 18.9 (build 11.0.13+8-LTS, mixed mode, sharing)");
+		assertInfo(lines, new Version(11, 0, 13), LocalDate.of(2021, 10, 19));
 	}
 
 	@Test
 	void testParseJava1302() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("java version \"13.0.2\" 2020-01-14");
-		parser.readLine("Java(TM) SE Runtime Environment (build 13.0.2+8)");
-		parser.readLine("Java HotSpot(TM) 64-Bit Server VM (build 13.0.2+8, mixed mode, sharing)");
-		assertInfo(parser, new Version(13, 0, 2), LocalDate.of(2020, 1, 14));
+		Lines lines = new Lines();
+		lines.addErr("java version \"13.0.2\" 2020-01-14");
+		lines.addErr("Java(TM) SE Runtime Environment (build 13.0.2+8)");
+		lines.addErr("Java HotSpot(TM) 64-Bit Server VM (build 13.0.2+8, mixed mode, sharing)");
+		assertInfo(lines, new Version(13, 0, 2), LocalDate.of(2020, 1, 14));
 	}
 
 	@Test
 	void testParseJava1402() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("java version \"14.0.2\" 2020-07-14");
-		parser.readLine("Java(TM) SE Runtime Environment (build 14.0.2+12-46)");
-		parser.readLine("Java HotSpot(TM) 64-Bit Server VM (build 14.0.2+12-46, mixed mode, sharing)");
-		assertInfo(parser, new Version(14, 0, 2), LocalDate.of(2020, 7, 14));
+		Lines lines = new Lines();
+		lines.addErr("java version \"14.0.2\" 2020-07-14");
+		lines.addErr("Java(TM) SE Runtime Environment (build 14.0.2+12-46)");
+		lines.addErr("Java HotSpot(TM) 64-Bit Server VM (build 14.0.2+12-46, mixed mode, sharing)");
+		assertInfo(lines, new Version(14, 0, 2), LocalDate.of(2020, 7, 14));
+	}
+
+	@Test
+	void testParseError() throws IOException {
+		Lines lines = new Lines();
+		lines.addErr("Unrecognized option: -a");
+		lines.addErr("Error: Could not create the Java Virtual Machine.");
+		lines.addErr("Error: A fatal exception has occurred. Program will exit.");
+		assertError(lines);
 	}
 
 	@Test
@@ -138,13 +163,30 @@ class JavaSoftProviderTestCase {
 	// *******************************************************
 
 	private Parser newParser() {
-		JavaSoftProvider softProvider = new JavaSoftProvider();
+		return newParser(new JavaSoftProvider());
+	}
+
+	private Parser newParser(JavaSoftProvider softProvider) {
 		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory(ImmutableProperties.of())).getParserFactory();
 		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
-	private void assertInfo(Parser parser, Version expectedVersion, LocalDate date) throws IOException {
-		SoftFound softFound = parser.closeAndParse("", 0);
+	private void assertError(Lines lines) throws IOException {
+		JavaSoftProvider softProvider = new JavaSoftProvider();
+		Parser parser = newParser(softProvider);
+		parser.read(lines);
+		SoftFound softFound = parser.closeAndParse("", 0, lines);
+		NavigableSet<SoftFound> foundSet = new TreeSet<>();
+		foundSet.add(softFound);
+		Soft soft = softProvider.createSoft(new Founds(softProvider.getName(), foundSet, softProvider.getSoftPolicy(), new Properties()));
+
+		System.out.println(soft);
+	}
+
+	private void assertInfo(Lines lines, Version expectedVersion, LocalDate date) throws IOException {
+		Parser parser = newParser();
+		parser.read(lines);
+		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		VersionDateSoftInfo softInfo = (VersionDateSoftInfo)softFound.getSoftInfo();
 		assertEquals(expectedVersion, softInfo.getVersion().orElse(null));
 		Optional<LocalDate> dateOpt = softInfo.getLocalDate();

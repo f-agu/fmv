@@ -29,14 +29,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteException;
 import org.fagu.fmv.soft.ExecuteDelegate;
 import org.fagu.fmv.soft.ExecuteDelegateRepository;
-import org.fagu.fmv.soft.exec.BufferedReadLine;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.soft.exec.ExecHelper;
 import org.fagu.fmv.soft.exec.FMVCommandLine;
@@ -44,7 +42,6 @@ import org.fagu.fmv.soft.exec.FMVExecutor;
 import org.fagu.fmv.soft.exec.ReadLine;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
-import org.fagu.fmv.utils.collection.LimitedLastQueue;
 import org.fagu.version.Version;
 
 
@@ -74,6 +71,13 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	// ------------------------------------------------------------
 
+	public interface SoftFoundSupplier {
+
+		Optional<SoftFound> getWith(File file, Lines lines);
+	}
+
+	// ------------------------------------------------------------
+
 	public static class ExecSoftFoundFactoryBuilder extends ExecHelper<ExecSoftFoundFactoryBuilder> {
 
 		private final SoftProvider softProvider;
@@ -82,18 +86,26 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 		private ParserFactory parserFactory;
 
+		private SoftFoundSupplier softFoundSupplier = (file, lines) -> Optional.empty();
+
 		private boolean build;
 
 		private ExecutorFactory executorFactory;
 
-		private Supplier<List<String>> bufferedReadLineSupplier = () -> new LimitedLastQueue<>(500);
+		private Lines lines = new Lines();
 
 		private ExecuteDelegate executeDelegate;
 
 		private ExecSoftFoundFactoryBuilder(SoftProvider softProvider, List<String> parameters) {
 			this.softProvider = softProvider;
 			this.parameters = parameters;
+		}
 
+		public ExecSoftFoundFactoryBuilder withSoftFoundSupplier(SoftFoundSupplier softFoundSupplier) {
+			if(softFoundSupplier != null) {
+				this.softFoundSupplier = softFoundSupplier;
+			}
+			return this;
 		}
 
 		public ExecSoftFoundFactoryBuilder parseFactory(ParserFactory parserFactory) {
@@ -116,8 +128,9 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 				}
 
 				@Override
-				public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-					return softPolicy.toSoftFound(new VersionSoftInfo(file, softProvider.getName(), version));
+				public SoftFound closeAndParse(String cmdLineStr, int exitValue, Lines lines) throws IOException {
+					return softFoundSupplier.getWith(file, lines)
+							.orElseGet(() -> softPolicy.toSoftFound(new VersionSoftInfo(file, softProvider.getName(), version), lines));
 				}
 			});
 		}
@@ -140,14 +153,17 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 				}
 
 				@Override
-				public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
-					return softPolicy.toSoftFound(new VersionDateSoftInfo(file, softProvider.getName(), version, date));
+				public SoftFound closeAndParse(String cmdLineStr, int exitValue, Lines lines) throws IOException {
+					return softFoundSupplier.getWith(file, lines)
+							.orElseGet(() -> softPolicy.toSoftFound(new VersionDateSoftInfo(file, softProvider.getName(), version, date), lines));
 				}
 			});
 		}
 
-		public ExecSoftFoundFactoryBuilder withBufferedReadLineSupplier(Supplier<List<String>> bufferedReadLineSupplier) {
-			this.bufferedReadLineSupplier = Objects.requireNonNull(bufferedReadLineSupplier);
+		public ExecSoftFoundFactoryBuilder withLines(Lines lines) {
+			if(lines != null) {
+				this.lines = lines;
+			}
 			return this;
 		}
 
@@ -171,16 +187,16 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 			ExecutorFactory execFact = executorFactory != null ? executorFactory : getDefaultExecutorFactory();
 			ExecuteDelegate execDelegate = executeDelegate != null ? executeDelegate : ExecuteDelegateRepository.get();
 			build = true;
-			return new ExecSoftFoundFactory(execFact, parameters, parserFactory, bufferedReadLineSupplier, execDelegate);
+			return new ExecSoftFoundFactory(execFact, parameters, parserFactory, lines, execDelegate);
 		}
 
 		// **********************************************************
 
 		private ExecutorFactory getDefaultExecutorFactory() {
-			return (file, parser, readLine) -> {
+			return (file, parser, outReadLine, errReadLine) -> {
 				FMVExecutor fmvExecutor = FMVExecutor.with(file.getParentFile())
-						.out(getOutReadLine(readLine, parser::readLineOut))
-						.err(getErrReadLine(readLine, parser::readLineErr))
+						.out(getOutReadLine(outReadLine, parser::readLineOut))
+						.err(getErrReadLine(errReadLine, parser::readLineErr))
 						.charset(charset)
 						.lookReader(lookReader)
 						.build();
@@ -204,6 +220,16 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	public interface Parser {
 
+		default void read(Lines lines) {
+			lines.lines().forEach(line -> {
+				if(line.isOut()) {
+					readLineOut(line.getValue());
+				} else if(line.isErr()) {
+					readLineErr(line.getValue());
+				}
+			});
+		}
+
 		void readLine(String line);
 
 		default void readLineOut(String line) {
@@ -214,15 +240,15 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 			readLine(line);
 		}
 
-		SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException;
+		SoftFound closeAndParse(String cmdLineStr, int exitValue, Lines lines) throws IOException;
 
-		default SoftFound closeAndParse(IOException ioException, String cmdLineStr, List<String> allLines) throws IOException {
-			String msg = cmdLineStr + System.lineSeparator() + allLines.stream().collect(Collectors.joining(System.lineSeparator()));
+		default SoftFound closeAndParse(IOException ioException, String cmdLineStr, Lines lines) throws IOException {
+			String msg = cmdLineStr + System.lineSeparator() + lines.values().collect(Collectors.joining(System.lineSeparator()));
 			throw new IOException(msg, ioException);
 		}
 
-		default SoftFound closeAndParse(ExecuteException executeException, String cmdLineStr, List<String> allLines) throws ExecuteException {
-			String msg = cmdLineStr + System.lineSeparator() + allLines.stream().collect(Collectors.joining(System.lineSeparator()));
+		default SoftFound closeAndParse(ExecuteException executeException, String cmdLineStr, Lines lines) throws ExecuteException {
+			String msg = cmdLineStr + System.lineSeparator() + lines.values().collect(Collectors.joining(System.lineSeparator()));
 			throw new ExecuteException(msg, executeException.getExitValue(), executeException);
 		}
 
@@ -280,7 +306,7 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 	@FunctionalInterface
 	public interface ExecutorFactory {
 
-		FMVExecutor create(File file, Parser parser, ReadLine readLine);
+		FMVExecutor create(File file, Parser parser, ReadLine outReadLine, ReadLine errReadLine);
 	}
 
 	// ------------------------------------------------------------
@@ -291,16 +317,16 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	private final ParserFactory parserFactory;
 
-	private final Supplier<List<String>> bufferedReadLineSupplier;
+	private final Lines lines;
 
 	private final ExecuteDelegate executeDelegate;
 
 	private ExecSoftFoundFactory(ExecutorFactory executorFactory, List<String> parameters, ParserFactory parserFactory,
-			Supplier<List<String>> bufferedReadLineSupplier, ExecuteDelegate executeDelegate) {
+			Lines lines, ExecuteDelegate executeDelegate) {
 		this.executorFactory = Objects.requireNonNull(executorFactory);
 		this.parameters = parameters;
 		this.parserFactory = parserFactory;
-		this.bufferedReadLineSupplier = bufferedReadLineSupplier;
+		this.lines = Objects.requireNonNull(lines);
 		this.executeDelegate = Objects.requireNonNull(executeDelegate);
 	}
 
@@ -318,19 +344,16 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 		CommandLine commandLine = FMVCommandLine.create(file, parameters);
 		String cmdLineStr = CommandLineUtils.toLine(commandLine);
 
-		List<String> readLineList = Objects.requireNonNull(bufferedReadLineSupplier.get());
-		BufferedReadLine bufferedReadLine = new BufferedReadLine(readLineList);
-
-		FMVExecutor executor = executorFactory.create(file, parser, bufferedReadLine);
+		FMVExecutor executor = executorFactory.create(file, parser, lines::addOut, lines::addErr);
 		try {
 			int exitValue = executeDelegate.execute(executor, commandLine);
-			SoftFound softFound = parser.closeAndParse(cmdLineStr, exitValue);
+			SoftFound softFound = parser.closeAndParse(cmdLineStr, exitValue, lines);
 			if(locator != null && softFound != null) {
 				softFound.setLocalizedBy(locator.toString());
 			}
 			return softFound;
 		} catch(IOException e) {
-			return parser.closeAndParse(e, cmdLineStr, readLineList);
+			return parser.closeAndParse(e, cmdLineStr, lines);
 		}
 	}
 

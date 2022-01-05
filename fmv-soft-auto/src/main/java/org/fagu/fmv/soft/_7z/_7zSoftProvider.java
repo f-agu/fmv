@@ -34,6 +34,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
@@ -114,7 +115,7 @@ public class _7zSoftProvider extends SoftProvider {
 			}
 
 			@Override
-			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
+			public SoftFound closeAndParse(String cmdLineStr, int exitValue, Lines lines) throws IOException {
 				return found ? SoftFound.found(new VersionSoftInfo(file, getName(), version)) : null;
 			}
 

@@ -32,6 +32,7 @@ import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
+import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
@@ -65,24 +66,26 @@ class GPACSoftProviderTestCase {
 
 	@Test
 	void testParseMP4Box() throws IOException {
-		Parser parser = newParserMP4Box();
-		parser.readLine("MP4Box - GPAC version 0.7.2-DEV-rev1167-g10c1f03b-master");
-		parser.readLine("(c) Telecom ParisTech 2000-2018 - Licence LGPL v2");
-		parser.readLine("GPAC Configuration: (static configuration file)");
-		parser.readLine("Features: GPAC_64_BITS GPAC_MEMORY_TRACKING GPAC_HAS_SSL GPAC_HAS_SPIDERMONKEY GPAC_HAS_JPEG GPAC_HAS_PNG");
-		assertInfo(parser, new Version(0, 7, 2));
+		Lines lines = new Lines();
+		lines.addOut("MP4Box - GPAC version 0.7.2-DEV-rev1167-g10c1f03b-master");
+		lines.addOut("(c) Telecom ParisTech 2000-2018 - Licence LGPL v2");
+		lines.addOut("GPAC Configuration: (static configuration file)");
+		lines.addOut("Features: GPAC_64_BITS GPAC_MEMORY_TRACKING GPAC_HAS_SSL GPAC_HAS_SPIDERMONKEY GPAC_HAS_JPEG GPAC_HAS_PNG");
+		assertInfo(lines, new Version(0, 7, 2));
 	}
 
 	// *******************************************************
 
-	private Parser newParserMP4Box() {
+	private Parser newParser() {
 		MP4BoxSoftProvider softProvider = new MP4BoxSoftProvider();
 		ParserFactory parserFactory = ((ExecSoftFoundFactory)softProvider.createSoftFoundFactory(ImmutableProperties.of())).getParserFactory();
 		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
-	private void assertInfo(Parser parser, Version expectedVersion) throws IOException {
-		SoftFound softFound = parser.closeAndParse("", 0);
+	private void assertInfo(Lines lines, Version expectedVersion) throws IOException {
+		Parser parser = newParser();
+		parser.read(lines);
+		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		VersionSoftInfo softInfo = (VersionSoftInfo)softFound.getSoftInfo();
 		assertEquals(expectedVersion, softInfo.getVersion().orElse(null));
 	}

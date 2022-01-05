@@ -44,6 +44,7 @@ import org.fagu.fmv.ffmpeg.exception.FFExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.exec.exception.ExceptionKnownAnalyzer;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SearchBehavior;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
@@ -192,7 +193,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 			}
 
 			@Override
-			public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
+			public SoftFound closeAndParse(String cmdLineStr, int exitValue, Lines lines) throws IOException {
 				if(softFound != null) {
 					return softFound;
 				}

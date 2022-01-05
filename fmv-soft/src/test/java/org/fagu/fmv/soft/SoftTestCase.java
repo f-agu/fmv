@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.SoftExecutor.Executed;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.junit.jupiter.api.Disabled;
@@ -59,7 +60,7 @@ class SoftTestCase {
 					}
 
 					@Override
-					public SoftFound closeAndParse(String cmdLineStr, int exitValue) throws IOException {
+					public SoftFound closeAndParse(String cmdLineStr, int exitValue, Lines lines) throws IOException {
 						if(build == null) {
 							return SoftFound.foundBadSoft(file);
 						}

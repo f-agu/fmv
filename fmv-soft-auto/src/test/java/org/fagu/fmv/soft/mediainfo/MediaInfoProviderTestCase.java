@@ -28,6 +28,7 @@ import java.io.IOException;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
+import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
@@ -42,10 +43,10 @@ class MediaInfoProviderTestCase {
 
 	@Test
 	void testParse() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("MediaInfo Command line,");
-		parser.readLine("MediaInfoLib - v18.03.1");
-		assertInfo(parser, new Version(18, 3, 1));
+		Lines lines = new Lines();
+		lines.addOut("MediaInfo Command line,");
+		lines.addOut("MediaInfoLib - v18.03.1");
+		assertInfo(lines, new Version(18, 3, 1));
 	}
 
 	// *******************************************************
@@ -56,8 +57,10 @@ class MediaInfoProviderTestCase {
 		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
-	private void assertInfo(Parser parser, Version expectedVersion) throws IOException {
-		SoftFound softFound = parser.closeAndParse("", 0);
+	private void assertInfo(Lines lines, Version expectedVersion) throws IOException {
+		Parser parser = newParser();
+		parser.read(lines);
+		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		VersionSoftInfo softInfo = (VersionSoftInfo)softFound.getSoftInfo();
 		assertEquals(expectedVersion, softInfo.getVersion().orElse(null));
 	}

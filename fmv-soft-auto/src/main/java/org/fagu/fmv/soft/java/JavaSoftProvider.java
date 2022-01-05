@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -38,6 +39,7 @@ import org.fagu.fmv.soft.find.ExecSoftFoundFactory.VersionDate;
 import org.fagu.fmv.soft.find.Locator;
 import org.fagu.fmv.soft.find.Locators;
 import org.fagu.fmv.soft.find.SearchBehavior;
+import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
@@ -96,6 +98,12 @@ public class JavaSoftProvider extends SoftProvider {
 		return prepareBuilder(
 				prepareSoftFoundFactory().withParameters("-version"),
 				builderConsumer)
+						.withSoftFoundSupplier((file, lines) -> {
+							if(lines.lines().anyMatch(l -> l.getValue().startsWith("Error: "))) {
+								return Optional.of(SoftFound.foundError(file, lines.values().collect(Collectors.joining(", "))));
+							}
+							return Optional.empty();
+						})
 						.parseVersionDate(line -> {
 							VersionDate vd = defaultVersionSearchMatching.ifMatches(line, matcher -> {
 								Version version = VersionParserManager.parse(matcher.group(2));

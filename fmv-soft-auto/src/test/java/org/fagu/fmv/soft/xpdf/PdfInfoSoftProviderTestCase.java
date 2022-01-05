@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.version.Version;
@@ -39,35 +40,35 @@ class PdfInfoSoftProviderTestCase {
 
 	@Test
 	void testParseOnLinux_original() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("pdfinfo version 3.04");
-		parser.readLine("Copyright 1996-2014 Glyph & Cog, LLC");
-		assertInfo(parser, new Version(3, 4));
+		Lines lines = new Lines();
+		lines.addOut("pdfinfo version 3.04");
+		lines.addOut("Copyright 1996-2014 Glyph & Cog, LLC");
+		assertInfo(lines, new Version(3, 4));
 	}
 
 	@Test
 	void testParseOnLinux_popplers() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("pdfinfo version 0.12.4");
-		parser.readLine("Copyright 2005-2009 The Poppler Developers - http://poppler.freedesktop.org");
-		parser.readLine("Copyright 1996-2004 Glyph & Cog, LLC");
-		assertInfo(parser, new Version(0, 12, 4));
+		Lines lines = new Lines();
+		lines.addOut("pdfinfo version 0.12.4");
+		lines.addOut("Copyright 2005-2009 The Poppler Developers - http://poppler.freedesktop.org");
+		lines.addOut("Copyright 1996-2004 Glyph & Cog, LLC");
+		assertInfo(lines, new Version(0, 12, 4));
 	}
 
 	@Test
 	void testParseOnWindows_original() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("pdfinfo version 3.04");
-		parser.readLine("Copyright 1996-2014 Glyph & Cog, LLC");
-		assertInfo(parser, new Version(3, 4));
+		Lines lines = new Lines();
+		lines.addOut("pdfinfo version 3.04");
+		lines.addOut("Copyright 1996-2014 Glyph & Cog, LLC");
+		assertInfo(lines, new Version(3, 4));
 	}
 
 	@Test
 	void testParseOnWindows_xpdfreader() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("pdfinfo version 4.03 [www.xpdfreader.com]");
-		parser.readLine("Copyright 1996-2021 Glyph & Cog, LLC");
-		assertInfo(parser, new Version(4, 3));
+		Lines lines = new Lines();
+		lines.addOut("pdfinfo version 4.03 [www.xpdfreader.com]");
+		lines.addOut("Copyright 1996-2021 Glyph & Cog, LLC");
+		assertInfo(lines, new Version(4, 3));
 	}
 
 	@Test
@@ -83,8 +84,10 @@ class PdfInfoSoftProviderTestCase {
 		return softProvider.createParser(new File("."));
 	}
 
-	private void assertInfo(Parser parser, Version expectedVersion) throws IOException {
-		SoftFound softFound = parser.closeAndParse("", 0);
+	private void assertInfo(Lines lines, Version expectedVersion) throws IOException {
+		Parser parser = newParser();
+		parser.read(lines);
+		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		VersionSoftInfo softInfo = (VersionSoftInfo)softFound.getSoftInfo();
 		assertEquals(expectedVersion, softInfo.getVersion().orElse(null));
 	}

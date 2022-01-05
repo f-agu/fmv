@@ -30,6 +30,7 @@ import java.util.Date;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
+import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
@@ -61,24 +62,24 @@ class IMInfoTestCase {
 
 	@Test
 	void testParseOnWindows() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("Version: ImageMagick 6.8.7-1 2013-10-17 Q16 http://www.imagemagick.org");
-		parser.readLine("Copyright: Copyright (C) 1999-2013 ImageMagick Studio LLC");
-		parser.readLine("Features: DPC OpenMP");
-		parser.readLine("Delegates: bzlib freetype jbig jng jp2 jpeg lcms lqr png ps png tiff webp x xml zlib");
-		assertInfo(parser, new Version(6, 8, 7, 1), d(2013, 10, 17), "6.8.7.1");
+		Lines lines = new Lines();
+		lines.addOut("Version: ImageMagick 6.8.7-1 2013-10-17 Q16 http://www.imagemagick.org");
+		lines.addOut("Copyright: Copyright (C) 1999-2013 ImageMagick Studio LLC");
+		lines.addOut("Features: DPC OpenMP");
+		lines.addOut("Delegates: bzlib freetype jbig jng jp2 jpeg lcms lqr png ps png tiff webp x xml zlib");
+		assertInfo(lines, new Version(6, 8, 7, 1), d(2013, 10, 17), "6.8.7.1");
 	}
 
 	@Test
 	void testParseOnMac() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("Version: ImageMagick 6.9.3-7 Q16 x86_64 2016-03-27 http://www.imagemagick.org");
-		parser.readLine("Copyright: Copyright (C) 1999-2016 ImageMagick Studio LLC");
-		parser.readLine("License: http://www.imagemagick.org/script/license.php");
-		parser.readLine("Features: Cipher DPC Modules ");
-		parser.readLine("Delegates (built-in): bzlib freetype jng jpeg ltdl lzma png tiff xml zlib");
+		Lines lines = new Lines();
+		lines.addOut("Version: ImageMagick 6.9.3-7 Q16 x86_64 2016-03-27 http://www.imagemagick.org");
+		lines.addOut("Copyright: Copyright (C) 1999-2016 ImageMagick Studio LLC");
+		lines.addOut("License: http://www.imagemagick.org/script/license.php");
+		lines.addOut("Features: Cipher DPC Modules ");
+		lines.addOut("Delegates (built-in): bzlib freetype jng jpeg ltdl lzma png tiff xml zlib");
 
-		assertInfo(parser, new Version(6, 9, 3, 7), d(2016, 3, 27), "6.9.3.7");
+		assertInfo(lines, new Version(6, 9, 3, 7), d(2016, 3, 27), "6.9.3.7");
 	}
 
 	// *******************************************************
@@ -97,13 +98,15 @@ class IMInfoTestCase {
 	}
 
 	private void assertInfo(String firstLine, Version expectedVersion, Date expectedDate, String expectedInfo) throws IOException {
-		Parser parser = newParser();
-		parser.readLine(firstLine);
-		assertInfo(parser, expectedVersion, expectedDate, expectedInfo);
+		Lines lines = new Lines();
+		lines.addOut(firstLine);
+		assertInfo(lines, expectedVersion, expectedDate, expectedInfo);
 	}
 
-	private void assertInfo(Parser parser, Version expectedVersion, Date expectedDate, String expectedInfo) throws IOException {
-		SoftFound softFound = parser.closeAndParse("", 0);
+	private void assertInfo(Lines lines, Version expectedVersion, Date expectedDate, String expectedInfo) throws IOException {
+		Parser parser = newParser();
+		parser.read(lines);
+		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		VersionDateSoftInfo imInfo = (VersionDateSoftInfo)softFound.getSoftInfo();
 		assertEquals(expectedVersion, imInfo.getVersion().orElse(null));
 		assertEquals(expectedDate, imInfo.getDate().orElse(null));

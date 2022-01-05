@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.utils.FileUtils;
 
 
@@ -86,6 +87,10 @@ public class SoftFound implements Comparable<SoftFound> {
 
 	public static SoftFound foundError(File file, String reason) {
 		return foundCheck(file, FoundReasons.ERROR, null, reason);
+	}
+
+	public static SoftFound foundError(SoftInfo softInfo, String reason) {
+		return foundCheck(softInfo.getFile(), FoundReasons.ERROR, softInfo, reason);
 	}
 
 	public static SoftFound multiple(final SoftFound... softFounds) {
@@ -206,13 +211,16 @@ public class SoftFound implements Comparable<SoftFound> {
 
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder();
-		buf.append(foundReason.name());
+		StringBuilder buf = new StringBuilder()
+				.append(foundReason.name());
 		if(file != null) {
 			buf.append(": ").append(file);
 		}
 		if(softInfo != null) {
 			buf.append(' ').append('(').append(softInfo).append(')');
+		}
+		if(StringUtils.isNotBlank(reason)) {
+			buf.append(' ').append(reason);
 		}
 		return buf.toString();
 	}

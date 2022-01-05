@@ -109,7 +109,7 @@ public abstract class SoftPolicy {
 		return on("Mac", s -> SystemUtils.IS_OS_MAC, subPredicate);
 	}
 
-	public abstract SoftFound toSoftFound(Object softInfo);
+	public abstract SoftFound toSoftFound(Object softInfo, Lines lines);
 
 	public Sorter getSorter() {
 		return sorter;

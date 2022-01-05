@@ -27,16 +27,16 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.fagu.fmv.soft.ExecuteDelegateRepository;
-import org.fagu.fmv.soft.LogExecuteDelegate;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ParserFactory;
+import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
@@ -46,26 +46,27 @@ import org.junit.jupiter.api.Test;
 class GSSoftProviderTestCase {
 
 	@Test
+	@Disabled
 	void testSearch() {
-		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
+		// ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Soft soft = GS.search();
 		System.out.println(soft);
 	}
 
 	@Test
 	void testParseOnWindows() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("GPL Ghostscript 9.16 (2015-03-30)");
-		parser.readLine("Copyright (C) 2015 Artifex Software, Inc.  All rights reserved.");
-		assertInfo(parser, new Version(9, 16), d(2015, 03, 30));
+		Lines lines = new Lines();
+		lines.addOut("GPL Ghostscript 9.16 (2015-03-30)");
+		lines.addOut("Copyright (C) 2015 Artifex Software, Inc.  All rights reserved.");
+		assertInfo(lines, new Version(9, 16), d(2015, 03, 30));
 	}
 
 	@Test
 	void testParseOnMac() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("GPL Ghostscript 9.18 (2015-10-05)");
-		parser.readLine("Copyright (C) 2015 Artifex Software, Inc.  All rights reserved.");
-		assertInfo(parser, new Version(9, 18), d(2015, 10, 05));
+		Lines lines = new Lines();
+		lines.addOut("GPL Ghostscript 9.18 (2015-10-05)");
+		lines.addOut("Copyright (C) 2015 Artifex Software, Inc.  All rights reserved.");
+		assertInfo(lines, new Version(9, 18), d(2015, 10, 05));
 	}
 
 	// *******************************************************
@@ -83,8 +84,10 @@ class GSSoftProviderTestCase {
 		return calendar.getTime();
 	}
 
-	private void assertInfo(Parser parser, Version expectedVersion, Date expectedDate) throws IOException {
-		SoftFound softFound = parser.closeAndParse("", 0);
+	private void assertInfo(Lines lines, Version expectedVersion, Date expectedDate) throws IOException {
+		Parser parser = newParser();
+		parser.read(lines);
+		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		VersionDateSoftInfo softInfo = (VersionDateSoftInfo)softFound.getSoftInfo();
 		assertEquals(expectedVersion, softInfo.getVersion().orElse(null));
 		assertEquals(expectedDate, softInfo.getDate().orElse(null));

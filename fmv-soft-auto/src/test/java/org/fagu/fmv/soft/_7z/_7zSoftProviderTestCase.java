@@ -25,10 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
-import org.fagu.fmv.soft.ExecuteDelegateRepository;
-import org.fagu.fmv.soft.LogExecuteDelegate;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
+import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.version.Version;
@@ -45,7 +44,7 @@ class _7zSoftProviderTestCase {
 	@Test
 	@Disabled
 	void testSearch() {
-		ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
+		// ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
 		Soft s = _7z.search();
 		System.out.println(s);
 		s.getFounds().getFounds().forEach(sf -> {
@@ -55,18 +54,18 @@ class _7zSoftProviderTestCase {
 
 	@Test
 	void test1() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("");
-		parser.readLine("7-Zip [64] 16.00 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-10");
-		assertInfo(parser, new Version(16, 0));
+		Lines lines = new Lines();
+		lines.addOut("");
+		lines.addOut("7-Zip [64] 16.00 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-10");
+		assertInfo(lines, new Version(16, 0));
 	}
 
 	@Test
 	void test2() throws IOException {
-		Parser parser = newParser();
-		parser.readLine("");
-		parser.readLine("7-Zip 17.01 beta (x64) : Copyright (c) 1999-2017 Igor Pavlov : 2017-08-28");
-		assertInfo(parser, new Version(17, 1));
+		Lines lines = new Lines();
+		lines.addOut("");
+		lines.addOut("7-Zip 17.01 beta (x64) : Copyright (c) 1999-2017 Igor Pavlov : 2017-08-28");
+		assertInfo(lines, new Version(17, 1));
 	}
 
 	// *******************************************************
@@ -76,8 +75,10 @@ class _7zSoftProviderTestCase {
 		return softProvider.createParser(new File("."));
 	}
 
-	private void assertInfo(Parser parser, Version expectedVersion) throws IOException {
-		SoftFound softFound = parser.closeAndParse("", 0);
+	private void assertInfo(Lines lines, Version expectedVersion) throws IOException {
+		Parser parser = newParser();
+		parser.read(lines);
+		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		VersionSoftInfo softInfo = (VersionSoftInfo)softFound.getSoftInfo();
 		assertEquals(expectedVersion, softInfo.getVersion().orElse(null));
 	}
