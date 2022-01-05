@@ -67,8 +67,8 @@ class VersionPolicyTestCase {
 				.onAllPlatforms(allVersion())
 				.toSoftFound(versionSoftInfo(null));
 		assertFalse(softFound.isFound());
-		assertEquals(FoundReasons.BAD_SOFT, softFound.getFoundReason());
-		assertEquals("version not parsable", softFound.getReason());
+		assertEquals(FoundReasons.ERROR, softFound.getFoundReason());
+		assertEquals("[stdout & stderr are empty]", softFound.getReason());
 	}
 
 	@Test
