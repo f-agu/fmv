@@ -3,6 +3,7 @@ package org.fagu.fmv.soft.find;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import org.fagu.fmv.utils.collection.LimitedLastQueue;
@@ -64,6 +65,8 @@ public class Lines {
 
 	private static final Lines EMPTY = new Lines(Collections.emptyList());
 
+	private final AtomicInteger count = new AtomicInteger();
+
 	private final List<Line> list;
 
 	public Lines() {
@@ -87,8 +90,17 @@ public class Lines {
 	}
 
 	public Lines add(Line line) {
+		count.incrementAndGet();
 		list.add(Objects.requireNonNull(line));
 		return this;
+	}
+
+	public int countAdded() {
+		return count.get();
+	}
+
+	public int countInBuffer() {
+		return list.size();
 	}
 
 	public List<Line> getLines() {

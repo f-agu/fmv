@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.spring.config;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * fmv-soft-spring-boot-2.x
@@ -83,12 +85,22 @@ public class SoftIndicatorProperties {
 
 		private boolean cacheEnabled = RunWithDocker.isInDocker();
 
+		private Duration cacheTimeOut = Duration.ofMinutes(5);
+
 		public boolean getCacheEnabled() {
 			return cacheEnabled;
 		}
 
 		public void setCacheEnabled(boolean cacheEnabled) {
 			this.cacheEnabled = cacheEnabled;
+		}
+
+		public Duration getCacheTimeOut() {
+			return cacheTimeOut;
+		}
+
+		public void setCacheTimeOut(Duration cacheTimeOut) {
+			this.cacheTimeOut = cacheTimeOut;
 		}
 
 	}

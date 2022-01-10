@@ -20,6 +20,8 @@ package org.fagu.fmv.soft.spring.actuator;
  * #L%
  */
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -42,24 +44,37 @@ public class SoftInfoContributor implements InfoContributor {
 
 	private final boolean cacheEnabled;
 
+	private final Duration cacheTimeOut;
+
+	private LocalDateTime lastCheck;
+
 	private Map<String, String> cache;
 
-	public SoftInfoContributor(boolean cacheEnabled) {
+	public SoftInfoContributor(boolean cacheEnabled, Duration cacheTimeOut) {
 		this.cacheEnabled = cacheEnabled;
+		this.cacheTimeOut = cacheTimeOut;
 	}
 
 	@Override
 	public void contribute(Builder builder) {
 		Map<String, String> content = null;
-		if(cacheEnabled && cache != null) {
-			content = cache;
-		} else {
+		if(cacheEnabled && (cache == null || isTimeOut())) {
 			content = content();
+			lastCheck = LocalDateTime.now();
+		} else {
+			content = cache;
 		}
 		builder.withDetail("softs", content);
 	}
 
 	// *********************************************
+
+	private boolean isTimeOut() {
+		if(cacheTimeOut == null) {
+			return false;
+		}
+		return lastCheck.plus(cacheTimeOut).isBefore(LocalDateTime.now());
+	}
 
 	private Map<String, String> content() {
 		Map<String, String> map = new HashMap<>();

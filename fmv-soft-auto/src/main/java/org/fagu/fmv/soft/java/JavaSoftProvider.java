@@ -96,6 +96,7 @@ public class JavaSoftProvider extends SoftProvider {
 		SearchMatching doubleVersionSearchMatching = new SearchPropertiesHelper(searchProperties, this)
 				.forMatchingVersion(DOUBLE_VERSION_PATTERN);
 		return prepareBuilder(
+				// change with "java -XshowSettings:properties -version"
 				prepareSoftFoundFactory().withParameters("-version"),
 				builderConsumer)
 						.parseVersionDate(line -> Stream.of(simpleVersionSearchMatching, doubleVersionSearchMatching)

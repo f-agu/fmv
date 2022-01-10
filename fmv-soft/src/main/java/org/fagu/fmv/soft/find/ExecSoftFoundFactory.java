@@ -44,12 +44,16 @@ import org.fagu.fmv.soft.exec.ReadLine;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.version.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * @author f.agu
  */
 public class ExecSoftFoundFactory implements SoftFoundFactory {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExecSoftFoundFactory.class);
 
 	// ------------------------------------------------------------
 
@@ -97,9 +101,19 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 		private ExecuteDelegate executeDelegate;
 
+		private Long timeOutMilliSeconds;
+
 		private ExecSoftFoundFactoryBuilder(SoftProvider softProvider, List<String> parameters) {
 			this.softProvider = softProvider;
 			this.parameters = parameters;
+			addErrReadLine(l -> LOGGER.trace("[{}] stderr: {}", softProvider.getName(), l));
+			addOutReadLine(l -> LOGGER.trace("[{}] stdout: {}", softProvider.getName(), l));
+		}
+
+		@Override
+		public ExecSoftFoundFactoryBuilder timeOut(long timeOutMilliSeconds) {
+			this.timeOutMilliSeconds = timeOutMilliSeconds;
+			return super.timeOut(timeOutMilliSeconds);
 		}
 
 		public ExecSoftFoundFactoryBuilder withSoftFoundSupplier(SoftFoundSupplier softFoundSupplier) {
@@ -207,7 +221,9 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 						.charset(charset)
 						.lookReader(lookReader)
 						.build();
-				fmvExecutor.setTimeOut(10_000); // default: 10 seconds
+				if(timeOutMilliSeconds == null) {
+					fmvExecutor.setTimeOut(10_000); // default: 10 seconds
+				}
 				applyCustomizeExecutor(fmvExecutor);
 				return fmvExecutor;
 			};
@@ -361,13 +377,18 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 		FMVExecutor executor = executorFactory.create(file, parser, lines::addOut, lines::addErr);
 		try {
+			LOGGER.trace("Executing {}", cmdLineStr);
+			long startTime = System.currentTimeMillis();
 			int exitValue = executeDelegate.execute(executor, commandLine);
+			long diffTime = System.currentTimeMillis() - startTime;
+			LOGGER.trace("Executed {} ; exitValue: {}, {} read line(s), {}ms", cmdLineStr, exitValue, lines.countAdded(), diffTime);
 			SoftFound softFound = parser.closeAndParse(cmdLineStr, exitValue, lines);
 			if(locator != null && softFound != null) {
 				softFound.setLocalizedBy(locator.toString());
 			}
 			return softFound;
 		} catch(IOException e) {
+			LOGGER.trace("Executed failed {} ; {} read line(s)", cmdLineStr, lines.countAdded(), e);
 			return parser.closeAndParse(e, cmdLineStr, lines);
 		}
 	}

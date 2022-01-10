@@ -34,6 +34,8 @@ import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.spring.config.SoftIndicatorProperties.Health;
 import org.fagu.fmv.soft.spring.config.SoftIndicatorProperties.Health.CheckPolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health.Builder;
 
@@ -43,6 +45,8 @@ import org.springframework.boot.actuate.health.Health.Builder;
  */
 public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
 	private final Map<Soft, FileInfo> fileInfos;
 
 	private final boolean checkOnFileChange;
@@ -51,6 +55,7 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 		super("soft check failed");
 		this.checkOnFileChange = healthProps.getCheckPolicy() == CheckPolicy.ON_FILE_CHANGE;
 		this.fileInfos = checkOnFileChange ? new HashMap<>() : Collections.emptyMap();
+		logger.trace("SoftFoundHealthIndicator.checkOnFileChange: {}", checkOnFileChange);
 	}
 
 	@Override
@@ -63,10 +68,12 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 
 		builder.up();
 		Set<String> downSofts = new TreeSet<>();
+		logger.trace("Checking {} soft(s) (checkOnFileChange: {})", softs.size(), checkOnFileChange);
 		for(Soft soft : softs) {
 			String msg = soft.toString();
 			if( ! checkOnFileChange || needToRecheck(soft)) {
 				SoftFound softFound = soft.getFounds().getFirstFound();
+				logger.trace("Soft {} checking: {}", soft.getName(), msg);
 				if(soft.isFound()) {
 					// recheck soft
 					softFound = soft.reFind();
@@ -80,6 +87,8 @@ public class SoftFoundHealthIndicator extends AbstractHealthIndicator {
 				} else if(checkOnFileChange) {
 					fileInfos.put(soft, new FileInfo(softFound.getFile()));
 				}
+			} else {
+				logger.trace("Soft {} not checked: {}", soft.getName(), msg);
 			}
 			builder.withDetail(soft.getName(), msg);
 		}

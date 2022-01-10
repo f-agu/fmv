@@ -1,10 +1,15 @@
 package org.fagu.fmv.soft.spring.config;
 
+import java.time.Duration;
+import java.util.Optional;
+
 import org.fagu.fmv.soft.spring.actuator.CachedHealthIndicator;
 import org.fagu.fmv.soft.spring.actuator.SoftFoundHealthIndicator;
 import org.fagu.fmv.soft.spring.actuator.SoftInfoContributor;
 import org.fagu.fmv.soft.spring.config.SoftIndicatorProperties.Contributor;
 import org.fagu.fmv.soft.spring.config.SoftIndicatorProperties.Health;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
 import org.springframework.boot.actuate.health.HealthIndicator;
 /*-
@@ -36,6 +41,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ActuatorConfig {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ActuatorConfig.class);
+
 	@Bean
 	SoftIndicatorProperties softIndicatorProperties() {
 		return new SoftIndicatorProperties();
@@ -45,7 +52,15 @@ public class ActuatorConfig {
 	@ConditionalOnEnabledHealthIndicator("soft-info")
 	SoftInfoContributor softVersionInfoContributor(SoftIndicatorProperties softIndicatorProperties) {
 		Contributor contributor = softIndicatorProperties.getContributor();
-		return new SoftInfoContributor(contributor.getCacheEnabled());
+		if(LOGGER.isDebugEnabled()) {
+			if(contributor.getCacheEnabled()) {
+				LOGGER.debug("SoftInfoContributor with cache (timeout: {})",
+						Optional.ofNullable(contributor.getCacheTimeOut()).map(Duration::toString).orElse("-"));
+			} else {
+				LOGGER.debug("SoftInfoContributor without cache");
+			}
+		}
+		return new SoftInfoContributor(contributor.getCacheEnabled(), contributor.getCacheTimeOut());
 	}
 
 	@Bean
@@ -53,8 +68,14 @@ public class ActuatorConfig {
 	HealthIndicator softHealthIndicator(SoftIndicatorProperties softIndicatorProperties) {
 		Health healthProps = softIndicatorProperties.getHealth();
 		if(healthProps.getCacheEnabled()) {
-			return new CachedHealthIndicator(new SoftFoundHealthIndicator(healthProps));
+			if(LOGGER.isDebugEnabled()) {
+				LOGGER.debug("SoftFoundHealthIndicator with cache (timeout: {}, checkPolicy: {})",
+						Optional.ofNullable(healthProps.getCacheTimeOut()).map(Duration::toString).orElse("-"),
+						healthProps.getCheckPolicy());
+			}
+			return new CachedHealthIndicator(new SoftFoundHealthIndicator(healthProps), healthProps.getCacheTimeOut());
 		}
+		LOGGER.debug("SoftFoundHealthIndicator without cache");
 		return new SoftFoundHealthIndicator(healthProps);
 	}
 

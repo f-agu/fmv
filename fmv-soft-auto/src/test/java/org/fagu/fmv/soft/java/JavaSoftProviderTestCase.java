@@ -49,9 +49,10 @@ import org.junit.jupiter.api.Test;
 class JavaSoftProviderTestCase {
 
 	@Test
-	@Disabled
+	// @Disabled
 	void testSearch() {
 		// ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
+		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 		Java.search();
 	}
 
@@ -121,6 +122,13 @@ class JavaSoftProviderTestCase {
 	}
 
 	@Test
+	void testParseFailed() throws IOException {
+		Lines lines = new Lines();
+		lines.addErr("Picked up JAVA_TOOL_OPTIONS: -XX:+UseG1GC -XX:+UseStringDeduplication -Dfile.encoding=UTF-8");
+		assertError2(lines);
+	}
+
+	@Test
 	void testParseJava1302() throws IOException {
 		Lines lines = new Lines();
 		lines.addErr("java version \"13.0.2\" 2020-01-14");
@@ -144,7 +152,7 @@ class JavaSoftProviderTestCase {
 		lines.addErr("Unrecognized option: -a");
 		lines.addErr("Error: Could not create the Java Virtual Machine.");
 		lines.addErr("Error: A fatal exception has occurred. Program will exit.");
-		assertError(lines);
+		assertError1(lines);
 	}
 
 	@Test
@@ -169,16 +177,27 @@ class JavaSoftProviderTestCase {
 		return parserFactory.create(new File("."), softProvider.getSoftPolicy());
 	}
 
-	private void assertError(Lines lines) throws IOException {
+	private void assertError1(Lines lines) throws IOException {
 		JavaSoftProvider softProvider = new JavaSoftProvider();
 		Parser parser = newParser(softProvider);
 		parser.read(lines);
 		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		assertSame(FoundReasons.ERROR, softFound.getFoundReason());
 		assertEquals(
-				"Unrecognized option: -a"
+				"version undefined in: Unrecognized option: -a"
 						+ "Error: Could not create the Java Virtual Machine."
 						+ "Error: A fatal exception has occurred. Program will exit. (exitValue: 0)",
+				softFound.getReason().replace("\n", "").replace("\r", ""));
+	}
+
+	private void assertError2(Lines lines) throws IOException {
+		JavaSoftProvider softProvider = new JavaSoftProvider();
+		Parser parser = newParser(softProvider);
+		parser.read(lines);
+		SoftFound softFound = parser.closeAndParse("", 0, lines);
+		assertSame(FoundReasons.ERROR, softFound.getFoundReason());
+		assertEquals(
+				"version undefined in: Picked up JAVA_TOOL_OPTIONS: -XX:+UseG1GC -XX:+UseStringDeduplication -Dfile.encoding=UTF-8 (exitValue: 0)",
 				softFound.getReason().replace("\n", "").replace("\r", ""));
 	}
 

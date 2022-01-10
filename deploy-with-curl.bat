@@ -2,7 +2,7 @@
 
 rem set PWD=%~dp0
 rem set PWD=D:\tmp\fmv\fmv\
-set VERSION=0.23.2
+set VERSION=0.24.0.10-SNAPSHOT
 rem set VERSION=0.18.4
 
 set REPO_URL=https://nexus.oodrive.net/nexus/
