@@ -83,24 +83,39 @@ public class SoftIndicatorProperties {
 
 	private static class Common {
 
-		private boolean cacheEnabled = RunWithDocker.isInDocker();
+		private Cache cache = new Cache();
 
-		private Duration cacheTimeOut = Duration.ofMinutes(5);
-
-		public boolean getCacheEnabled() {
-			return cacheEnabled;
+		public Cache getCache() {
+			return cache;
 		}
 
-		public void setCacheEnabled(boolean cacheEnabled) {
-			this.cacheEnabled = cacheEnabled;
+		public void setCache(Cache cache) {
+			this.cache = cache;
+		}
+	}
+
+	// -----------------------------------------
+
+	public static class Cache {
+
+		private boolean enabled = RunWithDocker.isInDocker();
+
+		private Duration timeOut = Duration.ofMinutes(5);
+
+		public boolean getEnabled() {
+			return enabled;
 		}
 
-		public Duration getCacheTimeOut() {
-			return cacheTimeOut;
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
 		}
 
-		public void setCacheTimeOut(Duration cacheTimeOut) {
-			this.cacheTimeOut = cacheTimeOut;
+		public Duration getTimeOut() {
+			return timeOut;
+		}
+
+		public void setTimeOut(Duration timeOut) {
+			this.timeOut = timeOut;
 		}
 
 	}
