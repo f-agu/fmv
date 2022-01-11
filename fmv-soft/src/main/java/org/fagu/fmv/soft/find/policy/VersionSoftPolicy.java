@@ -127,9 +127,11 @@ public class VersionSoftPolicy extends SoftPolicy {
 			}
 			throw new RuntimeException("Not implemented for this OS: " + SystemUtils.OS_NAME);
 		}
-		String msg = "version undefined in: " + lines.values().collect(Collectors.joining(System.lineSeparator()));
+		String msg = lines.values().collect(Collectors.joining(System.lineSeparator()));
 		if(StringUtils.isBlank(msg)) {
 			msg = "[stdout & stderr are empty]";
+		} else {
+			msg = "version undefined in: " + msg;
 		}
 		if(exitValue != null) {
 			msg += " (exitValue: " + exitValue + ')';
