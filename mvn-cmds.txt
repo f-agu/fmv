@@ -3,21 +3,21 @@ git clone https://github.com/f-agu/fmv.git
 cd fmv
 del release.properties pom.xml.releaseBackup
 mvn compile test
-mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.23.2 -DreleaseVersion=0.23.2 -DdevelopmentVersion=0.24.0-SNAPSHOT -U -B release:prepare
+mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.24.0 -DreleaseVersion=0.24.0 -DdevelopmentVersion=0.25.0-SNAPSHOT -U -B release:prepare
 
 
 
 
 # if git auth failed, do manually :
 git push origin master
-git tag -a 0.23.2 -m "0.23.2"
-git push origin 0.23.2
+git tag -a 0.24.0 -m "0.24.0"
+git push origin 0.24.0
 mvn versions:set -DnewVersion=0.24.0-SNAPSHOT
 git add .
 git commit -m "set version"
 git push origin master
 
-git checkout tags/0.23.2
+git checkout tags/0.24.0
 mvn install -DskipTests
 
 
