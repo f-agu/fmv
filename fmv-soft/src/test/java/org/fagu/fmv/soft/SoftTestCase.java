@@ -32,8 +32,10 @@ import org.fagu.fmv.soft.SoftExecutor.Executed;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.Lines;
+import org.fagu.fmv.soft.find.Locators;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
+import org.fagu.fmv.soft.find.SoftLocator;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -95,6 +97,40 @@ class SoftTestCase {
 		soft.withParameters("")
 				.execute();
 
+	}
+
+	@Test
+	@Disabled
+	void testTimeout() throws Exception {
+		TestSoftProvider softProvider = new TestSoftProvider("pause1") {
+
+			@Override
+			public SoftLocator getSoftLocator() {
+				SoftLocator softLocator = super.getSoftLocator();
+				Locators locators = softLocator.createLocators();
+				softLocator.addLocator(locators.byPath("c:\\tmp"));
+				return softLocator;
+			}
+
+		};
+		SoftFoundFactory ffSoftFoundFactory = ExecSoftFoundFactory.forProvider(softProvider)
+				.withParameters("-version")
+				.timeOut(1_000)
+				.parseFactory((file, softPolicy) -> new Parser() {
+
+					@Override
+					public void readLine(String line) { // ignore
+					}
+
+					@Override
+					public SoftFound closeAndParse(String cmdLineStr, int exitValue, Lines lines) throws IOException {
+						throw new RuntimeException();
+					}
+				})
+				.build();
+
+		Soft soft = Soft.with(softProvider).search(ffSoftFoundFactory);
+		System.out.println(soft);
 	}
 
 	@Test
