@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.format;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.ffmpeg.ioe.FileMediaOutput;
@@ -32,17 +31,10 @@ import org.fagu.fmv.ffmpeg.operation.MediaOutput;
  */
 public class F4VMuxer extends StreamMuxer<F4VMuxer> {
 
-	/**
-	 * @param mediaOutput
-	 */
 	protected F4VMuxer(MediaOutput mediaOutput) {
 		super("f4v", mediaOutput);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static F4VMuxer to(File file) {
 		return new F4VMuxer(new FileMediaOutput(file));
 	}

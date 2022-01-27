@@ -32,17 +32,10 @@ import org.fagu.fmv.ffmpeg.operation.MediaOutput;
  */
 public class NullMuxer extends Muxer<NullMuxer> {
 
-	/**
-	 * @param mediaOutput
-	 */
 	protected NullMuxer(MediaOutput mediaOutput) {
 		super("null", mediaOutput);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static NullMuxer build() {
 		File file = null;
 		if(OS.isFamilyWindows()) {

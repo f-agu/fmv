@@ -39,7 +39,7 @@ public class FileTypeUtils {
 
 	private static final Set<String> IMAGES = toSet("jpg", "jpeg", "png", "tiff", "tif", "bmp", "psd", "tga");
 
-	private static final Set<String> SOUNDS = toSet("mp3", "wma", "ogg", "m4a", "flac", "wav", "aac", "vqf");
+	private static final Set<String> SOUNDS = toSet("mp3", "wma", "ogg", "m4a", "flac", "wav", "aac", "vqf", "wv");
 
 	private static final Set<String> MOVIES = toSet("avi", "mov", "mp4", "wmv", "mpg", "3gp", "flv", "ts", "mkv", "vob");
 

@@ -33,10 +33,6 @@ import org.fagu.fmv.utils.media.Size;
  */
 public abstract class ImageDemuxer<M> extends Demuxer<M> {
 
-	/**
-	 * @param name
-	 * @param mediaInput
-	 */
 	public ImageDemuxer(String name, MediaInput mediaInput) {
 		super(name, mediaInput);
 	}

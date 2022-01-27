@@ -62,6 +62,10 @@
 			<groupId>com.github.junrar</groupId>
 			<artifactId>junrar</artifactId>
 		</dependency>			
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+		</dependency>			
 				
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

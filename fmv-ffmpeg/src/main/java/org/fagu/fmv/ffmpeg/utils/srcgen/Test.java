@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.utils.srcgen;
  * #L%
  */
 
-
 import java.util.Map;
 
 
@@ -29,14 +28,8 @@ import java.util.Map;
  */
 public class Test {
 
-	/**
-	 * 
-	 */
 	public Test() {}
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		Map<String, Group> extract = FullHelpExtract.extract();
 		for(Group group : extract.values()) {

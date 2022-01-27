@@ -42,12 +42,6 @@ public abstract class Flags<F> {
 
 	private final IO io;
 
-	/**
-	 * @param cls
-	 * @param index
-	 * @param name
-	 * @param io
-	 */
 	public Flags(@SuppressWarnings("rawtypes") Class<? extends Flags> cls, int index, String name, IO io) {
 		this.index = index;
 		this.name = name;
@@ -57,46 +51,27 @@ public abstract class Flags<F> {
 		}
 	}
 
-	/**
-	 * @return the index
-	 */
 	public int index() {
 		return index;
 	}
 
-	/**
-	 * @return the name
-	 */
 	public String name() {
 		return name;
 	}
 
-	/**
-	 * @return the io
-	 */
 	public IO io() {
 		return io;
 	}
 
-	/**
-	 * @return
-	 */
 	public Flags<F> inverse() {
 		return invert(this);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return new StringBuilder(name.length() + 1).append('+').append(name).toString();
 	}
 
-	/**
-	 * @param flags
-	 * @return
-	 */
 	public static <F> Flags<F> invert(Flags<F> flags) {
 		if(flags instanceof InvertFlags) {
 			return ((InvertFlags<F>)flags).origin;
@@ -113,22 +88,13 @@ public abstract class Flags<F> {
 	 */
 	private static class InvertFlags<F> extends Flags<F> {
 
-		/**
-		 * 
-		 */
 		private Flags<F> origin;
 
-		/**
-		 * @param flags
-		 */
 		private InvertFlags(Flags<F> flags) {
 			super(null, flags.index, flags.name, flags.io);
 			origin = flags;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return new StringBuilder(name().length() + 1).append('-').append(name()).toString();

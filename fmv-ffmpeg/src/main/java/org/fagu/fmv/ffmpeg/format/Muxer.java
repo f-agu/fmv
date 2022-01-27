@@ -34,26 +34,16 @@ public abstract class Muxer<M> extends Format<M> implements MediaOutput {
 
 	private final MediaOutput mediaOutput;
 
-	/**
-	 * @param name
-	 * @param mediaOutput
-	 */
 	public Muxer(String name, MediaOutput mediaOutput) {
 		super(name);
 		this.mediaOutput = Objects.requireNonNull(mediaOutput);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.format.Format#getIO()
-	 */
 	@Override
 	public IO getIO() {
 		return IO.OUTPUT;
 	}
 
-	/**
-	 * @return
-	 */
 	public MediaOutput getMediaOutput() {
 		return mediaOutput;
 	}

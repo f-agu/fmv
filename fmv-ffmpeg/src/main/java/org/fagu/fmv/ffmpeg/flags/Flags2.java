@@ -20,8 +20,8 @@ package org.fagu.fmv.ffmpeg.flags;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.format.IO;
+
 
 /**
  * (default 0)
@@ -29,30 +29,51 @@ import org.fagu.fmv.ffmpeg.format.IO;
  * @author f.agu
  */
 public class Flags2 extends Flags<Flags2> {
+
 	/**
 	 * Allow non-spec-compliant speedup tricks
 	 */
 	public static final Flags2 FAST = new Flags2(0, "fast", IO.OUTPUT);
+
 	/**
 	 * Skip bitstream encoding
 	 */
 	public static final Flags2 NOOUT = new Flags2(1, "noout", IO.OUTPUT);
+
 	/**
 	 * Ignore cropping information from sps
 	 */
 	public static final Flags2 IGNORECROP = new Flags2(2, "ignorecrop", IO.INPUT);
+
 	/**
 	 * Place global headers at every keyframe instead of in extradata
 	 */
 	public static final Flags2 LOCAL_HEADER = new Flags2(3, "local_header", IO.OUTPUT);
+
 	/**
 	 * Frame data might be split into multiple chunks
 	 */
 	public static final Flags2 CHUNKS = new Flags2(4, "chunks", IO.INPUT);
+
 	/**
 	 * Show all frames before the first keyframe
 	 */
 	public static final Flags2 SHOWALL = new Flags2(5, "showall", IO.INPUT);
+
+	/**
+	 * ... export motion vectors through frame side data
+	 */
+	public static final Flags2 EXPORT_MVS = new Flags2(6, "export_mvs", IO.INPUT);
+
+	/**
+	 * ... do not skip samples and export skip information as frame side data
+	 */
+	public static final Flags2 SKIP_MANUAL = new Flags2(7, "skip_manual", IO.INPUT);
+
+	/**
+	 * ... do not reset ASS ReadOrder field on flush
+	 */
+	public static final Flags2 ASS_RO_FLUSH_NOOP = new Flags2(8, "ass_ro_flush_noop", IO.INPUT);
 
 	/**
 	 * @param index

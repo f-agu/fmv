@@ -31,9 +31,6 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class GenerateFilter {
 
-	/**
-	 * @param name
-	 */
 	public void generate(String name) {
 		Map<String, Group> extract = FullHelpExtract.extract();
 		Group group = extract.get(name);
@@ -47,10 +44,6 @@ public class GenerateFilter {
 		writeClass(System.out, group);
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 */
 	private void writeClass(PrintStream ps, Group group) {
 
 		GenerateAVContext.writeEnums(ps, group, false, true, true);
@@ -111,9 +104,6 @@ public class GenerateFilter {
 		ps.println("}");
 	}
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		GenerateFilter generateFilter = new GenerateFilter();
 		generateFilter.generate("delogo");

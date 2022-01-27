@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.format;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.ffmpeg.ioe.FileMediaOutput;
@@ -32,17 +31,10 @@ import org.fagu.fmv.ffmpeg.operation.MediaOutput;
  */
 public class IPodMuxer extends StreamMuxer<IPodMuxer> {
 
-	/**
-	 * @param mediaOutput
-	 */
 	protected IPodMuxer(MediaOutput mediaOutput) {
 		super("f4v", mediaOutput);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static IPodMuxer to(File file) {
 		return new IPodMuxer(new FileMediaOutput(file));
 	}

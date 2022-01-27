@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.format;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.ffmpeg.ioe.FileMediaInput;
@@ -32,17 +31,10 @@ import org.fagu.fmv.ffmpeg.operation.MediaInput;
  */
 public class SunrastDemuxer extends ImageDemuxer<SunrastDemuxer> {
 
-	/**
-	 * @param mediaInput
-	 */
 	protected SunrastDemuxer(MediaInput mediaInput) {
 		super("sunrast", mediaInput);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static SunrastDemuxer from(File file) {
 		return new SunrastDemuxer(new FileMediaInput(file));
 	}

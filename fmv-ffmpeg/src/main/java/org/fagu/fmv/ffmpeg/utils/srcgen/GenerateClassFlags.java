@@ -32,11 +32,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class GenerateClassFlags {
 
-	private static final String path = "C:\\Project-4.4.1\\fmv-parent\\fmv-ffmpeg\\src\\main\\java\\org\\fagu\\fmv\\ffmpeg\\flags";
+	private static final String path = "C:\\Users\\Utilisateur\\git\\fmv\\fmv-ffmpeg\\src\\main\\java\\org\\fagu\\fmv\\ffmpeg\\flags";
 
-	/**
-	 * @param param
-	 */
 	public static File generate(Param param) throws IOException {
 		if(param.getType() != ParamType.FLAGS) {
 			return null;

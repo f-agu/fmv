@@ -36,9 +36,6 @@ public class GenerateDemuxer {
 
 	private static final Pattern FROM_TO_PATTERN = Pattern.compile(".*\\(from ([-\\w]+) to ([-\\w]+)\\).*");
 
-	/**
-	 * @param name
-	 */
 	public void generate(String name) {
 		Map<String, Group> extract = FullHelpExtract.extract();
 		String n = name + " demuxer";
@@ -50,10 +47,6 @@ public class GenerateDemuxer {
 		writeClass(System.out, group);
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 */
 	private void writeClass(PrintStream ps, Group group) {
 		String groupName = StringUtils.substringBefore(group.getName(), " ");
 		String className = StringUtils.capitalize(groupName) + "Demuxer";
@@ -95,10 +88,6 @@ public class GenerateDemuxer {
 		ps.println("}");
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 */
 	private static void writeEnums(PrintStream ps, Group group) {
 		Iterator<Param> paramIt = group.getParams().stream().filter(p -> ! p.getValues().isEmpty()).iterator();
 		if(paramIt.hasNext()) {
@@ -153,10 +142,6 @@ public class GenerateDemuxer {
 		}
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 */
 	private static void writeFields(PrintStream ps, Group group) {
 		for(Param param : group.getParams()) {
 			ps.println("\t/**");
@@ -168,11 +153,6 @@ public class GenerateDemuxer {
 		}
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 * @param returnClassName
-	 */
 	private static void writeMethods(PrintStream ps, Group group, String returnClassName) {
 		for(Param param : group.getParams()) {
 			String type = org.fagu.fmv.ffmpeg.utils.srcgen.ClassUtils.typeOf(param, true);
@@ -193,11 +173,6 @@ public class GenerateDemuxer {
 		}
 	}
 
-	/**
-	 * @param ps
-	 * @param param
-	 * @param returnClassName
-	 */
 	private static void writeMethodCheck(PrintStream ps, Param param, String name) {
 		if( ! param.getValues().isEmpty()) {
 			return;
@@ -229,10 +204,6 @@ public class GenerateDemuxer {
 		}
 	}
 
-	/**
-	 * @param s
-	 * @return
-	 */
 	private static int parseInt(String s) {
 		if("INT_MIN".equals(s)) {
 			return Integer.MIN_VALUE;
@@ -243,10 +214,6 @@ public class GenerateDemuxer {
 		return Integer.parseInt(s);
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 */
 	private static void writeMethod_eventAdded(PrintStream ps, Group group) {
 		ps.println("\t/**");
 		ps.println("\t * @see org.fagu.fmv.ffmpeg.operation.IOEntity#eventAdded(org.fagu.fmv.ffmpeg.operation.Processor, IOEntity)");
@@ -277,9 +244,6 @@ public class GenerateDemuxer {
 		ps.println("\t}");
 	}
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		GenerateDemuxer generateFilter = new GenerateDemuxer();
 		generateFilter.generate("image2");

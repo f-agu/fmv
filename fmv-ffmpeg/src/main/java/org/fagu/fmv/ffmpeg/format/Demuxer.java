@@ -43,27 +43,17 @@ public abstract class Demuxer<M> extends Format<M> implements MediaInput {
 
 	private final Set<ErrDetect> errDetects;
 
-	/**
-	 * @param name
-	 * @param mediaInput
-	 */
 	public Demuxer(String name, MediaInput mediaInput) {
 		super(name);
 		this.mediaInput = mediaInput;
 		errDetects = new HashSet<>();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.format.Format#getIO()
-	 */
 	@Override
 	public IO getIO() {
 		return IO.INPUT;
 	}
 
-	/**
-	 * @return
-	 */
 	public MediaInput getMediaInput() {
 		return mediaInput;
 	}
@@ -236,17 +226,11 @@ public abstract class Demuxer<M> extends Format<M> implements MediaInput {
 		return getMThis();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.MediaInput#getDuration()
-	 */
 	@Override
 	public Optional<Duration> getDuration() {
 		return Optional.empty();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.IOEntity#eventAdded(org.fagu.fmv.ffmpeg.operation.Processor, IOEntity)
-	 */
 	@Override
 	public void eventAdded(Processor<?> processor, IOEntity ioEntity) {
 		super.eventAdded(processor, ioEntity);

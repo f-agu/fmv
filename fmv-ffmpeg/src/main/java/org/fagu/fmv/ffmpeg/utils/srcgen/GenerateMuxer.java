@@ -31,9 +31,6 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class GenerateMuxer {
 
-	/**
-	 * @param name
-	 */
 	public void generate(String name) {
 		Map<String, Group> extract = FullHelpExtract.extract();
 		String n = name + " muxer";
@@ -45,10 +42,6 @@ public class GenerateMuxer {
 		writeClass(System.out, group);
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 */
 	private void writeClass(PrintStream ps, Group group) {
 		String groupName = StringUtils.substringBefore(group.getName(), " ");
 		String className = StringUtils.capitalize(groupName) + "Muxer";
@@ -92,9 +85,6 @@ public class GenerateMuxer {
 		ps.println("}");
 	}
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		GenerateMuxer generateFilter = new GenerateMuxer();
 		generateFilter.generate("image2");

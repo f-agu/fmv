@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.format;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.ioe.PipeMediaInput;
 import org.fagu.fmv.ffmpeg.operation.MediaInput;
 
@@ -30,16 +29,10 @@ import org.fagu.fmv.ffmpeg.operation.MediaInput;
  */
 public class Image2PipeDemuxer extends ImageDemuxer<Image2PipeDemuxer> {
 
-	/**
-	 * @param mediaInput
-	 */
 	protected Image2PipeDemuxer(MediaInput mediaInput) {
 		super("image2pipe", mediaInput);
 	}
 
-	/**
-	 * @return
-	 */
 	public static Image2PipeDemuxer build() {
 		return new Image2PipeDemuxer(new PipeMediaInput());
 	}

@@ -39,9 +39,6 @@ import org.fagu.fmv.ffmpeg.utils.HelpCache;
  */
 public class Formats {
 
-	/**
-	 * 
-	 */
 	private static final HelpCache<Formats, FormatsHelp> HELP_CACHE = new HelpCache<>(runnable(), Formats::new);
 
 	/**
@@ -1439,29 +1436,17 @@ public class Formats {
 	 */
 	public static final Formats YUV4MPEGPIPE = new Formats("yuv4mpegpipe");
 
-	/**
-	 * 
-	 */
 	private final String name;
 
-	/**
-	 * @param name
-	 */
 	private Formats(String name) {
 		this.name = name;
 		HELP_CACHE.add(name, this, null);
 	}
 
-	/**
-	 * @return the name
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isDemuxingSupported() {
 		for(FormatsHelp h : HELP_CACHE.cache(name)) {
 			if(h.contains('D')) {
@@ -1471,9 +1456,6 @@ public class Formats {
 		return false;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isMuxingSupported() {
 		for(FormatsHelp h : HELP_CACHE.cache(name)) {
 			if(h.contains('E')) {
@@ -1483,9 +1465,6 @@ public class Formats {
 		return false;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getDescription() {
 		return HELP_CACHE.cache(name)
 				.stream()
@@ -1493,16 +1472,10 @@ public class Formats {
 				.collect(Collectors.joining(", "));
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean exists() {
 		return exists(name);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return name;
@@ -1510,40 +1483,24 @@ public class Formats {
 
 	// **************************************************
 
-	/**
-	 * @return
-	 */
 	public static boolean exists(String name) {
 		return HELP_CACHE.exists(name);
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static Formats byName(String name) {
 		return HELP_CACHE.byName(name);
 	}
 
-	/**
-	 * @return
-	 */
 	public static Set<String> availableNames() {
 		return HELP_CACHE.availableNames();
 	}
 
-	/**
-	 * @return
-	 */
 	public static List<Formats> available() {
 		return HELP_CACHE.available();
 	}
 
 	// **************************************************
 
-	/**
-	 * @return
-	 */
 	private static Runnable runnable() {
 		return () -> {
 			LinesFFMPEGOperation operation = new LinesFFMPEGOperation();
@@ -1564,14 +1521,8 @@ public class Formats {
 
 	// ---------------------------------------------
 
-	/**
-	 * @return
-	 */
 	private static class FormatsHelp extends Help {
 
-		/**
-		 * @param name
-		 */
 		protected FormatsHelp(String name) {
 			super(name);
 		}

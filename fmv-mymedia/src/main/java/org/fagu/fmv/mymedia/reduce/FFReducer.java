@@ -143,17 +143,11 @@ public class FFReducer extends AbstractReducer {
 		videoFormatUnchanges = getProperyList("fmv.reduce.video.formatunchange", DEFAULT_VIDEO_FORMAT_UNCHANGE);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.reduce.Reducer#getName()
-	 */
 	@Override
 	public String getName() {
 		return "FFMpeg";
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.reduce.Reducer#reduceMedia(java.io.File, String, Logger)
-	 */
 	@Override
 	public Reduced reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException {
 		File destFile = null;
@@ -189,32 +183,14 @@ public class FFReducer extends AbstractReducer {
 		this.crf = crf;
 	}
 
-	/**
-	 * @see java.io.Closeable#close()
-	 */
 	@Override
 	public void close() throws IOException {}
 
-	/**
-	 * @param builder
-	 * @param movieMetadatas
-	 * @param maxSize
-	 * @param logger
-	 * @return
-	 */
 	public static Size applyScaleIfNecessary(FFMPEGExecutorBuilder builder, MovieMetadatas movieMetadatas, Size maxSize,
 			Logger logger) {
 		return applyScaleIfNecessary(builder, movieMetadatas, maxSize, logger, null);
 	}
 
-	/**
-	 * @param builder
-	 * @param movieMetadatas
-	 * @param maxSize
-	 * @param logger
-	 * @param rotation
-	 * @return
-	 */
 	public static Size applyScaleIfNecessary(FFMPEGExecutorBuilder builder, MovieMetadatas movieMetadatas, Size maxSize,
 			Logger logger, Rotation inRotation) {
 		VideoStream videoStream = movieMetadatas.getVideoStream();
@@ -251,23 +227,14 @@ public class FFReducer extends AbstractReducer {
 
 	// *******************************************
 
-	/**
-	 * @return
-	 */
 	private String getAudioFormat(File srcFile) {
 		return getFormat(srcFile, audioFormatUnchanges, audioFormat);
 	}
 
-	/**
-	 * @return
-	 */
 	private String getVideoFormat(File srcFile) {
 		return getFormat(srcFile, videoFormatUnchanges, videoFormat);
 	}
 
-	/**
-	 * @return
-	 */
 	private String getFormat(File srcFile, List<String> formatUnchanges, String defaultValue) {
 		String extension = FilenameUtils.getExtension(srcFile.getName());
 		return formatUnchanges.stream()//
@@ -276,11 +243,6 @@ public class FFReducer extends AbstractReducer {
 				.orElse(defaultValue);
 	}
 
-	/**
-	 * @param metadatas
-	 * @param logger
-	 * @return
-	 */
 	private boolean isVideo(MovieMetadatas metadatas, Logger logger) {
 		if( ! metadatas.contains(Type.VIDEO)) {
 			logger.log("Is audio: not contains video stream");
@@ -289,11 +251,6 @@ public class FFReducer extends AbstractReducer {
 		return isVideoStream(metadatas.getVideoStream(), logger);
 	}
 
-	/**
-	 * @param videoStream
-	 * @param logger
-	 * @return
-	 */
 	private boolean isVideoStream(VideoStream videoStream, Logger logger) {
 		Optional<Integer> numberOfFrames = videoStream.numberOfFrames();
 		if(numberOfFrames.isPresent() && numberOfFrames.get() == 1) {
@@ -313,23 +270,10 @@ public class FFReducer extends AbstractReducer {
 		return true;
 	}
 
-	/**
-	 * @param metadatas
-	 * @return
-	 */
 	private boolean needToReduceVideo(MovieMetadatas metadatas) {
 		return ! metadatas.isTreatedByFMV();
 	}
 
-	/**
-	 * @param metadatas
-	 * @param srcFile
-	 * @param movieMetadatas
-	 * @param destFile
-	 * @param consolePrefixMessage
-	 * @param logger
-	 * @throws IOException
-	 */
 	private boolean reduceVideo(MovieMetadatas metadatas, File srcFile, File destFile,
 			String consolePrefixMessage, Logger logger) throws IOException {
 
@@ -460,11 +404,6 @@ public class FFReducer extends AbstractReducer {
 		return false;
 	}
 
-	/**
-	 * @param srcFile
-	 * @param subtitleStream
-	 * @return
-	 */
 	private File getSubtitleOutputFile(File srcFile, Stream subtitleStream) {
 		StringBuilder joiner = new StringBuilder("")
 				.append(FilenameUtils.getBaseName(srcFile.getName()));
@@ -474,11 +413,6 @@ public class FFReducer extends AbstractReducer {
 		return new File(srcFile.getParentFile(), joiner.toString());
 	}
 
-	/**
-	 * @param metadatas
-	 * @param srcFile
-	 * @return
-	 */
 	private boolean needToReduceAudio(MovieMetadatas metadatas, File srcFile) {
 		String extension = FilenameUtils.getExtension(srcFile.getName());
 		if( ! audioFormat.equalsIgnoreCase(extension)) {
@@ -512,16 +446,6 @@ public class FFReducer extends AbstractReducer {
 		return selected.size() == audioStreams.size() ? null : selected;
 	}
 
-	/**
-	 * @param metadatas
-	 * @param srcFile
-	 * @param destFile
-	 * @param bitRate
-	 * @param consolePrefixMessage
-	 * @param logger
-	 * @return
-	 * @throws IOException
-	 */
 	private boolean reduceAudio(MovieMetadatas metadatas, File srcFile, File destFile, String bitRate,
 			String consolePrefixMessage, Logger logger, Collection<Stream> onlyStreams) throws IOException {
 
@@ -568,11 +492,6 @@ public class FFReducer extends AbstractReducer {
 		return false;
 	}
 
-	/**
-	 * @param propertyKey
-	 * @param defaultValues
-	 * @return
-	 */
 	private List<String> getProperyList(String propertyKey, List<String> defaultValues) {
 		String values = System.getProperty(propertyKey);
 		if(values == null) {
@@ -589,20 +508,10 @@ public class FFReducer extends AbstractReducer {
 		return list;
 	}
 
-	/**
-	 * @param logger
-	 * @param cropDetect
-	 * @param videoMetadatas
-	 * @return
-	 */
 	private FFExecListener createCropDetectFFExecListener(Logger logger, CropDetect cropDetect,
 			MovieMetadatas videoMetadatas) {
 		return new FFExecListener() {
 
-			/**
-			 * @see org.fagu.fmv.soft.exec.FMVExecListener#eventPostExecute(org.fagu.fmv.soft.exec.FMVExecutor,
-			 *      org.apache.commons.exec.CommandLine, java.util.Map, org.apache.commons.exec.ExecuteResultHandler)
-			 */
 			@Override
 			public void eventPostExecute(FMVExecutor fmvExecutor, CommandLine command, Map environment,
 					ExecuteResultHandler handler) {
@@ -623,18 +532,9 @@ public class FFReducer extends AbstractReducer {
 		};
 	}
 
-	/**
-	 * @param logger
-	 * @param volumeDetect
-	 * @return
-	 */
 	private FFExecListener createVolumeDetectFFExecListener(Logger logger, VolumeDetect volumeDetect) {
 		return new FFExecListener() {
 
-			/**
-			 * @see org.fagu.fmv.soft.exec.FMVExecListener#eventPostExecute(org.fagu.fmv.soft.exec.FMVExecutor,
-			 *      org.apache.commons.exec.CommandLine, java.util.Map, org.apache.commons.exec.ExecuteResultHandler)
-			 */
 			@Override
 			public void eventPostExecute(FMVExecutor fmvExecutor, CommandLine command, Map environment,
 					ExecuteResultHandler handler) {
@@ -653,9 +553,6 @@ public class FFReducer extends AbstractReducer {
 		};
 	}
 
-	/**
-	 * @return
-	 */
 	private Size getMaxSize() {
 		String property = System.getProperty("fmv.reduce.video.maxsize");
 		if(property == null) {

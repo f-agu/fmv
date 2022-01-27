@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.filter.impl;
 
+import java.time.LocalDate;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -21,7 +23,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  */
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.Set;
 
 import org.fagu.fmv.ffmpeg.filter.FilterCombined;
@@ -45,17 +46,10 @@ import org.fagu.version.Version;
  */
 public class AutoRotate extends FilterCombined {
 
-	/**
-	 * @param name
-	 */
 	private AutoRotate(Rotate rotate) {
 		super("auto-rotate", Collections.singletonList(rotate));
 	}
 
-	/**
-	 * @param movieMetadatas
-	 * @return
-	 */
 	public static AutoRotate create(MovieMetadatas movieMetadatas) {
 		Rotation rotation = Rotation.R_0;
 		if(movieMetadatas != null && ! isAutoRotateObsolete()) {
@@ -67,33 +61,20 @@ public class AutoRotate extends FilterCombined {
 		return new AutoRotate(Rotate.create(rotation));
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.AbstractFilter#upgradeOutputProcessor(org.fagu.fmv.ffmpeg.operation.OutputProcessor)
-	 */
 	@Override
 	public void upgradeOutputProcessor(OutputProcessor outputProcessor) {
 		Transpose.addMetadataRotate(outputProcessor, Rotation.R_0);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);
 	}
 
-	/**
-	 * @return
-	 */
 	public static boolean isAutoRotateObsolete() {
 		return isAutoRotateObsolete(FFMpeg.search());
 	}
 
-	/**
-	 * @param soft
-	 * @return
-	 */
 	public static boolean isAutoRotateObsolete(Soft soft) {
 		SoftFound softFound = soft.getFirstFound();
 		FFInfo ffInfo = (FFInfo)softFound.getSoftInfo();
@@ -108,11 +89,10 @@ public class AutoRotate extends FilterCombined {
 			return builtVersion.intValue() > 73010;
 		}
 		// build date
-		Date builtDate = ffInfo.getBuiltDate();
+		LocalDate builtDate = ffInfo.getBuiltDate();
 		if(builtDate != null) {
-			@SuppressWarnings("deprecation")
-			Date minDate = new Date(2015 - 1900, 6 - 1, 12);
-			return minDate.before(builtDate);
+			LocalDate minDate = LocalDate.of(2015, 6, 12);
+			return minDate.isBefore(builtDate);
 		}
 
 		return false;

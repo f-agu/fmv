@@ -48,7 +48,7 @@ public class VersionDateSoftInfo extends VersionSoftInfo {
 	}
 
 	public Optional<Date> getDate() {
-		return Optional.ofNullable(date)
+		return getLocalDateTime()
 				.map(d -> Date.from(d.atZone(ZoneId.systemDefault()).toInstant()));
 	}
 
@@ -57,7 +57,7 @@ public class VersionDateSoftInfo extends VersionSoftInfo {
 	}
 
 	public Optional<LocalDate> getLocalDate() {
-		return Optional.ofNullable(date)
+		return getLocalDateTime()
 				.map(LocalDateTime::toLocalDate);
 	}
 

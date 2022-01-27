@@ -33,18 +33,10 @@ public class Group extends AbstractOption {
 
 	private List<Param> params;
 
-	/**
-	 * @param name
-	 * @param flags
-	 * @param description
-	 */
 	public Group(String name, String description) {
 		super(name, null, description);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.utils.srcgen.AbstractOption#getFlags()
-	 */
 	@Override
 	public Flags getFlags() {
 		if(params == null) {
@@ -58,9 +50,6 @@ public class Group extends AbstractOption {
 		return flags;
 	}
 
-	/**
-	 * @param param
-	 */
 	public void addParam(Param param) {
 		if(params == null) {
 			params = new ArrayList<>();
@@ -68,16 +57,10 @@ public class Group extends AbstractOption {
 		params.add(param);
 	}
 
-	/**
-	 * @return
-	 */
 	public List<Param> getParams() {
 		return params == null ? Collections.emptyList() : params;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return getName() + (params != null ? params.toString() : "");

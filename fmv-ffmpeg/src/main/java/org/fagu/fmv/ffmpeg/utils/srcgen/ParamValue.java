@@ -20,24 +20,15 @@ package org.fagu.fmv.ffmpeg.utils.srcgen;
  * #L%
  */
 
-
 /**
  * @author f.agu
  */
 public class ParamValue extends AbstractOption {
 
-	/**
-	 * @param name
-	 * @param flags
-	 * @param description
-	 */
 	public ParamValue(String name, Flags flags, String description) {
 		super(name, flags, description);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return getName();

@@ -45,9 +45,6 @@ public abstract class Format<M> extends ElementParameterized<M> {
 
 	private final Set<Fdebug> fdebugs;
 
-	/**
-	 * @param name
-	 */
 	public Format(String name) {
 		super(name);
 		avioflagss = new HashSet<>();
@@ -160,9 +157,6 @@ public abstract class Format<M> extends ElementParameterized<M> {
 		return getMThis();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.IOEntity#eventAdded(org.fagu.fmv.ffmpeg.operation.Processor, IOEntity)
-	 */
 	@Override
 	public void eventAdded(Processor<?> processor, IOEntity ioEntity) {
 		super.eventAdded(processor, ioEntity);
@@ -179,9 +173,6 @@ public abstract class Format<M> extends ElementParameterized<M> {
 
 	// ***********************************************
 
-	/**
-	 * @return
-	 */
 	public abstract IO getIO();
 
 }

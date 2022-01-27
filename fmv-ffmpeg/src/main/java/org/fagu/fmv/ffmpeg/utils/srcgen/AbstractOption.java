@@ -25,40 +25,26 @@ package org.fagu.fmv.ffmpeg.utils.srcgen;
  */
 public abstract class AbstractOption {
 
-	private String name;
+	private final String name;
 
-	private Flags flags;
+	private final Flags flags;
 
-	private String description;
+	private final String description;
 
-	/**
-	 * @param name
-	 * @param flags
-	 * @param description
-	 */
 	public AbstractOption(String name, Flags flags, String description) {
 		this.name = name;
 		this.flags = flags;
 		this.description = description;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @return
-	 */
 	public Flags getFlags() {
 		return flags;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getDescription() {
 		return description;
 	}

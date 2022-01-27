@@ -41,10 +41,6 @@ public abstract class StreamMuxer<M> extends Muxer<M> {
 
 	private final Set<Rtpflags> rtpflagss;
 
-	/**
-	 * @param name
-	 * @param mediaOutput
-	 */
 	public StreamMuxer(String name, MediaOutput mediaOutput) {
 		super(name, mediaOutput);
 		movflagss = new HashSet<>();
@@ -245,9 +241,6 @@ public abstract class StreamMuxer<M> extends Muxer<M> {
 		return getMThis();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.IOEntity#eventAdded(org.fagu.fmv.ffmpeg.operation.Processor, IOEntity)
-	 */
 	@Override
 	public void eventAdded(Processor<?> processor, IOEntity ioEntity) {
 		super.eventAdded(processor, ioEntity);

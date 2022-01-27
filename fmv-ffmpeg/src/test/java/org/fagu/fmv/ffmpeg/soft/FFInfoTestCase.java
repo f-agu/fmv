@@ -29,8 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
@@ -51,7 +50,7 @@ import org.junit.jupiter.api.Test;
 class FFInfoTestCase {
 
 	@Test
-	@Disabled
+	// @Disabled
 	void testFindFFMpeg() throws Exception {
 		Founds founds = FFMpeg.search().getFounds();
 		founds.forEach(softFound -> {
@@ -153,7 +152,7 @@ class FFInfoTestCase {
 		lines.addOut("libswresample   1.  1.100 /  1.  1.100");
 		lines.addOut("libpostproc    53.  3.100 / 53.  3.100");
 
-		assertFull(newParserFFMpeg(lines), lines, null, date(2015, 1, 2), 70767);
+		assertFull(newParserFFMpeg(lines), lines, null, LocalDate.of(2015, 1, 2), 70767);
 	}
 
 	@Test
@@ -173,7 +172,7 @@ class FFInfoTestCase {
 		lines.addOut("libswresample   1.  1.100 /  1.  1.100");
 		lines.addOut("libpostproc    53.  3.100 / 53.  3.100");
 
-		assertFull(newParserProbe(lines), lines, null, date(2015, 1, 2), 70767);
+		assertFull(newParserProbe(lines), lines, null, LocalDate.of(2015, 1, 2), 70767);
 	}
 
 	/**
@@ -198,9 +197,7 @@ class FFInfoTestCase {
 		lines.addOut("libswresample   0. 18.100 /  0. 18.100");
 		lines.addOut("libpostproc    52.  3.100 / 52.  3.100");
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(2014, Calendar.NOVEMBER, 14, 14, 59, 05);
-		assertFull(newParserFFMpeg(lines), lines, new Version(2, 2, 10, 2), calendar.getTime(), null);
+		assertFull(newParserFFMpeg(lines), lines, new Version(2, 2, 10, 2), LocalDate.of(2014, 11, 14), null);
 	}
 
 	@Test
@@ -220,9 +217,7 @@ class FFInfoTestCase {
 		lines.addOut("libswresample   0. 19.100 /  0. 19.100");
 		lines.addOut("libpostproc    52.  3.100 / 52.  3.100");
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(2014, Calendar.JUNE, 1, 22, 9, 10);
-		assertFull(newParserFFMpeg(lines), lines, null, calendar.getTime(), 63696);
+		assertFull(newParserFFMpeg(lines), lines, null, LocalDate.of(2014, 6, 1), 63696);
 	}
 
 	@Test
@@ -242,9 +237,7 @@ class FFInfoTestCase {
 		lines.addOut("libswresample   0. 19.100 /  0. 19.100");
 		lines.addOut("libpostproc    52.  3.100 / 52.  3.100");
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(2014, Calendar.JULY, 29, 22, 10, 17);
-		assertFull(newParserFFMpeg(lines), lines, null, calendar.getTime(), 65107);
+		assertFull(newParserFFMpeg(lines), lines, null, LocalDate.of(2014, 07, 29), 65107);
 	}
 
 	@Test
@@ -264,7 +257,7 @@ class FFInfoTestCase {
 		lines.addOut("libswscale      3.  1.101 /  3.  1.101");
 		lines.addOut("libswresample   1.  1.100 /  1.  1.100");
 
-		assertFull(newParserFFMpeg(lines), lines, new Version(2, 6, 1), date(2015, 3, 7), null);
+		assertFull(newParserFFMpeg(lines), lines, new Version(2, 6, 1), LocalDate.of(2015, 3, 7), null);
 	}
 
 	@Test
@@ -285,7 +278,7 @@ class FFInfoTestCase {
 		lines.addOut("libswresample   1.  1.100 /  1.  1.100");
 		lines.addOut("libpostproc    53.  3.100 / 53.  3.100");
 
-		assertFull(newParserProbe(lines), lines, new Version(2, 6, 1), date(2015, 3, 7), null);
+		assertFull(newParserProbe(lines), lines, new Version(2, 6, 1), LocalDate.of(2015, 3, 7), null);
 	}
 
 	@Test
@@ -305,7 +298,7 @@ class FFInfoTestCase {
 		lines.addOut("libswresample   3.  6.100 /  3.  6.100");
 		lines.addOut("libpostproc    55.  6.100 / 55.  6.100");
 
-		assertFull(newParserProbe(lines), lines, null, date(2020, 6, 1), null);
+		assertFull(newParserProbe(lines), lines, null, LocalDate.of(2020, 6, 1), null);
 	}
 
 	@Test
@@ -327,16 +320,30 @@ class FFInfoTestCase {
 		lines.addOut("Hyper fast Audio and Video encoder");
 		lines.addOut("usage: ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...");
 
-		assertFull(newParserFFMpeg(lines), lines, null, date(2021, 7, 22), 103035);
+		assertFull(newParserFFMpeg(lines), lines, null, LocalDate.of(2021, 7, 22), 103035);
+	}
+
+	@Test
+	void testFFMpeg_2022_01_24() throws Exception {
+		Lines lines = new Lines();
+
+		lines.addOut("ffmpeg version 2022-01-24-git-0a83ecbf48-full_build-www.gyan.dev Copyright (c) 2000-2022 the FFmpeg developers");
+		lines.addOut("built with gcc 11.2.0 (Rev7, Built by MSYS2 project)");
+		lines.addOut(
+				"configuration: --enable-gpl --enable-version3 --enable-static --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-libsnappy --enable-zlib --enable-librist --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-libbluray --enable-libcaca --enable-sdl2 --enable-libdav1d --enable-libdavs2 --enable-libuavs3d --enable-libzvbi --enable-librav1e --enable-libsvtav1 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-frei0r --enable-libfreetype --enable-libfribidi --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-d3d11va --enable-dxva2 --enable-libmfx --enable-libshaderc --enable-vulkan --enable-libplacebo --enable-opencl --enable-libcdio --enable-libgme --enable-libmodplug --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libshine --enable-libtheora --enable-libtwolame --enable-libvo-amrwbenc --enable-libilbc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-ladspa --enable-libbs2b --enable-libflite --enable-libmysofa --enable-librubberband --enable-libsoxr --enable-chromaprint");
+		lines.addOut("libavutil      57. 18.100 / 57. 18.100");
+		lines.addOut("libavcodec     59. 20.100 / 59. 20.100");
+		lines.addOut("libavformat    59. 17.101 / 59. 17.101");
+		lines.addOut("libavdevice    59.  5.100 / 59.  5.100");
+		lines.addOut("libavfilter     8. 26.101 /  8. 26.101");
+		lines.addOut("libswscale      6.  5.100 /  6.  5.100");
+		lines.addOut("libswresample   4.  4.100 /  4.  4.100");
+		lines.addOut("libpostproc    56.  4.100 / 56.  4.100");
+
+		assertFull(newParserFFMpeg(lines), lines, null, LocalDate.of(2022, 1, 24), null);
 	}
 
 	// ********************************************************
-
-	private Date date(int year, int month, int day) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(year, month - 1, day, 0, 0, 0);
-		return calendar.getTime();
-	}
 
 	private Parser newParserProbe(Lines lines) {
 		FFProbeSoftProvider softProvider = new FFProbeSoftProvider();
@@ -352,7 +359,7 @@ class FFInfoTestCase {
 		return parser;
 	}
 
-	private void assertFull(Parser parser, Lines lines, Version version, Date builtDate, Integer builtVersion) throws IOException,
+	private void assertFull(Parser parser, Lines lines, Version version, LocalDate builtDate, Integer builtVersion) throws IOException,
 			ParseException {
 		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		FFInfo ffInfo = (FFInfo)softFound.getSoftInfo();
@@ -372,7 +379,7 @@ class FFInfoTestCase {
 			assertNull(ffInfo.getBuiltDate());
 		} else {
 			assertNotNull(ffInfo.getBuiltDate());
-			assertEquals(builtDate.getTime() / 1000, ffInfo.getBuiltDate().getTime() / 1000);
+			assertEquals(builtDate, ffInfo.getBuiltDate());
 		}
 	}
 

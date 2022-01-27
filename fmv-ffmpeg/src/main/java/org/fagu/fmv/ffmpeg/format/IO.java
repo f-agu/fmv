@@ -25,26 +25,19 @@ package org.fagu.fmv.ffmpeg.format;
  */
 public enum IO {
 
-	INPUT, OUTPUT, INPUT_OUTPUT, UNDEFINED;
+	INPUT,
+	OUTPUT,
+	INPUT_OUTPUT,
+	UNDEFINED;
 
-	/**
-	 * @return
-	 */
 	public boolean isInput() {
 		return this != OUTPUT;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isOutput() {
 		return this != INPUT;
 	}
 
-	/**
-	 * @param io
-	 * @return
-	 */
 	public boolean accept(IO other) {
 		return isInput() ? other.isInput() : other.isOutput();
 	}

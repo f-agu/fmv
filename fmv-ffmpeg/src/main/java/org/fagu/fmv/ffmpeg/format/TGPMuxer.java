@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.format;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.ffmpeg.ioe.FileMediaOutput;
@@ -32,17 +31,10 @@ import org.fagu.fmv.ffmpeg.operation.MediaOutput;
  */
 public class TGPMuxer extends StreamMuxer<TGPMuxer> {
 
-	/**
-	 * @param mediaOutput
-	 */
 	protected TGPMuxer(MediaOutput mediaOutput) {
 		super("tgp", mediaOutput);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static TGPMuxer to(File file) {
 		return new TGPMuxer(new FileMediaOutput(file));
 	}

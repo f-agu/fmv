@@ -25,16 +25,8 @@ package org.fagu.fmv.ffmpeg.utils.srcgen;
  */
 public class ClassUtils {
 
-	/**
-	 * 
-	 */
 	private ClassUtils() {}
 
-	/**
-	 * @param param
-	 * @param primitive
-	 * @return
-	 */
 	public static String typeOf(Param param, boolean primitive) {
 		ParamType<?> paramType = param.getType();
 		if(paramType == ParamType.FLAGS || ! param.getValues().isEmpty()) {
@@ -55,10 +47,6 @@ public class ClassUtils {
 		return cls.getSimpleName();
 	}
 
-	/**
-	 * @param param
-	 * @return
-	 */
 	public static String nameOf(Param param) {
 		return ClassNameUtils.field(param.getName());
 	}

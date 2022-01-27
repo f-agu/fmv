@@ -22,6 +22,9 @@ package org.fagu.fmv.ffmpeg.soft;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,13 +47,13 @@ public class FFInfo extends VersionDateSoftInfo {
 
 	private final Integer builtVersion;
 
-	private final Date builtDate;
+	private final LocalDate builtDate;
 
 	private final Set<String> configSet;
 
 	private final Map<String, Version> libVersionMap;
 
-	protected FFInfo(File file, Version version, String softName, Date builtDate, Integer builtVersion, Set<String> configSet,
+	protected FFInfo(File file, Version version, String softName, LocalDate builtDate, Integer builtVersion, Set<String> configSet,
 			Map<String, Version> libVersionMap) {
 		super(file, softName, null, (Date)null);
 		this.version = version;
@@ -78,12 +81,17 @@ public class FFInfo extends VersionDateSoftInfo {
 	}
 
 	@Override
-	public Optional<Date> getDate() {
+	public Optional<LocalDateTime> getLocalDateTime() {
+		return Optional.ofNullable(getBuiltDate()).map(ld -> LocalDateTime.of(ld, LocalTime.MIDNIGHT));
+	}
+
+	@Override
+	public Optional<LocalDate> getLocalDate() {
 		return Optional.ofNullable(getBuiltDate());
 	}
 
-	public Date getBuiltDate() {
-		return builtDate != null ? new Date(builtDate.getTime()) : null;
+	public LocalDate getBuiltDate() {
+		return builtDate != null ? builtDate : null;
 	}
 
 	public Set<String> getConfigs() {
@@ -134,7 +142,7 @@ public class FFInfo extends VersionDateSoftInfo {
 			// uncomparable
 		}
 		if(builtDate != null) {
-			Date otherBuiltDate = off.getBuiltDate();
+			LocalDate otherBuiltDate = off.getBuiltDate();
 			if(otherBuiltDate != null) {
 				return builtDate.compareTo(otherBuiltDate);
 			}
@@ -175,21 +183,15 @@ public class FFInfo extends VersionDateSoftInfo {
 
 	// *****************************************************
 
-	/**
-	 * @param version
-	 * @param builtVersion
-	 * @param defaultDate
-	 * @return
-	 */
-	private Date estimateBuildDate(Version version, Integer builtVersion, Date defaultDate) {
+	private LocalDate estimateBuildDate(Version version, Integer builtVersion, LocalDate defaultDate) {
 		if(defaultDate != null) {
 			return defaultDate;
 		}
 		if(version != null) {
-			return BuildMapping.versionToDate(version);
+			return BuildMapping.versionToLocalDate(version);
 		}
 		if(builtVersion != null) {
-			return BuildMapping.buildToDate(builtVersion);
+			return BuildMapping.buildToLocalDate(builtVersion);
 		}
 		return null;
 	}

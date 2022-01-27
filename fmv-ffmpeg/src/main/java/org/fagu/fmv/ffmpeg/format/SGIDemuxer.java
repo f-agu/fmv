@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.format;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.ffmpeg.ioe.FileMediaInput;
@@ -32,17 +31,10 @@ import org.fagu.fmv.ffmpeg.operation.MediaInput;
  */
 public class SGIDemuxer extends ImageDemuxer<SGIDemuxer> {
 
-	/**
-	 * @param mediaInput
-	 */
 	protected SGIDemuxer(MediaInput mediaInput) {
 		super("sgi", mediaInput);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static SGIDemuxer from(File file) {
 		return new SGIDemuxer(new FileMediaInput(file));
 	}

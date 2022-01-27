@@ -145,9 +145,6 @@ public class ParamType<P> {
 
 	public static final ParamType<Fraction> RATIONAL = new ParamType<Fraction>(Fraction.class) {
 
-		/**
-		 * @see org.fagu.fmv.ffmpeg.utils.srcgen.ParamType#parse(java.lang.String)
-		 */
 		@Override
 		public Fraction parse(String s) {
 			return Fraction.parse(s);
@@ -158,9 +155,6 @@ public class ParamType<P> {
 
 	public static final ParamType<String> STRING = new ParamType<String>(String.class) {
 
-		/**
-		 * @see org.fagu.fmv.ffmpeg.utils.srcgen.ParamType#parse(java.lang.String)
-		 */
 		@Override
 		public String parse(String s) {
 			return s;
@@ -169,9 +163,6 @@ public class ParamType<P> {
 
 	public static final ParamType<Boolean> BOOLEAN = new ParamType<Boolean>(Boolean.class) {
 
-		/**
-		 * @see org.fagu.fmv.ffmpeg.utils.srcgen.ParamType#parse(java.lang.String)
-		 */
 		@Override
 		public Boolean parse(String s) {
 			return Boolean.parseBoolean(s);
@@ -181,42 +172,26 @@ public class ParamType<P> {
 
 	public static final ParamType<FrameRate> VIDEO_RATE = new ParamType<>(FrameRate.class);
 
+	public static final ParamType<Object> DICTIONARY = new ParamType<>(Object.class);
+
 	private final Class<?> cls;
 
-	/**
-	 * @param cls
-	 */
 	private ParamType(Class<P> cls) {
 		this.cls = cls;
 	}
 
-	/**
-	 * @return the cls
-	 */
 	public Class<?> getCls() {
 		return cls;
 	}
 
-	/**
-	 * @param s
-	 * @return
-	 */
 	public P parse(String s) {
 		return null;
 	}
 
-	/**
-	 * @param p
-	 * @return
-	 */
 	public boolean isMin(P p) {
 		return false;
 	}
 
-	/**
-	 * @param p
-	 * @return
-	 */
 	public boolean isMax(P p) {
 		return false;
 	}
@@ -232,10 +207,6 @@ public class ParamType<P> {
 
 	// *******************************************************************
 
-	/**
-	 * @param s
-	 * @return
-	 */
 	public static Number parseNumber(String s) {
 		if("INT_MIN".equals(s)) {
 			return Integer.MIN_VALUE;

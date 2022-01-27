@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.format;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.ffmpeg.ioe.FileMediaOutput;
@@ -32,17 +31,10 @@ import org.fagu.fmv.ffmpeg.operation.MediaOutput;
  */
 public class Image2Muxer extends Muxer<Image2Muxer> {
 
-	/**
-	 * @param mediaOutput
-	 */
 	protected Image2Muxer(MediaOutput mediaOutput) {
 		super("image2", mediaOutput);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static Image2Muxer to(File file) {
 		return new Image2Muxer(new FileMediaOutput(file));
 	}

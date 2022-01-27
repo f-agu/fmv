@@ -28,9 +28,6 @@ import java.util.Map;
  */
 public class GenerateEncoder {
 
-	/**
-	 * @param name
-	 */
 	public void generate(String name) {
 		Map<String, Group> extract = FullHelpExtract.extract();
 		String n = name;
@@ -42,9 +39,6 @@ public class GenerateEncoder {
 		GenerateAVContext.writeClass(System.out, group, false, false, true);
 	}
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		GenerateEncoder generateFilter = new GenerateEncoder();
 		generateFilter.generate("libx264");

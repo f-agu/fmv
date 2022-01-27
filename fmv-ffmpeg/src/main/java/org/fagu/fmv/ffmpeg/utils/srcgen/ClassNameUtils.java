@@ -32,10 +32,6 @@ public class ClassNameUtils {
 
 	private ClassNameUtils() {}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static String type(String name) {
 		String newName = name.replaceAll("-|_", " ");
 		BreakIterator boundary = BreakIterator.getWordInstance();
@@ -57,10 +53,6 @@ public class ClassNameUtils {
 		return newName;
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static String field(String name) {
 		String newName = name.replaceAll("-|_", " ");
 		BreakIterator boundary = BreakIterator.getWordInstance();
@@ -86,10 +78,6 @@ public class ClassNameUtils {
 		return newName;
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static String fieldStatic(String name) {
 		String fieldName = name.toUpperCase();
 		if(Character.isDigit(fieldName.charAt(0))) {

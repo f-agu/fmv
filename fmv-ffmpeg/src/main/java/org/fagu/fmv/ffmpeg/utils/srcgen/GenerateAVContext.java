@@ -39,9 +39,6 @@ public class GenerateAVContext {
 
 	private static final Pattern FROM_TO_PATTERN = Pattern.compile(".*\\(from ([\\-\\+\\w\\.]+) to ([\\-\\+\\w\\.]+)\\).*");
 
-	/**
-	 * @param name
-	 */
 	public void generate() {
 		Map<String, Group> extract = FullHelpExtract.extract();
 		String name = "AVCodecContext";
@@ -54,10 +51,6 @@ public class GenerateAVContext {
 		writeClass(System.out, group, true, input, output);
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 */
 	public static void writeClass(PrintStream ps, Group group, boolean checkio, boolean input, boolean output) {
 		String groupName = StringUtils.substringBefore(group.getName(), " ");
 		String className = StringUtils.capitalize(groupName);
@@ -75,10 +68,6 @@ public class GenerateAVContext {
 		ps.println("}");
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 */
 	public static void writeClassFlags(PrintStream ps, Param param, boolean checkio, boolean input, boolean output) {
 		IO io = param.getFlags().io();
 		if(checkio && ! accept(io, input, output)) {
@@ -93,10 +82,6 @@ public class GenerateAVContext {
 		}
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 */
 	public static void writeEnums(PrintStream ps, Group group, boolean checkio, boolean input, boolean output) {
 		Iterator<Param> paramIt = group.getParams().stream()
 				.filter(p -> ! p.getValues().isEmpty())
@@ -195,13 +180,6 @@ public class GenerateAVContext {
 		}
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 * @param checkio
-	 * @param input
-	 * @param output
-	 */
 	public static void writeFields(PrintStream ps, Group group, boolean checkio, boolean input, boolean output) {
 		for(Param param : group.getParams()) {
 			if( ! accept(param.getFlags().io(), input, output)) {
@@ -224,13 +202,6 @@ public class GenerateAVContext {
 		}
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 * @param checkio
-	 * @param input
-	 * @param output
-	 */
 	public static void writeIntoConstructor(PrintStream ps, Group group, boolean checkio, boolean input, boolean output) {
 		ps.println();
 		ps.println();
@@ -248,14 +219,6 @@ public class GenerateAVContext {
 		ps.println();
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 * @param returnClassName
-	 * @param checkio
-	 * @param input
-	 * @param output
-	 */
 	public static void writeMethods(PrintStream ps, Group group, String returnClassName, boolean checkio, boolean input, boolean output) {
 		String returnName = StringUtils.defaultString(returnClassName, "M");
 
@@ -328,14 +291,6 @@ public class GenerateAVContext {
 		}
 	}
 
-	/**
-	 * @param ps
-	 * @param param
-	 * @param returnClassName
-	 * @param checkio
-	 * @param input
-	 * @param output
-	 */
 	public static void writeMethodsFlagsCollection(PrintStream ps, Param param, String returnClassName, boolean checkio, boolean input,
 			boolean output) {
 		if(checkio && ( ! accept(param.getFlags().io(), input, output) || param.getType() != ParamType.FLAGS)) {
@@ -361,13 +316,6 @@ public class GenerateAVContext {
 		ps.println();
 	}
 
-	/**
-	 * @param ps
-	 * @param param
-	 * @param name
-	 * @param input
-	 * @param output
-	 */
 	public static void writeMethodCheck(PrintStream ps, Param param, String name, boolean input, boolean output) {
 		if( ! param.getValues().isEmpty()) {
 			if(input && output) {
@@ -434,12 +382,6 @@ public class GenerateAVContext {
 		return null;
 	}
 
-	/**
-	 * @param io
-	 * @param input
-	 * @param output
-	 * @return
-	 */
 	public static boolean accept(IO io, boolean input, boolean output) {
 		if(io == null) {
 			return true;
@@ -456,10 +398,6 @@ public class GenerateAVContext {
 		return false;
 	}
 
-	/**
-	 * @param ps
-	 * @param group
-	 */
 	public static void writeMethod_eventAdded(PrintStream ps, Group group, boolean checkio, boolean input, boolean output) {
 		ps.println("\t/**");
 		ps.println("\t * @see org.fagu.fmv.ffmpeg.operation.IOEntity#eventAdded(org.fagu.fmv.ffmpeg.operation.Processor, IOEntity)");
@@ -487,9 +425,6 @@ public class GenerateAVContext {
 		ps.println("\t}");
 	}
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		GenerateAVContext generateFilter = new GenerateAVContext();
 		generateFilter.generate();

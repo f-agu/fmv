@@ -34,20 +34,11 @@ public class Param extends AbstractOption {
 
 	private List<ParamValue> values;
 
-	/**
-	 * @param name
-	 * @param paramType
-	 * @param flags
-	 * @param description
-	 */
 	public Param(String name, ParamType paramType, Flags flags, String description) {
 		super(name, flags, description);
 		this.paramType = paramType;
 	}
 
-	/**
-	 * @param paramValue
-	 */
 	public void addValue(ParamValue paramValue) {
 		if(values == null) {
 			values = new ArrayList<>();
@@ -55,23 +46,14 @@ public class Param extends AbstractOption {
 		values.add(paramValue);
 	}
 
-	/**
-	 * @return
-	 */
 	public ParamType getType() {
 		return paramType;
 	}
 
-	/**
-	 * @return
-	 */
 	public List<ParamValue> getValues() {
 		return values == null ? Collections.emptyList() : values;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return getName() + (values != null ? values.toString() : "");

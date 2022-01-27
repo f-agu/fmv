@@ -22,10 +22,10 @@ package org.fagu.fmv.ffmpeg.soft;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -69,6 +69,8 @@ public abstract class FFSoftProvider extends SoftProvider {
 	private static final Pattern NVERSION_DATE_PATTERN = Pattern.compile("[N|n]-?([0-9]+)-([a-zA-Z0-9]+)-([0-9]{4})([0-9]{2})([0-9]{2})");
 
 	private static final Pattern GITBUILDDATE_PATTERN = Pattern.compile("git-([0-9]+)-([0-9]+)-([0-9]+).*");
+
+	private static final Pattern BUILDDATEGIT_PATTERN = Pattern.compile("([0-9]+)-([0-9]+)-([0-9]+)-git-.*");
 
 	private static final Pattern BUILD_PATTERN = Pattern.compile(".*built on (.*) with gcc.*");
 
@@ -144,7 +146,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 			private Version version = null;
 
-			private Date builtDate = null;
+			private LocalDate builtDate = null;
 
 			private Set<String> configuration = null; // configuration
 
@@ -166,7 +168,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 					if(parsedTool.equalsIgnoreCase(getName())) {
 						String svorb = matcher.group(2).trim();
 						version = getVersion(svorb);
-						builtDate = getBuiltDate(svorb);
+						builtDate = parseBuiltDateWithVersion(svorb);
 						return;
 					}
 					softFound = SoftFound.foundError(file, "Wrong tool, need " + getName() + " and found " + parsedTool + ": " + line);
@@ -181,7 +183,7 @@ public abstract class FFSoftProvider extends SoftProvider {
 				// built
 				matcher = BUILD_PATTERN.matcher(line);
 				if(matcher.matches()) {
-					builtDate = getBuiltDate(matcher);
+					builtDate = parseBuiltDate(matcher.group(1));
 					return;
 				}
 
@@ -216,17 +218,6 @@ public abstract class FFSoftProvider extends SoftProvider {
 
 	}
 
-	static Date getBuiltDate(Matcher matcher) {
-		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss", Locale.ENGLISH);
-		String strDate = matcher.group(1);
-		try {
-			return simpleDateFormat.parse(strDate);
-		} catch(ParseException pe) {
-			// ignore
-		}
-		return null;
-	}
-
 	static Version getVersion(String line) {
 		String sver = StringUtils.substringBefore(line, " ");
 		Matcher matcher = NVERSION_DATE_PATTERN.matcher(sver);
@@ -238,6 +229,10 @@ public abstract class FFSoftProvider extends SoftProvider {
 				sver = matcher.group(1);
 			}
 		}
+		matcher = BUILDDATEGIT_PATTERN.matcher(sver);
+		if(matcher.matches()) {
+			return null;
+		}
 		try {
 			return VersionParserManager.parse(sver);
 		} catch(VersionParseException e) {
@@ -246,14 +241,23 @@ public abstract class FFSoftProvider extends SoftProvider {
 		return null;
 	}
 
-	static Date getBuiltDate(String line) {
+	static LocalDate parseBuiltDate(String strDate) {
+		try {
+			return LocalDate.parse(strDate.replace("  ", " "), DateTimeFormatter.ofPattern("MMM d yyyy HH:mm:ss", Locale.ENGLISH));
+		} catch(DateTimeParseException pe) {
+			// ignore
+		}
+		return null;
+	}
+
+	static LocalDate parseBuiltDateWithVersion(String line) {
 		String sbuilt = StringUtils.substringBefore(line, " ");
 		Matcher matcher = NVERSION_DATE_PATTERN.matcher(sbuilt);
 		if(matcher.matches()) {
 			int year = Integer.parseInt(matcher.group(3));
 			int month = Integer.parseInt(matcher.group(4));
 			int day = Integer.parseInt(matcher.group(5));
-			return new Date(year - 1900, month - 1, day);
+			return LocalDate.of(year, month, day);
 		}
 
 		matcher = GITBUILDDATE_PATTERN.matcher(sbuilt);
@@ -261,10 +265,21 @@ public abstract class FFSoftProvider extends SoftProvider {
 			int year = Integer.parseInt(matcher.group(1));
 			int month = Integer.parseInt(matcher.group(2));
 			int day = Integer.parseInt(matcher.group(3));
-			return new Date(year - 1900, month - 1, day);
+			return LocalDate.of(year, month, day);
 		}
+
+		matcher = BUILDDATEGIT_PATTERN.matcher(sbuilt);
+		if(matcher.matches()) {
+			int year = Integer.parseInt(matcher.group(1));
+			int month = Integer.parseInt(matcher.group(2));
+			int day = Integer.parseInt(matcher.group(3));
+			return LocalDate.of(year, month, day);
+		}
+
 		return null;
 	}
+
+	// private static Date
 
 	static Set<String> getConfiguration(String line) {
 		Set<String> set = new LinkedHashSet<>(32);

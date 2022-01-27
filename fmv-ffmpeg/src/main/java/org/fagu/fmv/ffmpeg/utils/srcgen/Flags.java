@@ -48,9 +48,6 @@ public class Flags {
 
 	private Flags() {}
 
-	/**
-	 * @return
-	 */
 	public static Flags nothing() {
 		return NOTHING;
 	}

@@ -40,9 +40,6 @@ public class FullHelpExtract {
 
 	private FullHelpExtract() {}
 
-	/**
-	 * @return
-	 */
 	public static Map<String, Group> extract() {
 		LinesFFMPEGOperation operation = new LinesFFMPEGOperation();
 		operation.addParameter("-h", "full");

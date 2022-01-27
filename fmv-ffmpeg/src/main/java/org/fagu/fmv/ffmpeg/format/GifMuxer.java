@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.format;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.ffmpeg.ioe.FileMediaOutput;
@@ -32,31 +31,18 @@ import org.fagu.fmv.ffmpeg.operation.MediaOutput;
  */
 public class GifMuxer extends Muxer<GifMuxer> {
 
-	/**
-	 * @param mediaOutput
-	 */
 	protected GifMuxer(MediaOutput mediaOutput) {
 		super("gif", mediaOutput);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static GifMuxer to(File file) {
 		return new GifMuxer(new FileMediaOutput(file));
 	}
 
-	/**
-	 * @return
-	 */
 	public GifMuxer loopIndefinitely() {
 		return loop(0);
 	}
 
-	/**
-	 * @return
-	 */
 	public GifMuxer noLoop() {
 		return loop( - 1);
 	}

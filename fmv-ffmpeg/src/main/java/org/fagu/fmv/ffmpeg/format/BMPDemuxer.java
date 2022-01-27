@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.format;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.ffmpeg.ioe.FileMediaInput;
@@ -32,17 +31,10 @@ import org.fagu.fmv.ffmpeg.operation.MediaInput;
  */
 public class BMPDemuxer extends ImageDemuxer<BMPDemuxer> {
 
-	/**
-	 * @param mediaInput
-	 */
 	protected BMPDemuxer(MediaInput mediaInput) {
 		super("bmp", mediaInput);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public static BMPDemuxer from(File file) {
 		return new BMPDemuxer(new FileMediaInput(file));
 	}
