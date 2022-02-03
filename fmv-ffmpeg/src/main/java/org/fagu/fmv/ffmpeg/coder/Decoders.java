@@ -190,7 +190,7 @@ public class Decoders extends Coders {
 	public static final Decoders ADPCM_IMA_RAD = new Decoders("adpcm_ima_rad");
 
 	// ADPCM IMA Loki SDL MJPEG
-	public static final Decoders ADPCM_IMA_SMJPEG = new Decoders("adpcm_ima_smjpeg");
+	public static final Decoders ADPCM_IMA_SMJPEG = new Decoders("adpcm_ima_smjpeg", SubType.IMAGE);
 
 	// ADPCM IMA Simon & Schuster Interactive
 	public static final Decoders ADPCM_IMA_SSI = new Decoders("adpcm_ima_ssi");
@@ -712,10 +712,10 @@ public class Decoders extends Coders {
 	public static final Decoders JACOSUB = new Decoders("jacosub");
 
 	// JPEG 2000
-	public static final Decoders JPEG2000 = new Decoders("jpeg2000");
+	public static final Decoders JPEG2000 = new Decoders("jpeg2000", SubType.IMAGE);
 
 	// JPEG-LS
-	public static final Decoders JPEGLS = new Decoders("jpegls");
+	public static final Decoders JPEGLS = new Decoders("jpegls", SubType.IMAGE);
 
 	// Bitmap Brothers JV video
 	public static final Decoders JV = new Decoders("jv");
@@ -754,7 +754,7 @@ public class Decoders extends Coders {
 	public static final Decoders LIBOPENCORE_AMRWB = new Decoders("libopencore_amrwb");
 
 	// OpenJPEG JPEG 2000 (codec jpeg2000)
-	public static final Decoders LIBOPENJPEG = new Decoders("libopenjpeg");
+	public static final Decoders LIBOPENJPEG = new Decoders("libopenjpeg", SubType.IMAGE);
 
 	// libopus Opus (codec opus)
 	public static final Decoders LIBOPUS = new Decoders("libopus");
@@ -808,16 +808,16 @@ public class Decoders extends Coders {
 	public static final Decoders MIMIC = new Decoders("mimic");
 
 	// MJPEG (Motion JPEG)
-	public static final Decoders MJPEG = new Decoders("mjpeg");
+	public static final Decoders MJPEG = new Decoders("mjpeg", SubType.IMAGE);
 
 	// Nvidia CUVID MJPEG decoder (codec mjpeg)
-	public static final Decoders MJPEG_CUVID = new Decoders("mjpeg_cuvid");
+	public static final Decoders MJPEG_CUVID = new Decoders("mjpeg_cuvid", SubType.IMAGE);
 
 	// MJPEG video (Intel Quick Sync Video acceleration) (codec mjpeg)
-	public static final Decoders MJPEG_QSV = new Decoders("mjpeg_qsv");
+	public static final Decoders MJPEG_QSV = new Decoders("mjpeg_qsv", SubType.IMAGE);
 
 	// Apple MJPEG-B
-	public static final Decoders MJPEGB = new Decoders("mjpegb");
+	public static final Decoders MJPEGB = new Decoders("mjpegb", SubType.IMAGE);
 
 	// MLP (Meridian Lossless Packing)
 	public static final Decoders MLP = new Decoders("mlp");
@@ -1264,7 +1264,7 @@ public class Decoders extends Coders {
 	public static final Decoders SMC = new Decoders("smc");
 
 	// SMV JPEG
-	public static final Decoders SMVJPEG = new Decoders("smvjpeg");
+	public static final Decoders SMVJPEG = new Decoders("smvjpeg", SubType.IMAGE);
 
 	// Snow
 	public static final Decoders SNOW = new Decoders("snow");

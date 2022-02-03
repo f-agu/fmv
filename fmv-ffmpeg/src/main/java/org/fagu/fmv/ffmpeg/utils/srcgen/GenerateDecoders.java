@@ -52,7 +52,8 @@ public class GenerateDecoders {
 			String fieldName = ClassNameUtils.fieldStatic(name);
 			StringBuilder sb = new StringBuilder(50);
 			sb.append("public static final Decoders ").append(fieldName).append(" = new Decoders(\"").append(name).append('"');
-			if(comment.contains("image")) {
+			if(comment.contains("image")
+					|| name.contains("jpeg")) {
 				sb.append(", SubType.IMAGE");
 			}
 			sb.append(");");
