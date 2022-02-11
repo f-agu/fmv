@@ -205,8 +205,8 @@ public class FFReducer extends AbstractReducer {
 		if(size.getWidth() <= maxSize.getWidth() && size.getHeight() <= maxSize.getHeight()) {
 			return size;
 		}
-		StringBuilder log = new StringBuilder();
-		log.append("Need to resize ").append(size);
+		StringBuilder log = new StringBuilder()
+				.append("Need to resize ").append(size);
 		if(rotation != null) {
 			log.append(" (rotation of ").append(rotation.getValue()).append(')');
 		}
