@@ -29,31 +29,18 @@ public enum Rotation {
 
 	private final int value;
 
-	/**
-	 * @param value
-	 */
 	private Rotation(int value) {
 		this.value = value;
 	}
 
-	/**
-	 * @return
-	 */
 	public int getValue() {
 		return value;
 	}
 
-	/**
-	 * @param size
-	 * @return
-	 */
 	public Size resize(Size size) {
 		return value % 180 == 0 ? size : size.rotate();
 	}
 
-	/**
-	 * @return
-	 */
 	public Rotation opposite() {
 		switch(this) {
 			case R_90:

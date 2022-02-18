@@ -145,8 +145,8 @@ public class Ratio extends Fractionable<Ratio> implements Comparable<Ratio>, Ser
 				double dd = Double.parseDouble(d);
 				return valueOf(dn / dd);
 			}
-			int in = Integer.valueOf(n);
-			int id = Integer.valueOf(d);
+			int in = Integer.parseInt(n);
+			int id = Integer.parseInt(d);
 			return valueOf(in, id);
 		}
 

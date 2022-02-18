@@ -193,21 +193,10 @@ public class Size implements Serializable {
 
 	private final boolean custom;
 
-	/**
-	 * @param width
-	 * @param height
-	 * @param names
-	 */
 	protected Size(int width, int height, String... names) {
 		this(width, height, false, names);
 	}
 
-	/**
-	 * @param width
-	 * @param height
-	 * @param custom
-	 * @param names
-	 */
 	protected Size(int width, int height, boolean custom, String... names) {
 		if(names == null || names.length == 0) {
 			throw new NullPointerException("name");
@@ -227,10 +216,6 @@ public class Size implements Serializable {
 		}
 	}
 
-	/**
-	 * @param value
-	 * @return
-	 */
 	public static Size parse(String value) {
 		String v = value.trim().toLowerCase();
 		Pattern pattern = Pattern.compile("(\\d+)(?:[ \\t]*)x(?:[ \\t]*)(\\d+)");
@@ -245,11 +230,6 @@ public class Size implements Serializable {
 		throw new IllegalArgumentException("Unable to parse: '" + value + '\'');
 	}
 
-	/**
-	 * @param width
-	 * @param height
-	 * @return
-	 */
 	public static Size valueOf(int width, int height) {
 		String sizeKey = getKey(width, height);
 		Size size = SIZE_MAP.get(sizeKey);
@@ -263,17 +243,10 @@ public class Size implements Serializable {
 		return valueOf(side, side);
 	}
 
-	/**
-	 * @return
-	 */
 	public static Collection<Size> values() {
 		return Collections.unmodifiableCollection(SIZE_MAP.values());
 	}
 
-	/**
-	 * @param ratio
-	 * @return
-	 */
 	public static List<Size> byRatio(Ratio ratio) {
 		List<Size> list = new ArrayList<>();
 		for(Size size : values()) {
@@ -284,125 +257,71 @@ public class Size implements Serializable {
 		return list;
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static Size byName(String name) {
 		return SIZE_MAP.get(name.toLowerCase());
 	}
 
-	/**
-	 * @return
-	 */
 	public String getName() {
 		return names.get(0);
 	}
 
-	/**
-	 * @return
-	 */
 	public List<String> getNames() {
 		return Collections.unmodifiableList(names);
 	}
 
-	/**
-	 * @return
-	 */
 	public int getWidth() {
 		return width;
 	}
 
-	/**
-	 * @return
-	 */
 	public int getHeight() {
 		return height;
 	}
 
-	/**
-	 * @return
-	 */
 	public int countPixel() {
 		return width * height;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getStringSize() {
 		return getKey(width, height);
 	}
 
-	/**
-	 * @return
-	 */
 	public Ratio getRatio() {
 		int pgcd = (int)org.fagu.fmv.utils.Math.greatestCommonDivisor(width, height);
 		return Ratio.valueOf(width / pgcd, height / pgcd);
 	}
 
-	/**
-	 * @return
-	 */
 	public Ratio getRatioApproximated() {
 		return getRatio().approximate();
 	}
 
-	/**
-	 * @param size
-	 * @return
-	 */
 	public Size fitAndKeepRatioTo(Size size) {
 		return getRatio().getSizeIn(size);
 	}
 
-	/**
-	 * @return
-	 */
 	public double getDiagonal() {
 		return Math.sqrt(width * width + height * height);
 	}
 
-	/**
-	 * @return
-	 */
 	public Size rotate() {
 		return valueOf(height, width);
 	}
 
-	/**
-	 * @param rotation
-	 * @return
-	 */
 	public Size rotate(Rotation rotation) {
 		return rotation.resize(this);
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isCustom() {
 		return custom;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isPortrait() {
 		return width < height;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isLandscape() {
 		return width > height;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isSquare() {
 		return width == height;
 	}
@@ -419,9 +338,6 @@ public class Size implements Serializable {
 		return width > other.width ^ height > other.height;
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if( ! (obj instanceof Size)) {
@@ -431,17 +347,11 @@ public class Size implements Serializable {
 		return width == other.width && height == other.height;
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		return width << 15 + height;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		if(custom) {
@@ -450,48 +360,28 @@ public class Size implements Serializable {
 		return getName();
 	}
 
-	/**
-	 * @return
-	 */
 	public static Comparator<Size> comparatorByWidth() {
 		return (s1, s2) -> s1.width - s2.width;
 	}
 
-	/**
-	 * @return
-	 */
 	public static Comparator<Size> comparatorByHeight() {
 		return (s1, s2) -> s1.height - s2.height;
 	}
 
-	/**
-	 * @return
-	 */
 	public static Comparator<Size> comparatorByCountPixel() {
 		return (s1, s2) -> s1.countPixel() - s2.countPixel();
 	}
 
-	/**
-	 * @return
-	 */
 	public static Comparator<Size> comparatorByDiagonal() {
 		return (s1, s2) -> Double.compare(s1.getDiagonal(), s2.getDiagonal());
 	}
 
 	// **********************************************************
 
-	/**
-	 * @param width
-	 * @param height
-	 * @return
-	 */
 	private static String getKey(int width, int height) {
 		return new StringBuilder().append(width).append('x').append(height).toString();
 	}
 
-	/**
-	 *
-	 */
 	private void init() {
 		if(custom) {
 			return;
@@ -499,8 +389,8 @@ public class Size implements Serializable {
 		for(String name : names) {
 			String lcname = name.toLowerCase();
 			NAME_MAP.put(lcname, this);
-			NAME_MAP.put(lcname.replaceAll("_", ""), this);
-			NAME_MAP.put(lcname.replaceAll("_", "-"), this);
+			NAME_MAP.put(lcname.replace("_", ""), this);
+			NAME_MAP.put(lcname.replace("_", "-"), this);
 			SIZE_MAP.put(getStringSize(), this);
 		}
 	}
