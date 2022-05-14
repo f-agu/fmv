@@ -59,19 +59,10 @@ public class FFMPEGExecutorBuilder {
 
 	protected DefaultFFMPEGOperation<?> defaultFFMPEGOperation;
 
-	/**
-	 *
-	 */
 	protected FFMPEGExecutorBuilder() {
 		this(null, null);
 	}
 
-	/**
-	 * @param ffExecutorFactory
-	 * @param filterNaming
-	 * @param defaultFFMPEGOperation
-	 * @param require
-	 */
 	protected FFMPEGExecutorBuilder(FFExecutorFactory ffExecutorFactory, DefaultFFMPEGOperation<?> defaultFFMPEGOperation) {
 		this.ffExecutorFactory = ffExecutorFactory != null ? ffExecutorFactory : new FFExecutorFactoryImpl();
 		this.defaultFFMPEGOperation = defaultFFMPEGOperation != null ? defaultFFMPEGOperation
@@ -79,9 +70,6 @@ public class FFMPEGExecutorBuilder {
 						new Require());
 	}
 
-	/**
-	 * @return
-	 */
 	public static FFMPEGExecutorBuilder create() {
 		if(factory != null) {
 			return factory.get();
@@ -89,31 +77,18 @@ public class FFMPEGExecutorBuilder {
 		return new FFMPEGExecutorBuilder();
 	}
 
-	/**
-	 * @param factory
-	 */
 	public static void setFactory(Supplier<FFMPEGExecutorBuilder> factory) {
 		FFMPEGExecutorBuilder.factory = factory;
 	}
 
-	/**
-	 * @return
-	 */
 	public static Supplier<FFMPEGExecutorBuilder> getFactory() {
 		return factory;
 	}
 
-	/**
-	 * @return the ffExecutorFactory
-	 */
 	public FFExecutorFactory getFFExecutorFactory() {
 		return ffExecutorFactory;
 	}
 
-	/**
-	 * @param filter
-	 * @return
-	 */
 	public FFMPEGExecutorBuilder filter(Filter filter) {
 		if(filter != null) {
 			filter.beforeAdd(defaultFFMPEGOperation);
@@ -123,17 +98,10 @@ public class FFMPEGExecutorBuilder {
 
 	// =========== IO
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public InputProcessor addMediaInputFile(File file) {
 		return addMediaInput(new FileMediaInput(file));
 	}
 
-	/**
-	 * @return
-	 */
 	public InputProcessor addMediaInputWebCam() {
 		String format = Devices.webCam().getName();
 		InputProcessor input = addMediaInput(new IntMediaInput(0));
@@ -142,10 +110,6 @@ public class FFMPEGExecutorBuilder {
 		return input;
 	}
 
-	/**
-	 * @param input
-	 * @return
-	 */
 	public InputProcessor addMediaInput(MediaInput input) {
 		if(input instanceof Demuxer) {
 			return demux((Demuxer<?>)input);
@@ -159,18 +123,10 @@ public class FFMPEGExecutorBuilder {
 		return inputParameters.addInput(input);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public OutputProcessor addMediaOutputFile(File file) {
 		return addMediaOutput(new FileMediaOutput(file));
 	}
 
-	/**
-	 * @param output
-	 * @return
-	 */
 	public OutputProcessor addMediaOutput(MediaOutput output) {
 		if(output instanceof Muxer) {
 			return mux((Muxer<?>)output);
@@ -183,10 +139,6 @@ public class FFMPEGExecutorBuilder {
 		return outputParameters.addOutput(output);
 	}
 
-	/**
-	 * @param muxer
-	 * @return
-	 */
 	public InputProcessor demux(Demuxer<?> demuxer) {
 		MediaInput mediaInput = demuxer.getMediaInput();
 		InputProcessor inputProcessor = addMediaInput(mediaInput);
@@ -195,10 +147,6 @@ public class FFMPEGExecutorBuilder {
 		return inputProcessor;
 	}
 
-	/**
-	 * @param muxer
-	 * @return
-	 */
 	public OutputProcessor mux(Muxer<?> muxer) {
 		MediaOutput mediaOutput = muxer.getMediaOutput();
 		OutputProcessor outputProcessor = addMediaOutput(mediaOutput);

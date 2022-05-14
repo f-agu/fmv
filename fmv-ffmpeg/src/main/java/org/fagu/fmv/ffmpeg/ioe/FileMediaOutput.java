@@ -33,24 +33,15 @@ public class FileMediaOutput extends AbstractIOEntity<FileMediaOutput> implement
 
 	private final File file;
 
-	/**
-	 * @param file
-	 */
 	public FileMediaOutput(File file) {
 		super("file");
 		this.file = Objects.requireNonNull(file);
 	}
 
-	/**
-	 * @return the file
-	 */
 	public File getFile() {
 		return file;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.ioe.AbstractIOEntity#toString()
-	 */
 	@Override
 	public String toString() {
 		return file.getPath();

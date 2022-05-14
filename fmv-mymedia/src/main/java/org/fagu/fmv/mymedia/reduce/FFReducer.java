@@ -410,7 +410,10 @@ public class FFReducer extends AbstractReducer {
 		subtitleStream.language().ifPresent(lg -> joiner.append('-').append(lg));
 		subtitleStream.title().ifPresent(t -> joiner.append('-').append(t));
 		joiner.append('-').append(subtitleStream.index()).append(".srt");
-		return new File(srcFile.getParentFile(), joiner.toString());
+		return new File(
+				srcFile.getParentFile(),
+				joiner.toString()
+						.replaceAll("[\\\\/:*?\"<>|]", "_"));
 	}
 
 	private boolean needToReduceAudio(MovieMetadatas metadatas, File srcFile) {
