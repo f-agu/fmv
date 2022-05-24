@@ -17,7 +17,7 @@ git add .
 git commit -m "set version"
 git push origin master
 
-git checkout tags/0.24.0
+git checkout tags/0.24.1
 mvn install -DskipTests
 
 
@@ -38,6 +38,9 @@ mvn -Dmaven.test.skip=true -DskipTests -U clean deploy
 svn co https://svn.code.sf.net/p/fmv/code/trunk .
 mvn -Dtag=0.5.7 -DreleaseVersion=0.5.7 -DdevelopmentVersion=0.5.8-SNAPSHOT -Dmaven.javadoc.skip=true -U -B clean release:clean release:prepare release:perform
 
+
+--git token conf
+git remote set-url origin https://<token>@github.com/f-agu/fmv.git
 
 
 -- extract
