@@ -491,7 +491,7 @@ public class PixelFormat {
 			try {
 				FFExecutor<List<String>> executor = new FFExecutor<>(operation);
 				Consumer<PixelFormatHelp> cacheConsumer = HELP_CACHE.consumer();
-				final Pattern pattern = Pattern.compile("(\\d+)\\s+(\\d+)");
+				final Pattern pattern = Pattern.compile("(\\d+)\\s+(\\d+).*");
 				Function<String, PixelFormatHelp> factory = PixelFormatHelp::new;
 				Consumer<PixelFormatHelp> consumer = help -> {
 					Matcher matcher = pattern.matcher(help.getText());
