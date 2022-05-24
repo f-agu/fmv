@@ -92,8 +92,8 @@ public enum Orientation {
 	}
 
 	public static Orientation valueOf(int value) {
-		if(value <= 0 || value > 8) {
-			throw new IllegalArgumentException("Value must between 1 and 8 included" + value);
+		if(value < 0 || value > 8) {
+			throw new IllegalArgumentException("Value must between 0 and 8 included: " + value);
 		}
 		for(Orientation orientation : values()) {
 			if(orientation.value == value) {
