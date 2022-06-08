@@ -49,18 +49,12 @@ public class MovieFinder extends AutoSaveLoadFileFinder<Movie> {
 
 	private static final Set<String> EXTENSIONS = new HashSet<>(Arrays.asList("mp4", "mov", "avi", "3gp"));
 
-	/**
-	 * @param saveFile
-	 */
 	public MovieFinder(File saveFile) {
 		super(EXTENSIONS, BUFFER_SIZE, saveFile, MediaWithMetadatasInfoFile.movie());
 	}
 
 	// *****************************************
 
-	/**
-	 * @see org.fagu.fmv.utils.file.FileFinder#flushToMap(java.util.List, java.util.function.Consumer)
-	 */
 	@Override
 	protected Future<Map<FileFound, InfosFile>> flushToMap(List<FileFound> buffer, Consumer<List<FileFound>> consumer) {
 		Map<FileFound, InfosFile> outMap = new LinkedHashMap<>(buffer.size());

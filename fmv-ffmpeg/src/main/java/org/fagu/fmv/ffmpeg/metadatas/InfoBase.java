@@ -136,7 +136,7 @@ public abstract class InfoBase implements MetadataProperties {
 		if(tag == null) {
 			return Optional.empty();
 		}
-		String[] patterns = {"yyyy-MM-dd HH:mm:SS", "yyyy-MM-dd'T'HH:mm:ss.MMZ"};
+		String[] patterns = {"yyyy-MM-dd HH:mm:SS", "yyyy-MM-dd'T'HH:mm:ss.MMZ", "yyyy-MM-dd'T'HH:mm:ss.MMMMMMZ"};
 		for(String pattern : patterns) {
 			SimpleDateFormat createDateFormat = new SimpleDateFormat(pattern);
 			try {
@@ -148,6 +148,11 @@ public abstract class InfoBase implements MetadataProperties {
 
 		try {
 			return Optional.of(Date.from(LocalDateTime.parse(tag).atZone(ZoneId.systemDefault()).toInstant()));
+		} catch(DateTimeParseException e) {
+			// ignore
+		}
+		try {
+			return Optional.of(Date.from(OffsetDateTime.parse(tag).toInstant()));
 		} catch(DateTimeParseException e) {
 			// ignore
 		}

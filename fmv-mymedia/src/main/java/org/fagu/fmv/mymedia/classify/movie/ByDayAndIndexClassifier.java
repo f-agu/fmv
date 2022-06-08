@@ -72,10 +72,10 @@ public class ByDayAndIndexClassifier extends MovieClassifier {
 			for(FileFinder<Movie>.InfosFile infosFile : entry.getValue()) {
 				Movie movie = infosFile.getMain();
 				String extension = FilenameUtils.getExtension(movie.getFile().getName());
-				StringBuilder buf = new StringBuilder();
-				buf.append(entry.getKey()).append(" (");
-				buf.append(StringUtils.leftPad(Integer.toString(++index), 2, '0')).append(") .");
-				buf.append(converter.getFormat(extension));
+				StringBuilder buf = new StringBuilder()
+						.append(entry.getKey()).append(" (")
+						.append(StringUtils.leftPad(Integer.toString(++index), 2, '0')).append(") .")
+						.append(converter.getFormat(extension));
 				File destFile = new File(destFolder, buf.toString());
 				converter.convert(movie, infosFile, destFile, listener);
 				files.add(destFile);

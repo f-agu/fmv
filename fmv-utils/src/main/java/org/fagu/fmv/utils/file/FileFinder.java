@@ -64,48 +64,29 @@ public abstract class FileFinder<T> implements Serializable {
 
 		private final File fileFound;
 
-		/**
-		 * @param rootFolder
-		 * @param fileFound
-		 */
 		public FileFound(File rootFolder, File fileFound) {
 			this.rootFolder = rootFolder;
 			this.fileFound = fileFound;
 		}
 
-		/**
-		 * @return the fileFound
-		 */
 		public File getFileFound() {
 			return fileFound;
 		}
 
-		/**
-		 * @return the rootFolder
-		 */
 		public File getRootFolder() {
 			return rootFolder;
 		}
 
-		/**
-		 * @see java.lang.Comparable#compareTo(java.lang.Object)
-		 */
 		@Override
 		public int compareTo(FileFound o) {
 			return fileFound.compareTo(o.fileFound);
 		}
 
-		/**
-		 * @see java.lang.Object#hashCode()
-		 */
 		@Override
 		public int hashCode() {
 			return fileFound.hashCode();
 		}
 
-		/**
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
 		@Override
 		public boolean equals(Object obj) {
 			if(obj instanceof FileFound) {
@@ -114,9 +95,6 @@ public abstract class FileFinder<T> implements Serializable {
 			return false;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return fileFound.toString();
@@ -134,57 +112,34 @@ public abstract class FileFinder<T> implements Serializable {
 
 		private final List<Object> infos;
 
-		/**
-		 *
-		 */
 		public InfosFile() {
 			this.infos = new ArrayList<>();
 		}
 
-		/**
-		 * @param mainInfo
-		 * @param infos
-		 */
 		public InfosFile(T mainInfo, Object... infos) {
 			this.mainInfo = mainInfo;
 			this.infos = new ArrayList<>(Arrays.asList(infos));
 		}
 
-		/**
-		 * @param mainInfo
-		 * @param infos
-		 */
 		public InfosFile(T mainInfo, Collection<Object> infos) {
 			this.mainInfo = mainInfo;
 			this.infos = new ArrayList<>(infos);
 		}
 
-		/**
-		 * @return
-		 */
 		public T getMain() {
 			return mainInfo;
 		}
 
-		/**
-		 * @param mainInfo the mainInfo to set
-		 */
 		public void setMain(T mainInfo) {
 			this.mainInfo = mainInfo;
 		}
 
-		/**
-		 * @param object
-		 */
 		public void addInfo(Object object) {
 			if(object != null) {
 				infos.add(object);
 			}
 		}
 
-		/**
-		 * @return
-		 */
 		public List<Object> getInfos() {
 			return infos;
 		}
@@ -206,17 +161,10 @@ public abstract class FileFinder<T> implements Serializable {
 
 	private List<Future<Map<FileFound, InfosFile>>> futures = new ArrayList<>();
 
-	/**
-	 * @param extensions
-	 */
 	public FileFinder(Set<String> extensions) {
 		this(extensions, BUFFER_SIZE);
 	}
 
-	/**
-	 * @param extensions
-	 * @param bufferSize
-	 */
 	public FileFinder(Set<String> extensions, int bufferSize) {
 		this.extensions = extensions;
 		this.bufferSize = Math.min(100, Math.max(1, bufferSize));
@@ -225,44 +173,24 @@ public abstract class FileFinder<T> implements Serializable {
 		bufferedList = new ArrayList<>(bufferSize);
 	}
 
-	/**
-	 * @param listener
-	 */
 	public void addListener(FileFinderListener<T> listener) {
 		if(listener != null) {
 			listeners.add(listener);
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	public int count() {
 		return fileMap.size();
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	public int find(File file) {
 		return find(Collections.singletonList(file), null);
 	}
 
-	/**
-	 * @param file
-	 * @param findProgress
-	 * @return
-	 */
 	public int find(File file, FindProgress findProgress) {
 		return find(Collections.singletonList(file), findProgress);
 	}
 
-	/**
-	 * @param files
-	 * @param findProgress
-	 * @return
-	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public int find(Collection<File> files, FindProgress findProgress) {
 		Proxifier<FileFinderListener> proxifier = new Proxifier<>(FileFinderListener.class);
@@ -306,65 +234,36 @@ public abstract class FileFinder<T> implements Serializable {
 		return count;
 	}
 
-	/**
-	 * @return
-	 */
 	public Set<FileFound> getSources() {
 		return fileMap.keySet();
 	}
 
-	/**
-	 * @return
-	 */
 	public Collection<InfosFile> getAll() {
 		return Collections.unmodifiableCollection(fileMap.values());
 	}
 
-	/**
-	 * @return
-	 */
 	public Map<FileFound, InfosFile> getAllMap() {
 		return Collections.unmodifiableMap(fileMap);
 	}
 
-	/**
-	 * @param source
-	 * @return
-	 */
 	public InfosFile get(FileFound source) {
 		return fileMap.get(source);
 	}
 
-	/**
-	 * @param source
-	 * @return
-	 */
-	public boolean contains(File source) {
+	public boolean contains(FileFound source) {
 		return fileMap.containsKey(source);
 	}
 
 	// *****************************************
 
-	/**
-	 * @param buffer
-	 * @param consumer
-	 * @return
-	 */
 	abstract protected Future<Map<FileFound, InfosFile>> flushToMap(List<FileFound> buffer, Consumer<List<FileFound>> consumer);
 
 	// *****************************************
 
-	/**
-	 * @param file
-	 * @param infosFile
-	 */
 	protected void add(FileFound file, InfosFile infosFile) {
 		fileMap.put(file, infosFile);
 	}
 
-	/**
-	 * @param map
-	 */
 	protected void addAll(Map<FileFound, InfosFile> map) {
 		for(Entry<FileFound, InfosFile> entry : map.entrySet()) {
 			fileMap.put(entry.getKey(), entry.getValue());
@@ -374,10 +273,6 @@ public abstract class FileFinder<T> implements Serializable {
 
 	// *****************************************
 
-	/**
-	 * @param file
-	 * @return
-	 */
 	private boolean accept(File file) {
 		String name = file.getName();
 		String extension = FilenameUtils.getExtension(name);
@@ -388,12 +283,6 @@ public abstract class FileFinder<T> implements Serializable {
 		return extensions.contains(extension);
 	}
 
-	/**
-	 * @param rootFolder
-	 * @param file
-	 * @param atEnd
-	 * @return
-	 */
 	private boolean add(File rootFolder, File file, IntConsumer atEnd) {
 		if( ! accept(file)) {
 			return false;
@@ -412,14 +301,6 @@ public abstract class FileFinder<T> implements Serializable {
 		return true;
 	}
 
-	/**
-	 * @param rootFolder
-	 * @param file
-	 * @param findProgress
-	 * @param addFunction
-	 * @param atEnd
-	 * @return
-	 */
 	private int find(File rootFolder, File file, FindProgress findProgress, BiFunction<File, File, Boolean> addFunction, IntConsumer atEnd) {
 		if(file.isFile()) {
 			return addFunction.apply(rootFolder, file) ? 1 : 0;
@@ -432,7 +313,7 @@ public abstract class FileFinder<T> implements Serializable {
 		for(File child : childs) {
 			if(child.isDirectory()) {
 				count += find(rootFolder, child, findProgress, addFunction, atEnd);
-			} else if(child.isFile() && ! contains(child)) {
+			} else if(child.isFile() && ! contains(new FileFound(rootFolder, child))) {
 				if(addFunction.apply(rootFolder, child)) {
 					++count;
 				}
@@ -444,9 +325,6 @@ public abstract class FileFinder<T> implements Serializable {
 		return count;
 	}
 
-	/**
-	 * @param consumer
-	 */
 	private void flushBuffer(Consumer<List<FileFound>> consumer) {
 		Future<Map<FileFound, InfosFile>> future = flushToMap(new ArrayList<>(bufferedList), consumer);
 		if( ! future.isDone()) {
