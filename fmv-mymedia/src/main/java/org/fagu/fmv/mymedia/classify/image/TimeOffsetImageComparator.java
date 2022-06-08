@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 
-import org.fagu.fmv.im.Image;
 import org.fagu.fmv.im.IMIdentifyImageMetadatas;
+import org.fagu.fmv.im.Image;
 
 
 /**
@@ -36,31 +36,16 @@ public class TimeOffsetImageComparator implements ImageTimeComparator {
 
 	private final Map<Predicate<IMIdentifyImageMetadatas>, Long> filterMap = new LinkedHashMap<>();
 
-	/**
-	 * 
-	 */
 	public TimeOffsetImageComparator() {}
 
-	/**
-	 * @param filter
-	 * @param timeDiff
-	 */
 	public void addFilter(Predicate<IMIdentifyImageMetadatas> filter, long timeDiff) {
 		filterMap.put(filter, timeDiff);
 	}
 
-	/**
-	 * @param device
-	 * @param model
-	 * @param timeDiff
-	 */
 	public void addDevice(String device, String model, long timeDiff) {
 		addFilter(new DeviceImageMetadatasFilter(device, model), timeDiff);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.image.ImageTimeComparator#getTime(org.fagu.fmv.im.Image)
-	 */
 	@Override
 	public long getTime(Image image) {
 		long time = 0;

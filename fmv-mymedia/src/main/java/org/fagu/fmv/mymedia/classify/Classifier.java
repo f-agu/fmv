@@ -39,10 +39,6 @@ public abstract class Classifier<F extends FileFinder<M>, M extends Media> imple
 
 	protected final File destFolder;
 
-	/**
-	 * @param finder
-	 * @param destFolder
-	 */
 	public Classifier(F finder, File destFolder) {
 		this.finder = finder;
 		this.destFolder = Objects.requireNonNull(destFolder);
@@ -50,30 +46,16 @@ public abstract class Classifier<F extends FileFinder<M>, M extends Media> imple
 
 	// *******************************
 
-	/**
-	 * @param infosFile
-	 */
 	abstract public void add(FileFinder<M>.InfosFile infosFile);
 
-	/**
-	 * @param converter
-	 * @param listener
-	 * @throws IOException
-	 */
 	abstract public List<File> classify(Converter<M> converter, ConverterListener<M> listener) throws IOException;
 
 	// *******************************
 
-	/**
-	 *
-	 */
 	protected void addMyFinder() {
 		addFinder(finder);
 	}
 
-	/**
-	 * @param finder
-	 */
 	protected void addFinder(F finder) {
 		for(FileFinder<M>.InfosFile infosFile : finder.getAll()) {
 			add(infosFile);

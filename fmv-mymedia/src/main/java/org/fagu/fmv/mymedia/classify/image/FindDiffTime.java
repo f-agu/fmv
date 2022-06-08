@@ -36,15 +36,8 @@ import org.fagu.fmv.utils.file.FileFinder;
  */
 public class FindDiffTime {
 
-	/**
-	 * 
-	 */
 	private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
 	public static void main(String[] args) throws IOException {
 		ImageFinder imagesFinder = Sources.load(new File("C:\\tmp\\july\\save"));
 		for(FileFinder<Image>.InfosFile infosFile : imagesFinder.getAll()) {

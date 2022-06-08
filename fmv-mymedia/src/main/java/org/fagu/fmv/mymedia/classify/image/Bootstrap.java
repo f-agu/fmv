@@ -40,12 +40,6 @@ public class Bootstrap {
 
 	// ---------------------------------------------------
 
-	/**
-	 * @param saveFile
-	 * @param srcFiles
-	 * @return
-	 * @throws IOException
-	 */
 	private ImageFinder findImage(File saveFile, File... srcFiles) throws IOException {
 
 		ImageFinder imagesFinder = new ImageFinder(saveFile);
@@ -73,9 +67,6 @@ public class Bootstrap {
 					.fixWidth(40).withText("Finding images")
 					.buildForPrinting();
 
-			/**
-			 * @see org.fagu.fmv.utils.file.FindProgress#progress(int, int)
-			 */
 			@Override
 			public void progress(int done, int total) {
 				textProgressBar.print((100 * done) / total);
@@ -87,10 +78,6 @@ public class Bootstrap {
 		return imagesFinder;
 	}
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
 	public static void main(String[] args) throws IOException {
 		File source = new File(args[0]);
 

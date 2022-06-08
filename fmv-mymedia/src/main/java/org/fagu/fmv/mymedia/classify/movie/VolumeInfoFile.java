@@ -44,26 +44,16 @@ import org.fagu.fmv.utils.file.FileFinder.FileFound;
  */
 public class VolumeInfoFile implements InfoFile {
 
-	/**
-	 * @see org.fagu.fmv.mymedia.file.InfoFile#getCode()
-	 */
 	@Override
 	public char getCode() {
 		return 'V';
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.file.InfoFile#isMine(java.lang.Object)
-	 */
 	@Override
 	public boolean isMine(Object object) {
 		return object instanceof VolumeDetected;
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.file.InfoFile#toLine(org.fagu.fmv.utils.file.FileFinder.FileFound,
-	 *      org.fagu.fmv.media.Media)
-	 */
 	@Override
 	public String toLine(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException {
 		Media main = infosFile.getMain();
@@ -100,9 +90,6 @@ public class VolumeInfoFile implements InfoFile {
 		return "";
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.file.InfoFile#parse(java.io.File, java.lang.String)
-	 */
 	@Override
 	public Object parse(File file, String line) throws IOException {
 		return VolumeDetected.parse(line);

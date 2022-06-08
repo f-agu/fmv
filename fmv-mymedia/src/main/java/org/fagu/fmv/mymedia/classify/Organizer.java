@@ -43,18 +43,10 @@ public class Organizer<F extends FileFinder<M>, M extends Media> {
 
 	private final Class<M> mediaCls;
 
-	/**
-	 * @param mediaCls
-	 */
 	public Organizer(Class<M> mediaCls) {
 		this.mediaCls = mediaCls;
 	}
 
-	/**
-	 * @param destFolder
-	 * @param finder
-	 * @throws IOException
-	 */
 	public void organize(File destFolder, F finder) throws IOException {
 		List<Converter<M>> converters = get(ClassifierProvider.class, t -> t.getConverter(mediaCls, destFolder));
 		try (Converter<M> converter = select(converters, "Conversion :", Converter::getTitle)) {
@@ -72,11 +64,6 @@ public class Organizer<F extends FileFinder<M>, M extends Media> {
 
 	// ***************************************************
 
-	/**
-	 * @param cls
-	 * @param supplier
-	 * @return
-	 */
 	private <T, R> List<R> get(Class<T> cls, Function<T, List<R>> supplier) {
 		ServiceLoader<T> serviceLoader = ServiceLoader.load(cls);
 		List<R> list = new ArrayList<>();
@@ -86,12 +73,6 @@ public class Organizer<F extends FileFinder<M>, M extends Media> {
 		return list;
 	}
 
-	/**
-	 * @param list
-	 * @param mainTitle
-	 * @param titleSupplier
-	 * @return
-	 */
 	private <O> O select(List<O> list, String mainTitle, Function<O, String> titleSupplier) {
 		O o = null;
 		if(list.isEmpty()) {
@@ -128,10 +109,6 @@ public class Organizer<F extends FileFinder<M>, M extends Media> {
 		return o;
 	}
 
-	/**
-	 * @param listeners
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	private ConverterListener<M> createListener(final List<ConverterListener<M>> listeners) {
 		if(listeners.isEmpty()) {
@@ -143,10 +120,6 @@ public class Organizer<F extends FileFinder<M>, M extends Media> {
 		return (ConverterListener<M>)Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] {ConverterListener.class},
 				new InvocationHandler() {
 
-					/**
-					 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method,
-					 *      java.lang.Object[])
-					 */
 					@Override
 					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 						for(ConverterListener<M> listener : listeners) {

@@ -44,29 +44,16 @@ public abstract class AskTimeOffsetComparator<M extends Media> implements MediaT
 
 	private final FileFinder<M> fileFinder;
 
-	/**
-	 * Map<metadatas, offset>
-	 */
 	private Map<String, Long> metadatasMap = new LinkedHashMap<>();
 
-	/**
-	 * @param fileFinder
-	 */
 	public AskTimeOffsetComparator(FileFinder<M> fileFinder) {
 		this.fileFinder = Objects.requireNonNull(fileFinder);
 	}
 
-	/**
-	 * @param filter
-	 * @param timeDiff
-	 */
 	public void addMetadatas(String metadatas, long timeDiff) {
 		metadatasMap.put(metadatas, timeDiff);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.MediaTimeComparator#getTime(org.fagu.fmv.media.Media)
-	 */
 	@Override
 	public long getTime(M media) {
 		String metadatasKey = media.getDevice();
@@ -79,10 +66,7 @@ public abstract class AskTimeOffsetComparator<M extends Media> implements MediaT
 	}
 
 	// *************************************************************
-	/**
-	 * @param key
-	 * @return
-	 */
+
 	private long askTimeOffset(String key) {
 		SortedSet<M> images = new TreeSet<>((m1, m2) -> m1.getFile().compareTo(m2.getFile()));
 		for(FileFinder<M>.InfosFile infosFile : fileFinder.getAll()) {
@@ -103,9 +87,6 @@ public abstract class AskTimeOffsetComparator<M extends Media> implements MediaT
 		return offset;
 	}
 
-	/**
-	 * @return
-	 */
 	private long scan(String key) {
 		Scanner scanner = new Scanner(System.in);
 		while(true) {
@@ -121,16 +102,10 @@ public abstract class AskTimeOffsetComparator<M extends Media> implements MediaT
 
 	}
 
-	/**
-	 * @return
-	 */
 	private boolean scanYesOrNo() {
 		return true;
 	}
 
-	/**
-	 * @return
-	 */
 	private boolean scanYesOrNo_legacy() {
 		System.out.print("[y/n] ");
 		while(true) {
@@ -149,10 +124,6 @@ public abstract class AskTimeOffsetComparator<M extends Media> implements MediaT
 		}
 	}
 
-	/**
-	 * @param medias
-	 * @param offset
-	 */
 	private void displayAllFilesFromSameDevice(Collection<M> medias, Long offset) {
 		for(M media : medias) {
 			StringBuilder line = new StringBuilder(50);

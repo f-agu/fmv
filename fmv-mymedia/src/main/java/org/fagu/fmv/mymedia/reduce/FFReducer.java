@@ -122,9 +122,6 @@ public class FFReducer extends AbstractReducer {
 		}
 	}
 
-	/**
-	 *
-	 */
 	public FFReducer() {
 		try {
 			audioSampleRate = Integer.parseInt(System.getProperty("fmv.reduce.audio.samplerate"));

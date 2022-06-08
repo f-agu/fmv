@@ -28,67 +28,40 @@ import java.util.function.Predicate;
  */
 public class DeviceFilters {
 
-	/**
-	 * 
-	 */
 	public DeviceFilters() {}
 
 	// -------
 
-	/**
-	 * @return
-	 */
 	public static Predicate<Movie> canon500D() {
 		return byComptableBrands("qt  CAEP").and(byMajorBrand("qt"));
 	}
 
-	/**
-	 * @return
-	 */
 	public static Predicate<Movie> gopro() {
 		return byHandlerName("GoProa AVC");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Predicate<Movie> nikonCoolpixS10() {
 		throw new RuntimeException("undefined");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Predicate<Movie> android() {
 		return byHandlerName("VideoHandle").and(byComptableBrands("isom3gp4")).and(byMajorBrand("isom"));
 	}
 
 	// -------
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static Predicate<Movie> byHandlerName(String name) {
 		return m -> m.getMetadatas().getVideoStream().handlerName()
 				.map(n -> name.equals(n))
 				.orElse(false);
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static Predicate<Movie> byComptableBrands(String brands) {
 		return m -> m.getMetadatas().getFormat().compatibleBrands()
 				.map(n -> brands.equals(n))
 				.orElse(false);
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static Predicate<Movie> byMajorBrand(final String brand) {
 		return m -> m.getMetadatas().getFormat().majorBrand()
 				.map(n -> brand.equals(n))

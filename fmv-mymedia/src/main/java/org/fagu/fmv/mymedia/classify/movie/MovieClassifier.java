@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.classify.movie;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.mymedia.classify.Classifier;
@@ -32,10 +31,6 @@ import org.fagu.fmv.mymedia.file.MovieFinder;
  */
 public abstract class MovieClassifier extends Classifier<MovieFinder, Movie> {
 
-	/**
-	 * @param finder
-	 * @param destFolder
-	 */
 	public MovieClassifier(MovieFinder finder, File destFolder) {
 		super(finder, destFolder);
 	}

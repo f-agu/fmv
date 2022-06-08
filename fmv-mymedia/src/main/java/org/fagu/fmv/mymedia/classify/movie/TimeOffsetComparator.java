@@ -36,23 +36,12 @@ public class TimeOffsetComparator implements Comparator<FileFinder<Movie>.InfosF
 
 	private final Map<Predicate<Movie>, Long> filterMap = new LinkedHashMap<>();
 
-	/**
-	 *
-	 */
 	public TimeOffsetComparator() {}
 
-	/**
-	 * @param filter
-	 * @param timeDiff
-	 */
 	public void addFilter(Predicate<Movie> filter, long timeDiff) {
 		filterMap.put(filter, timeDiff);
 	}
 
-	/**
-	 * @param image
-	 * @return
-	 */
 	public long getTime(Movie movie) {
 		long time = 0;
 		for(Entry<Predicate<Movie>, Long> entry : filterMap.entrySet()) {
@@ -63,17 +52,10 @@ public class TimeOffsetComparator implements Comparator<FileFinder<Movie>.InfosF
 		return movie.getTime() + time;
 	}
 
-	/**
-	 * @param infosFile
-	 * @return
-	 */
 	public long getTime(FileFinder<Movie>.InfosFile infosFile) {
 		return getTime(infosFile.getMain());
 	}
 
-	/**
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 */
 	@Override
 	public int compare(FileFinder<Movie>.InfosFile o1, FileFinder<Movie>.InfosFile o2) {
 		long t1 = getTime(o1);

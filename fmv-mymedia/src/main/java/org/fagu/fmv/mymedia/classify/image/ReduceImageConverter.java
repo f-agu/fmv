@@ -43,24 +43,14 @@ public class ReduceImageConverter extends AbstractImageConverter {
 
 	private double quality = 65D;
 
-	/**
-	 * @param destFolder
-	 */
 	public ReduceImageConverter(File destFolder) {
 		super(destFolder);
 	}
 
-	/**
-	 * @param destFolder
-	 * @param nThreads
-	 */
 	public ReduceImageConverter(File destFolder, int nThreads) {
 		super(destFolder, nThreads);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Converter#getTitle()
-	 */
 	@Override
 	public String getTitle() {
 		return "Organiser & reduire la taille des images";

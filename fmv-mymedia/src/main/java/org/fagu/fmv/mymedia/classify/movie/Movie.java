@@ -44,43 +44,27 @@ public class Movie implements Media {
 
 	private final MovieMetadatas videoMetadatas;
 
-	/**
-	 * @param file
-	 * @param infos
-	 */
 	public Movie(File file, MovieMetadatas infos) {
 		this.file = file;
 		this.videoMetadatas = infos;
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.Media#getFile()
-	 */
 	@Override
 	public File getFile() {
 		return file;
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.Media#getMetadatas()
-	 */
 	@Override
 	public MovieMetadatas getMetadatas() {
 		return videoMetadatas;
 	}
 
-	/**
-	 * @see org.fagu.fmv.media.Media#getTime()
-	 */
 	@Override
 	public long getTime() {
 		Optional<Date> creationDate = videoMetadatas.getVideoStream().creationDate();
 		return creationDate.isPresent() ? creationDate.get().getTime() : 0;
 	}
 
-	/**
-	 * @see org.fagu.fmv.media.Media#getDevice()
-	 */
 	@Override
 	public String getDevice() {
 		List<String> keys = new ArrayList<>();

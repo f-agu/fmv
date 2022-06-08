@@ -40,9 +40,6 @@ public class Bootstrap {
 
 	// ---------------------------------------------------
 
-	/**
-	 *
-	 */
 	private MovieFinder findMovie(File saveFile, File... srcFiles) throws IOException {
 		MovieFinder movieFinder = new MovieFinder(saveFile);
 		movieFinder.addInfoFile(new VolumeInfoFile());
@@ -50,18 +47,12 @@ public class Bootstrap {
 
 			private int count;
 
-			/**
-			 * @see org.fagu.fmv.utils.file.FileFinderListener#eventFindPre(org.fagu.fmv.utils.file.FileFinder.FileFound)
-			 */
 			@Override
 			public void eventFindPre(FileFound fileFound) {
 				System.out.println(count + ": " + fileFound.getFileFound().getName());
 				++count;
 			}
 
-			/**
-			 * @see org.fagu.fmv.utils.file.FileFinderListener#eventFindPost(FileFound, java.lang.Object)
-			 */
 			@Override
 			public void eventFindPost(FileFound fileFound, FileFinder<Movie>.InfosFile infosFile) {
 				Movie movie = infosFile.getMain();
@@ -82,10 +73,6 @@ public class Bootstrap {
 		return movieFinder;
 	}
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
 	public static void main(String[] args) throws IOException {
 		File source = new File(args[0]);
 

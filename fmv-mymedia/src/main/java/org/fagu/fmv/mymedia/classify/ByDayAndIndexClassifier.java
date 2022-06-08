@@ -50,20 +50,12 @@ public class ByDayAndIndexClassifier extends Classifier<FileFinder<Media>, Media
 
 	private final MapSortedSet<String, FileFinder<Media>.InfosFile> map;
 
-	/**
-	 * @param fileFinder
-	 * @param destFolder
-	 * @param mediaTimeComparator
-	 */
 	public ByDayAndIndexClassifier(FileFinder<Media> fileFinder, File destFolder, MediaTimeComparator<Media> mediaTimeComparator) {
 		super(fileFinder, destFolder);
 		this.mediaTimeComparator = mediaTimeComparator;
 		map = MultiValueMaps.sortedSet(new TreeMap<>(), () -> new TreeSet<>(mediaTimeComparator));
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Classifier#add(org.fagu.fmv.utils.file.FileFinder.InfosFile)
-	 */
 	@Override
 	public void add(FileFinder<Media>.InfosFile infosFile) {
 		long time = mediaTimeComparator.getTime(infosFile);
@@ -71,9 +63,6 @@ public class ByDayAndIndexClassifier extends Classifier<FileFinder<Media>, Media
 		map.add(strDate, infosFile);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Classifier#classify(org.fagu.fmv.mymedia.classify.Converter)
-	 */
 	@Override
 	public List<File> classify(Converter<Media> converter, ConverterListener<Media> listener) throws IOException {
 		List<File> files = new ArrayList<>(100);
@@ -99,9 +88,6 @@ public class ByDayAndIndexClassifier extends Classifier<FileFinder<Media>, Media
 		return files;
 	}
 
-	/**
-	 * @see java.io.Closeable#close()
-	 */
 	@Override
 	public void close() throws IOException {}
 }

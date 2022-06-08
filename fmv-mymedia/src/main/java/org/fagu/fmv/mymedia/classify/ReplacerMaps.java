@@ -38,21 +38,12 @@ import org.fagu.fmv.utils.Replacers;
  */
 public class ReplacerMaps {
 
-	/**
-	 *
-	 */
 	private ReplacerMaps() {}
 
-	/**
-	 * @return
-	 */
 	public static <M extends Media> ReplacerMap<M> counterGlobal() {
 		return counterGlobal(1);
 	}
 
-	/**
-	 * @return
-	 */
 	public static <M extends Media> ReplacerMap<M> counterGlobal(final int start) {
 		return new ReplacerMap<M>() {
 
@@ -60,19 +51,11 @@ public class ReplacerMaps {
 
 			private int counter = start;
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ByPatternClassifier.ReplacerMap#analyze(org.fagu.fmv.media.Media,
-			 *      org.fagu.fmv.mymedia.classify.ByPatternClassifier)
-			 */
 			@Override
 			public void analyze(M media, ByPatternClassifier<?, M> byPatternClassifier) {
 				++countTotal;
 			}
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ByPatternClassifier.ReplacerMap#getMapOf(org.fagu.fmv.media.Media,
-			 *      java.lang.String, org.fagu.fmv.mymedia.classify.ByPatternClassifier)
-			 */
 			@Override
 			public Replacer getReplacer(M media, String destPath, ByPatternClassifier<?, M> byPatternClassifier) {
 				int cntLen = 1 + (int)Math.log10(countTotal + start);
@@ -81,9 +64,6 @@ public class ReplacerMaps {
 		};
 	}
 
-	/**
-	 * @return
-	 */
 	public static <M extends Media> ReplacerMap<M> counterByDay() {
 		return new ReplacerMap<M>() {
 
@@ -91,10 +71,6 @@ public class ReplacerMaps {
 
 			private Map<String, AtomicInteger> counter = new HashMap<>();
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ByPatternClassifier.ReplacerMap#analyze(org.fagu.fmv.media.Media,
-			 *      org.fagu.fmv.mymedia.classify.ByPatternClassifier)
-			 */
 			@Override
 			public void analyze(M media, ByPatternClassifier<?, M> byPatternClassifier) {
 				String key = getKey(media, byPatternClassifier);
@@ -106,10 +82,6 @@ public class ReplacerMaps {
 				}
 			}
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ByPatternClassifier.ReplacerMap#getMapOf(org.fagu.fmv.media.Media,
-			 *      java.lang.String, org.fagu.fmv.mymedia.classify.ByPatternClassifier)
-			 */
 			@Override
 			public Replacer getReplacer(M media, String destPath, ByPatternClassifier<?, M> byPatternClassifier) {
 				String key = getKey(media, byPatternClassifier);
@@ -122,16 +94,12 @@ public class ReplacerMaps {
 					counter.put(key, cnt);
 				}
 
-				return Replacers.chain().map(Collections.singletonMap("counter", StringUtils.leftPad(Integer.toString(cnt.incrementAndGet()), cntLen, '0')));
+				return Replacers.chain().map(Collections.singletonMap("counter", StringUtils.leftPad(Integer.toString(cnt.incrementAndGet()), cntLen,
+						'0')));
 			}
 
 			// *****************************************
 
-			/**
-			 * @param media
-			 * @param byPatternClassifier
-			 * @return
-			 */
 			private String getKey(M media, ByPatternClassifier<?, M> byPatternClassifier) {
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTimeInMillis(byPatternClassifier.getMediaTimeComparator().getTime(media));

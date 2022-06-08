@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.classify;
  * #L%
  */
 
-
 import java.io.File;
 import java.io.IOException;
 
@@ -33,16 +32,7 @@ import org.fagu.fmv.utils.file.FileFinder;
  */
 public interface ClassifierFactory<F extends FileFinder<M>, M extends Media> {
 
-	/**
-	 * @return
-	 */
 	String getTitle();
 
-	/**
-	 * @param finder
-	 * @param destFolder
-	 * @return
-	 * @throws IOException
-	 */
 	Classifier<F, M> create(F finder, File destFolder) throws IOException;
 }

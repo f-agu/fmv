@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.classify;
  * #L%
  */
 
-
 import java.io.File;
 import java.util.List;
 
@@ -33,22 +32,9 @@ import org.fagu.fmv.utils.file.FileFinder;
  */
 public interface ClassifierProvider {
 
-	/**
-	 * @param mediaCls
-	 * @param destFolder
-	 * @return
-	 */
 	<M extends Media> List<Converter<M>> getConverter(Class<? extends M> mediaCls, File destFolder);
 
-	/**
-	 * @param mediaCls
-	 * @return
-	 */
 	<M extends Media> List<ConverterListener<M>> getConverterListener(Class<? extends M> mediaCls);
 
-	/**
-	 * @param mediaCls
-	 * @return
-	 */
 	<F extends FileFinder<M>, M extends Media> List<ClassifierFactory<F, M>> getClassifierFactories(Class<? extends Media> mediaCls);
 }

@@ -28,9 +28,6 @@ import org.fagu.fmv.mymedia.file.MovieFinder;
  */
 public class AskTimeOffsetMovieComparator extends AskTimeOffsetComparator<Movie> implements MovieTimeComparator {
 
-	/**
-	 * @param movieFinder
-	 */
 	public AskTimeOffsetMovieComparator(MovieFinder movieFinder) {
 		super(movieFinder);
 	}

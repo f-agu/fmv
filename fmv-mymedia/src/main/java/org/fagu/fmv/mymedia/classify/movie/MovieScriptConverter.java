@@ -63,41 +63,24 @@ public class MovieScriptConverter extends Converter<Movie> {
 
 	private int currentVideo;
 
-	/**
-	 * @param destFolder
-	 */
 	public MovieScriptConverter(File destFolder) {
 		super(destFolder);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Converter#getTitle()
-	 */
 	@Override
 	public String getTitle() {
 		return "Ecrire un script";
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Converter#getFormat(java.lang.String)
-	 */
 	@Override
 	public String getFormat(String defaultValue) {
 		return "mp4";
 	}
 
-	/**
-	 * @param fileName
-	 * @param rotate
-	 */
 	public void rotate(String fileName, Rotation rotate) {
 		rotateMap.put(fileName, rotate);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Converter#convert(org.fagu.fmv.media.Media,
-	 *      org.fagu.fmv.utils.file.FileFinder.InfosFile, java.io.File, org.fagu.fmv.mymedia.classify.ConverterListener)
-	 */
 	@Override
 	public void convert(Movie srcMedia, FileFinder<Movie>.InfosFile infosFile, File destFile, ConverterListener<Movie> listener) throws IOException {
 		openScript();
@@ -159,9 +142,6 @@ public class MovieScriptConverter extends Converter<Movie> {
 		}
 	}
 
-	/**
-	 * @see java.io.Closeable#close()
-	 */
 	@Override
 	public void close() throws IOException {
 		if(script != null) {
@@ -172,9 +152,6 @@ public class MovieScriptConverter extends Converter<Movie> {
 
 	// **************************************************
 
-	/**
-	 * @throws IOException
-	 */
 	private void openScript() throws IOException {
 		if(script == null) {
 			script = new PrintStream(new File(destFolder, "script.bat"));
@@ -188,16 +165,10 @@ public class MovieScriptConverter extends Converter<Movie> {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	private void writeLabel() {
 		script.println(":movie_" + currentVideo++);
 	}
 
-	/**
-	 * @return
-	 */
 	private Logger getScaleLogger() {
 		return new Logger() {
 
@@ -214,9 +185,6 @@ public class MovieScriptConverter extends Converter<Movie> {
 		};
 	}
 
-	/**
-	 * @return
-	 */
 	private Size getMaxSize() {
 		String property = System.getProperty("fmv.reduce.video.maxsize");
 		if(property == null) {

@@ -34,18 +34,11 @@ public class DeviceImageMetadatasFilter implements Predicate<IMIdentifyImageMeta
 
 	private final String model;
 
-	/**
-	 * @param device
-	 * @param model
-	 */
 	public DeviceImageMetadatasFilter(String device, String model) {
 		this.device = device;
 		this.model = model;
 	}
 
-	/**
-	 * @see java.util.function.Predicate#test(java.lang.Object)
-	 */
 	@Override
 	public boolean test(IMIdentifyImageMetadatas t) {
 		if(t == null) {

@@ -36,30 +36,17 @@ import org.fagu.fmv.mymedia.file.MovieFinder;
  */
 public class ClassifierFactories {
 
-	/**
-	 *
-	 */
 	private ClassifierFactories() {}
 
-	/**
-	 * @return
-	 */
 	public static ClassifierFactory<ImageFinder, Image> imageSejour() {
 		final String PATTERN = "${yyyy}-${MM}-${dd}/${counter}.${extension}";
 		return new ClassifierFactory<ImageFinder, Image>() {
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ClassifierFactory#getTitle()
-			 */
 			@Override
 			public String getTitle() {
 				return "Sejour (" + PATTERN + ')';
 			}
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ClassifierFactory#create(org.fagu.fmv.utils.file.FileFinder,
-			 *      java.io.File)
-			 */
 			@Override
 			public Classifier<ImageFinder, Image> create(ImageFinder finder, File destFolder) throws IOException {
 				MediaTimeComparator<Image> mediaTimeComparator = new AskTimeOffsetImageComparator(finder);
@@ -68,25 +55,15 @@ public class ClassifierFactories {
 		};
 	}
 
-	/**
-	 * @return
-	 */
 	public static ClassifierFactory<ImageFinder, Image> imagesToMovie() {
 		final String PATTERN = "img_${counter}.${extension}";
 		return new ClassifierFactory<ImageFinder, Image>() {
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ClassifierFactory#getTitle()
-			 */
 			@Override
 			public String getTitle() {
 				return "Images -> Video";
 			}
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ClassifierFactory#create(org.fagu.fmv.utils.file.FileFinder,
-			 *      java.io.File)
-			 */
 			@Override
 			public Classifier<ImageFinder, Image> create(ImageFinder finder, File destFolder) throws IOException {
 				MediaTimeComparator<Image> mediaTimeComparator = new MediaTimeComparator<Image>() {};
@@ -95,25 +72,15 @@ public class ClassifierFactories {
 		};
 	}
 
-	/**
-	 * @return
-	 */
 	public static ClassifierFactory<MovieFinder, Movie> movie() {
 		final String PATTERN = "${yyyy}-${MM}-${dd} (${counter}).${extension}";
 		return new ClassifierFactory<MovieFinder, Movie>() {
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ClassifierFactory#getTitle()
-			 */
 			@Override
 			public String getTitle() {
 				return "Basic (" + PATTERN + ')';
 			}
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ClassifierFactory#create(org.fagu.fmv.utils.file.FileFinder,
-			 *      java.io.File)
-			 */
 			@Override
 			public Classifier<MovieFinder, Movie> create(MovieFinder finder, File destFolder) throws IOException {
 				MediaTimeComparator<Movie> mediaTimeComparator = new AskTimeOffsetMovieComparator(finder);

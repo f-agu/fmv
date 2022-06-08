@@ -29,9 +29,6 @@ import org.fagu.fmv.mymedia.file.ImageFinder;
  */
 public class AskTimeOffsetImageComparator extends AskTimeOffsetComparator<Image> implements ImageTimeComparator {
 
-	/**
-	 * @param imageFinder
-	 */
 	public AskTimeOffsetImageComparator(ImageFinder imageFinder) {
 		super(imageFinder);
 	}

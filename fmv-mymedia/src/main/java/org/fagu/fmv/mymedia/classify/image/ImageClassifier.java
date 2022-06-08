@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.classify.image;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.im.Image;
@@ -33,10 +32,6 @@ import org.fagu.fmv.mymedia.file.ImageFinder;
  */
 public abstract class ImageClassifier extends Classifier<ImageFinder, Image> {
 
-	/**
-	 * @param finder
-	 * @param destFolder
-	 */
 	public ImageClassifier(ImageFinder finder, File destFolder) {
 		super(finder, destFolder);
 	}

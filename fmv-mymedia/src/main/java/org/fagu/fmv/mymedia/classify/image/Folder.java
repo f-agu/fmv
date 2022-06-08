@@ -34,32 +34,18 @@ public class Folder {
 
 	private final String key;
 
-	/**
-	 * @param key
-	 */
 	protected Folder(String key) {
 		this.key = Objects.requireNonNull(key);
 	}
 
-	/**
-	 * @param time
-	 * @return
-	 */
 	public static Folder byDay(long time) {
 		return byDay(new Date(time));
 	}
 
-	/**
-	 * @param date
-	 * @return
-	 */
 	public static Folder byDay(Date date) {
 		return new Folder(DAY_FORMAT.format(date));
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -68,9 +54,6 @@ public class Folder {
 		return result;
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if(this == obj) {
@@ -93,9 +76,6 @@ public class Folder {
 		return true;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return key;

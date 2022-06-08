@@ -30,15 +30,8 @@ import org.fagu.fmv.im.IMIdentifyImageMetadatas;
  */
 public class UnknownDeviceImageMetadatasFilter implements Predicate<IMIdentifyImageMetadatas> {
 
-	/**
-	 * @param device
-	 * @param model
-	 */
 	public UnknownDeviceImageMetadatasFilter() {}
 
-	/**
-	 * @see java.util.function.Predicate#test(java.lang.Object)
-	 */
 	@Override
 	public boolean test(IMIdentifyImageMetadatas t) {
 		return t == null || t.getDevice() == null || t.getDeviceModel() == null;

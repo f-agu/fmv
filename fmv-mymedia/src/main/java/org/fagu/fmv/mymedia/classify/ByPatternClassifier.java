@@ -58,18 +58,8 @@ public class ByPatternClassifier<F extends FileFinder<M>, M extends Media> exten
 	 */
 	public interface ReplacerMap<M extends Media> {
 
-		/**
-		 * @param media
-		 * @param byPatternClassifier
-		 */
 		void analyze(M media, ByPatternClassifier<?, M> byPatternClassifier);
 
-		/**
-		 * @param media
-		 * @param destPath
-		 * @param byPatternClassifier
-		 * @return
-		 */
 		Replacer getReplacer(M media, String destPath, ByPatternClassifier<?, M> byPatternClassifier);
 	}
 
@@ -83,13 +73,6 @@ public class ByPatternClassifier<F extends FileFinder<M>, M extends Media> exten
 
 	private final ReplacerMap<M> replacerMap;
 
-	/**
-	 * @param fileFinder
-	 * @param destFolder
-	 * @param mediaTimeComparator
-	 * @param pattern
-	 * @param replacerMap
-	 */
 	public ByPatternClassifier(F fileFinder, File destFolder, MediaTimeComparator<M> mediaTimeComparator, String pattern,
 			ReplacerMap<M> replacerMap) {
 		super(fileFinder, destFolder);
@@ -99,30 +82,17 @@ public class ByPatternClassifier<F extends FileFinder<M>, M extends Media> exten
 		map = MultiValueMaps.sortedSet(new TreeMap<>(), () -> new TreeSet<>(mediaTimeComparator));
 	}
 
-	/**
-	 * @return the mediaTimeComparator
-	 */
 	public MediaTimeComparator<M> getMediaTimeComparator() {
 		return mediaTimeComparator;
 	}
 
-	/**
-	 * @return the pattern
-	 */
 	public String getPattern() {
 		return pattern;
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Classifier#add(org.fagu.fmv.utils.file.FileFinder.InfosFile)
-	 */
 	@Override
 	public void add(FileFinder<M>.InfosFile infosFile) {}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Classifier#classify(org.fagu.fmv.mymedia.classify.Converter,
-	 *      org.fagu.fmv.mymedia.classify.ConverterListener)
-	 */
 	@Override
 	public List<File> classify(Converter<M> converter, ConverterListener<M> listener) throws IOException {
 		List<File> files = new ArrayList<>(100);
@@ -153,19 +123,11 @@ public class ByPatternClassifier<F extends FileFinder<M>, M extends Media> exten
 		return files;
 	}
 
-	/**
-	 * @see java.io.Closeable#close()
-	 */
 	@Override
 	public void close() throws IOException {}
 
 	// ***************************************
 
-	/**
-	 * @param media
-	 * @param format
-	 * @return
-	 */
 	private Map<String, String> replacerMap(M media, String format) {
 		Map<String, String> map = new HashMap<>();
 

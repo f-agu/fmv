@@ -43,17 +43,10 @@ public abstract class AbstractImageConverter extends Converter<Image> {
 
 	private final Soft convertSoft;
 
-	/**
-	 * @param destFolder
-	 */
 	public AbstractImageConverter(File destFolder) {
 		this(destFolder, Runtime.getRuntime().availableProcessors());
 	}
 
-	/**
-	 * @param destFolder
-	 * @param nThreads
-	 */
 	public AbstractImageConverter(File destFolder, int nThreads) {
 		super(destFolder);
 		convertSoft = Convert.search();
@@ -64,18 +57,11 @@ public abstract class AbstractImageConverter extends Converter<Image> {
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Converter#getFormat(java.lang.String)
-	 */
 	@Override
 	public String getFormat(String defaultValue) {
 		return "jpg";
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Converter#convert(org.fagu.fmv.media.Media,
-	 *      org.fagu.fmv.utils.file.FileFinder.InfosFile, java.io.File, org.fagu.fmv.mymedia.classify.ConverterListener)
-	 */
 	@Override
 	public void convert(Image srcImage, FileFinder<Image>.InfosFile infosFile, File destFile, ConverterListener<Image> listener) throws IOException {
 		Runnable runnable = create(srcImage, destFile, listener);
@@ -86,9 +72,6 @@ public abstract class AbstractImageConverter extends Converter<Image> {
 		executorService.submit(runnable);
 	}
 
-	/**
-	 * @see java.io.Closeable#close()
-	 */
 	@Override
 	public void close() throws IOException {
 		if(executorService != null) {
@@ -98,19 +81,10 @@ public abstract class AbstractImageConverter extends Converter<Image> {
 
 	// **********************************************************
 
-	/**
-	 * @param op
-	 */
 	abstract protected void populateOperation(IMOperation op);
 
 	// **********************************************************
 
-	/**
-	 * @param srcImage
-	 * @param destFile
-	 * @param listener
-	 * @return
-	 */
 	private Runnable create(Image srcImage, File destFile, ConverterListener<Image> listener) {
 		return () -> {
 			if(listener != null) {

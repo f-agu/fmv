@@ -36,34 +36,17 @@ public abstract class Converter<M extends Media> implements Closeable {
 
 	protected final File destFolder;
 
-	/**
-	 * @param destFolder
-	 */
 	public Converter(File destFolder) {
 		this.destFolder = Objects.requireNonNull(destFolder);
 	}
 
-	/**
-	 * @param defaultValue
-	 * @return
-	 */
 	public String getFormat(String defaultValue) {
 		return defaultValue;
 	}
 
 	// ************************************************
 
-	/**
-	 * @return
-	 */
 	abstract public String getTitle();
 
-	/**
-	 * @param srcMedia
-	 * @param infosFile
-	 * @param destFile
-	 * @param listener
-	 * @throws IOException
-	 */
 	abstract public void convert(M srcMedia, FileFinder<M>.InfosFile infosFile, File destFile, ConverterListener<M> listener) throws IOException;
 }

@@ -35,27 +35,14 @@ import org.fagu.fmv.mymedia.file.ImageFinder;
  */
 public class Sources {
 
-	/**
-	 * 
-	 */
 	public Sources() {}
 
-	/**
-	 * @param sourceFinder
-	 * @param file
-	 * @throws IOException
-	 */
 	public static void save(ImageFinder sourceFinder, File file) throws IOException {
 		try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
 			outputStream.writeObject(sourceFinder);
 		}
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
 	public static ImageFinder load(File file) throws IOException {
 		try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
 			return (ImageFinder)inputStream.readObject();

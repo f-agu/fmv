@@ -32,25 +32,15 @@ import org.fagu.fmv.utils.file.FileFinder;
  */
 public class MoveConverter extends Converter<Media> {
 
-	/**
-	 * @param destFolder
-	 */
 	public MoveConverter(File destFolder) {
 		super(destFolder);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Converter#getTitle()
-	 */
 	@Override
 	public String getTitle() {
 		return "Organiser / deplacer sans reduire";
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.classify.Converter#convert(org.fagu.fmv.media.Media,
-	 *      org.fagu.fmv.utils.file.FileFinder.InfosFile, java.io.File, org.fagu.fmv.mymedia.classify.ConverterListener)
-	 */
 	@Override
 	public void convert(Media srcMedia, FileFinder<Media>.InfosFile infosFile, File destFile, ConverterListener<Media> listener) throws IOException {
 		if(listener != null) {
@@ -62,9 +52,6 @@ public class MoveConverter extends Converter<Media> {
 		}
 	}
 
-	/**
-	 * @see java.io.Closeable#close()
-	 */
 	@Override
 	public void close() throws IOException {}
 
