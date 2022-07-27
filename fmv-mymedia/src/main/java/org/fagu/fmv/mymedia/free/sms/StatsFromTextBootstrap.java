@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 /**
@@ -15,6 +16,8 @@ import java.util.List;
  * @created 29 juil. 2021 10:51:53
  */
 public class StatsFromTextBootstrap {
+
+	private static final Pattern IS_DIGITS = Pattern.compile("\\d+");
 
 	public static void main(String... args) throws Exception {
 		if(args.length == 0) {
@@ -31,10 +34,10 @@ public class StatsFromTextBootstrap {
 			String phoneNumber = null;
 			LocalDateTime localDateTime = null;
 			while((line = reader.readLine()) != null) {
-				if("SMS".equals(line) || "1".equals(line)) {
+				if("SMS".equals(line) || IS_DIGITS.matcher(line).matches()) {
 					continue;
 				}
-				if(line.contains("€")) {
+				if(line.contains("€") || line.contains("�")) {
 					smsList.add(new SMS(phoneNumber, localDateTime));
 				} else if(line.endsWith("***")) {
 					phoneNumber = line;
