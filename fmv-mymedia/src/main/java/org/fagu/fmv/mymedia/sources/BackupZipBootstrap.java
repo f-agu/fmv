@@ -180,7 +180,7 @@ public class BackupZipBootstrap {
 				.add("Name")
 				.add("Version")
 				.add("Git")
-				.add("Count mdoules")
+				.add("Count modules")
 				.add("Count files")
 				.add("Count java files")
 				.add("File size"));
