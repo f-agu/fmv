@@ -15,6 +15,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ProjectStats implements Comparable<ProjectStats> {
 
+	private final String group;
+
 	private final String name;
 
 	private final String version;
@@ -29,10 +31,15 @@ public class ProjectStats implements Comparable<ProjectStats> {
 
 	private int countModules;
 
-	public ProjectStats(String name, String version) {
+	public ProjectStats(String group, String name, String version) {
+		this.group = Objects.requireNonNull(group);
 		this.name = Objects.requireNonNull(name);
 		this.version = Objects.requireNonNull(version);
 		this.countFilesByExtension = new HashMap<>();
+	}
+
+	public String getGroup() {
+		return group;
 	}
 
 	public String getName() {
@@ -89,7 +96,8 @@ public class ProjectStats implements Comparable<ProjectStats> {
 
 	@Override
 	public int compareTo(ProjectStats other) {
-		return name.compareTo(other.name);
+		int c = group.compareTo(other.group);
+		return c == 0 ? name.compareTo(other.name) : c;
 	}
 
 }

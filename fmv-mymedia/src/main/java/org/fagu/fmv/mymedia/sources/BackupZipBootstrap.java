@@ -69,6 +69,7 @@ public class BackupZipBootstrap {
 
 	private void searchProject(Path dir, Path outputFolder, Consumer<ProjectStats> projectStatsConsumer) throws IOException {
 		System.out.println(dir);
+		String group = dir.getFileName().toString();
 		Files.walkFileTree(dir, new FileVisitor<Path>() {
 
 			@Override
@@ -76,8 +77,10 @@ public class BackupZipBootstrap {
 				Path pomPath = path.resolve("pom.xml");
 				if(Files.exists(pomPath)) {
 					ReadPomXML readPomXML = new ReadPomXML("version");
-					ProjectStats stats = backupProject(dir, path, outputFolder, readPomXML.getInfo(pomPath));
-					projectStatsConsumer.accept(stats);
+					ProjectStats projectStats = new ProjectStats(group, path.getFileName().toString(), readPomXML.getInfo(pomPath));
+					GitTools.findURL(path).ifPresent(projectStats::setGitUrl);
+					backupProject(dir, path, outputFolder, projectStats);
+					projectStatsConsumer.accept(projectStats);
 					return FileVisitResult.SKIP_SUBTREE;
 				}
 				return FileVisitResult.CONTINUE;
@@ -101,15 +104,12 @@ public class BackupZipBootstrap {
 		});
 	}
 
-	private ProjectStats backupProject(Path rootPath, Path dir, Path outputFolder, String projectVersion) throws IOException {
+	private ProjectStats backupProject(Path rootPath, Path dir, Path outputFolder, ProjectStats projectStats) throws IOException {
 		Filter<Path> filter = GitIgnoreFilter.open(dir);
-		String name = dir.getFileName().toString();
-		Path outputFile = outputFolder.resolve(name + '_' + projectVersion + ".zip");
+		Path outputFile = outputFolder.resolve(projectStats.getName() + '_' + projectStats.getVersion() + ".zip");
 		if(Files.exists(outputFile)) {
 			Files.delete(outputFile);
 		}
-		ProjectStats projectStats = new ProjectStats(name, projectVersion);
-		GitTools.findURL(dir).ifPresent(projectStats::setGitUrl);
 
 		AtomicInteger countPath = new AtomicInteger();
 		AtomicReference<String> endText = new AtomicReference<>(StringUtils.EMPTY);
@@ -177,6 +177,7 @@ public class BackupZipBootstrap {
 		System.out.println();
 		System.out.println();
 		System.out.println(new StringJoiner("\t")
+				.add("Group")
 				.add("Name")
 				.add("Version")
 				.add("Git")
@@ -187,6 +188,7 @@ public class BackupZipBootstrap {
 
 		for(ProjectStats projectStats : projectStatsSet) {
 			StringJoiner joiner = new StringJoiner("\t")
+					.add(projectStats.getGroup())
 					.add(projectStats.getName())
 					.add(projectStats.getVersion())
 					.add(projectStats.getGitUrl().orElse(""))

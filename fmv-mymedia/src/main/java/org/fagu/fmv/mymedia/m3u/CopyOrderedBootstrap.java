@@ -26,14 +26,50 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.UnaryOperator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 public class CopyOrderedBootstrap {
+
+	private enum Name {
+
+		FILE_NAME {
+
+			@Override
+			public String getName(String firstLine, File sourceFile) {
+				return sourceFile.getName();
+			}
+		},
+		FILE_NAME_INDEX_TRUNKED {
+
+			@Override
+			public String getName(String firstLine, File sourceFile) {
+				return CopyOrderedBootstrap.getName(sourceFile);
+			}
+		},
+
+		TAG {
+
+			@Override
+			public String getName(String firstLine, File sourceFile) {
+				return StringUtils.substringAfter(firstLine, ",");
+			}
+		};
+
+		public abstract String getName(String firstLine, File sourceFile);
+	}
+
+	private static final boolean WITH_INDEX = false;
+
+	private static final Name NAME = Name.FILE_NAME;
 
 	public static void main(String... args) throws Exception {
 		for(String arg : args) {
@@ -50,21 +86,32 @@ public class CopyOrderedBootstrap {
 			}
 			file = files[0];
 		}
+		UnaryOperator<String> nameOperator = UnaryOperator.identity();
+		if(WITH_INDEX) {
+			AtomicInteger index = new AtomicInteger();
+			nameOperator = n -> {
+				int idx = index.incrementAndGet();
+				return (idx <= 9 ? "0" : "") + idx + ' ' + n;
+			};
+		}
 
 		// File destFolder = new File(args[1]);
-		File destFolder = new File("D:\\tmp\\cd-auto\\auto-x2", file.getName());
+		File destFolder = new File("c:\\tmp\\zic", file.getName());
 		FileUtils.forceMkdir(destFolder);
 
 		File srcFolder = file.getParentFile();
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.ISO_8859_1))) {
-			AtomicInteger index = new AtomicInteger();
+			AtomicReference<String> previousLine = new AtomicReference<>();
 			reader.lines()
-					.filter(l -> ! l.startsWith("#"))
-					.map(l -> new File(srcFolder, l))
+					.filter(l -> {
+						previousLine.set(l);
+						return ! l.startsWith("#");
+					})
+					.map(l -> searchSource(srcFolder, l))
+					.filter(Objects::nonNull)
 					.forEach(f -> {
-						int idx = index.incrementAndGet();
 						try {
-							File destFile = new File(destFolder, (idx <= 9 ? "0" : "") + idx + ' ' + getName(f));
+							File destFile = new File(destFolder, NAME.getName(previousLine.get(), f));
 							System.out.println(destFile);
 							FileUtils.copyFile(f, destFile);
 						} catch(IOException e) {
@@ -72,6 +119,18 @@ public class CopyOrderedBootstrap {
 						}
 					});
 		}
+	}
+
+	private static File searchSource(File parentFolder, String path) {
+		File parent = parentFolder;
+		File file = null;
+		while(parent != null && ! (file = new File(parent, path)).exists()) {
+			parent = parent.getParentFile();
+		}
+		if(file == null || ! file.exists()) {
+			System.out.println("File not found: " + path);
+		}
+		return file;
 	}
 
 	private static final char[] IGNORE_CHARS = ".)-_".toCharArray();
