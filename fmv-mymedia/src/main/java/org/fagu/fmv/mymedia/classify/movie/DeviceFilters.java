@@ -28,7 +28,7 @@ import java.util.function.Predicate;
  */
 public class DeviceFilters {
 
-	public DeviceFilters() {}
+	private DeviceFilters() {}
 
 	// -------
 
@@ -52,19 +52,19 @@ public class DeviceFilters {
 
 	public static Predicate<Movie> byHandlerName(String name) {
 		return m -> m.getMetadatas().getVideoStream().handlerName()
-				.map(n -> name.equals(n))
+				.map(name::equals)
 				.orElse(false);
 	}
 
 	public static Predicate<Movie> byComptableBrands(String brands) {
 		return m -> m.getMetadatas().getFormat().compatibleBrands()
-				.map(n -> brands.equals(n))
+				.map(brands::equals)
 				.orElse(false);
 	}
 
 	public static Predicate<Movie> byMajorBrand(final String brand) {
 		return m -> m.getMetadatas().getFormat().majorBrand()
-				.map(n -> brand.equals(n))
+				.map(brand::equals)
 				.orElse(false);
 	}
 

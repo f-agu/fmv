@@ -53,10 +53,6 @@ public class Reduce {
 	// private static final long BEFORE_TIME = 1449010800000L; // 2015-12-02
 	// 1449244477913
 
-	/**
-	 * @param args
-	 * @throws Exception
-	 */
 	public static void main(String[] args) throws Exception {
 		File folder = new File("c:\\tmp\\movies\\TODO");
 

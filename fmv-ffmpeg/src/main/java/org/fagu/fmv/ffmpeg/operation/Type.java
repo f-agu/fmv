@@ -1,5 +1,7 @@
 package org.fagu.fmv.ffmpeg.operation;
 
+import java.util.EnumSet;
+
 /*
  * #%L
  * fmv-ffmpeg
@@ -33,29 +35,14 @@ public enum Type {
 
 	AUDIO, VIDEO, SUBTITLE, DATA, ATTACHEMENTS, UNKNOWN;
 
-	/**
-	 * @return
-	 */
 	public char code() {
 		return Character.toLowerCase(name().charAt(0));
 	}
 
-	/**
-	 * @return
-	 */
 	public static Set<Type> valuesSet() {
-		Type[] values = Type.values();
-		Set<Type> set = new HashSet<>(values.length);
-		for(Type type : values) {
-			set.add(type);
-		}
-		return set;
+		return EnumSet.allOf(Type.class);
 	}
 
-	/**
-	 * @param filterComplexBase
-	 * @return
-	 */
 	public static Set<Type> valuesSet(FilterComplexBase filterComplexBase) {
 		Type[] values = Type.values();
 		Set<Type> set = new HashSet<>(values.length);
@@ -67,11 +54,6 @@ public enum Type {
 		return set;
 	}
 
-	/**
-	 * @param parameter
-	 * @param type
-	 * @return
-	 */
 	public static String concat(String parameter, Type type) {
 		if(type == null) {
 			return parameter;

@@ -36,8 +36,6 @@ public class TimeOffsetComparator implements Comparator<FileFinder<Movie>.InfosF
 
 	private final Map<Predicate<Movie>, Long> filterMap = new LinkedHashMap<>();
 
-	public TimeOffsetComparator() {}
-
 	public void addFilter(Predicate<Movie> filter, long timeDiff) {
 		filterMap.put(filter, timeDiff);
 	}

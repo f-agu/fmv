@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,8 +46,8 @@ public class Movie implements Media {
 	private final MovieMetadatas videoMetadatas;
 
 	public Movie(File file, MovieMetadatas infos) {
-		this.file = file;
-		this.videoMetadatas = infos;
+		this.file = Objects.requireNonNull(file);
+		this.videoMetadatas = Objects.requireNonNull(infos);
 	}
 
 	@Override
