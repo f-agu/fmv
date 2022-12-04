@@ -538,13 +538,15 @@ public class FFReducer extends AbstractReducer {
 			@Override
 			public void eventPostExecute(FMVExecutor fmvExecutor, CommandLine command, Map environment,
 					ExecuteResultHandler handler) {
-				if(volumeDetect.isDetected()) {
+				if(volumeDetect != null && volumeDetect.isDetected()) {
 					VolumeDetected detected = volumeDetect.getDetected();
-					logger.log("VolumeDetect: nb_sample= " + detected.countSample());
-					logger.log("VolumeDetect: max=       " + detected.getMax());
-					logger.log("VolumeDetect: mean=      " + detected.getMean());
-					logger.log("VolumeDetect: histogram= " + detected.getHistogram());
-					logger.log("VolumeDetect: Add volume filter: " + detected.toMaxVolume());
+					if(detected != null) {
+						logger.log("VolumeDetect: nb_sample= " + detected.countSample());
+						logger.log("VolumeDetect: max=       " + detected.getMax());
+						logger.log("VolumeDetect: mean=      " + detected.getMean());
+						logger.log("VolumeDetect: histogram= " + detected.getHistogram());
+						logger.log("VolumeDetect: Add volume filter: " + detected.toMaxVolume());
+					}
 				} else {
 					logger.log("volume not detected");
 				}
