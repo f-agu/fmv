@@ -200,7 +200,7 @@ public class InfoOperation extends FFProbeOperation<MovieMetadatas> {
 
 	@Override
 	public MovieMetadatas getResult() {
-		return MovieMetadatas.parseJSON(StringUtils.join(out, ' '));
+		return MovieMetadatas.parseJSON(StringUtils.join(out, '\n'));
 	}
 
 }

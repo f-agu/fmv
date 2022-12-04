@@ -31,7 +31,7 @@ import org.fagu.fmv.mymedia.file.MovieFinder;
  */
 public abstract class MovieClassifier extends Classifier<MovieFinder, Movie> {
 
-	public MovieClassifier(MovieFinder finder, File destFolder) {
+	protected MovieClassifier(MovieFinder finder, File destFolder) {
 		super(finder, destFolder);
 	}
 

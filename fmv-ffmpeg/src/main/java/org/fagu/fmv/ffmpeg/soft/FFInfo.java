@@ -21,10 +21,10 @@ package org.fagu.fmv.ffmpeg.soft;
  */
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -115,8 +115,7 @@ public class FFInfo extends VersionDateSoftInfo {
 			return builtVersion.toString();
 		}
 		if(builtDate != null) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			return dateFormat.format(builtDate);
+			return builtDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		}
 		return "<version not found>";
 	}
