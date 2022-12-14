@@ -39,6 +39,10 @@ public class MultiSoftFoundFactory implements SoftFoundFactory {
 		this.factories = Collections.unmodifiableList(new ArrayList<>(factories));
 	}
 
+	public List<SoftFoundFactory> getFactories() {
+		return factories;
+	}
+
 	@Override
 	public SoftFound create(File file, Locator locator, SoftPolicy softPolicy) throws IOException {
 		SoftFound softFound;
