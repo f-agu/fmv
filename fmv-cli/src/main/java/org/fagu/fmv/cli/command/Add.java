@@ -34,9 +34,6 @@ import org.fagu.fmv.cli.completion.FileCompleterFactory;
 @Completion(FileCompleterFactory.CLS_NAME)
 public class Add extends AbstractCommand {
 
-	/**
-	 * @see org.fagu.fmv.cli.Command#run(java.lang.String[])
-	 */
 	@Override
 	public void run(String[] args) {
 		for(String arg : args) {
@@ -44,17 +41,11 @@ public class Add extends AbstractCommand {
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.Command#getShortDescription()
-	 */
 	@Override
 	public String getShortDescription() {
 		return "Add some media sources: image, movies";
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.Command#getSyntax()
-	 */
 	@Override
 	public String getSyntax() {
 		return "add [file/folder] [file/folder] ...";

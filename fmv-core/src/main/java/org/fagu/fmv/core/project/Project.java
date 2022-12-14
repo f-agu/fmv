@@ -133,7 +133,7 @@ public class Project {
 		fmvVersion = FMV.getVersion();
 
 		extensions.addAll(FileType.AUDIO, Arrays.asList("mp3", "ogg", "wav")); // TODO
-		extensions.addAll(FileType.VIDEO, Arrays.asList("mov", "mp4", "avi", "mkv")); // TODO
+		extensions.addAll(FileType.VIDEO, Arrays.asList("mov", "mp4", "avi", "mkv", "ts")); // TODO
 		extensions.addAll(FileType.IMAGE, Arrays.asList("jpg", "jpeg", "gif", "png")); // TODO
 	}
 
