@@ -40,7 +40,7 @@ public class LogExecuteDelegate implements ExecuteDelegate {
 	private final Consumer<String> logConsumer;
 
 	public LogExecuteDelegate(Consumer<String> logConsumer) {
-		this(BasicExecuteDelegate.INSTANCE, logConsumer);
+		this(EnvironmentExecuteDelegate.systemEnvs(), logConsumer);
 	}
 
 	public LogExecuteDelegate(ExecuteDelegate delegated, Consumer<String> logConsumer) {

@@ -55,6 +55,8 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExecSoftFoundFactory.class);
 
+	private static final int DEFAULT_TIMEOUT_MS = 10_000; // default: 10 seconds
+
 	// ------------------------------------------------------------
 
 	public static class ExecSoftFoundFactoryPrepare {
@@ -222,8 +224,9 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 						.lookReader(lookReader)
 						.build();
 				if(timeOutMilliSeconds == null) {
-					fmvExecutor.setTimeOut(10_000); // default: 10 seconds
+					fmvExecutor.setTimeOut(DEFAULT_TIMEOUT_MS);
 				}
+				fmvExecutor.addListener(new LogFMVExecListener());
 				applyCustomizeExecutor(fmvExecutor);
 				return fmvExecutor;
 			};

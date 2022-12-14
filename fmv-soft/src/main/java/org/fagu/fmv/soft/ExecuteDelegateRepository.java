@@ -29,7 +29,7 @@ import java.util.Objects;
  */
 public class ExecuteDelegateRepository {
 
-	private static ExecuteDelegate delegate = BasicExecuteDelegate.INSTANCE;
+	private static ExecuteDelegate delegate = EnvironmentExecuteDelegate.systemEnvs();
 
 	private ExecuteDelegateRepository() {}
 
