@@ -32,21 +32,9 @@ import org.fagu.fmv.soft.SoftExecutor;
  */
 public interface MetadatasBuilder<M extends Metadatas, B extends MetadatasBuilder<M, ?>> {
 
-	/**
-	 * @param identifySoft
-	 * @return
-	 */
 	B soft(Soft identifySoft);
 
-	/**
-	 * @param customizeExecutor
-	 * @return
-	 */
 	B customizeExecutor(Consumer<SoftExecutor> customizeExecutor);
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	M extract() throws IOException;
 }

@@ -28,19 +28,10 @@ import java.io.File;
  */
 public interface Media {
 
-	/**
-	 * @return
-	 */
 	File getFile();
 
-	/**
-	 * @return
-	 */
 	Metadatas getMetadatas();
 
-	/**
-	 * @return
-	 */
 	long getTime();
 
 	String getDevice();

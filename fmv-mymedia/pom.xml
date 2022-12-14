@@ -75,6 +75,12 @@
 		    <groupId>com.googlecode.soundlibs</groupId>
 		    <artifactId>mp3spi</artifactId>
 		    <version>1.9.5.4</version>
+		    <exclusions>
+		    	<exclusion>
+		    		<groupId>junit</groupId>
+		    		<artifactId>junit</artifactId>
+		    	</exclusion>
+		    </exclusions>
 		</dependency>
 						
 		<dependency>

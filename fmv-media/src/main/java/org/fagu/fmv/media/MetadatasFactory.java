@@ -45,7 +45,7 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 
 	private final Class<? extends ExceptionKnownAnalyzer> exceptionKnownSPIClass;
 
-	public MetadatasFactory(Class<? extends ExceptionKnownAnalyzer> exceptionKnownSPIClass) {
+	protected MetadatasFactory(Class<? extends ExceptionKnownAnalyzer> exceptionKnownSPIClass) {
 		this.exceptionKnownSPIClass = exceptionKnownSPIClass;
 	}
 

@@ -41,7 +41,7 @@ public abstract class FileIs {
 
 	private final Set<String> extensions;
 
-	public FileIs(FileType fileType, Collection<String> extensions) {
+	protected FileIs(FileType fileType, Collection<String> extensions) {
 		this.fileType = Objects.requireNonNull(fileType);
 		this.extensions = extensions.stream()
 				.filter(Objects::nonNull)
