@@ -36,6 +36,7 @@ import org.fagu.fmv.mymedia.logger.Loggers;
 import org.fagu.fmv.mymedia.reduce.cb.ComicBook;
 import org.fagu.fmv.mymedia.reduce.cb.ComicBookFactory;
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.textprogressbar.part.ProgressPart;
 import org.fagu.fmv.utils.io.UnclosedOutputStream;
@@ -90,7 +91,12 @@ public class CBReducer extends AbstractReducer {
 
 				try (ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(new FileOutputStream(tempCbrFile))) {
 					comicBook.reduce(
-							(zipArchiveEntry, inputStream) -> appendEntry(zipArchiveOutputStream, currentCount, zipArchiveEntry, inputStream));
+							(zipArchiveEntry, inputStream) -> appendEntry(
+									zipArchiveOutputStream,
+									currentCount,
+									zipArchiveEntry,
+									inputStream,
+									logger));
 				}
 			}
 		}
@@ -112,12 +118,15 @@ public class CBReducer extends AbstractReducer {
 	// ***************************************************
 
 	private void appendEntry(ZipArchiveOutputStream zipArchiveOutputStream, AtomicInteger currentCount, ZipArchiveEntry outEntry,
-			InputStream inputStream) throws IOException {
-		zipArchiveOutputStream.putArchiveEntry(outEntry);
+			InputStream inputStream, Logger logger) throws IOException {
+		ZipArchiveEntry newEntry = new ZipArchiveEntry(outEntry);
+		newEntry.setMethod(java.util.zip.ZipEntry.DEFLATED);
+		zipArchiveOutputStream.putArchiveEntry(newEntry);
 		convertSoft.withParameters(imOperation.toList())
-				// .logCommandLine(cmdLine -> System.out.println(cmdLine))
+				.logCommandLine(cmdLine -> logger.log(newEntry.getName() + ": " + CommandLineUtils.toLine(cmdLine)))
 				.input(inputStream)
 				.output(new UnclosedOutputStream(zipArchiveOutputStream))
+				.addErrReadLine(line -> logger.log(line))
 				.execute();
 		zipArchiveOutputStream.closeArchiveEntry();
 		currentCount.incrementAndGet();

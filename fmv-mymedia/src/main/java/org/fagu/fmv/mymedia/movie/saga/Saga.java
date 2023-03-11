@@ -67,20 +67,11 @@ public class Saga implements Comparable<Saga> {
 
 	private final Set<Movie> movies;
 
-	/**
-	 * @param name
-	 * @param movies
-	 */
 	private Saga(String name, Set<Movie> movies) {
 		this.name = name;
 		this.movies = movies;
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
 	public static Saga load(File file) throws IOException {
 		Set<Movie> movies = new LinkedHashSet<>();
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {

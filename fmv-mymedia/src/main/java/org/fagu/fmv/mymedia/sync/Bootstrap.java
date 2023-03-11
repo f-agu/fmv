@@ -36,6 +36,7 @@ import org.fagu.fmv.mymedia.sync.file.FileStorage;
 import org.fagu.fmv.mymedia.sync.impl.Synchronizers;
 import org.fagu.fmv.mymedia.utils.AppVersion;
 import org.fagu.fmv.mymedia.utils.ScannerHelper;
+import org.fagu.fmv.mymedia.utils.ScannerHelper.YesNo;
 
 
 /**
@@ -45,10 +46,6 @@ public class Bootstrap {
 
 	private static final String LOG_FILE_PROPERTY = "fmv.sync.logfile";
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
 	public static void main(String[] args) throws IOException {
 		if(args.length == 0) {
 			System.out.println("Usage: " + Bootstrap.class.getName() + " <sync-config-file1> [<sync-config-file2> <sync-config-file3> ...]");
@@ -65,7 +62,7 @@ public class Bootstrap {
 			forkLogger.log("");
 			displayConfig(configs, forkLogger);
 			forkLogger.log("");
-			if(ScannerHelper.yesNo("Continue with this configuration")) {
+			if(YesNo.YES.equals(ScannerHelper.yesNo("Continue with this configuration"))) {
 				synchronize(configs, logger);
 			}
 		}

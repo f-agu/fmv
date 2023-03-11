@@ -45,6 +45,7 @@ import org.fagu.fmv.mymedia.logger.Loggers;
 import org.fagu.fmv.mymedia.movie.Sagas;
 import org.fagu.fmv.mymedia.movie.saga.Saga.Movie;
 import org.fagu.fmv.mymedia.utils.ScannerHelper;
+import org.fagu.fmv.mymedia.utils.ScannerHelper.YesNo;
 
 
 /**
@@ -61,10 +62,6 @@ public class Bootstrap {
 
 	private final File destFolder;
 
-	/**
-	 * @param logger
-	 * @param srcFolder
-	 */
 	public Bootstrap(Logger logger, File srcFolder) {
 		this.logger = Objects.requireNonNull(logger);
 		this.destFolder = new File(srcFolder, "_Sagas");
@@ -104,7 +101,7 @@ public class Bootstrap {
 			createLink(destFile, file);
 		}
 		existingFiles.forEach(f -> {
-			if(ScannerHelper.yesNo("Delete " + f)) {
+			if(YesNo.YES.equals(ScannerHelper.yesNo("Delete " + f))) {
 				f.delete();
 			}
 		});

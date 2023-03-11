@@ -60,39 +60,22 @@ public class Loggers {
 
 	private Loggers() {}
 
-	/**
-	 * @return
-	 */
 	public static Logger noOperation() {
 		return NO_OPERATION;
 	}
 
-	/**
-	 * @return
-	 */
 	public static Logger systemOut() {
 		return SYSTEM_OUT;
 	}
 
-	/**
-	 * @return
-	 */
 	public static Logger systemErr() {
 		return SYSTEM_ERR;
 	}
 
-	/**
-	 * @param printStream
-	 * @return
-	 */
 	public static Logger printStream(PrintStream printStream) {
 		return printStream(printStream, null);
 	}
 
-	/**
-	 * @param printStream
-	 * @return
-	 */
 	public static Logger printStream(PrintStream printStream, String toString) {
 		return new Logger() {
 
@@ -118,10 +101,6 @@ public class Loggers {
 		};
 	}
 
-	/**
-	 * @param logger
-	 * @return
-	 */
 	public static Logger fork(Logger... loggers) {
 		return new Logger() {
 
@@ -157,21 +136,10 @@ public class Loggers {
 		};
 	}
 
-	/**
-	 * @param logger
-	 * @return
-	 * @throws IOException
-	 */
 	public static Logger timestamp(Logger logger) throws IOException {
 		return timestamp(logger, null);
 	}
 
-	/**
-	 * @param logger
-	 * @param dateTimeFormatter
-	 * @return
-	 * @throws IOException
-	 */
 	public static Logger timestamp(Logger logger, DateTimeFormatter dateTimeFormatter) throws IOException {
 		final DateTimeFormatter dateFormatter = dateTimeFormatter == null ? DEFAULT_DATE_TIME_FORMATTER : dateTimeFormatter;
 		return new Logger() {

@@ -31,17 +31,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class IOUtils {
 
-	/**
-	 * 
-	 */
 	private IOUtils() {}
 
-	/**
-	 * @param input
-	 * @param output
-	 * @param progress
-	 * @throws IOException
-	 */
 	public static void copy(final InputStream input, final OutputStream output, AtomicLong progress) throws IOException {
 		final byte[] buffer = new byte[16 * 1024];
 		int n;

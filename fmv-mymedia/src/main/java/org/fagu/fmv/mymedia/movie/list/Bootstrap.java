@@ -71,6 +71,7 @@ import org.fagu.fmv.mymedia.movie.list.column.VideoSubtitleColumn;
 import org.fagu.fmv.mymedia.movie.list.datatype.DataStoreImpl;
 import org.fagu.fmv.mymedia.utils.AppVersion;
 import org.fagu.fmv.mymedia.utils.ScannerHelper;
+import org.fagu.fmv.mymedia.utils.ScannerHelper.YesNo;
 import org.fagu.fmv.utils.IniFile;
 
 
@@ -89,42 +90,25 @@ public class Bootstrap implements Closeable {
 
 	private Logger logger;
 
-	/**
-	 * @param printStream
-	 */
 	public Bootstrap(PrintStream printStream) {
 		this.printStream = Objects.requireNonNull(printStream);
 		columns = new ArrayList<>();
 	}
 
-	/**
-	 * @param column
-	 */
 	public void addColumn(Column column) {
 		if(column != null) {
 			columns.add(column);
 		}
 	}
 
-	/**
-	 * @param file
-	 */
 	public void list(File file) {
 		list(file, OptionalInt.empty());
 	}
 
-	/**
-	 * @param file
-	 * @param maxDepth
-	 */
 	public void list(File file, OptionalInt maxDepth) {
 		list(Collections.singletonList(file), maxDepth);
 	}
 
-	/**
-	 * @param files
-	 * @param maxDepth
-	 */
 	public void list(Collection<File> files, OptionalInt maxDepth) {
 		if(columns.isEmpty()) {
 			populateDefaultColumns();
@@ -142,9 +126,6 @@ public class Bootstrap implements Closeable {
 		}
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	@Override
 	public void close() throws IOException {
 		printStream.close();
@@ -152,9 +133,6 @@ public class Bootstrap implements Closeable {
 
 	// ****************************************************
 
-	/**
-	 *
-	 */
 	private void populateDefaultColumns() {
 		columns.add(new NameColumn());
 		// columns.add(new SagaNameColumn());
@@ -188,9 +166,6 @@ public class Bootstrap implements Closeable {
 		columns.add(new PathColumn());
 	}
 
-	/**
-	 *
-	 */
 	private void writeHeaders() {
 		if(headerWritten) {
 			return;
@@ -199,12 +174,6 @@ public class Bootstrap implements Closeable {
 		headerWritten = true;
 	}
 
-	/**
-	 * @param rootPath
-	 * @param currentFile
-	 * @param currentDepth
-	 * @param maxDepth
-	 */
 	private void recurse(Path rootPath, File currentFile, int currentDepth, int maxDepth) {
 		if(currentFile.isFile()) {
 			doFile(rootPath, currentFile);
@@ -223,10 +192,6 @@ public class Bootstrap implements Closeable {
 		}
 	}
 
-	/**
-	 * @param folder
-	 * @return
-	 */
 	private IniFile loadIniFile(File folder) {
 		File file = new File(folder, ".fmv-listmovie");
 		if( ! file.exists()) {
@@ -239,10 +204,6 @@ public class Bootstrap implements Closeable {
 		}
 	}
 
-	/**
-	 * @param iniFile
-	 * @return
-	 */
 	private FileFilter createFileFilter(IniFile iniFile) {
 		if(iniFile == null) {
 			return f -> true;
@@ -250,10 +211,6 @@ public class Bootstrap implements Closeable {
 		return f -> ! iniFile.contains("exclude", f.getName());
 	}
 
-	/**
-	 * @param rootPath
-	 * @param file
-	 */
 	private void doFile(Path rootPath, File file) {
 		if("Thumbs.db".equalsIgnoreCase(file.getName())) {
 			file.delete();
@@ -275,10 +232,6 @@ public class Bootstrap implements Closeable {
 				.collect(Collectors.joining("\t")));
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	private static Logger openLogger() throws IOException {
 		String property = System.getProperty(LOG_FILE_PROPERTY);
 		if(property == null) {
@@ -287,12 +240,6 @@ public class Bootstrap implements Closeable {
 		return LoggerFactory.openLogger(new File(property));
 	}
 
-	/**
-	 * @param args
-	 * @param logger
-	 * @return
-	 * @throws IOException
-	 */
 	private static List<ListConfig> loadConfig(String[] args, Logger logger) throws IOException {
 		List<ListConfig> configs = new LinkedList<>();
 		for(String arg : args) {
@@ -306,10 +253,6 @@ public class Bootstrap implements Closeable {
 		return configs;
 	}
 
-	/**
-	 * @param configs
-	 * @param logger
-	 */
 	private static void displayConfig(List<ListConfig> configs, Logger logger) {
 		logger.log("List declared:");
 		configs.stream()
@@ -317,10 +260,6 @@ public class Bootstrap implements Closeable {
 				.forEach(f -> logger.log("Folder: " + f));
 	}
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
 	public static void main(String[] args) throws IOException {
 		if(args.length < 2) {
 			System.out.println("Usage: " + Bootstrap.class.getName()
@@ -342,7 +281,7 @@ public class Bootstrap implements Closeable {
 			forkLogger.log("");
 			displayConfig(configs, forkLogger);
 			forkLogger.log("");
-			if(ScannerHelper.yesNo("Continue with this configuration")) {
+			if(YesNo.YES.equals(ScannerHelper.yesNo("Continue with this configuration"))) {
 				configs.stream()
 						.flatMap(lc -> lc.getFolders().stream())
 						.forEach(bootstrap::list);

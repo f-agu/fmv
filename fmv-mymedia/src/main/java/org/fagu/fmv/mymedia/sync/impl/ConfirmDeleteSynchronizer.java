@@ -25,6 +25,7 @@ import java.io.IOException;
 import org.fagu.fmv.mymedia.sync.Item;
 import org.fagu.fmv.mymedia.sync.Synchronizer;
 import org.fagu.fmv.mymedia.utils.ScannerHelper;
+import org.fagu.fmv.mymedia.utils.ScannerHelper.YesNo;
 
 
 /**
@@ -38,7 +39,7 @@ public class ConfirmDeleteSynchronizer extends WrappedSynchronizer {
 
 	@Override
 	public boolean delete(Item item) throws IOException {
-		if(ScannerHelper.yesNo("> Delete " + item)) {
+		if(YesNo.YES.equals(ScannerHelper.yesNo("> Delete " + item))) {
 			return synchronizer.delete(item);
 		}
 		return false;

@@ -32,17 +32,8 @@ import java.io.PrintStream;
  */
 public class LoggerFactory {
 
-	/**
-	 * 
-	 */
 	private LoggerFactory() {}
 
-	/**
-	 * @param sourceFile
-	 * @param propertyLogFile
-	 * @param propertyLogFileDefaultName
-	 * @return
-	 */
 	public static File getLogFile(File sourceFile, String propertyLogFile, String propertyLogFileDefaultName) {
 		File sourceFolder = sourceFile;
 		if(sourceFolder.isFile()) {
@@ -62,11 +53,6 @@ public class LoggerFactory {
 		return logFile;
 	}
 
-	/**
-	 * @param logFile
-	 * @return
-	 * @throws IOException
-	 */
 	public static Logger openLogger(File logFile) throws IOException {
 		final PrintStream printStream = new PrintStream(new FileOutputStream(logFile, true));
 		return Loggers.timestamp(Loggers.printStream(printStream, logFile.toString()));
