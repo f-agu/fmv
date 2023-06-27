@@ -20,31 +20,16 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-
 /**
  * @author f.agu
  */
 public interface PropertyValue<V> {
 
-	/**
-	 * @return
-	 */
 	String name();
 
-	/**
-	 * @return
-	 */
 	V getDefaultValue();
 
-	/**
-	 * @param v
-	 * @return
-	 */
 	String fromValue(V v);
 
-	/**
-	 * @param str
-	 * @return
-	 */
 	V toValue(String str);
 }

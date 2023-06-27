@@ -23,11 +23,11 @@ package org.fagu.fmv.core.exec;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -37,8 +37,6 @@ import org.fagu.fmv.core.exec.executable.GenericExecutable;
 import org.fagu.fmv.core.project.LoadException;
 import org.fagu.fmv.core.project.LoadUtils;
 import org.fagu.fmv.core.project.Project;
-import org.fagu.fmv.utils.collection.MapMap;
-import org.fagu.fmv.utils.collection.MultiValueMaps;
 import org.fagu.fmv.utils.time.Duration;
 
 
@@ -47,7 +45,7 @@ import org.fagu.fmv.utils.time.Duration;
  */
 public abstract class BaseIdentifiable implements Identifiable {
 
-	private static final MapMap<Project, String, Identifiable> UNIQUE_ID_MAP = MultiValueMaps.hashMapHashMap();
+	private static final Map<Project, Map<String, Identifiable>> UNIQUE_ID_MAP = new HashMap<>();
 
 	protected final List<Identifiable> identifiableChildren = new ArrayList<>();
 
@@ -65,70 +63,43 @@ public abstract class BaseIdentifiable implements Identifiable {
 
 	private Identifiable parent;
 
-	/**
-	 *
-	 */
-	public BaseIdentifiable() {}
+	protected BaseIdentifiable() {}
 
-	/**
-	 * @param project
-	 */
-	public BaseIdentifiable(Project project) {
+	protected BaseIdentifiable(Project project) {
 		this.project = project;
 		registerMe();
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.timeline.Identifiable#getId()
-	 */
 	@Override
 	public String getId() {
 		return id;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#getCode()
-	 */
 	@Override
 	public String getCode() {
 		return code;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.timeline.Identifiable#getProject()
-	 */
 	@Override
 	public Project getProject() {
 		return project;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#getParent()
-	 */
 	@Override
 	public Identifiable getParent() {
 		return parent;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#isRoot()
-	 */
 	@Override
 	public boolean isRoot() {
 		return parent == null;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#getDepth()
-	 */
 	@Override
 	public int getDepth() {
 		return getDepth(i -> true);
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#getDepth(java.util.function.Predicate)
-	 */
 	@Override
 	public int getDepth(Predicate<Identifiable> filter) {
 		if(parent == null) {
@@ -148,17 +119,11 @@ public abstract class BaseIdentifiable implements Identifiable {
 		return count;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.timeline.Identifiable#modified()
-	 */
 	@Override
 	public void modified() {
 		project.modified();
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.timeline.Identifiable#getHash()
-	 */
 	@Override
 	public Hash getHash() {
 		Hash hash = new Hash(id);
@@ -170,33 +135,21 @@ public abstract class BaseIdentifiable implements Identifiable {
 		return hash;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#isExecutable()
-	 */
 	@Override
 	public boolean isExecutable() {
 		return this instanceof Executable;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#isFilterExec()
-	 */
 	@Override
 	public boolean isFilterExec() {
 		return this instanceof FilterExec;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#isSource()
-	 */
 	@Override
 	public boolean isSource() {
 		return this instanceof Source;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#add(org.fagu.fmv.core.exec.Identifiable)
-	 */
 	@Override
 	public Identifiable add(Identifiable identifiable) {
 		if(identifiable.isFilterExec()) {
@@ -211,9 +164,6 @@ public abstract class BaseIdentifiable implements Identifiable {
 		throw new RuntimeException("Undefined identifiable: " + identifiable);
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#add(org.fagu.fmv.core.exec.Executable)
-	 */
 	@Override
 	public Identifiable add(Executable executable) {
 		Identifiable previousParentOfChild = insert(executables, executable);
@@ -229,9 +179,6 @@ public abstract class BaseIdentifiable implements Identifiable {
 		return null;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#add(org.fagu.fmv.core.exec.FilterExec)
-	 */
 	@Override
 	public Identifiable add(FilterExec filterExec) {
 		Identifiable newParent = insert(filterExecs, filterExec);
@@ -242,9 +189,6 @@ public abstract class BaseIdentifiable implements Identifiable {
 		return null;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#add(org.fagu.fmv.core.exec.Source)
-	 */
 	@Override
 	public Identifiable add(Source source) {
 		insert(sources, source);
@@ -253,50 +197,32 @@ public abstract class BaseIdentifiable implements Identifiable {
 		return null;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#getIdentifiableChildren()
-	 */
 	@Override
 	public List<Identifiable> getIdentifiableChildren() {
 		return Collections.unmodifiableList(identifiableChildren);
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Executable#getFilters()
-	 */
 	@Override
 	public List<FilterExec> getFilters() {
 		return Collections.unmodifiableList(filterExecs);
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Executable#getExecutables()
-	 */
 	@Override
 	public List<Executable> getExecutables() {
 		return Collections.unmodifiableList(executables);
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Executable#getSources()
-	 */
 	@Override
 	public List<Source> getSources() {
 		return Collections.unmodifiableList(sources);
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#remove(org.fagu.fmv.core.exec.Identifiable)
-	 */
 	@Override
 	public boolean remove(Identifiable identifiable) {
 		identifiableChildren.remove(identifiable);
 		return getIdentifiableList(identifiable).remove(identifiable);
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.timeline.Identifiable#load(org.dom4j.Element)
-	 */
 	@Override
 	public void load(Project project, Element fromElement, Identifiable parent) throws LoadException {
 		this.project = project;
@@ -334,9 +260,6 @@ public abstract class BaseIdentifiable implements Identifiable {
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.timeline.Identifiable#save(org.dom4j.Element)
-	 */
 	@Override
 	public void save(Element toElement) {
 		toElement.addAttribute("code", getCode());
@@ -363,32 +286,19 @@ public abstract class BaseIdentifiable implements Identifiable {
 
 	// *************************************************
 
-	/**
-	 * @param project
-	 * @param id
-	 * @return
-	 */
 	public static Optional<Identifiable> findById(Project project, String id) {
-		return Optional.ofNullable(UNIQUE_ID_MAP.get(project, id));
+		Map<String, Identifiable> map = UNIQUE_ID_MAP.get(project);
+		return map == null ? Optional.empty() : Optional.ofNullable(map.get(id));
 	}
 
-	/**
-	 * @param project
-	 * @param id
-	 * @return
-	 */
 	public static List<Executable> getRoots(Project project) {
 		return stream(project)
 				.filter(Identifiable::isExecutable)
 				.map(id -> (Executable)id)
 				.filter(Executable::isRoot)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
-	/**
-	 * @param project
-	 * @return
-	 */
 	public static Stream<Identifiable> stream(Project project) {
 		Map<String, Identifiable> map = UNIQUE_ID_MAP.get(project);
 		if(map == null) {
@@ -399,10 +309,6 @@ public abstract class BaseIdentifiable implements Identifiable {
 
 	// *************************************************
 
-	/**
-	 * @param identifiable
-	 * @return
-	 */
 	protected List<? extends Identifiable> getIdentifiableList(Identifiable identifiable) {
 		if(identifiable.isFilterExec()) {
 			return filterExecs;
@@ -416,11 +322,6 @@ public abstract class BaseIdentifiable implements Identifiable {
 		throw new RuntimeException("Undefined identifiable: " + identifiable);
 	}
 
-	/**
-	 * @param list
-	 * @param child
-	 * @return
-	 */
 	protected <I extends Identifiable> Identifiable insert(List<I> list, I child) {
 		Identifiable previousParent = child.getParent();
 		list.add(child);
@@ -438,9 +339,6 @@ public abstract class BaseIdentifiable implements Identifiable {
 		return previousParent == null ? this : previousParent;
 	}
 
-	/**
-	 * @return
-	 */
 	protected Optional<Duration> getGlobalDuration() {
 		List<Duration> durations = new ArrayList<>(3);
 		sumDuration(filterExecs).ifPresent(durations::add);
@@ -456,10 +354,6 @@ public abstract class BaseIdentifiable implements Identifiable {
 		return Optional.of(dur);
 	}
 
-	/**
-	 * @param identifiables
-	 * @return
-	 */
 	private Optional<Duration> sumDuration(Collection<? extends Identifiable> identifiables) {
 		Duration duration = Duration.valueOf(0);
 		for(Identifiable identifiable : identifiables) {
@@ -472,24 +366,15 @@ public abstract class BaseIdentifiable implements Identifiable {
 		return Optional.of(duration);
 	}
 
-	/**
-	 * @param code
-	 */
 	protected void setCode(String code) {
 		this.code = code;
 	}
 
-	/**
-	 * @return
-	 */
 	protected synchronized String registerMe() {
 		if(project == null) {
 			return null;
 		}
-		Map<String, Identifiable> map = UNIQUE_ID_MAP.get(project);
-		if(map == null) {
-			map = UNIQUE_ID_MAP.addEmpty(project);
-		}
+		Map<String, Identifiable> map = UNIQUE_ID_MAP.computeIfAbsent(project, k -> new HashMap<>());
 		if(id != null) {
 			if(map.containsKey(id)) {
 				throw new RuntimeException("id already exists: " + id + " by " + map.get(id));
@@ -505,9 +390,6 @@ public abstract class BaseIdentifiable implements Identifiable {
 		return id;
 	}
 
-	/**
-	 *
-	 */
 	protected synchronized void unregisterMe() {
 		Map<String, Identifiable> map = UNIQUE_ID_MAP.get(project);
 		if(map == null || id == null) {

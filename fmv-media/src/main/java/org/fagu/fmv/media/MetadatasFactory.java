@@ -23,6 +23,7 @@ import java.io.File;
  */
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,22 +93,21 @@ public abstract class MetadatasFactory implements Predicate<FileType> {
 	public static void register(String packageName) {
 		ClassResolver classResolver = new ClassResolver();
 		try {
-			for(Class<?> findCls : classResolver.find(packageName, cls -> {
-				if(MetadatasFactory.class.isAssignableFrom(cls)) {
-					int mod = cls.getModifiers();
-					return ! Modifier.isAbstract(mod) && ! Modifier.isInterface(mod) && Modifier.isPublic(mod);
-				}
-				return false;
-			})) {
+			for(Class<?> findCls : classResolver.find(
+					packageName,
+					cls -> {
+						if(MetadatasFactory.class.isAssignableFrom(cls)) {
+							int mod = cls.getModifiers();
+							return ! Modifier.isAbstract(mod) && ! Modifier.isInterface(mod) && Modifier.isPublic(mod);
+						}
+						return false;
+					})) {
 				@SuppressWarnings("unchecked")
 				Class<MetadatasFactory> cmdClass = (Class<MetadatasFactory>)findCls;
-				register(cmdClass.newInstance());
+				register(cmdClass.getConstructor().newInstance());
 			}
-		} catch(IOException e) {
-			throw new RuntimeException(e);
-		} catch(InstantiationException e) {
-			throw new RuntimeException(e);
-		} catch(IllegalAccessException e) {
+		} catch(IOException | InstantiationException | IllegalAccessException | NoSuchMethodException | IllegalArgumentException
+				| InvocationTargetException | SecurityException e) {
 			throw new RuntimeException(e);
 		}
 	}

@@ -53,7 +53,7 @@ public class ReadLineOutputStream extends OutputStream {
 	}
 
 	public ReadLineOutputStream(OutputStream outputStream, ReadLine readLine, Charset charsets) {
-		this.outputStream = outputStream != null ? outputStream : NullOutputStream.NULL_OUTPUT_STREAM;
+		this.outputStream = outputStream != null ? outputStream : NullOutputStream.INSTANCE;
 		this.readLine = readLine;
 		this.charsets = charsets != null ? charsets : Charset.defaultCharset();
 		this.byteArrayOutputStream = new ByteArrayOutputStream(200);

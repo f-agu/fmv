@@ -41,6 +41,7 @@ import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.simple.SimpleLogger;
 
 
 /**
@@ -52,7 +53,7 @@ class JavaSoftProviderTestCase {
 	// @Disabled
 	void testSearch() {
 		// ExecuteDelegateRepository.set(new LogExecuteDelegate(System.out::println));
-		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+		System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 		Java.search();
 	}
 

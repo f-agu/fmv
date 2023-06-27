@@ -35,6 +35,7 @@ import org.fagu.fmv.ffmpeg.operation.Processor;
 /**
  * 
  * qhdhdfsryqeyreq
+ * 
  * @author f.agu
  */
 public abstract class Element<M> {
@@ -52,36 +53,22 @@ public abstract class Element<M> {
 
 		private String value;
 
-		/**
-		 * @param parameter
-		 */
 		PseudoParam(Parameter parameter) {
 			name = null;
 			value = null;
 			this.parameter = parameter;
 		}
 
-		/**
-		 * @param name
-		 * @param value
-		 */
 		private PseudoParam(String name, String value) {
 			this.name = name;
 			this.value = value;
 			parameter = null;
 		}
 
-		/**
-		 * @return
-		 */
 		public String value() {
 			return value;
 		}
 
-		/**
-		 * @param ioEntity
-		 * @return
-		 */
 		private Parameter getParameter(IOEntity ioEntity) {
 			if(parameter != null) {
 				if(parameter.getIOEntity() != ioEntity) {
@@ -104,25 +91,15 @@ public abstract class Element<M> {
 
 	protected final Map<String, PseudoParam> parameterMap;
 
-	/**
-	 * @param name
-	 */
-	public Element(String name) {
+	protected Element(String name) {
 		this.name = name;
 		parameterMap = new LinkedHashMap<>();
 	}
 
-	/**
-	 * @return
-	 */
 	public String name() {
 		return name;
 	}
 
-	/**
-	 * @param name
-	 * @param value
-	 */
 	public M parameter(String name, String value) {
 		parameterMap.put(name, new PseudoParam(name, value));
 		return getMThis();
@@ -130,9 +107,6 @@ public abstract class Element<M> {
 
 	// ****************************************************
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	protected M getMThis() {
 		return (M)this;
@@ -140,40 +114,21 @@ public abstract class Element<M> {
 
 	// ****************************************************
 
-	/**
-	 * @param processor
-	 * @param ioEntity
-	 */
 	public void eventAdded(Processor<?> processor, IOEntity ioEntity) {
 		parameterMap.values().stream().forEach(p -> processor.add(p.getParameter(ioEntity)));
 	}
 
 	// ****************************************************
 
-	/**
-	 * @param processor
-	 * @param ioEntity
-	 * @param name
-	 * @param value
-	 */
 	protected void parameter(Processor<?> processor, IOEntity ioEntity, String name, String value) {
 		processor.add(Parameter.before(ioEntity, name, value));
 	}
 
-	/**
-	 * @param processor
-	 * @param ioEntity
-	 * @param name
-	 * @param flags
-	 */
-	protected void parameter(Processor<?> processor, IOEntity ioEntity, String name, @SuppressWarnings("rawtypes") Collection<? extends Flags> flags) {
+	protected void parameter(Processor<?> processor, IOEntity ioEntity, String name,
+			@SuppressWarnings("rawtypes") Collection<? extends Flags> flags) {
 		parameter(processor, ioEntity, name, flagsToString(flags));
 	}
 
-	/**
-	 * @param flags
-	 * @return
-	 */
 	protected String flagsToString(@SuppressWarnings("rawtypes") Collection<? extends Flags> flags) {
 		return flags.stream().map(Flags::toString).collect(Collectors.joining());
 	}

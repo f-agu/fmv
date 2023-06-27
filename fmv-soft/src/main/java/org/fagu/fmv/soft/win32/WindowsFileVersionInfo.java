@@ -37,7 +37,7 @@ public class WindowsFileVersionInfo {
 
 	interface Version extends Library {
 
-		Version INSTANCE = Native.loadLibrary("Version", Version.class, W32APIOptions.UNICODE_OPTIONS);
+		Version INSTANCE = Native.load("Version", Version.class, W32APIOptions.UNICODE_OPTIONS);
 
 		public int GetFileVersionInfoSizeW(String lptstrFilename, int dwDummy);
 

@@ -45,16 +45,6 @@ import org.apache.commons.io.FileUtils;
  */
 public class ClassResolver {
 
-	/**
-	 * 
-	 */
-	public ClassResolver() {}
-
-	/**
-	 * @param packagePath
-	 * @param cls
-	 * @throws IOException
-	 */
 	public Set<Class<?>> find(String packagePath, Predicate<Class<?>> filter) throws IOException {
 		String path = packagePath.replace('.', '/');
 		if(path.startsWith("/")) {
@@ -78,21 +68,11 @@ public class ClassResolver {
 
 	// *********************************************************
 
-	/**
-	 * @param url
-	 * @return
-	 */
 	protected boolean isJarURL(URL url) {
 		String protocol = url.getProtocol();
 		return "jar".equals(protocol) || "zip".equals(protocol);
 	}
 
-	/**
-	 * @param rootDir
-	 * @param filter
-	 * @return
-	 * @throws IOException
-	 */
 	protected Set<Class<?>> doFindFile(File rootDir, Predicate<Class<?>> filter) throws IOException {
 		if( ! rootDir.exists()) {
 			return Collections.emptySet();
@@ -139,12 +119,6 @@ public class ClassResolver {
 		return findSet;
 	}
 
-	/**
-	 * @param url
-	 * @param filter
-	 * @return
-	 * @throws IOException
-	 */
 	protected Set<Class<?>> doFindJar(URL url, Predicate<Class<?>> filter) throws IOException {
 		URLConnection con = url.openConnection();
 		JarFile jarFile;
@@ -207,11 +181,6 @@ public class ClassResolver {
 		}
 	}
 
-	/**
-	 * @param jarFileUrl
-	 * @return
-	 * @throws IOException
-	 */
 	protected JarFile getJarFile(String jarFileUrl) throws IOException {
 		final String FILE_URL_PREFIX = "file:";
 		if(jarFileUrl.startsWith(FILE_URL_PREFIX)) {
@@ -225,11 +194,6 @@ public class ClassResolver {
 		return new JarFile(jarFileUrl);
 	}
 
-	/**
-	 * @param className
-	 * @param filter
-	 * @param result
-	 */
 	protected void filterAndAddX(String className, Predicate<Object> filter, Set<Object> result) {
 		Class<?> cls = null;
 		try {
@@ -244,11 +208,6 @@ public class ClassResolver {
 		}
 	}
 
-	/**
-	 * @param className
-	 * @param filter
-	 * @param result
-	 */
 	protected void filterAndAdd(String className, Predicate<Class<?>> filter, Set<Class<?>> result) {
 		Class<?> cls = null;
 		try {

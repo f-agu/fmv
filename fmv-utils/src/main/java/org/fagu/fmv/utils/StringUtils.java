@@ -28,10 +28,6 @@ public class StringUtils {
 
 	private StringUtils() {}
 
-	/**
-	 * @param bytes
-	 * @return
-	 */
 	public static String toHex(byte[] bytes) {
 		final int count = bytes.length;
 		final char[] hexChars = new char[count * 2];

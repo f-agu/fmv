@@ -20,20 +20,12 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-
 /**
  * @author f.agu
  */
 public interface Replacer {
 
-	/**
-	 * @param keyName
-	 * @return
-	 */
 	String replace(String keyName);
 
-	/**
-	 * @param placeHolder
-	 */
 	default void init(PlaceHolder placeHolder) {}
 }

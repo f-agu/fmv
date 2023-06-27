@@ -20,7 +20,6 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
-
 import java.util.Collection;
 import java.util.Locale;
 
@@ -30,26 +29,12 @@ import java.util.Locale;
  */
 public class LocaleUtils {
 
-	/**
-	 * 
-	 */
 	private LocaleUtils() {}
 
-	/**
-	 * @param locale
-	 * @param inLocales
-	 * @return
-	 */
 	public static Locale near(final Locale locale, final Collection<Locale> inLocales) {
 		return near(locale, inLocales, null);
 	}
 
-	/**
-	 * @param locale
-	 * @param inLocales
-	 * @param defaultLocale
-	 * @return
-	 */
 	public static Locale near(final Locale locale, final Collection<Locale> inLocales, Locale defaultLocale) {
 		if(locale == null || inLocales == null || inLocales.isEmpty()) {
 			return defaultLocale;
@@ -78,10 +63,6 @@ public class LocaleUtils {
 		return defaultLocale;
 	}
 
-	/**
-	 * @param locale
-	 * @return
-	 */
 	public static Locale getParent(Locale locale) {
 		if(locale == null) {
 			return null;
@@ -103,10 +84,6 @@ public class LocaleUtils {
 
 	// **************************************************************************
 
-	/**
-	 * @param s
-	 * @return
-	 */
 	private static String nullIfEmpty(String s) {
 		return s == null || "".equals(s) ? null : s;
 	}

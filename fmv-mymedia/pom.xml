@@ -55,8 +55,12 @@
 			<artifactId>commons-compress</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>dom4j</groupId>
+			<groupId>org.dom4j</groupId>
 			<artifactId>dom4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.github.junrar</groupId>

@@ -21,11 +21,10 @@ package org.fagu.fmv.ffmpeg.flags;
  */
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.fagu.fmv.ffmpeg.format.IO;
-import org.fagu.fmv.utils.collection.MapMap;
-import org.fagu.fmv.utils.collection.MultiValueMaps;
 
 
 /**
@@ -34,7 +33,7 @@ import org.fagu.fmv.utils.collection.MultiValueMaps;
 public abstract class Flags<F> {
 
 	@SuppressWarnings("rawtypes")
-	private static final MapMap<Class<? extends Flags>, Integer, Flags<?>> MAP = MultiValueMaps.map(new HashMap<>(), TreeMap::new);
+	private static final Map<Class<? extends Flags>, Map<Integer, Flags<?>>> MAP = new HashMap<>();
 
 	private final int index;
 
@@ -42,12 +41,12 @@ public abstract class Flags<F> {
 
 	private final IO io;
 
-	public Flags(@SuppressWarnings("rawtypes") Class<? extends Flags> cls, int index, String name, IO io) {
+	protected Flags(@SuppressWarnings("rawtypes") Class<? extends Flags> cls, int index, String name, IO io) {
 		this.index = index;
 		this.name = name;
 		this.io = io;
 		if(cls != null) {
-			MAP.add(cls, index, this);
+			MAP.computeIfAbsent(cls, k -> new TreeMap<>()).put(index, this);
 		}
 	}
 
@@ -81,11 +80,6 @@ public abstract class Flags<F> {
 
 	// -------------------------------------------------------
 
-	/**
-	 * @author f.agu
-	 *
-	 * @param <F>
-	 */
 	private static class InvertFlags<F> extends Flags<F> {
 
 		private Flags<F> origin;

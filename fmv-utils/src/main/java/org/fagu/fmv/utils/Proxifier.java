@@ -37,9 +37,6 @@ public class Proxifier<T> {
 
 	private final List<T> toCallList;
 
-	/**
-	 * @param clazz
-	 */
 	public Proxifier(Class<T> clazz) {
 		this.clazz = Objects.requireNonNull(clazz);
 		if( ! Modifier.isInterface(clazz.getModifiers())) {
@@ -48,27 +45,16 @@ public class Proxifier<T> {
 		toCallList = new ArrayList<>();
 	}
 
-	/**
-	 * @param toCall
-	 * @return
-	 */
 	public Proxifier<T> add(T toCall) {
 		toCallList.add(toCall);
 		return this;
 	}
 
-	/**
-	 * @param toCalls
-	 * @return
-	 */
 	public Proxifier<T> addAll(Collection<? extends T> toCalls) {
 		toCallList.addAll(toCalls);
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	public T proxify() {
 		return (T)Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {clazz}, (proxy, method, args) -> {

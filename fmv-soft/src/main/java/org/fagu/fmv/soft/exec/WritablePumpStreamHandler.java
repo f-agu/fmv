@@ -36,7 +36,7 @@ public class WritablePumpStreamHandler extends PumpStreamHandler {
 	private OutputStream outputStream;
 
 	public WritablePumpStreamHandler() {
-		super(NullOutputStream.NULL_OUTPUT_STREAM);
+		super(NullOutputStream.INSTANCE);
 	}
 
 	@Override

@@ -30,11 +30,6 @@ public class StringJoin {
 
 	private StringJoin() {}
 
-	/**
-	 * @param buf
-	 * @param iterable
-	 * @param separator
-	 */
 	public static void append(StringBuilder buf, Iterable<?> iterable, char separator) {
 		if(iterable == null) {
 			return;
@@ -42,11 +37,6 @@ public class StringJoin {
 		append(buf, iterable.iterator(), separator);
 	}
 
-	/**
-	 * @param buf
-	 * @param iterable
-	 * @param separator
-	 */
 	public static void append(StringBuilder buf, Iterable<?> iterable, String separator) {
 		if(iterable == null) {
 			return;
@@ -54,13 +44,6 @@ public class StringJoin {
 		append(buf, iterable.iterator(), separator);
 	}
 
-	/**
-	 * @param buf
-	 * @param iterable
-	 * @param separator
-	 * @param wrapBefore
-	 * @param wrapAfter
-	 */
 	public static void append(StringBuilder buf, Iterable<?> iterable, String separator, String wrapBefore, String wrapAfter) {
 		if(iterable == null) {
 			return;
@@ -68,11 +51,6 @@ public class StringJoin {
 		append(buf, iterable.iterator(), separator, wrapBefore, wrapAfter);
 	}
 
-	/**
-	 * @param buf
-	 * @param iterable
-	 * @param separator
-	 */
 	public static void append(StringBuilder buf, Iterator<?> iterator, char separator) {
 		if(iterator == null) {
 			return;
@@ -87,11 +65,6 @@ public class StringJoin {
 		}
 	}
 
-	/**
-	 * @param buf
-	 * @param iterable
-	 * @param separator
-	 */
 	public static void append(StringBuilder buf, Iterator<?> iterator, String separator) {
 		if(iterator == null) {
 			return;
@@ -106,13 +79,6 @@ public class StringJoin {
 		}
 	}
 
-	/**
-	 * @param buf
-	 * @param iterator
-	 * @param separator
-	 * @param wrapBefore
-	 * @param wrapAfter
-	 */
 	public static void append(StringBuilder buf, Iterator<?> iterator, String separator, String wrapBefore, String wrapAfter) {
 		if(iterator == null) {
 			return;

@@ -20,7 +20,6 @@ package org.fagu.fmv.utils.collection;
  * #L%
  */
 
-
 import java.util.Map;
 
 
@@ -31,43 +30,15 @@ import java.util.Map;
  */
 public interface MapMap<K1, K2, V> extends Map<K1, Map<K2, V>> {
 
-	/**
-	 * @param k1
-	 * @param k2
-	 * @return
-	 */
 	boolean containsKeys(K1 k1, K2 k2);
 
-	/**
-	 * @param key1
-	 * @return
-	 */
 	Map<K2, V> addEmpty(K1 key1);
 
-	/**
-	 * @param key1
-	 * @param key2
-	 * @param value
-	 * @return
-	 */
 	V add(K1 key1, K2 key2, V value);
 
-	/**
-	 * @param k1
-	 * @param k2
-	 * @return
-	 */
 	V get(K1 k1, K2 k2);
 
-	/**
-	 * @param k1
-	 * @param k2
-	 * @return
-	 */
 	V removeFor(K1 k1, K2 k2);
 
-	/**
-	 * @param k1
-	 */
 	void clear(K1 k1);
 }

@@ -36,20 +36,14 @@ import org.fagu.fmv.textprogressbar.part.TextPart;
  */
 public class Bootstrap {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) throws Exception {
-		// color();
-		// basicProgress();
+	public static void main(String... args) throws Exception {
+		color();
+		basicProgress();
 		spinner();
 	}
 
 	// *********************************************
 
-	/**
-	 * @throws Exception
-	 */
 	private static void color() throws Exception {
 		try (TextProgressBar bar = TextProgressBar.newBar()
 				.append(ColorPart.foreground(Color.RED, new TextPart("red")))
@@ -60,9 +54,6 @@ public class Bootstrap {
 		}
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	private static void basicProgress() throws Exception {
 		AtomicInteger value = new AtomicInteger();
 		IntSupplier progressInPercent = value::get;
@@ -78,9 +69,6 @@ public class Bootstrap {
 		}
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	private static void spinner() throws Exception {
 		try (TextProgressBar bar = TextProgressBar.newBar()
 				.fixWidth(40).centerPad().withText("Spinner: 2 turns per second...")

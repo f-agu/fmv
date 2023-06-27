@@ -1,6 +1,8 @@
 package org.fagu.fmv.ffmpeg.operation;
 
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,8 +36,6 @@ import org.fagu.fmv.ffmpeg.operation.Parameter.Way;
 import org.fagu.fmv.ffmpeg.require.Require;
 import org.fagu.fmv.ffmpeg.utils.FrameRate;
 import org.fagu.fmv.ffmpeg.utils.PixelFormat;
-import org.fagu.fmv.utils.collection.MapMap;
-import org.fagu.fmv.utils.collection.MultiValueMaps;
 import org.fagu.fmv.utils.media.Size;
 import org.fagu.fmv.utils.time.Duration;
 import org.fagu.fmv.utils.time.Time;
@@ -54,14 +54,14 @@ public abstract class Processor<P extends Processor<?>> {
 
 	private final Require require;
 
-	private final MapMap<String, Type, Coder<?>> coderMap;
+	private final Map<String, Map<Type, Coder<?>>> coderMap;
 
-	public Processor(IOParameters ioParameters, IOEntity ioEntity, int index, Require require) {
+	protected Processor(IOParameters ioParameters, IOEntity ioEntity, int index, Require require) {
 		this.ioParameters = Objects.requireNonNull(ioParameters);
 		this.ioEntity = Objects.requireNonNull(ioEntity);
 		this.index = index;
 		this.require = require;
-		coderMap = MultiValueMaps.hashMapHashMap();
+		coderMap = new HashMap<>();
 	}
 
 	public int getIndex() {
@@ -203,55 +203,40 @@ public abstract class Processor<P extends Processor<?>> {
 		return getThis();
 	}
 
-	/**
-	 * @param coder
-	 * @return
-	 */
 	public P codec(Coder<?> coder) {
-		if(coder != null && ! coderMap.containsKeys(coder.name(), coder.type())) {
-			coderMap.add(coder.name(), coder.type(), coder);
-			codec(coder.type(), coder.name());
-			coder.eventAdded(this, ioEntity);
-			if(coder instanceof LibLog) {
-				ioParameters.getOperation().add((LibLog)coder);
+		if(coder != null) {
+			Map<Type, Coder<?>> map = coderMap.get(coder.name());
+			if(map == null || ! map.containsKey(coder.type())) {
+				coderMap.computeIfAbsent(coder.name(), k -> new EnumMap<>(Type.class))
+						.put(coder.type(), coder);
+				codec(coder.type(), coder.name());
+				coder.eventAdded(this, ioEntity);
+				if(coder instanceof LibLog lib) {
+					ioParameters.getOperation().add(lib);
+				}
 			}
+
 		}
+
 		return getThis();
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	public Stream<Coder<?>> getCoders(Type type) {
 		return coderMap.values().stream().flatMap(map -> map.entrySet().stream()).filter(e -> e.getKey() == type)
 				.map(Entry::getValue);
 	}
 
-	/**
-	 * @param coderClass
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	public <C extends Coder<C>> Stream<C> getCoders(Class<C> coderClass) {
 		return coderMap.values().stream().flatMap(map -> map.entrySet().stream()).map(Entry::getValue)
 				.filter(c -> coderClass.isAssignableFrom(c.getClass())).map(c -> (C)c);
 	}
 
-	/**
-	 * @param coderClass
-	 * @return
-	 */
 	public java.util.Map<Type, Coder<?>> getCoders(String name) {
 		Map<Type, Coder<?>> map = coderMap.get(name);
 		return map != null ? Collections.unmodifiableMap(map) : Collections.emptyMap();
 	}
 
-	/**
-	 * @param type
-	 * @param profile
-	 * @return
-	 */
 	public P profile(Type type, String profile) {
 		add(Parameter.before(ioEntity, Type.concat("-profile", type), profile));
 		return getThis();
@@ -268,54 +253,30 @@ public abstract class Processor<P extends Processor<?>> {
 		return getThis();
 	}
 
-	/**
-	 * @param pixelFormat
-	 * @return
-	 */
 	public P pixelFormat(String pixelFormat) {
 		add(Parameter.before(ioEntity, "-pix_fmt", pixelFormat));
 		return getThis();
 	}
 
-	/**
-	 * @param pixelFormat
-	 * @return
-	 */
 	public P pixelFormat(PixelFormat pixelFormat) {
 		return pixelFormat(pixelFormat.toString());
 	}
 
-	/**
-	 * @param parameter
-	 * @return
-	 */
 	public P add(Parameter parameter) {
 		ioParameters.add(parameter);
 		return getThis();
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public P add(String name) {
 		ioParameters.add(Parameter.before(ioEntity, name));
 		return getThis();
 	}
 
-	/**
-	 * @param name
-	 * @param value
-	 * @return
-	 */
 	public P add(String name, String value) {
 		ioParameters.add(Parameter.before(ioEntity, name, value));
 		return getThis();
 	}
 
-	/**
-	 * @return
-	 */
 	public List<Parameter> getParameters() {
 		return getParameters(Way.BEFORE);
 	}
@@ -324,26 +285,16 @@ public abstract class Processor<P extends Processor<?>> {
 		return ioParameters;
 	}
 
-	/**
-	 * @param way
-	 * @return
-	 */
 	public List<Parameter> getParameters(Way way) {
 		return Collections.unmodifiableList(ioParameters.getParameters(ioEntity, way));
 	}
 
-	/**
-	 * @return
-	 */
 	public Require require() {
 		return require;
 	}
 
 	// *******************************************************
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	private P getThis() {
 		return (P)this;

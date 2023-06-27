@@ -28,13 +28,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
@@ -60,8 +64,6 @@ import org.fagu.fmv.media.Metadatas;
 import org.fagu.fmv.utils.PropertyValue;
 import org.fagu.fmv.utils.PropertyValues;
 import org.fagu.fmv.utils.Proxifier;
-import org.fagu.fmv.utils.collection.MapSortedSet;
-import org.fagu.fmv.utils.collection.MultiValueMaps;
 
 
 /**
@@ -81,7 +83,7 @@ public class Project {
 
 	private final NavigableMap<Integer, FileSource> fileSources;
 
-	private final MapSortedSet<FileType, String> extensions;
+	private final Map<FileType, SortedSet<String>> extensions;
 
 	private final FileFilter fileFilter;
 
@@ -95,16 +97,13 @@ public class Project {
 
 	private final FileCache fileCache;
 
-	/**
-	 * @param saveFile
-	 */
 	public Project(File saveFile) {
 		this.saveFile = saveFile;
 
 		propertyMap = new TreeMap<>();
 		propertyValues = new PropertyValues(propertyMap);
 		fileSources = new TreeMap<>();
-		extensions = MultiValueMaps.hashMapTreeSet();
+		extensions = new HashMap<>();
 		fileFilter = pathname -> {
 			if(pathname.isDirectory()) {
 				return true;
@@ -123,130 +122,76 @@ public class Project {
 		undeleteFileSet.add(Pattern.compile("make-\\d+"));
 	}
 
-	/**
-	 * @param saveFile
-	 * @param outputInfos
-	 */
 	public Project(File saveFile, OutputInfos outputInfos) {
 		this(saveFile);
 		this.outputInfos = outputInfos;
 		fmvVersion = FMV.getVersion();
 
-		extensions.addAll(FileType.AUDIO, Arrays.asList("mp3", "ogg", "wav")); // TODO
-		extensions.addAll(FileType.VIDEO, Arrays.asList("mov", "mp4", "avi", "mkv", "ts")); // TODO
-		extensions.addAll(FileType.IMAGE, Arrays.asList("jpg", "jpeg", "gif", "png")); // TODO
+		BiConsumer<FileType, List<String>> consumer = (type, ext) -> extensions.computeIfAbsent(type, k -> new TreeSet<>()).addAll(ext);
+		consumer.accept(FileType.AUDIO, Arrays.asList("mp3", "ogg", "wav")); // TODO
+		consumer.accept(FileType.VIDEO, Arrays.asList("mov", "mp4", "avi", "mkv", "ts")); // TODO
+		consumer.accept(FileType.IMAGE, Arrays.asList("jpg", "jpeg", "gif", "png")); // TODO
 	}
 
-	/**
-	 * @param property
-	 * @return
-	 */
 	public <V> V getProperty(PropertyValue<V> propertyValue) {
 		return propertyValues.getProperty(propertyValue);
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public String getPropertyValue(String name) {
 		return propertyMap.get(name);
 	}
 
-	/**
-	 * @return
-	 */
 	public Set<String> getPropertyNames() {
 		return Collections.unmodifiableSet(propertyMap.keySet());
 	}
 
-	/**
-	 * @param property
-	 * @param value
-	 * @return
-	 */
 	public <V> V setProperty(PropertyValue<V> property, V value) {
 		String before = propertyMap.put(property.name(), property.fromValue(value));
 		return before == null ? null : property.toValue(before);
 	}
 
-	/**
-	 * @param name
-	 * @param value
-	 * @return
-	 */
 	public String setPropertyValue(String name, String value) {
 		return propertyMap.put(name, value);
 	}
 
-	/**
-	 *
-	 */
 	public void modified() {
 		modified = true;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isModified() {
 		return modified;
 	}
 
-	/**
-	 * @return the name
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @param name the name to set
-	 */
 	public void setName(String name) {
 		this.name = name;
 		modified();
 	}
 
-	/**
-	 * @return
-	 */
 	public FileCache getFileCache() {
 		return fileCache;
 	}
 
-	/**
-	 * @return the executables
-	 */
 	public List<Executable> getExecutables() {
 		return BaseIdentifiable.getRoots(this);
 	}
 
-	/**
-	 * @return
-	 */
 	public OutputInfos getOutputInfos() {
 		return outputInfos;
 	}
 
-	/**
-	 * @return the saveFile
-	 */
 	public File getSaveFile() {
 		return saveFile;
 	}
 
-	/**
-	 * @param saveFile the saveFile to set
-	 */
 	public void setSaveFile(File saveFile) {
 		this.saveFile = saveFile;
 		modified();
 	}
 
-	/**
-	 * @param file
-	 */
 	public void addSource(FileSource fileSource) {
 		if( ! fileSources.containsValue(fileSource)) {
 			int index = fileSources.size();
@@ -256,64 +201,38 @@ public class Project {
 		}
 	}
 
-	/**
-	 * @param file
-	 */
 	public void addSource(File file) {
 		addSource(file, file);
 		modified();
 	}
 
-	/**
-	 * @param fileType
-	 * @param extension
-	 */
 	public void addExtension(FileType fileType, String extension) {
-		extensions.add(fileType, extension.toLowerCase());
+		addExtensions(fileType, Collections.singletonList(extension.toLowerCase()));
 		modified();
 	}
 
-	/**
-	 * @return
-	 */
-	public MapSortedSet<FileType, String> getExtensions() {
+	public Map<FileType, SortedSet<String>> getExtensions() {
 		return extensions;
 	}
 
-	/**
-	 * @return
-	 */
 	public FileSource getSource(int num) {
 		return fileSources.get(num);
 	}
 
-	/**
-	 * @return
-	 */
 	public Collection<FileSource> getSources() {
 		return fileSources.values();
 	}
 
-	/**
-	 * @param projectListener
-	 */
 	public void addListener(ProjectListener projectListener) {
 		projectListeners.add(projectListener);
 	}
 
-	/**
-	 * @return
-	 */
 	public ProjectListener getListener() {
 		Proxifier<ProjectListener> proxifier = new Proxifier<>(ProjectListener.class);
 		proxifier.addAll(projectListeners);
 		return proxifier.proxify();
 	}
 
-	/**
-	 * @param extension
-	 * @return
-	 */
 	public FileType getTypeByExtension(String extension) {
 		String extlc = extension.toLowerCase();
 		return extensions.entrySet().stream()
@@ -323,9 +242,6 @@ public class Project {
 				.orElse(null);
 	}
 
-	/**
-	 * @return
-	 */
 	public File getTempFolder() {
 		File folder = new File(saveFile.getAbsolutePath() + ".tmp");
 		try {
@@ -336,10 +252,6 @@ public class Project {
 		return folder;
 	}
 
-	/**
-	 * @param folderName
-	 * @return
-	 */
 	public File getFolderInTemp(String folderName) {
 		File tmpFolder = getTempFolder();
 		File folder = new File(tmpFolder, folderName);
@@ -351,9 +263,6 @@ public class Project {
 		return folder;
 	}
 
-	/**
-	 *
-	 */
 	public void cleanTempFolder() {
 		File tmpFolder = getTempFolder();
 		for(File file : tmpFolder.listFiles()) {
@@ -363,10 +272,6 @@ public class Project {
 		}
 	}
 
-	/**
-	 * @param folderPrefix
-	 * @return
-	 */
 	// public File createFolderFor(String folderPrefix) {
 	// File makeParent = saveFile.getParentFile();
 	// try {
@@ -376,20 +281,12 @@ public class Project {
 	// }
 	// }
 
-	/**
-	 * @param prefix
-	 * @return
-	 * @throws IOException
-	 */
 	public File createTempFile(String prefix) throws IOException {
 		File tmpFolder = getTempFolder();
 		String format = getOutputInfos().getFormat();
 		return File.createTempFile(prefix, '.' + format, tmpFolder);
 	}
 
-	/**
-	 * @throws LoadException
-	 */
 	public void load() throws LoadException {
 		SAXReader reader = new SAXReader();
 		reader.setEncoding("UTF-8");
@@ -415,9 +312,6 @@ public class Project {
 		fileCache.start();
 	}
 
-	/**
-	 *
-	 */
 	public void save() throws IOException {
 		Document document = DocumentHelper.createDocument();
 		Element root = document.addElement("fmv");
@@ -443,10 +337,6 @@ public class Project {
 
 	// ************************************
 
-	/**
-	 * @param fromFile
-	 * @param file
-	 */
 	private void addSource(File fromFile, File file) {
 		if(file.isFile()) {
 			addFile(fromFile, file);
@@ -459,10 +349,6 @@ public class Project {
 		}
 	}
 
-	/**
-	 * @param fromFile
-	 * @param file
-	 */
 	private void addFile(File fromFile, File file) {
 		int index = fileSources.size();
 		FileSource fileSource = new FileSource(getTypeByExtension(FilenameUtils.getExtension(file.getName())), file, index);
@@ -476,18 +362,12 @@ public class Project {
 		}
 	}
 
-	/**
-	 * @param rootElement
-	 */
 	private void loadMain(Element root) {
 		Element element = root.element("main");
 		setName(element.attributeValue("name"));
 		fmvVersion = element.attributeValue("fmv-version");
 	}
 
-	/**
-	 * @param root
-	 */
 	private void loadSources(Element root) {
 		Element sourcesElement = root.element("sources");
 
@@ -530,9 +410,6 @@ public class Project {
 		}
 	}
 
-	/**
-	 * @param root
-	 */
 	private void loadExtensions(Element root) {
 		extensions.clear();
 		Element extensionsElement = root.element("extensions");
@@ -550,13 +427,10 @@ public class Project {
 			for(int i = 0; i < text.length; ++i) {
 				text[i] = text[i].trim();
 			}
-			extensions.addAll(fileType, Arrays.asList(text));
+			addExtensions(fileType, List.of(text));
 		}
 	}
 
-	/**
-	 * @param root
-	 */
 	private void loadProperties(Element root) {
 		propertyMap.clear();
 		Element propertiesElement = root.element("properties");
@@ -567,9 +441,6 @@ public class Project {
 		}
 	}
 
-	/**
-	 * @param root
-	 */
 	private void loadUndeleteFile(Element root) {
 		Element undeleteElement = root.element("undelete");
 		if(undeleteElement == null) {
@@ -583,37 +454,23 @@ public class Project {
 		}
 	}
 
-	/**
-	 * @param root
-	 * @throws LoadException
-	 */
 	private void loadOutputInfos(Element root) throws LoadException {
 		Element outputInfosElement = LoadUtils.elementRequire(root, "output");
 		outputInfos.load(outputInfosElement);
 	}
 
-	/**
-	 * @param root
-	 * @throws LoadException
-	 */
 	private void loadExecutables(Element root) throws LoadException {
 		for(Element element : LoadUtils.elements(root, "exec")) {
 			ExecutableFactory.getSingleton().get(this, element, null);
 		}
 	}
 
-	/**
-	 * @param root
-	 */
 	private void saveMain(Element root) {
 		Element mainElement = root.addElement("main");
 		mainElement.addAttribute("name", getName());
 		mainElement.addAttribute("fmv-version", fmvVersion);
 	}
 
-	/**
-	 * @param root
-	 */
 	private void saveSources(Element root) {
 		Element sourcesElement = root.addElement("sources");
 		for(FileSource fileSource : getSources()) {
@@ -630,9 +487,6 @@ public class Project {
 		}
 	}
 
-	/**
-	 * @param root
-	 */
 	private void saveExtensions(Element root) {
 		Element extensionsElement = root.addElement("extensions");
 		for(Entry<FileType, SortedSet<String>> entry : getExtensions().entrySet()) {
@@ -642,9 +496,6 @@ public class Project {
 		}
 	}
 
-	/**
-	 * @param root
-	 */
 	private void saveProperties(Element root) {
 		Element propertiesElement = root.addElement("properties");
 		for(Entry<String, String> entry : propertyMap.entrySet()) {
@@ -654,9 +505,6 @@ public class Project {
 		}
 	}
 
-	/**
-	 * @param root
-	 */
 	private void saveUndeleteFileName(Element root) {
 		Element undeleteElement = root.addElement("undelete");
 		for(Pattern pattern : undeleteFileSet) {
@@ -665,22 +513,20 @@ public class Project {
 		}
 	}
 
-	/**
-	 * @param root
-	 */
 	private void saveOutputInfos(Element root) {
 		Element outputElement = root.addElement("output");
 		outputInfos.save(outputElement);
 	}
 
-	/**
-	 * @param root
-	 */
 	private void saveExecutables(Element root) {
 		for(Executable executable : getExecutables()) {
 			Element execElement = root.addElement("exec");
 			executable.save(execElement);
 		}
+	}
+
+	private void addExtensions(FileType fileType, List<String> extensionList) {
+		extensions.computeIfAbsent(fileType, k -> new TreeSet<>()).addAll(extensionList);
 	}
 
 }

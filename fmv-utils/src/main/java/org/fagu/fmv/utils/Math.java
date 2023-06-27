@@ -25,16 +25,8 @@ package org.fagu.fmv.utils;
  */
 public class Math {
 
-	/**
-	 * 
-	 */
 	private Math() {}
 
-	/**
-	 * @param a
-	 * @param b
-	 * @return
-	 */
 	public static long greatestCommonDivisor(long a, long b) {
 		if(a <= 0) {
 			throw new IllegalArgumentException("a is zero or negative");

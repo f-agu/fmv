@@ -27,29 +27,16 @@ public class PlaceHolderException extends RuntimeException {
 
 	private static final long serialVersionUID = 1162784810617412582L;
 
-	/**
-	 *
-	 */
 	public PlaceHolderException() {}
 
-	/**
-	 * @param message
-	 */
 	public PlaceHolderException(String message) {
 		super(message);
 	}
 
-	/**
-	 * @param cause
-	 */
 	public PlaceHolderException(Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
 	public PlaceHolderException(String message, Throwable cause) {
 		super(message, cause);
 	}

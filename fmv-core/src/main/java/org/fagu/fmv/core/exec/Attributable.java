@@ -48,21 +48,12 @@ public abstract class Attributable extends BaseIdentifiable {
 
 	private Duration duration;
 
-	/**
-	 *
-	 */
-	public Attributable() {}
+	protected Attributable() {}
 
-	/**
-	 * @param project
-	 */
-	public Attributable(Project project) {
+	protected Attributable(Project project) {
 		super(project);
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.timeline.BaseIdentifiable#load(org.dom4j.Element)
-	 */
 	@Override
 	public void load(Project project, Element fromElement, Identifiable parent) throws LoadException {
 		super.load(project, fromElement, parent);
@@ -79,9 +70,6 @@ public abstract class Attributable extends BaseIdentifiable {
 				.forEach(attr -> attributeMap.put(attr.getName(), attr.getValue()));
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.timeline.BaseIdentifiable#save(org.dom4j.Element)
-	 */
 	@Override
 	public void save(Element toElement) {
 		super.save(toElement);
@@ -89,9 +77,6 @@ public abstract class Attributable extends BaseIdentifiable {
 		getDuration().ifPresent(d -> toElement.addAttribute(ATTRIBUTE_RAWDURATION, d.toString()));
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.BaseIdentifiable#getHash()
-	 */
 	@Override
 	public Hash getHash() {
 		Hash hash = super.getHash();
@@ -99,9 +84,6 @@ public abstract class Attributable extends BaseIdentifiable {
 		return hash;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#getDuration()
-	 */
 	@Override
 	public Optional<Duration> getDuration() {
 		if(duration != null) {
@@ -110,9 +92,6 @@ public abstract class Attributable extends BaseIdentifiable {
 		return setDuration(getSpecificDuration().orElse(null));
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		Set<Type> types = new HashSet<>(8);
@@ -122,18 +101,12 @@ public abstract class Attributable extends BaseIdentifiable {
 		return types;
 	}
 
-	/**
-	 * @see org.fagu.fmv.core.exec.Identifiable#resetDuration()
-	 */
 	@Override
 	public void resetDuration() {
 		duration = null;
 		getProject().modified();
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder(50);
@@ -155,11 +128,8 @@ public abstract class Attributable extends BaseIdentifiable {
 
 	// ****************************************************
 
-	/**
-	 * @return
-	 */
 	protected Set<String> ignoreAttributes() {
-		Set<String> set = new HashSet<>();
+		Set<String> set = new HashSet<>(4);
 		set.add("id");
 		set.add("hash");
 		set.add("code");
@@ -167,19 +137,12 @@ public abstract class Attributable extends BaseIdentifiable {
 		return set;
 	}
 
-	/**
-	 * @param duration
-	 * @return
-	 */
 	protected Optional<Duration> setDuration(Duration duration) {
 		getProject().modified();
 		this.duration = duration;
 		return Optional.ofNullable(duration);
 	}
 
-	/**
-	 * @return
-	 */
 	protected Optional<Duration> getSpecificDuration() {
 		return getGlobalDuration();
 	}

@@ -28,14 +28,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.fagu.fmv.utils.collection.MapMap;
-import org.fagu.fmv.utils.collection.MultiValueMaps;
 
 
 /**
@@ -43,9 +41,9 @@ import org.fagu.fmv.utils.collection.MultiValueMaps;
  */
 public class IniFile {
 
-	private final MapMap<String, String, String> mapMap;
+	private final Map<String, Map<String, String>> mapMap;
 
-	protected IniFile(MapMap<String, String, String> mapMap) {
+	protected IniFile(Map<String, Map<String, String>> mapMap) {
 		this.mapMap = Objects.requireNonNull(mapMap);
 	}
 
@@ -64,7 +62,7 @@ public class IniFile {
 	public static IniFile parse(Reader reader) throws IOException {
 		final Pattern sectionPattern = Pattern.compile("\\s*\\[([^]]*)\\]\\s*");
 
-		MapMap<String, String, String> mapMap = MultiValueMaps.hashMapHashMap();
+		Map<String, Map<String, String>> mapMap = new HashMap<>();
 
 		String line;
 		String section = null;
@@ -88,7 +86,7 @@ public class IniFile {
 				} else {
 					key = line;
 				}
-				mapMap.add(section, key, value);
+				mapMap.computeIfAbsent(section, k -> new HashMap<>()).put(key, value);
 			}
 		}
 		return new IniFile(mapMap);
@@ -106,7 +104,8 @@ public class IniFile {
 	}
 
 	public boolean contains(String section, String key) {
-		return mapMap.containsKeys(section, key);
+		Map<String, String> map = mapMap.get(section);
+		return map != null && map.containsKey(key);
 	}
 
 	public String getString(String section, String key) {
@@ -114,7 +113,11 @@ public class IniFile {
 	}
 
 	public String getString(String section, String key, String defaultvalue) {
-		String string = mapMap.get(section, key);
+		Map<String, String> map = mapMap.get(section);
+		if(map == null) {
+			return defaultvalue;
+		}
+		String string = map.get(key);
 		return string != null ? string : defaultvalue;
 	}
 

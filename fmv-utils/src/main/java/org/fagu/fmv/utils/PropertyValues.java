@@ -38,32 +38,19 @@ public class PropertyValues {
 	 */
 	public static class BooleanPropertyValue extends AbstractPropertyValue<Boolean> {
 
-		/**
-		 * @param name
-		 */
 		public BooleanPropertyValue(String name) {
 			this(name, false);
 		}
 
-		/**
-		 * @param name
-		 * @param defaultValue
-		 */
 		public BooleanPropertyValue(String name, Boolean defaultValue) {
 			super(name, defaultValue);
 		}
 
-		/**
-		 * @see org.fagu.fmv.core.project.PropertyValue#fromValue(java.lang.Object)
-		 */
 		@Override
 		public String fromValue(Boolean v) {
 			return v.toString();
 		}
 
-		/**
-		 * @see org.fagu.fmv.core.project.PropertyValue#toValue(java.lang.String)
-		 */
 		@Override
 		public Boolean toValue(String str) {
 			if("0".equals(str)) {
@@ -83,32 +70,19 @@ public class PropertyValues {
 	 */
 	public static class IntegerPropertyValue extends AbstractPropertyValue<Integer> {
 
-		/**
-		 * @param name
-		 */
 		public IntegerPropertyValue(String name) {
 			super(name, 0);
 		}
 
-		/**
-		 * @param name
-		 * @param defaultValue
-		 */
 		public IntegerPropertyValue(String name, Integer defaultValue) {
 			super(name, defaultValue);
 		}
 
-		/**
-		 * @see org.fagu.fmv.core.project.PropertyValue#fromValue(java.lang.Object)
-		 */
 		@Override
 		public String fromValue(Integer v) {
 			return v.toString();
 		}
 
-		/**
-		 * @see org.fagu.fmv.core.project.PropertyValue#toValue(java.lang.String)
-		 */
 		@Override
 		public Integer toValue(String str) {
 			return Integer.parseInt(str);
@@ -123,32 +97,19 @@ public class PropertyValues {
 	 */
 	public static class StringPropertyValue extends AbstractPropertyValue<String> {
 
-		/**
-		 * @param name
-		 */
 		public StringPropertyValue(String name) {
 			super(name, StringUtils.EMPTY);
 		}
 
-		/**
-		 * @param name
-		 * @param defaultValue
-		 */
 		public StringPropertyValue(String name, String defaultValue) {
 			super(name, defaultValue);
 		}
 
-		/**
-		 * @see org.fagu.fmv.core.project.PropertyValue#fromValue(java.lang.Object)
-		 */
 		@Override
 		public String fromValue(String v) {
 			return v.toString();
 		}
 
-		/**
-		 * @see org.fagu.fmv.core.project.PropertyValue#toValue(java.lang.String)
-		 */
 		@Override
 		public String toValue(String str) {
 			return String.valueOf(str); // for null
@@ -169,34 +130,21 @@ public class PropertyValues {
 
 		private final V defaultValue;
 
-		/**
-		 * @param name
-		 */
 		public AbstractPropertyValue(String name) {
 			this.name = Objects.requireNonNull(name);
 			defaultValue = null;
 		}
 
-		/**
-		 * @param name
-		 * @param defaultValue
-		 */
 		public AbstractPropertyValue(String name, V defaultValue) {
 			this.name = Objects.requireNonNull(name);
 			this.defaultValue = defaultValue;
 		}
 
-		/**
-		 * @see org.fagu.fmv.core.project.PropertyValue#name()
-		 */
 		@Override
 		public String name() {
 			return name;
 		}
 
-		/**
-		 * @return
-		 */
 		@Override
 		public V getDefaultValue() {
 			return defaultValue;
@@ -208,49 +156,28 @@ public class PropertyValues {
 
 	private final Map<String, String> map;
 
-	/**
-	 * @param map
-	 */
 	public PropertyValues(Map<String, String> map) {
 		this.map = Objects.requireNonNull(map);
 	}
 
-	/**
-	 * @return
-	 */
 	public static PropertyValues fromSystemProperties() {
 		@SuppressWarnings({"rawtypes", "unchecked"})
 		Map<String, String> map = (Map)System.getProperties();
 		return new PropertyValues(map);
 	}
 
-	/**
-	 * @param property
-	 * @return
-	 */
 	public static <V> V fromSystemProperties(PropertyValue<V> property) {
 		return fromSystemProperties().getProperty(property);
 	}
 
-	/**
-	 * @return
-	 */
 	public static PropertyValues fromSystemEnv() {
 		return new PropertyValues(System.getenv());
 	}
 
-	/**
-	 * @param property
-	 * @return
-	 */
 	public static <V> V fromSystemEnv(PropertyValue<V> property) {
 		return fromSystemEnv().getProperty(property);
 	}
 
-	/**
-	 * @param property
-	 * @return
-	 */
 	public <V> V getProperty(PropertyValue<V> property) {
 		String name = property.name();
 		if(map.containsKey(name)) {

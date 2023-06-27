@@ -37,25 +37,16 @@ public class Replacers implements Replacer {
 
 	private static final Replacer UNRESOLVABLE_COPY = new Replacer() {
 
-		/**
-		 * @see org.fagu.fmv.utils.Replacer#init(org.fagu.fmv.utils.PlaceHolder)
-		 */
 		@Override
 		public void init(PlaceHolder placeHolder) {
 			placeHolder.circularKeyCopy();
 		}
 
-		/**
-		 * @see org.fagu.fmv.utils.Replacer#replace(java.lang.String)
-		 */
 		@Override
 		public String replace(String keyName) {
 			return PlaceHolder.wrapKey(keyName);
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return "unresolvableCopy";
@@ -66,33 +57,21 @@ public class Replacers implements Replacer {
 
 	private final List<Replacer> replacerList;
 
-	/**
-	 *
-	 */
 	private Replacers() {
 		replacerList = new ArrayList<>();
 	}
 
 	// ******************************************************
 
-	/**
-	 * @return
-	 */
 	public static Replacers chain() {
 		return new Replacers();
 	}
 
-	/**
-	 * @see org.fagu.fmv.utils.Replacer#init(org.fagu.fmv.utils.PlaceHolder)
-	 */
 	@Override
 	public void init(PlaceHolder placeHolder) {
 		replacerList.stream().forEach(r -> r.init(placeHolder));
 	}
 
-	/**
-	 * @see org.fagu.fmv.utils.Replacer#replace(java.lang.String)
-	 */
 	@Override
 	public String replace(String keyName) {
 		return replacerList.stream()
@@ -102,35 +81,20 @@ public class Replacers implements Replacer {
 				.orElseThrow(() -> new PlaceHolderException("Could not resolve placeholder '" + keyName + '\''));
 	}
 
-	/**
-	 * @param replacer
-	 * @return
-	 */
 	public Replacers of(Replacer replacer) {
 		replacerList.add(Objects.requireNonNull(replacer));
 		return this;
 	}
 
-	/**
-	 * @param replacer
-	 * @param replacerName
-	 * @return
-	 */
 	public Replacers of(Replacer replacer, String replacerName) {
 		Objects.requireNonNull(replacer);
 		replacerList.add(new Replacer() {
 
-			/**
-			 * @see org.fagu.fmv.utils.Replacer#replace(java.lang.String)
-			 */
 			@Override
 			public String replace(String keyName) {
 				return replacer.replace(keyName);
 			}
 
-			/**
-			 * @see java.lang.Object#toString()
-			 */
 			@Override
 			public String toString() {
 				return replacerName;
@@ -139,64 +103,35 @@ public class Replacers implements Replacer {
 		return this;
 	}
 
-	/**
-	 * @param replacerMap
-	 * @return
-	 */
 	public Replacers map(Map<String, String> replacerMap) {
 		return mapReplacer("map", replacerMap);
 	}
 
-	/**
-	 * @param key
-	 * @param value
-	 * @return
-	 */
 	public Replacers keyValue(String key, String value) {
 		return mapReplacer("keyValue", Collections.singletonMap(key, value));
 	}
 
-	/**
-	 * @return
-	 */
 	public Replacers ofEnv() {
 		return mapReplacer("env", System.getenv());
 	}
 
-	/**
-	 * @return
-	 */
 	public Replacers ofSystemProperties() {
 		@SuppressWarnings({"rawtypes", "unchecked"})
 		Map<String, String> map = (Map)System.getProperties();
 		return mapReplacer("systemproperties", map);
 	}
 
-	/**
-	 * @param namePredicate
-	 * @param replacer
-	 * @return
-	 */
 	public Replacers functionNamed(String functionName, Replacer replacer) {
 		Objects.requireNonNull(functionName);
 		return functionNamed(name -> Objects.equals(name, functionName), ":", replacer);
 	}
 
-	/**
-	 * @param namePredicate
-	 * @param separator
-	 * @param replacer
-	 * @return
-	 */
 	public Replacers functionNamed(Predicate<String> namePredicate, String separator, Replacer replacer) {
 		Objects.requireNonNull(namePredicate);
 		Objects.requireNonNull(separator);
 		Objects.requireNonNull(replacer);
 		return of(new Replacer() {
 
-			/**
-			 * @see org.fagu.fmv.utils.Replacer#replace(java.lang.String)
-			 */
 			@Override
 			public String replace(String keyName) {
 				int posSep = keyName.indexOf(separator);
@@ -208,9 +143,6 @@ public class Replacers implements Replacer {
 				return null;
 			}
 
-			/**
-			 * @see java.lang.Object#toString()
-			 */
 			@Override
 			public String toString() {
 				return "functionNamed(" + separator + ';' + replacer + ')';
@@ -218,10 +150,6 @@ public class Replacers implements Replacer {
 		});
 	}
 
-	/**
-	 * @param findConsumer
-	 * @return
-	 */
 	public Replacers eventFind(Consumer<String> findConsumer) {
 		return of(new Replacer() {
 
@@ -238,52 +166,30 @@ public class Replacers implements Replacer {
 		});
 	}
 
-	/**
-	 * @return
-	 */
 	public Replacer unresolvableCopy() {
 		return of(UNRESOLVABLE_COPY);
 	}
 
-	/**
-	 * @return
-	 */
 	public Replacer unresolvableIgnored() {
 		return of(UNRESOLVABLE_IGNORE);
 	}
 
-	/**
-	 * @return
-	 */
 	public Replacer unresolvableIgnored(String replaceBy) {
 		return of(ignore(replaceBy));
 	}
 
-	/**
-	 * @return
-	 */
 	public Replacer unresolvableThrow() {
 		return unresolvableThrow(k -> new PlaceHolderException("Could not resolve placeholder '" + k + '\''));
 	}
 
-	/**
-	 * @param supplierThrowable
-	 * @return
-	 */
 	public Replacer unresolvableThrow(Function<String, ? extends RuntimeException> supplierThrowable) {
 		return of(new Replacer() {
 
-			/**
-			 * @see org.fagu.fmv.utils.Replacer#replace(java.lang.String)
-			 */
 			@Override
 			public String replace(String keyName) {
 				throw supplierThrowable.apply(keyName);
 			}
 
-			/**
-			 * @see java.lang.Object#toString()
-			 */
 			@Override
 			public String toString() {
 				return "unresolvableThrow";
@@ -291,9 +197,6 @@ public class Replacers implements Replacer {
 		});
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		if(replacerList.isEmpty()) {
@@ -307,32 +210,19 @@ public class Replacers implements Replacer {
 
 	// ****************************************************
 
-	/**
-	 * @param by
-	 * @return
-	 */
 	private static Replacer ignore(String by) {
 		return new Replacer() {
 
-			/**
-			 * @see org.fagu.fmv.utils.Replacer#init(org.fagu.fmv.utils.PlaceHolder)
-			 */
 			@Override
 			public void init(PlaceHolder placeHolder) {
 				placeHolder.circular(s -> by);
 			}
 
-			/**
-			 * @see org.fagu.fmv.utils.Replacer#replace(java.lang.String)
-			 */
 			@Override
 			public String replace(String keyName) {
 				return by;
 			}
 
-			/**
-			 * @see java.lang.Object#toString()
-			 */
 			@Override
 			public String toString() {
 				return "unresolvableIgnore(" + by + ')';
@@ -340,31 +230,20 @@ public class Replacers implements Replacer {
 		};
 	}
 
-	/**
-	 * @param name
-	 * @param replacerMap
-	 * @return
-	 */
 	private Replacers mapReplacer(String name, Map<String, String> replacerMap) {
 		Objects.requireNonNull(name);
 		return of(new Replacer() {
 
-			/**
-			 * @see org.fagu.fmv.utils.Replacer#replace(java.lang.String)
-			 */
 			@Override
 			public String replace(String keyName) {
 				return replacerMap.get(keyName);
 			}
 
-			/**
-			 * @see java.lang.Object#toString()
-			 */
 			@Override
 			public String toString() {
-				StringBuilder buf = new StringBuilder();
-				buf.append(name).append(replacerMap.toString());
-				return buf.toString();
+				return new StringBuilder()
+						.append(name).append(replacerMap.toString())
+						.toString();
 			}
 		});
 	}

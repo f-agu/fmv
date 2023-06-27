@@ -54,18 +54,11 @@ public class PlaceHolder {
 
 	private Replacer circularKeyReplacer;
 
-	/**
-	 * @param pattern
-	 */
 	private PlaceHolder(String pattern) {
 		this.pattern = pattern; // maybe null !
 		circularKeyReplacer = getDefaultCircularKeyNameFunction();
 	}
 
-	/**
-	 * @param pattern
-	 * @return
-	 */
 	public static PlaceHolder with(String pattern) {
 		return new PlaceHolder(pattern);
 	}
@@ -92,24 +85,14 @@ public class PlaceHolder {
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	public PlaceHolder circularKeyThrows() {
 		return circular(getDefaultCircularKeyNameFunction());
 	}
 
-	/**
-	 * @return
-	 */
 	public PlaceHolder circularKeyCopy() {
 		return circular(this::wrap);
 	}
 
-	/**
-	 * @param circularKeyFunction
-	 * @return
-	 */
 	public PlaceHolder circular(Replacer circularKeyFunction) {
 		this.circularKeyReplacer = Objects.requireNonNull(circularKeyFunction);
 		return this;
@@ -135,10 +118,6 @@ public class PlaceHolder {
 				.append(placeholderSuffix).toString();
 	}
 
-	/**
-	 * @param findConsumer
-	 * @return
-	 */
 	public PlaceHolder listNames(Consumer<String> findConsumer) {
 		format(Replacers.chain()
 				.eventFind(findConsumer)
@@ -146,39 +125,23 @@ public class PlaceHolder {
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	public List<String> listNames() {
 		List<String> names = new ArrayList<>();
 		listNames(names::add);
 		return names;
 	}
 
-	/**
-	 * @param replacer
-	 * @return
-	 */
 	public String format(Replacer replacer) {
 		replacer.init(this);
 		return format(pattern, replacer, new HashSet<>());
 	}
 
-	/**
-	 * @param replacerMap
-	 * @return
-	 */
 	public String format(Map<String, String> replacerMap) {
 		return format(Replacers.chain()
 				.map(replacerMap)
 				.unresolvableThrow());
 	}
 
-	/**
-	 * @param replacerMap
-	 * @param notFoundReplacer
-	 * @return
-	 */
 	public String format(Map<String, String> replacerMap, Replacer notFoundReplacer) {
 		return format(Replacers.chain()
 				.map(replacerMap)
@@ -186,36 +149,20 @@ public class PlaceHolder {
 				.unresolvableThrow());
 	}
 
-	/**
-	 * @param replacerMap
-	 * @return
-	 */
 	public String formatUnresolvableIgnored(Map<String, String> replacerMap) {
 		return format(replacerMap, Replacers.chain().unresolvableIgnored());
 	}
 
-	/**
-	 * @param replacerMap
-	 * @return
-	 */
 	public String formatUnresolvableThrows(Map<String, String> replacerMap) {
 		return format(replacerMap, Replacers.chain().unresolvableThrow());
 	}
 
 	// ********
 
-	/**
-	 * @param placeHolderName
-	 * @return
-	 */
 	public static String wrapKey(String placeHolderName) {
 		return DEFAULT_PLACEHOLDER_PREFIX + placeHolderName + DEFAULT_PLACEHOLDER_SUFFIX;
 	}
 
-	/**
-	 * @param pattern
-	 * @return
-	 */
 	public static String format(String pattern) {
 		Replacer replacer = Replacers.chain()
 				.ofSystemProperties()
@@ -224,11 +171,6 @@ public class PlaceHolder {
 		return PlaceHolder.with(pattern).format(replacer);
 	}
 
-	/**
-	 * @param pattern
-	 * @param replacerMap
-	 * @return
-	 */
 	public static String format(String pattern, Map<String, String> replacerMap) {
 		return PlaceHolder.with(pattern)
 				.format(Replacers.chain()
@@ -236,23 +178,12 @@ public class PlaceHolder {
 						.unresolvableThrow());
 	}
 
-	/**
-	 * @param pattern
-	 * @param replacer
-	 * @return
-	 */
 	public static String format(String pattern, Replacer replacer) {
 		return PlaceHolder.with(pattern).format(replacer);
 	}
 
 	// *******************************************************
 
-	/**
-	 * @param pattern
-	 * @param replacer
-	 * @param visitedPlaceholders
-	 * @return
-	 */
 	private String format(String pattern, Replacer replacer, Set<String> visitedPlaceholders) {
 		if(pattern == null || "".equals(pattern)) {
 			return "";
@@ -280,12 +211,6 @@ public class PlaceHolder {
 		return stack.peek().toString();
 	}
 
-	/**
-	 * @param keyName
-	 * @param replacer
-	 * @param visitedPlaceholders
-	 * @return
-	 */
 	private String replace(String keyName, Replacer replacer, Set<String> visitedPlaceholders) {
 		String apply = null;
 		if( ! visitedPlaceholders.add(keyName)) {
@@ -298,12 +223,6 @@ public class PlaceHolder {
 		return apply;
 	}
 
-	/**
-	 * @param pattern
-	 * @param toFind
-	 * @param currentIndex
-	 * @return
-	 */
 	private static boolean find(String pattern, String toFind, final int currentIndex) {
 		int i = 0;
 		for(; i < toFind.length() && currentIndex + i < pattern.length(); ++i) {
@@ -314,9 +233,6 @@ public class PlaceHolder {
 		return true;
 	}
 
-	/**
-	 * @return
-	 */
 	private static Replacer getDefaultCircularKeyNameFunction() {
 		return s -> {
 			throw new PlaceHolderException("Circular placeholder reference '" + s + "' in property definitions");

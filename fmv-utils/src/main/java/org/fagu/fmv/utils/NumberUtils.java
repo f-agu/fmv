@@ -23,6 +23,7 @@ package org.fagu.fmv.utils;
 import static java.lang.Math.abs;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 
 /**
@@ -30,29 +31,15 @@ import java.math.BigDecimal;
  */
 public class NumberUtils {
 
-	/**
-	 * 
-	 */
 	private NumberUtils() {}
 
-	/**
-	 * @param d1
-	 * @param d2
-	 * @param delta
-	 * @return
-	 */
 	public static boolean equals(double d1, double d2, double delta) {
 		return Double.compare(d1, d2) == 0 || abs(d1 - d2) <= delta;
 	}
 
-	/**
-	 * @param d
-	 * @param decimalPlace
-	 * @return
-	 */
 	public static double round(double d, int decimalPlace) {
 		BigDecimal bd = BigDecimal.valueOf(d);
-		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+		bd = bd.setScale(decimalPlace, RoundingMode.HALF_UP);
 		return bd.doubleValue();
 	}
 }
