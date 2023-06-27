@@ -112,11 +112,6 @@ public class FFHelper {
 
 	private FFHelper() {}
 
-	/**
-	 * @param inFile
-	 * @return
-	 * @throws IOException
-	 */
 	public static MovieMetadatas videoMetadatas(File inFile) throws IOException {
 		MediaInput input = new FileMediaInput(inFile);
 		InfoOperation infoOperation = new InfoOperation(input);
@@ -125,10 +120,6 @@ public class FFHelper {
 		return execute.getResult();
 	}
 
-	/**
-	 * @param inFile
-	 * @throws IOException
-	 */
 	public static void reencodeToH264(File inFile, File outFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.addMediaInputFile(inFile);
@@ -146,10 +137,6 @@ public class FFHelper {
 		System.out.println(endTime - startTime);
 	}
 
-	/**
-	 * @param inFile
-	 * @throws IOException
-	 */
 	public static void showInfoVideoFrames(File inFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.addMediaInputFile(inFile);
@@ -163,11 +150,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param outFile
-	 * @param duration
-	 * @throws IOException
-	 */
 	public static void captureWebCam(File outFile, Duration duration) throws IOException {
 		// http://4youngpadawans.com/stream-camera-video-and-audio-with-ffmpeg/
 		// ffmpeg -list_devices true -f dshow -i dummy
@@ -183,11 +165,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void audioConvert2AAC(File inFile, File outFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.addMediaInputFile(inFile);
@@ -198,10 +175,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void audioGenerator(File outFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -215,11 +188,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void audioHalfVolume(File inFile, File outFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		InputProcessor inputProcessor = builder.addMediaInputFile(inFile);
@@ -236,11 +204,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static VolumeDetected audioVolumeDetect(File inFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -257,11 +220,6 @@ public class FFHelper {
 		return volumeDetect.getDetected();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void audioVolumeAdjustToMax(File inFile, File outFile) throws IOException {
 		VolumeDetected volumeDetected = audioVolumeDetect(inFile);
 
@@ -280,12 +238,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param videoFile
-	 * @param frenchAudioToAddFile
-	 * @param outFile
-	 * @throws Exception
-	 */
 	public static void addFrenchAudioStream(File videoFile, File frenchAudioToAddFile, File outFile) throws Exception {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		InputProcessor videoInput = builder.addMediaInputFile(videoFile);
@@ -301,13 +253,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outImageFile
-	 * @param time
-	 * @return
-	 * @throws IOException
-	 */
 	public static void extractOneThumbnail(File inFile, File outImageFile, Time time) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.addMediaInputFile(inFile);
@@ -321,13 +266,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFolder
-	 * @param fps
-	 * @return
-	 * @throws IOException
-	 */
 	public static ExtractThumbnail extractThumbnails(File inFile, File outFolder, FPS fps) throws IOException {
 		if( ! outFolder.exists()) {
 			outFolder.mkdirs();
@@ -344,13 +282,6 @@ public class FFHelper {
 		return ExtractThumbnail.find(outFolder, "out\\d+\\.jpg");
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFolder
-	 * @param countFrame
-	 * @return
-	 * @throws IOException
-	 */
 	public static ExtractThumbnail extractThumbnails2JPEGS(File inFile, File outFolder, int countFrame)
 			throws IOException {
 
@@ -384,12 +315,6 @@ public class FFHelper {
 
 	/**
 	 * similar extractThumbnails2JPEGS(..) without 'format("image2")'
-	 *
-	 * @param inFile
-	 * @param outFolder
-	 * @param countFrame
-	 * @return
-	 * @throws IOException
 	 */
 	public static void extractThumbnails2GIF(File inFile, File outFile, int countFrame) throws IOException {
 		if( ! "gif".equalsIgnoreCase(FilenameUtils.getExtension(outFile.getName()))) {
@@ -424,13 +349,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFolder
-	 * @param startTime
-	 * @param duration
-	 * @throws IOException
-	 */
 	public static void extractPart(File inFile, File outFile, Time startTime, Duration duration) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -445,12 +363,6 @@ public class FFHelper {
 		builder.build().execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param size
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void resize(File inFile, Size size, File outFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -478,11 +390,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFiles
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void concat(List<File> inFiles, File outFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -497,11 +404,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFiles
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void cutConcat(List<File> inFiles, File outFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -536,12 +438,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @param multiplyBy
-	 * @throws IOException
-	 */
 	public static void speed(File inFile, File outFile, float multiplyBy) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -557,13 +453,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @param fadeType
-	 * @param duration
-	 * @throws IOException
-	 */
 	public static void fade1(File inFile, File outFile, FadeType fadeType, Duration duration) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -579,13 +468,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @param fadeType
-	 * @param duration
-	 * @throws IOException
-	 */
 	public static void fade2(File inFile, File outFile, FadeType fadeType, Duration duration) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -601,10 +483,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @throws IOException
-	 */
 	public static CropDetection cropDetect(File inFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -622,12 +500,6 @@ public class FFHelper {
 		return cropDetect.getCropSizeDetected();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @param size
-	 * @throws IOException
-	 */
 	public static void crop(File inFile, File outFile, Size size) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -641,12 +513,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile1
-	 * @param outFile2
-	 * @throws IOException
-	 */
 	public static void splitTo3(File inFile, File outFile1, File outFile2, File outFile3) throws IOException {
 		// outFile1 : no fade
 		// outFile2 : fade in
@@ -694,12 +560,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @param size
-	 * @throws IOException
-	 */
 	public static void autoRotate(File inFile, File outFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -712,12 +572,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inVideoFile
-	 * @param inAudioFile
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void mixAudio(File inVideoFile, File inAudioFile, File outFile, Time audioStart) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -738,15 +592,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param in1VideoFile
-	 * @param in2VideoFile
-	 * @param in3VideoFile
-	 * @param in4VideoFile
-	 * @param outFile
-	 * @param size
-	 * @throws IOException
-	 */
 	public static void overlay4(File in1VideoFile, File in2VideoFile, File in3VideoFile, File in4VideoFile,
 			File outFile, Size size) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
@@ -785,13 +630,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param in1VideoFile
-	 * @param in2VideoFile
-	 * @param fadeDuration
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void concatFade(File in1VideoFile, File in2VideoFile, Duration fadeDuration, File outFile)
 			throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
@@ -853,11 +691,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void backgroundBlurOverlayScale(File inFile, File outFile) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 
@@ -884,12 +717,6 @@ public class FFHelper {
 
 	}
 
-	/**
-	 * @param inMkvFile
-	 * @param outMp4File
-	 * @param locales
-	 * @throws IOException
-	 */
 	public static void encodeTox264_KeepChaptersAndSubtitles(File inFile, File outFile, Collection<Locale> locales)
 			throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
@@ -923,11 +750,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void oo(File srcFile, File outFile) throws IOException {
 		final int DEFAULT_AUDIO_SAMPLE_RATE = 44100;
 		final int DEFAULT_AUDIO_BIT_RATE = 128000;
@@ -968,11 +790,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void m4aToMp3(File inFile, File outFile) throws IOException {
 		final int SAMPLE_RATE = 44100;
 		final String bitRate = "128k";
@@ -999,11 +816,6 @@ public class FFHelper {
 		// executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void audioToGraph(File inAudio, File outImage) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.hideBanner();
@@ -1019,11 +831,6 @@ public class FFHelper {
 		executor.execute();
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void videoToGraph(File inAudio, File outImage) throws IOException {
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
 		builder.hideBanner();
@@ -1096,11 +903,6 @@ public class FFHelper {
 		return new File(srcFile.getParentFile(), joiner.toString());
 	}
 
-	/**
-	 * @param inFile
-	 * @param outFile
-	 * @throws IOException
-	 */
 	public static void encoderList() throws IOException {
 		Encoders.availableNames().stream().filter(s -> s.contains("264")).sorted().forEach(System.out::println);
 	}
