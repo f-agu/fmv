@@ -59,22 +59,12 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 
 		private Type type;
 
-		/**
-		 * 
-		 */
 		private In() {}
 
-		/**
-		 * @param filterInput
-		 */
 		private In(FilterInput filterInput) {
 			this(filterInput, null);
 		}
 
-		/**
-		 * @param filterInput
-		 * @param type
-		 */
 		private In(FilterInput filterInput, Type type) {
 			this.filterInput = filterInput;
 			this.type = type;
@@ -82,23 +72,14 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 
 		// ******************************
 
-		/**
-		 * @return the filterInput
-		 */
 		public FilterInput getFilterInput() {
 			return filterInput;
 		}
 
-		/**
-		 * @return the type
-		 */
 		public Type getType() {
 			return type;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			StringBuilder buf = new StringBuilder();
@@ -112,17 +93,10 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 
 		// ******************************
 
-		/**
-		 * @return
-		 */
 		protected List<MediaInput> getInputs() {
 			return filterInput.getInputs();
 		}
 
-		/**
-		 * @param type
-		 * @return
-		 */
 		protected boolean contains(Type type) {
 			if(this.type != null) {
 				return this.type == type;
@@ -134,35 +108,21 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 
 	// -------------------------------------------------
 
-	/**
-	 * @param name
-	 */
-	public FilterComplexBase(String name) {
+	protected FilterComplexBase(String name) {
 		super(name);
 		inputMap = new LinkedHashMap<>();
 		outputList = new LinkedHashMap<>();
 		mapList = new ArrayList<>();
 	}
 
-	/**
-	 * @return
-	 */
 	public FilterNaming getFilterNaming() {
 		return filterNaming;
 	}
 
-	/**
-	 * @param filterNaming the filterNaming to set
-	 */
 	public void setFilterNaming(FilterNaming filterNaming) {
 		this.filterNaming = filterNaming;
 	}
 
-	/**
-	 * @param filterInput
-	 * @param types
-	 * @return
-	 */
 	public FilterComplexBase addInput(FilterInput filterInput, Type... types) {
 		if(filterInput == null) {
 			return this;
@@ -189,10 +149,6 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 		return this;
 	}
 
-	/**
-	 * @param filterInput
-	 * @return
-	 */
 	public boolean contains(FilterInput filterInput) {
 		for(In in : inputMap.values()) {
 			if(in.filterInput == filterInput) {
@@ -202,10 +158,6 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 		return false;
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	public int countInput(Type type) {
 		int count = 0;
 		for(In input : inputMap.values()) {
@@ -216,19 +168,11 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 		return count;
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	@Override
 	public boolean contains(Type type) {
 		return getTypes().contains(type);
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	public boolean containsInput(Type type) {
 		for(In in : inputMap.values()) {
 			if(in.contains(type)) {
@@ -238,12 +182,9 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 		return false;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public List<MediaInput> getInputs() {
-		List<MediaInput> inputs = new ArrayList<MediaInput>();
+		List<MediaInput> inputs = new ArrayList<>();
 		for(In in : inputMap.values()) {
 			inputs.addAll(in.getInputs());
 		}
@@ -253,51 +194,32 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 		return inputs;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getInputKeys()
-	 */
 	@Override
 	public Set<IOKey> getInputKeys() {
 		return inputMap.keySet();
 	}
 
-	/**
-	 * 
-	 */
 	public void clearInput() {
 		inputMap.clear();
 	}
 
-	/**
-	 * @return the inputMap
-	 */
 	public Map<IOKey, In> getInputMap() {
 		return Collections.unmodifiableMap(inputMap);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.utils.Durable#getDuration()
-	 */
 	@Override
 	public Optional<Duration> getDuration() {
 		return inputMap.values()
 				.stream()
 				.map(i -> i.filterInput.getDuration().orElse(null))
 				.filter(Objects::nonNull)
-				.max((d1, d2) -> d1.compareTo(d2));
+				.max(Comparable::compareTo);
 	}
 
-	/**
-	 * 
-	 */
 	public OutputKey addOutput() {
 		return addOutput(Label.intermediate(StringUtils.substring(name(), 0, 3)));
 	}
 
-	/**
-	 * @param outputLabel
-	 * @return
-	 */
 	public OutputKey addOutput(Label outputLabel) {
 		if(outputList.containsKey(outputLabel)) {
 			throw new IllegalArgumentException("Already used: " + outputLabel);
@@ -307,26 +229,17 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 		return outputKey;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public List<OutputKey> getOutputKeys() {
-		return new ArrayList<OutputKey>(outputList.values());
+		return new ArrayList<>(outputList.values());
 	}
 
-	/**
-	 * 
-	 */
 	public void clearOutput() {
 		outputList.clear();
 	}
 
-	/**
-	 * @return
-	 */
 	public int countVariousInput() {
-		Set<MediaInput> inputs = new HashSet<MediaInput>();
+		Set<MediaInput> inputs = new HashSet<>();
 		int countSrcGen = 0;
 		for(MediaInput input : getInputs()) {
 			inputs.add(input);
@@ -337,27 +250,16 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 		return inputs.size() - (countSrcGen >= 1 ? 1 : 0);
 	}
 
-	/**
-	 * @param mapLabel
-	 * @return
-	 */
 	public FilterComplexBase addMap(String mapLabel) {
 		mapList.add(mapLabel);
 		return this;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return toString(super.toString());
 	}
 
-	/**
-	 * @param middle
-	 * @return
-	 */
 	public String toString(String middle) {
 		StringBuilder buf = new StringBuilder();
 		if( ! inputMap.isEmpty()) {
@@ -374,39 +276,23 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 
 	// ******************************************************
 
-	/**
-	 * @return
-	 */
 	protected boolean hasExplicitType() {
 		return true;
 	}
 
 	// ******************************************************
 
-	/**
-	 * @param labels
-	 * @return
-	 */
 	private Iterator<String> ioKeyToString(final Iterator<IOKey> ioKey) {
 		return new Iterator<String>() {
 
-			/**
-			 * @see java.util.Iterator#remove()
-			 */
 			@Override
 			public void remove() {}
 
-			/**
-			 * @see java.util.Iterator#next()
-			 */
 			@Override
 			public String next() {
 				return ioKey.next().toString(filterNaming);
 			}
 
-			/**
-			 * @see java.util.Iterator#hasNext()
-			 */
 			@Override
 			public boolean hasNext() {
 				return ioKey.hasNext();
@@ -414,24 +300,14 @@ public abstract class FilterComplexBase extends AbstractFilter implements Filter
 		};
 	}
 
-	/**
-	 * @param labels
-	 * @return
-	 */
 	private Iterator<String> labelToString(final Iterator<Label> labels) {
 		return new Iterator<String>() {
 
-			/**
-			 * @see java.util.Iterator#next()
-			 */
 			@Override
 			public String next() {
 				return filterNaming.generate(labels.next());
 			}
 
-			/**
-			 * @see java.util.Iterator#hasNext()
-			 */
 			@Override
 			public boolean hasNext() {
 				return labels.hasNext();

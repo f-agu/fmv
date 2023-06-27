@@ -136,11 +136,6 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 		 */
 		public static final CFlags OUTPUT_CORRUPT = new CFlags(16, "output_corrupt", IO.INPUT);
 
-		/**
-		 * @param index
-		 * @param flag
-		 * @param io
-		 */
 		protected CFlags(int index, String flag, IO io) {
 			super(CFlags.class, index, flag, io);
 		}
@@ -152,6 +147,7 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @author f.agu
 	 */
 	public enum Idct {
+
 		AUTO("auto", IO.INPUT_OUTPUT),
 		INT("int", IO.INPUT_OUTPUT),
 		SIMPLE("simple", IO.INPUT_OUTPUT),
@@ -174,25 +170,15 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Idct(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -204,6 +190,7 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @author f.agu
 	 */
 	public enum Threads {
+
 		// autodetect a suitable number of threads to use
 		AUTO("auto", IO.INPUT_OUTPUT);
 
@@ -211,25 +198,15 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Threads(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -241,6 +218,7 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @author f.agu
 	 */
 	public enum ColorPrimaries {
+
 		// BT.709
 		BT709("bt709", IO.INPUT_OUTPUT),
 		// Unspecified
@@ -262,25 +240,15 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private ColorPrimaries(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -292,6 +260,7 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @author f.agu
 	 */
 	public enum ColorTrc {
+
 		// BT.709
 		BT709("bt709", IO.INPUT_OUTPUT),
 		// Unspecified
@@ -325,25 +294,15 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private ColorTrc(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -355,6 +314,7 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @author f.agu
 	 */
 	public enum Colorspace {
+
 		// RGB
 		RGB("rgb", IO.INPUT_OUTPUT),
 		// BT.709
@@ -380,25 +340,15 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Colorspace(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -410,6 +360,7 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @author f.agu
 	 */
 	public enum ColorRange {
+
 		// Unspecified
 		UNSPECIFIED("unspecified", IO.INPUT_OUTPUT),
 		// MPEG (219*2^(n-8))
@@ -421,25 +372,15 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private ColorRange(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -451,6 +392,7 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 	 * @author f.agu
 	 */
 	public enum FieldOrder {
+
 		PROGRESSIVE("progressive", IO.INPUT_OUTPUT),
 		TT("tt", IO.INPUT_OUTPUT),
 		BB("bb", IO.INPUT_OUTPUT),
@@ -462,25 +404,15 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private FieldOrder(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -500,12 +432,7 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 
 	protected final IO io;
 
-	/**
-	 * @param type
-	 * @param name
-	 * @param io
-	 */
-	public Coder(Type type, String name, IO io) {
+	protected Coder(Type type, String name, IO io) {
 		super(name);
 		this.type = type;
 		this.io = io;
@@ -516,16 +443,10 @@ public abstract class Coder<M> extends ElementParameterized<M> {
 		threadTypes = new HashSet<>();
 	}
 
-	/**
-	 * @return
-	 */
 	public Type type() {
 		return type;
 	}
 
-	/**
-	 * @return
-	 */
 	public IO io() {
 		return io;
 	}

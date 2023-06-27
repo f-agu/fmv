@@ -34,32 +34,19 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class ATempo extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected ATempo() {
 		super("atempo");
 	}
 
-	/**
-	 * @param factor
-	 */
 	protected ATempo(float factor) {
 		this();
 		speed(factor);
 	}
 
-	/**
-	 * @return
-	 */
 	public static ATempo build() {
 		return new ATempo();
 	}
 
-	/**
-	 * @param multiplyBy
-	 * @return
-	 */
 	public ATempo speed(float factor) {
 		if(factor < 0.5 || 2 < factor) {
 			throw new IllegalArgumentException("must be in the [0.5, 2.0] range. Or use static method 'speed(float)'");
@@ -68,18 +55,11 @@ public class ATempo extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);
 	}
 
-	/**
-	 * @param factor
-	 * @return
-	 */
 	public static List<ATempo> create(float factor) {
 		float n = factor;
 		if(0.5 < n && n < 2) {

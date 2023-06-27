@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.graph;
  * #L%
  */
 
-
 import java.util.Set;
 
 import org.fagu.fmv.ffmpeg.filter.FilterComplex;
@@ -32,14 +31,6 @@ import org.fagu.fmv.ffmpeg.filter.Label;
  */
 public interface Visitor<T> {
 
-	/**
-	 * @param inLabel
-	 * @param inFilters
-	 * @param filterComplex
-	 * @param outFilters
-	 * @param outLabel
-	 * @param depth
-	 */
 	void visit(Label inLabel, Set<FilterComplex> inFilters, FilterComplex filterComplex, Set<FilterComplex> outFilters, Label outLabel, int depth);
 
 	default void close() {

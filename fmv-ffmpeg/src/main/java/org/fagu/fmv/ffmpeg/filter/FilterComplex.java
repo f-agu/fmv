@@ -36,36 +36,21 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public abstract class FilterComplex extends FilterComplexBase {
 
-	/**
-	 * @param name
-	 */
-	public FilterComplex(String name) {
+	protected FilterComplex(String name) {
 		this(name, true);
 	}
 
-	/**
-	 * @param name
-	 * @param autoGenerateOutputLabel
-	 */
-	public FilterComplex(String name, boolean autoGenerateOutputLabel) {
+	protected FilterComplex(String name, boolean autoGenerateOutputLabel) {
 		super(name);
 		if(autoGenerateOutputLabel) {
 			addOutput();
 		}
 	}
 
-	/**
-	 * @param filters
-	 * @return
-	 */
 	public static FilterComplex create(Filter... filters) {
 		return create(Arrays.asList(filters));
 	}
 
-	/**
-	 * @param filters
-	 * @return
-	 */
 	public static FilterComplex create(final Collection<? extends Filter> filters) {
 		final Set<Type> inTypes = new HashSet<>();
 		for(Filter filter : filters) {
@@ -76,10 +61,6 @@ public abstract class FilterComplex extends FilterComplexBase {
 		}
 		FilterComplex filterComplex = new FilterComplex("f") {
 
-			/**
-			 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#addInput(org.fagu.fmv.ffmpeg.operation.InputProcessor,
-			 *      org.fagu.fmv.ffmpeg.operation.Type[])
-			 */
 			@Override
 			public FilterComplex addInput(FilterInput filterInput, Type... types) {
 				if(types.length == 0) {
@@ -90,9 +71,6 @@ public abstract class FilterComplex extends FilterComplexBase {
 				return this;
 			}
 
-			/**
-			 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#getInputs()
-			 */
 			@Override
 			public List<MediaInput> getInputs() {
 				List<MediaInput> inputs = super.getInputs();
@@ -104,17 +82,11 @@ public abstract class FilterComplex extends FilterComplexBase {
 				return inputs;
 			}
 
-			/**
-			 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#getTypes()
-			 */
 			@Override
 			public Set<Type> getTypes() {
 				return inTypes;
 			}
 
-			/**
-			 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#toString()
-			 */
 			@Override
 			public String toString() {
 				return toString(StringUtils.join(filters, ','));
@@ -122,9 +94,6 @@ public abstract class FilterComplex extends FilterComplexBase {
 
 			// *******************************************
 
-			/**
-			 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#hasExplicitType()
-			 */
 			@Override
 			protected boolean hasExplicitType() {
 				return false;
@@ -134,10 +103,6 @@ public abstract class FilterComplex extends FilterComplexBase {
 		return filterComplex;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#addInput(org.fagu.fmv.ffmpeg.filter.FilterInput,
-	 *      org.fagu.fmv.ffmpeg.operation.Type[])
-	 */
 	@Override
 	public FilterComplex addInput(FilterInput filterInput, Type... types) {
 		super.addInput(filterInput, types);

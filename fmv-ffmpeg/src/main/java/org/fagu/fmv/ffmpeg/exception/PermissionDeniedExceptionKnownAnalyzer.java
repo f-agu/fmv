@@ -24,9 +24,6 @@ package org.fagu.fmv.ffmpeg.exception;
  */
 public class PermissionDeniedExceptionKnownAnalyzer extends FFSimpleExceptionKnownAnalyzer {
 
-	/**
-	 * 
-	 */
 	public PermissionDeniedExceptionKnownAnalyzer() {
 		super("Permission denied", ": Permission denied");
 	}

@@ -42,18 +42,11 @@ public class FilterNaming {
 
 	private final Map<Label, String> labelMap;
 
-	/**
-	 * 
-	 */
 	public FilterNaming() {
 		names = new LinkedHashSet<>();
 		labelMap = new HashMap<>();
 	}
 
-	/**
-	 * @param label
-	 * @return
-	 */
 	public String generate(Label label) {
 		if(label.getState() == State.INPUT) {
 			return label.getName();
@@ -69,10 +62,6 @@ public class FilterNaming {
 		return name;
 	}
 
-	/**
-	 * @param label
-	 * @return
-	 */
 	public String generateBrackets(Label label) {
 		String gen = generate(label);
 		if(label.getState() == State.INPUT) {
@@ -81,9 +70,6 @@ public class FilterNaming {
 		return '[' + gen + ']';
 	}
 
-	/**
-	 * 
-	 */
 	public void reset() {
 		counter = 0;
 		names.clear();
@@ -91,20 +77,12 @@ public class FilterNaming {
 
 	// **********************************************************
 
-	/**
-	 * @return
-	 */
 	private String nextUnused(String prefix) {
 		String s = null;
 		while(names.contains(s = prefix + toUnsignedString(counter++, 4)));
 		return s;
 	}
 
-	/**
-	 * @param i
-	 * @param shift
-	 * @return
-	 */
 	private static String toUnsignedString(int i, int shift) {
 		char[] buf = new char[32];
 		int charPos = 32;

@@ -45,18 +45,11 @@ class Inputs {
 
 		private final Type type;
 
-		/**
-		 * @param inputIndex
-		 * @param type
-		 */
 		private In(int inputIndex, Type type) {
 			this.inputIndex = inputIndex;
 			this.type = type;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return new StringBuilder().append('[').append(inputIndex).append(':').append(type.code()).append(']').toString();
@@ -72,56 +65,32 @@ class Inputs {
 
 	private final Set<Integer> index = new HashSet<>();
 
-	/**
-	 * 
-	 */
 	Inputs() {
 		ins = new ArrayList<>(4);
 	}
 
-	/**
-	 * @param indexStream
-	 * @param type
-	 */
 	void add(int indexStream, Type type) {
 		ins.add(new In(indexStream, type));
 		types.add(type);
 		index.add(indexStream);
 	}
 
-	/**
-	 * @return
-	 */
 	boolean isEmpty() {
 		return ins.isEmpty();
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	boolean contains(Type type) {
 		return types.contains(type);
 	}
 
-	/**
-	 * @return
-	 */
 	int countInput() {
 		return index.size();
 	}
 
-	/**
-	 * @return
-	 */
 	int countTypes() {
 		return types.size();
 	}
 
-	/**
-	 * @param buf
-	 * @param inTypes
-	 */
 	void appendHeader(StringBuilder buf, Type... inTypes) {
 		Type[] types = inTypes;
 		if(types == null || types.length == 0) {

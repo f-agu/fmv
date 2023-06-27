@@ -36,42 +36,31 @@ public abstract class FilterComplexCombined extends FilterComplexBase implements
 
 	private final List<FilterComplex> filterComplexs;
 
-	/**
-	 * @param name
-	 * @param filterComplexs
-	 */
-	public FilterComplexCombined(String name, List<FilterComplex> filterComplexs) {
+	protected FilterComplexCombined(String name, List<FilterComplex> filterComplexs) {
 		super(name);
 		this.filterComplexs = Collections.unmodifiableList(new ArrayList<>(filterComplexs));
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#addInput(org.fagu.fmv.ffmpeg.filter.FilterInput,
-	 *      org.fagu.fmv.ffmpeg.operation.Type[])
-	 */
 	@Override
 	public FilterComplexBase addInput(FilterInput filterInput, Type... types) {
 		for(FilterComplex filterComplex : filterComplexs) {
 			for(Type type : filterComplex.getTypes()) {
-				if(types == null || types.length == 0 || ArrayUtils.indexOf(types, type) >= 0) {
-					if(filterComplex.contains(type)) {
-						if(filterInput instanceof FilterComplexCombined) {
-							((FilterComplexCombined)filterInput).filterComplexs.stream() //
-							.filter(fc -> fc.contains(type)) //
-							.forEach(fc -> filterComplex.addInput(filterInput));
-						} else if(filterInput.contains(type)) {
-							filterComplex.addInput(filterInput);
-						}
+				if((types == null || types.length == 0 || ArrayUtils.indexOf(types, type) >= 0)
+						&& filterComplex.contains(type)) {
+					if(filterInput instanceof FilterComplexCombined) {
+						((FilterComplexCombined)filterInput).filterComplexs.stream() //
+								.filter(fc -> fc.contains(type)) //
+								.forEach(fc -> filterComplex.addInput(filterInput));
+					} else if(filterInput.contains(type)) {
+						filterComplex.addInput(filterInput);
 					}
+
 				}
 			}
 		}
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#getOutputKeys()
-	 */
 	@Override
 	public List<OutputKey> getOutputKeys() {
 		List<OutputKey> okeys = new ArrayList<>();
@@ -81,19 +70,12 @@ public abstract class FilterComplexCombined extends FilterComplexBase implements
 		return okeys;
 	}
 
-	/**
-	 * @return the filters
-	 */
 	public List<FilterComplex> getFilters() {
 		return filterComplexs;
 	}
 
 	// **************************************************
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.AbstractFilter#beforeAddAround(org.fagu.fmv.ffmpeg.operation.Operation,
-	 *      org.fagu.fmv.ffmpeg.filter.FilterNaming)
-	 */
 	@Override
 	protected void beforeAddAround(Operation<?, ?> operation, FilterNaming filterNaming) {
 		for(FilterComplex filterComplex : filterComplexs) {

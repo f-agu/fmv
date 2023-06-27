@@ -37,9 +37,6 @@ import org.fagu.fmv.utils.media.Size;
  */
 public class Libx264NotDisibleBy2FFExecFallback implements FFExecFallback {
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.executor.FFExecFallback#prepare(org.fagu.fmv.ffmpeg.executor.FFEnv, java.io.IOException)
-	 */
 	@Override
 	public boolean prepare(FFEnv ffEnv, IOException ioException) throws IOException {
 		FFExecutor<Object> executor = ffEnv.getExecutor();
@@ -67,18 +64,11 @@ public class Libx264NotDisibleBy2FFExecFallback implements FFExecFallback {
 
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Libx264 not divisible by 2";
 	}
 
-	/**
-	 * @param size
-	 * @return
-	 */
 	public static Size resize(final Size size) {
 		Size newSize = size;
 		if(size.getHeight() % 2 == 1) {

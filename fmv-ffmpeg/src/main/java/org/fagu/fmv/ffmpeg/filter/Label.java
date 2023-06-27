@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import org.fagu.fmv.ffmpeg.operation.Type;
 
-
 /*
  * #%L
  * fmv-ffmpeg
@@ -25,6 +24,7 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  * #L%
  */
 
+
 /**
  * @author f.agu
  */
@@ -43,32 +43,19 @@ public class Label {
 
 	private final String name;
 
-	/**
-	 * @param name
-	 * @param state
-	 */
 	private Label(String name, State state) {
 		this.name = Objects.requireNonNull(name);
 		this.state = Objects.requireNonNull(state);
 	}
 
-	/**
-	 * @return
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @return
-	 */
 	public State getState() {
 		return state;
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		if(state == State.INPUT) {
@@ -77,9 +64,6 @@ public class Label {
 		return super.hashCode();
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if(this == obj) {
@@ -92,63 +76,33 @@ public class Label {
 		return state == State.INPUT && state == other.state && name.equals(other.name);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder(50);
-		buf.append("Label(").append(Integer.toHexString(hashCode())).append(',').append(name).append(',').append(state).append(')');
-		return buf.toString();
+		return new StringBuilder(50)
+				.append("Label(").append(Integer.toHexString(hashCode())).append(',').append(name).append(',').append(state).append(')')
+				.toString();
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static Label of(String name, State state) {
 		return new Label(name, state);
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static Label input(String name) {
 		return new Label(name, State.INPUT);
 	}
 
-	/**
-	 * @param name
-	 * @param type
-	 * @return
-	 */
 	public static Label input(String name, Type type) {
 		return type == null ? input(name) : input(name + ':' + type.code());
 	}
 
-	/**
-	 * @param index
-	 * @param type
-	 * @return
-	 */
 	public static Label input(int index) {
 		return input(index, null);
 	}
 
-	/**
-	 * @param index
-	 * @param type
-	 * @return
-	 */
 	public static Label input(int index, Type type) {
 		return input(Integer.toString(index), type);
 	}
 
-	/**
-	 * @param prefix
-	 * @return
-	 */
 	public static Label intermediate(String prefix) {
 		return new Label(prefix, State.INTERMEDIATE);
 	}

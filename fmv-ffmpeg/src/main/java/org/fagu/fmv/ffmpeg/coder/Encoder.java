@@ -36,6 +36,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum MeMethod {
+
 		// zero motion estimation (fastest)
 		ZERO("zero", IO.OUTPUT),
 		// full motion estimation (slowest)
@@ -65,25 +66,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private MeMethod(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -95,6 +86,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Dct {
+
 		// autoselect a good one (default)
 		AUTO("auto", IO.OUTPUT),
 		// fast integer
@@ -110,25 +102,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Dct(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -140,31 +122,22 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Pred {
+
 		LEFT("left", IO.OUTPUT), PLANE("plane", IO.OUTPUT), MEDIAN("median", IO.OUTPUT);
 
 		private final String flag;
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Pred(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -176,6 +149,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Cmp {
+
 		// sum of absolute differences, fast (default)
 		SAD("sad", IO.OUTPUT),
 		// sum of squared errors
@@ -209,25 +183,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Cmp(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -239,6 +203,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Subcmp {
+
 		// sum of absolute differences, fast (default)
 		SAD("sad", IO.OUTPUT),
 		// sum of squared errors
@@ -272,25 +237,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Subcmp(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -302,6 +257,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Mbcmp {
+
 		// sum of absolute differences, fast (default)
 		SAD("sad", IO.OUTPUT),
 		// sum of squared errors
@@ -335,25 +291,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Mbcmp(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -365,6 +311,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Ildctcmp {
+
 		// sum of absolute differences, fast (default)
 		SAD("sad", IO.OUTPUT),
 		// sum of squared errors
@@ -398,25 +345,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Ildctcmp(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -428,6 +365,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Precmp {
+
 		// sum of absolute differences, fast (default)
 		SAD("sad", IO.OUTPUT),
 		// sum of squared errors
@@ -461,25 +399,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Precmp(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -491,6 +419,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Coder {
+
 		// variable length coder / Huffman coder
 		VLC("vlc", IO.OUTPUT),
 		// arithmetic coder
@@ -506,25 +435,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Coder(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -536,6 +455,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Mbd {
+
 		// use mbcmp (default)
 		SIMPLE("simple", IO.OUTPUT),
 		// use fewest bits
@@ -547,25 +467,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Mbd(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -577,6 +487,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Profile {
+
 		UNKNOWN("unknown", IO.OUTPUT),
 		AAC_MAIN("aac_main", IO.OUTPUT),
 		AAC_LOW("aac_low", IO.OUTPUT),
@@ -598,25 +509,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Profile(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -628,31 +529,22 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Level {
+
 		UNKNOWN("unknown", IO.OUTPUT);
 
 		private final String flag;
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Level(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -664,6 +556,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum Skipcmp {
+
 		// sum of absolute differences, fast (default)
 		SAD("sad", IO.OUTPUT),
 		// sum of squared errors
@@ -697,25 +590,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private Skipcmp(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -729,6 +612,7 @@ public abstract class Encoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum AudioServiceType {
+
 		// Main Audio Service
 		MA("ma", IO.OUTPUT),
 		// Effects
@@ -752,25 +636,15 @@ public abstract class Encoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private AudioServiceType(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -778,11 +652,7 @@ public abstract class Encoder<M> extends Coder<M> {
 
 	// -----------------------------------------------
 
-	/**
-	 * @param type
-	 * @param name
-	 */
-	public Encoder(Type type, String name) {
+	protected Encoder(Type type, String name) {
 		super(type, name, IO.OUTPUT);
 	}
 

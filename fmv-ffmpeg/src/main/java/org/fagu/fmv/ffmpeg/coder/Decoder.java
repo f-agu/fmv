@@ -48,6 +48,7 @@ public abstract class Decoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum SkipLoopFilter {
+
 		// discard no frame
 		NONE("none", IO.INPUT),
 		// discard useless frames
@@ -67,25 +68,15 @@ public abstract class Decoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private SkipLoopFilter(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -97,6 +88,7 @@ public abstract class Decoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum SkipIdct {
+
 		// discard no frame
 		NONE("none", IO.INPUT),
 		// discard useless frames
@@ -116,25 +108,15 @@ public abstract class Decoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private SkipIdct(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -146,6 +128,7 @@ public abstract class Decoder<M> extends Coder<M> {
 	 * @author f.agu
 	 */
 	public enum SkipFrame {
+
 		// discard no frame
 		NONE("none", IO.INPUT),
 		// discard useless frames
@@ -165,25 +148,15 @@ public abstract class Decoder<M> extends Coder<M> {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private SkipFrame(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -201,11 +174,7 @@ public abstract class Decoder<M> extends Coder<M> {
 
 	private final Set<SubCharencMode> subCharencModes;
 
-	/**
-	 * @param type
-	 * @param name
-	 */
-	public Decoder(Type type, String name) {
+	protected Decoder(Type type, String name) {
 		super(type, name, IO.INPUT);
 
 		bugs = new HashSet<>();
@@ -470,9 +439,6 @@ public abstract class Decoder<M> extends Coder<M> {
 		return getMThis();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.IOEntity#eventAdded(org.fagu.fmv.ffmpeg.operation.Processor, IOEntity)
-	 */
 	@Override
 	public void eventAdded(Processor<?> processor, IOEntity ioEntity) {
 		super.eventAdded(processor, ioEntity);

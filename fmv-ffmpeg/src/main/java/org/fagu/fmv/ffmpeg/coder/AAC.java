@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.coder;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.operation.Type;
 
 
@@ -31,16 +30,10 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class AAC extends Encoder<AAC> {
 
-	/**
-	 * 
-	 */
 	protected AAC() {
 		super(Type.AUDIO, "aac");
 	}
 
-	/**
-	 * @return
-	 */
 	public static AAC build() {
 		return new AAC();
 	}

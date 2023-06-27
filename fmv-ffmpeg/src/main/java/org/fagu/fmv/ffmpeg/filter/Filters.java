@@ -51,83 +51,47 @@ public class Filters {
 	 */
 	public static class IOType {
 
-		/**
-		 * 
-		 */
 		public static final IOType AUDIO = new IOType('A');
 
-		/**
-		 * 
-		 */
 		public static final IOType VIDEO = new IOType('V');
 
-		/**
-		 * 
-		 */
 		public static final IOType NUMBER = new IOType('N');
 
-		/**
-		 * 
-		 */
 		public static final IOType SOURCE_OR_SINK = new IOType('|');
 
 		private char code;
 
 		private IOType[] types;
 
-		/**
-		 * @param code
-		 */
 		private IOType(char code) {
 			this.code = code;
 			types = new IOType[] {this};
 		}
 
-		/**
-		 * @param types
-		 */
 		private IOType(IOType[] types) {
 			this.types = types;
 		}
 
-		/**
-		 * @return
-		 */
 		public boolean isAudio() {
 			return ArrayUtils.contains(types, AUDIO);
 		}
 
-		/**
-		 * @return
-		 */
 		public boolean isVideo() {
 			return ArrayUtils.contains(types, VIDEO);
 		}
 
-		/**
-		 * @return
-		 */
 		public boolean isNumber() {
 			return ArrayUtils.contains(types, NUMBER);
 		}
 
-		/**
-		 * @return
-		 */
 		public boolean isSourceOrSink() {
 			return ArrayUtils.contains(types, SOURCE_OR_SINK);
 		}
 
-		/**
-		 * @return
-		 */
 		public boolean isMultiple() {
 			return types.length > 1;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			StringBuilder buf = new StringBuilder(2);
@@ -137,10 +101,6 @@ public class Filters {
 			return buf.toString();
 		}
 
-		/**
-		 * @param c
-		 * @return
-		 */
 		public static IOType byCode(char c) {
 			switch(c) {
 				case 'A':
@@ -151,14 +111,11 @@ public class Filters {
 					return NUMBER;
 				case '|':
 					return SOURCE_OR_SINK;
+				default:
 			}
 			throw new IllegalArgumentException("Unknown type: " + c);
 		}
 
-		/**
-		 * @param str
-		 * @return
-		 */
 		public static IOType parse(String str) {
 			List<IOType> list = new ArrayList<>();
 			for(char c : str.toCharArray()) {
@@ -1117,73 +1074,43 @@ public class Filters {
 
 	private final String name;
 
-	/**
-	 * @param name
-	 */
 	private Filters(String name) {
 		this.name = name;
 		HELP_CACHE.add(name, this, null);
 	}
 
-	/**
-	 * @return the name
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isTimelineSupported() {
 		return cache().contains('T');
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isSliceThreading() {
 		return cache().contains('S');
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isCommandSupport() {
 		return cache().contains('C');
 	}
 
-	/**
-	 * @return
-	 */
 	public IOType getInputType() {
 		return cache().inputType;
 	}
 
-	/**
-	 * @return
-	 */
 	public IOType getOutputType() {
 		return cache().outputType;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getDescription() {
 		return cache().description;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean exists() {
 		return exists(name);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return name;
@@ -1191,47 +1118,28 @@ public class Filters {
 
 	// **************************************************
 
-	/**
-	 * @return
-	 */
 	public static boolean exists(String name) {
 		return HELP_CACHE.exists(name);
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static Filters byName(String name) {
 		return HELP_CACHE.byName(name);
 	}
 
-	/**
-	 * @return
-	 */
 	public static Set<String> availableNames() {
 		return HELP_CACHE.availableNames();
 	}
 
-	/**
-	 * @return
-	 */
 	public static List<Filters> available() {
 		return HELP_CACHE.available();
 	}
 
 	// **************************************************
 
-	/**
-	 * @return
-	 */
 	private FilterHelp cache() {
 		return HELP_CACHE.cache(name).get(0);
 	}
 
-	/**
-	 * @return
-	 */
 	private static Runnable runnable() {
 		return () -> {
 			LinesFFMPEGOperation operation = new LinesFFMPEGOperation();
@@ -1239,10 +1147,10 @@ public class Filters {
 			try {
 				FFExecutor<List<String>> executor = new FFExecutor<>(operation);
 				Consumer<FilterHelp> cacheConsumer = HELP_CACHE.consumer();
-				final Pattern PATTERN = Pattern.compile("([AVN\\|]+)-\\>([AVN\\|]+)\\s+(\\w+.*)");
+				final Pattern pattern = Pattern.compile("([AVN\\|]+)-\\>([AVN\\|]+)\\s+(\\w+.*)");
 				Function<String, FilterHelp> factory = name -> new FilterHelp(name);
 				Consumer<FilterHelp> consumer = help -> {
-					Matcher matcher = PATTERN.matcher(help.getText());
+					Matcher matcher = pattern.matcher(help.getText());
 					if(matcher.matches()) {
 						help.inputType = IOType.parse(matcher.group(1));
 						help.outputType = IOType.parse(matcher.group(2));
@@ -1268,24 +1176,12 @@ public class Filters {
 	 */
 	private static class FilterHelp extends Help {
 
-		/**
-		 * 
-		 */
 		private IOType inputType;
 
-		/**
-		 * 
-		 */
 		private IOType outputType;
 
-		/**
-		 * 
-		 */
 		private String description;
 
-		/**
-		 * @param name
-		 */
 		protected FilterHelp(String name) {
 			super(name);
 		}

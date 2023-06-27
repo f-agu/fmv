@@ -102,25 +102,15 @@ public abstract class H264<M extends H264<?>> extends Encoder<M> implements LibL
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		public Weightp(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}

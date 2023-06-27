@@ -31,13 +31,7 @@ import org.fagu.fmv.utils.time.Duration;
  */
 public interface GeneratedSource extends Filter {
 
-	/**
-	 * @return
-	 */
 	MediaInput forInput();
 
-	/**
-	 * @return
-	 */
 	Optional<Duration> getDuration();
 }

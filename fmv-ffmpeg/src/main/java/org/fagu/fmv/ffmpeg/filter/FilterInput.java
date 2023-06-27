@@ -33,25 +33,12 @@ import org.fagu.fmv.ffmpeg.utils.Durable;
  */
 public interface FilterInput extends Durable {
 
-	/**
-	 * @return
-	 */
 	List<OutputKey> getOutputKeys();
 
-	/**
-	 * @return
-	 */
 	List<MediaInput> getInputs();
 
-	/**
-	 * @return
-	 */
 	Set<IOKey> getInputKeys();
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	boolean contains(Type type);
 
 }

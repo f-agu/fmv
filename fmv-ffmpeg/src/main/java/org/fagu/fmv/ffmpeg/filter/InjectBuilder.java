@@ -33,15 +33,8 @@ import org.fagu.fmv.ffmpeg.operation.Operation;
  */
 public class InjectBuilder {
 
-	/**
-	 *
-	 */
 	private InjectBuilder() {}
 
-	/**
-	 * @param toFilter
-	 * @param operation
-	 */
 	public static void inject(Filter toFilter, Operation<?, ?> operation) {
 		if(toFilter == null) {
 			return;

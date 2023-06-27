@@ -35,33 +35,20 @@ public abstract class FilterCombined extends AbstractFilter implements Combined 
 
 	private final List<Filter> filters;
 
-	/**
-	 * @param name
-	 * @param filters
-	 */
-	public FilterCombined(String name, List<Filter> filters) {
+	protected FilterCombined(String name, List<Filter> filters) {
 		super(name);
 		this.filters = Collections.unmodifiableList(new ArrayList<>(filters));
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#parameter(java.lang.String, java.lang.String)
-	 */
 	@Override
 	public Filter parameter(String name, String value) {
 		throw new RuntimeException("Forbidden, I'm combined");
 	}
 
-	/**
-	 * @return the filters
-	 */
 	public List<Filter> getFilters() {
 		return filters;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#toString()
-	 */
 	@Override
 	public String toString() {
 		return StringUtils.join(filters, ',');
@@ -69,10 +56,6 @@ public abstract class FilterCombined extends AbstractFilter implements Combined 
 
 	// **************************************************
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.AbstractFilter#beforeAddAround(org.fagu.fmv.ffmpeg.operation.Operation,
-	 *      org.fagu.fmv.ffmpeg.filter.FilterNaming)
-	 */
 	@Override
 	protected void beforeAddAround(Operation<?, ?> operation, FilterNaming filterNaming) {
 		for(Filter filter : filters) {

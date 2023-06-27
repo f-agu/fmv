@@ -28,11 +28,5 @@ import java.io.IOException;
  */
 public interface FFExecFallback {
 
-	/**
-	 * @param ffEnv
-	 * @param ioException
-	 * @return
-	 * @throws IOException
-	 */
 	boolean prepare(FFEnv ffEnv, IOException ioException) throws IOException;
 }

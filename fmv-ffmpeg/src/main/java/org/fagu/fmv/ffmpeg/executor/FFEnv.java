@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.executor;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.operation.Operation;
 
 
@@ -30,19 +29,10 @@ import org.fagu.fmv.ffmpeg.operation.Operation;
  */
 public interface FFEnv {
 
-	/**
-	 * @return
-	 */
 	FFExecutor<Object> getExecutor();
 
-	/**
-	 * @return
-	 */
 	Operation<?, ?> getOperation();
 
-	/**
-	 * @return
-	 */
 	FFMPEGExecutorBuilder geExecutorBuilder();
 
 }

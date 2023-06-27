@@ -35,9 +35,6 @@ import org.fagu.fmv.ffmpeg.utils.BitStreamFilter;
  */
 public class AAC_ADTSTOASCBitStreamFilterFFExecFallback implements FFExecFallback {
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.executor.FFExecFallback#prepare(java.io.IOException)
-	 */
 	@Override
 	public boolean prepare(FFEnv ffEnv, IOException ioException) throws IOException {
 		FFExecutor<Object> executor = ffEnv.getExecutor();
@@ -53,9 +50,6 @@ public class AAC_ADTSTOASCBitStreamFilterFFExecFallback implements FFExecFallbac
 		return change.booleanValue();
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "BitStream aac_adtstoasc";

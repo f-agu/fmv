@@ -34,76 +34,32 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public interface Filter {
 
-	/**
-	 * @param operation
-	 */
 	void beforeAdd(Operation<?, ?> operation);
 
-	/**
-	 * @return the name
-	 */
 	String name();
 
-	/**
-	 * @param value
-	 */
 	void setMainParameter(String value);
 
-	/**
-	 * @param operation
-	 */
 	void upgrade(Operation<?, ?> operation);
 
-	/**
-	 * @param inputProcessor
-	 */
 	void upgradeInputProcessor(InputProcessor inputProcessor);
 
-	/**
-	 * @param outputProcessor
-	 */
 	void upgradeOutputProcessor(OutputProcessor outputProcessor);
 
-	/**
-	 * @param name
-	 * @param value
-	 */
 	Filter parameter(String name, String value);
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	boolean containsParameter(String name);
 
-	/**
-	 * @param name
-	 */
 	String removeParameter(String name);
 
-	/**
-	 *
-	 */
 	void clearParameters();
 
-	/**
-	 * @return
-	 */
 	Set<Type> getTypes();
 
-	/**
-	 * @return
-	 */
 	Collection<Type> getInputTypes();
 
-	/**
-	 * @return
-	 */
 	Collection<Type> getOutputTypes();
 
-	/**
-	 * @return
-	 */
 	Filters getFilterType();
 
 }

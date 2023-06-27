@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.graph;
  * #L%
  */
 
-
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,15 +37,8 @@ import org.fagu.fmv.utils.collection.MapSet;
  */
 public class Visitors {
 
-	/**
-	 * 
-	 */
 	private Visitors() {}
 
-	/**
-	 * @param printStream
-	 * @return
-	 */
 	public static Visitor<String> print(PrintStream printStream) {
 		return (inLabel, inFilters, filterComplex, outFilters, outLabel, depth) -> {
 			String indent = StringUtils.leftPad("", depth * 3);
@@ -54,9 +46,6 @@ public class Visitors {
 		};
 	}
 
-	/**
-	 * @return
-	 */
 	public static Visitor<Object> checkSameTypes() {
 		Set<Type> set = new HashSet<>();
 		return (inLabel, inFilters, filterComplex, outFilters, outLabel, depth) -> {
@@ -75,18 +64,11 @@ public class Visitors {
 		};
 	}
 
-	/**
-	 * @param map
-	 * @return
-	 */
 	public static Visitor<Object> lastLabelWithType(MapSet<Label, Type> map) {
 		// Map<Label, FilterComplex> labelMap = new HashMap<>();
 		return new Visitor<Object>() {
 
-			/**
-			 * @see org.fagu.fmv.ffmpeg.filter.graph.Visitor#visit(org.fagu.fmv.ffmpeg.filter.Label, Set,
-			 *      org.fagu.fmv.ffmpeg.filter.FilterComplex, Set, org.fagu.fmv.ffmpeg.filter.Label, int)
-			 */
+			@Override
 			public void visit(Label inLabel, Set<FilterComplex> inFilters, FilterComplex filterComplex, Set<FilterComplex> outFilters,
 					Label outLabel, int depth) {
 				// System.out.println(filterComplex + " / " + filterNaming.generate(outLabel));
@@ -98,9 +80,6 @@ public class Visitors {
 				}
 			}
 
-			/**
-			 * @see org.fagu.fmv.ffmpeg.filter.graph.Visitor#close()
-			 */
 			// public void close() {
 			// for(Type type : lastFilterComplex.get().getTypes()) {
 			// map.add(lastOutLabel.get(), type);

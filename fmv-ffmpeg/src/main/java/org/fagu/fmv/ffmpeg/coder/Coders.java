@@ -36,23 +36,14 @@ public abstract class Coders {
 
 	private final String name;
 
-	/**
-	 * @param name
-	 */
 	Coders(String name) {
 		this.name = Objects.requireNonNull(name);
 	}
 
-	/**
-	 * @return
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @return the name
-	 */
 	public Type getType() {
 		if(cache().contains('A')) {
 			return Type.AUDIO;
@@ -66,53 +57,32 @@ public abstract class Coders {
 		throw new RuntimeException("Unknown type: " + StringUtils.join(cache().getChars(), ','));
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isFrameLevelMultithreading() {
 		return cache().contains('F');
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isSliceLevelMultithreading() {
 		return cache().contains('S');
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isCodecExperimental() {
 		return cache().contains('X');
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isSupports_draw_horiz_band() {
 		return cache().contains('B');
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isSupportsDirectRenderingMethod_1() {
 		return cache().contains('D');
 	}
 
-	/**
-	 * @return
-	 */
 	public String getDescription() {
 		return helpCache().cache(name).stream()
 				.map(CoderHelp::getText)
 				.collect(Collectors.joining(", "));
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return name;
@@ -120,14 +90,8 @@ public abstract class Coders {
 
 	// ********************************************
 
-	/**
-	 * @return
-	 */
 	protected abstract <H extends CoderHelp> H cache();
 
-	/**
-	 * @return
-	 */
 	protected abstract <H extends CoderHelp, R extends Coders> HelpCache<R, H> helpCache();
 
 	// ---------------------------------------------
@@ -137,9 +101,6 @@ public abstract class Coders {
 	 */
 	public abstract static class CoderHelp extends Help {
 
-		/**
-		 * @param name
-		 */
 		protected CoderHelp(String name) {
 			super(name);
 		}

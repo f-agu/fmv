@@ -23,7 +23,6 @@ package org.fagu.fmv.ffmpeg.filter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.ffmpeg.Element;
@@ -43,16 +42,10 @@ public abstract class AbstractFilter extends Element<Filter> implements Filter {
 
 	protected FilterNaming filterNaming;
 
-	/**
-	 * @param name
-	 */
-	public AbstractFilter(String name) {
+	protected AbstractFilter(String name) {
 		super(name);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#beforeAdd(org.fagu.fmv.ffmpeg.operation.Operation)
-	 */
 	@Override
 	public final void beforeAdd(Operation<?, ?> operation) {
 		if(operation == null) {
@@ -69,18 +62,12 @@ public abstract class AbstractFilter extends Element<Filter> implements Filter {
 		InjectBuilder.inject(this, operation);
 	}
 
-	/**
-	 * @param value
-	 */
 	@Override
 	public void setMainParameter(String value) {
 		clearParameters();
 		parameter("", value);
 	}
 
-	/**
-	 * @param operation
-	 */
 	@Override
 	public void upgrade(Operation<?, ?> operation) {
 		for(Processor<?> processor : operation.getProcessors()) {
@@ -92,71 +79,43 @@ public abstract class AbstractFilter extends Element<Filter> implements Filter {
 		}
 	}
 
-	/**
-	 * @param inputProcessor
-	 */
 	@Override
 	public void upgradeInputProcessor(InputProcessor inputProcessor) {}
 
-	/**
-	 * @param outputProcessor
-	 */
 	@Override
 	public void upgradeOutputProcessor(OutputProcessor outputProcessor) {}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	@Override
 	public boolean containsParameter(String name) {
 		return parameterMap.containsKey(name);
 	}
 
-	/**
-	 * @param name
-	 */
 	@Override
 	public String removeParameter(String name) {
 		PseudoParam removed = parameterMap.remove(name);
 		return removed != null ? removed.value() : null;
 	}
 
-	/**
-	 *
-	 */
 	@Override
 	public void clearParameters() {
 		parameterMap.clear();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getInputTypes()
-	 */
 	@Override
 	public Collection<Type> getInputTypes() {
 		return getTypes();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getOutputTypes()
-	 */
 	@Override
 	public Collection<Type> getOutputTypes() {
 		return getTypes();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getFilterType()
-	 */
 	@Override
 	public Filters getFilterType() {
 		return Filters.byName(name);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder(32);
@@ -182,18 +141,5 @@ public abstract class AbstractFilter extends Element<Filter> implements Filter {
 	}
 
 	// **************************************************
-
-	/**
-	 * @return
-	 */
-	@Override
-	abstract public Set<Type> getTypes();
-
-	// **************************************************
-
-	/**
-	 * @param operation
-	 * @param filterNaming
-	 */
 	protected void beforeAddAround(Operation<?, ?> operation, FilterNaming filterNaming) {}
 }

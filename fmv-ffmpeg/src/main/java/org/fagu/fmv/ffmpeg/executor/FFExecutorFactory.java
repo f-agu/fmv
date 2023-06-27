@@ -28,10 +28,5 @@ import org.fagu.fmv.ffmpeg.operation.Operation;
  */
 public interface FFExecutorFactory {
 
-	/**
-	 * @param operation
-	 * @param ffmpegExecutorBuilder
-	 * @return
-	 */
 	<R> FFExecutor<R> create(Operation<R, ?> operation, FFMPEGExecutorBuilder ffmpegExecutorBuilder);
 }

@@ -34,25 +34,14 @@ import org.fagu.fmv.soft.exec.exception.SimpleExceptionKnownAnalyzer;
  */
 public abstract class FFSimpleExceptionKnownAnalyzer extends SimpleExceptionKnownAnalyzer implements FFExceptionKnownAnalyzer {
 
-	/**
-	 * @param title
-	 * @param strToFind
-	 */
-	public FFSimpleExceptionKnownAnalyzer(String title, String strToFind) {
+	protected FFSimpleExceptionKnownAnalyzer(String title, String strToFind) {
 		super(title, strToFind);
 	}
 
-	/**
-	 * @return
-	 */
 	public static List<ExceptionKnownAnalyzer> getAnalyzers() {
 		return ExceptionKnownAnalyzers.getExceptionKnownAnalyzers(FFExceptionKnownAnalyzer.class);
 	}
 
-	/**
-	 * @param e
-	 * @return
-	 */
 	public static Optional<ExceptionKnown> getKnown(IOException e) {
 		return ExceptionKnownAnalyzers.getKnown(FFExceptionKnownAnalyzer.class, e);
 	}

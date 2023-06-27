@@ -56,18 +56,10 @@ public class FilterGraph {
 
 	private MapSet<Label, FilterComplex> byOutMap = MultiValueMaps.hashMapHashSet();
 
-	/**
-	 * @param filterNaming
-	 */
 	private FilterGraph(FilterNaming filterNaming) {
 		this.filterNaming = filterNaming;
 	}
 
-	/**
-	 * @param operation
-	 * @param filterNaming
-	 * @return
-	 */
 	public static FilterGraph of(Operation<?, ?> operation) {
 		FilterGraph filterGraph = new FilterGraph(operation.getFilterNaming());
 
@@ -106,41 +98,24 @@ public class FilterGraph {
 		return filterGraph;
 	}
 
-	/**
-	 * @return
-	 */
 	public List<FilterComplex> getRoots() {
 		return Collections.unmodifiableList(roots);
 	}
 
-	/**
-	 * @param label
-	 * @return
-	 */
 	public Set<FilterComplex> getByIn(Label label) {
 		Set<FilterComplex> set = byInMap.get(label);
 		return set != null ? Collections.unmodifiableSet(set) : Collections.emptySet();
 	}
 
-	/**
-	 * @param label
-	 * @return
-	 */
 	public Set<FilterComplex> getByOut(Label label) {
 		Set<FilterComplex> set = byOutMap.get(label);
 		return set != null ? Collections.unmodifiableSet(set) : Collections.emptySet();
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isEmpty() {
 		return roots.isEmpty();
 	}
 
-	/**
-	 * @param visitorSupplier
-	 */
 	public <T> void discover(Supplier<Visitor<T>> visitorSupplier) {
 		for(FilterComplex fcRoot : roots) {
 			Visitor<T> visitor = visitorSupplier.get();
@@ -151,13 +126,6 @@ public class FilterGraph {
 
 	// ***************************************************
 
-	/**
-	 * @param inLabel
-	 * @param filterComplex
-	 * @param outLabel
-	 * @param visitor
-	 * @param depth
-	 */
 	private <T> void discover(Label inLabel, FilterComplex filterComplex, Visitor<T> visitor, int depth) {
 		for(OutputKey outputKey : filterComplex.getOutputKeys()) {
 			Label outLabel = outputKey.getLabel();
@@ -179,20 +147,20 @@ public class FilterGraph {
 	// System.out.println();
 	// System.out.println("ROOTS : ");
 	// for(FilterComplex root : roots) {
-	// System.out.println("    " + root);
+	// System.out.println(" " + root);
 	// }
 	// System.out.println("BY IN : ");
 	// for(Entry<Label, Set<FilterComplex>> lblEntry : byInMap.entrySet()) {
-	// System.out.println("    " + filterNaming.generate(lblEntry.getKey()));
+	// System.out.println(" " + filterNaming.generate(lblEntry.getKey()));
 	// for(FilterComplex filterComplex : lblEntry.getValue()) {
-	// System.out.println("      -> " + filterComplex);
+	// System.out.println(" -> " + filterComplex);
 	// }
 	// }
 	// System.out.println("BY OUT : ");
 	// for(Entry<Label, Set<FilterComplex>> lblEntry : byOutMap.entrySet()) {
-	// System.out.println("    " + filterNaming.generate(lblEntry.getKey()));
+	// System.out.println(" " + filterNaming.generate(lblEntry.getKey()));
 	// for(FilterComplex filterComplex : lblEntry.getValue()) {
-	// System.out.println("      <- " + filterComplex);
+	// System.out.println(" <- " + filterComplex);
 	// }
 	// }
 	// }

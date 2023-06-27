@@ -40,57 +40,35 @@ public class OutputKey implements FilterInput {
 
 	private final Label label;
 
-	/**
-	 * @param filterInput
-	 * @param label
-	 */
 	public OutputKey(FilterInput filterInput, Label label) {
 		this.filterInput = Objects.requireNonNull(filterInput);
 		this.label = Objects.requireNonNull(label);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getOutputKeys()
-	 */
 	@Override
 	public List<OutputKey> getOutputKeys() {
 		return Collections.singletonList(this);
 	}
 
-	/**
-	 * @return
-	 */
 	public Label getLabel() {
 		return label;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getInputs()
-	 */
 	@Override
 	public List<MediaInput> getInputs() {
 		return filterInput.getInputs();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getInputKeys()
-	 */
 	@Override
 	public Set<IOKey> getInputKeys() {
 		return filterInput.getInputKeys();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#contains(org.fagu.fmv.ffmpeg.operation.Type)
-	 */
 	@Override
 	public boolean contains(Type type) {
 		return filterInput.contains(type);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterInput#getDuration()
-	 */
 	@Override
 	public Optional<Duration> getDuration() {
 		return filterInput.getDuration();
