@@ -44,26 +44,15 @@ public abstract class IOParameters {
 
 	private final MapList<IOEntity, Parameter> paramsMap;
 
-	/**
-	 * @param abstractOperation
-	 */
-	public IOParameters(AbstractOperation<?, ?> abstractOperation) {
+	protected IOParameters(AbstractOperation<?, ?> abstractOperation) {
 		this.operation = abstractOperation;
 		paramsMap = MultiValueMaps.list(new LinkedHashMap<>(2), () -> new ArrayList<>(4));
 	}
 
-	/**
-	 * @param ioEntity
-	 * @return
-	 */
 	public boolean contains(IOEntity ioEntity) {
 		return paramsMap.containsKey(ioEntity);
 	}
 
-	/**
-	 * @param paramName
-	 * @return
-	 */
 	public boolean contains(String paramName) {
 		String mParamName = '-' + paramName;
 		for(List<Parameter> parameters : paramsMap.values()) {
@@ -76,19 +65,10 @@ public abstract class IOParameters {
 		return false;
 	}
 
-	/**
-	 * @param parameter
-	 * @return
-	 */
 	public boolean contains(Parameter parameter) {
 		return contains(parameter.getIOEntity(), parameter.getName());
 	}
 
-	/**
-	 * @param ioEntity
-	 * @param parameterName
-	 * @return
-	 */
 	public boolean contains(IOEntity ioEntity, String parameterName) {
 		List<Parameter> list = paramsMap.get(ioEntity);
 		if(list == null) {
@@ -97,72 +77,43 @@ public abstract class IOParameters {
 		return list.stream().map(Parameter::getName).anyMatch(name -> name.equals(parameterName));
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isEmpty() {
 		return paramsMap.isEmpty();
 	}
 
-	/**
-	 * @param ioEntity
-	 * @param processor
-	 */
 	public void add(IOEntity ioEntity, Processor<?> processor) {
 		if(ioEntity == null) {
 			return;
 		}
 		paramsMap.addEmpty(ioEntity);
 		operation.addProcessor(ioEntity, processor);
-		if(ioEntity instanceof LibLog) {
-			operation.add((LibLog)ioEntity);
+		if(ioEntity instanceof LibLog ll) {
+			operation.add(ll);
 		}
 	}
 
-	/**
-	 * @param parameter
-	 */
 	public void add(Parameter parameter) {
 		List<Parameter> list = paramsMap.addEmpty(parameter.getIOEntity());
 		list.add(parameter);
 	}
 
-	/**
-	 * @param index
-	 * @param parameter
-	 */
 	public void add(int index, Parameter parameter) {
 		List<Parameter> list = paramsMap.addEmpty(parameter.getIOEntity());
 		list.add(index, parameter);
 	}
 
-	/**
-	 * @return
-	 */
 	public Set<IOEntity> getIOEntities() {
 		return Collections.unmodifiableSet(paramsMap.keySet());
 	}
 
-	/**
-	 * @param ioEntity
-	 * @return
-	 */
 	public Processor<?> getProcessor(IOEntity ioEntity) {
 		return operation.getProcessor(ioEntity);
 	}
 
-	/**
-	 * @return
-	 */
 	public Operation<?, ?> getOperation() {
 		return operation;
 	}
 
-	/**
-	 * @param ioEntity
-	 * @param way
-	 * @return
-	 */
 	public List<Parameter> getParameters(IOEntity ioEntity, Way way) {
 		List<Parameter> list = paramsMap.get(ioEntity);
 		if(list == null) {
@@ -177,19 +128,12 @@ public abstract class IOParameters {
 		return out;
 	}
 
-	/**
-	 * @param name
-	 */
 	public void removeParameter(String name) {
 		for(List<Parameter> list : paramsMap.values()) {
 			removeParameter(list, name);
 		}
 	}
 
-	/**
-	 * @param ioEntity
-	 * @param name
-	 */
 	public void removeParameter(IOEntity ioEntity, String name) {
 		List<Parameter> list = paramsMap.get(ioEntity);
 		if(list != null) {
@@ -197,10 +141,6 @@ public abstract class IOParameters {
 		}
 	}
 
-	/**
-	 * @param parameter
-	 * @return
-	 */
 	public boolean removeParameter(Parameter parameter) {
 		List<Parameter> list = paramsMap.get(parameter.getIOEntity());
 		if(list != null) {
@@ -209,9 +149,6 @@ public abstract class IOParameters {
 		return false;
 	}
 
-	/**
-	 * @param commands
-	 */
 	public void toArguments(Collection<String> commands) {
 		for(IOEntity ioEntity : getIOEntities()) {
 			// before
@@ -233,9 +170,6 @@ public abstract class IOParameters {
 		}
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		List<String> list = new ArrayList<>();
@@ -245,16 +179,10 @@ public abstract class IOParameters {
 
 	// ************************************************************
 
-	/**
-	 * @return
-	 */
 	abstract String getCommandPrefixFile();
 
 	// ************************************************************
 
-	/**
-	 * @param ioParameters
-	 */
 	protected void addAll(IOParameters ioParameters) {
 		for(Entry<IOEntity, List<Parameter>> entry : ioParameters.paramsMap.entrySet()) {
 			List<Parameter> list = paramsMap.addEmpty(entry.getKey());
@@ -264,10 +192,6 @@ public abstract class IOParameters {
 
 	// ************************************************************
 
-	/**
-	 * @param parameters
-	 * @param name
-	 */
 	private void removeParameter(List<Parameter> parameters, String name) {
 		Iterator<Parameter> iterator = parameters.iterator();
 		while(iterator.hasNext()) {
@@ -275,7 +199,6 @@ public abstract class IOParameters {
 				iterator.remove();
 			}
 		}
-
 	}
 
 }

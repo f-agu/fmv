@@ -2,9 +2,6 @@ package org.fagu.fmv.ffmpeg.operation;
 
 import java.util.Objects;
 
-import org.fagu.fmv.ffmpeg.require.Require;
-
-
 /*
  * #%L
  * fmv-ffmpeg
@@ -25,6 +22,7 @@ import org.fagu.fmv.ffmpeg.require.Require;
  * #L%
  */
 
+
 /**
  * @author f.agu
  */
@@ -34,37 +32,16 @@ public class InputParameters extends IOParameters {
 
 	private InputProcessorFactory inputProcessorFactory;
 
-	/**
-	 * @param abstractOperation
-	 */
 	public InputParameters(AbstractOperation<?, ?> abstractOperation) {
 		this(abstractOperation, "-i");
 	}
 
-	/**
-	 * @param abstractOperation
-	 * @param commandPrefixFile
-	 */
 	public InputParameters(AbstractOperation<?, ?> abstractOperation, String commandPrefixFile) {
 		super(abstractOperation);
 		this.commandPrefixFile = commandPrefixFile;
-		inputProcessorFactory = new InputProcessorFactory() {
-
-			/**
-			 * @see org.fagu.fmv.ffmpeg.operation.InputProcessorFactory#create(org.fagu.fmv.ffmpeg.operation.InputParameters,
-			 *      org.fagu.fmv.ffmpeg.operation.MediaInput, int, org.fagu.fmv.ffmpeg.require.Require)
-			 */
-			@Override
-			public InputProcessor create(InputParameters inputParameters, MediaInput input, int index, Require require) {
-				return new InputProcessor(inputParameters, input, index, require);
-			}
-		};
+		inputProcessorFactory = InputProcessor::new;
 	}
 
-	/**
-	 * @param input
-	 * @return
-	 */
 	public InputProcessor addInput(MediaInput input) {
 		InputProcessor inputProcessor = inputProcessorFactory.create(this, input, operation.countIOEntity(InputProcessor.class), operation.require());
 		add(input, inputProcessor);
@@ -72,25 +49,16 @@ public class InputParameters extends IOParameters {
 		return inputProcessor;
 	}
 
-	/**
-	 * @param inputParameters
-	 */
 	public void addAll(InputParameters inputParameters) {
 		super.addAll(inputParameters);
 	}
 
-	/**
-	 * @param inputProcessorFactory
-	 */
 	public void setInputProcessorFactory(InputProcessorFactory inputProcessorFactory) {
 		this.inputProcessorFactory = Objects.requireNonNull(inputProcessorFactory);
 	}
 
 	// *****************************************************
 
-	/**
-	 * @return
-	 */
 	@Override
 	protected String getCommandPrefixFile() {
 		return commandPrefixFile;

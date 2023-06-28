@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.operation;
  * #L%
  */
 
-
 import java.util.function.Predicate;
 
 
@@ -29,14 +28,8 @@ import java.util.function.Predicate;
  */
 public interface ParsedLibLog extends LibLog {
 
-	/**
-	 * @return
-	 */
 	String name();
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.LibLog#getLibLogFilter()
-	 */
 	@Override
 	default Predicate<String> getLibLogFilter() {
 		String prefix = "Parsed_" + name() + '_';

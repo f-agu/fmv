@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.flags;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.format.IO;
 
 
@@ -71,11 +70,6 @@ public class ErrDetect extends Flags<ErrDetect> {
 	 */
 	public static final ErrDetect AGGRESSIVE = new ErrDetect(7, "aggressive", IO.INPUT);
 
-	/**
-	 * @param index
-	 * @param flag
-	 * @param io
-	 */
 	protected ErrDetect(int index, String flag, IO io) {
 		super(ErrDetect.class, index, flag, io);
 	}

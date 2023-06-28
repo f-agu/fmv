@@ -66,25 +66,14 @@ public class Blend extends AbstractFilter {
 		XOR
 	}
 
-	/**
-	 * 
-	 */
 	protected Blend() {
 		super("blend");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Blend build() {
 		return new Blend();
 	}
 
-	/**
-	 * @param startTime
-	 * @param fadeDuration
-	 * @return
-	 */
 	public Blend exprFade(Time startTime, Duration fadeDuration) {
 		// 1.1 : startTime
 		// 2.5 : endTime
@@ -101,45 +90,26 @@ public class Blend extends AbstractFilter {
 		return expr(expr.toString());
 	}
 
-	/**
-	 * @param mode
-	 * @return
-	 */
 	public Blend mode(Mode mode) {
 		parameter("all_mode", mode.name().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @param repeat
-	 * @return
-	 */
 	public Blend repeatLast(boolean repeat) {
 		parameter("repeatlast", repeat ? "1" : "0");
 		return this;
 	}
 
-	/**
-	 * @param d
-	 * @return
-	 */
 	public Blend opacity(double d) {
 		parameter("all_opacity", Double.toString(d));
 		return this;
 	}
 
-	/**
-	 * @param expr
-	 * @return
-	 */
 	public Blend expr(String expr) {
 		parameter("all_expr", "'" + expr + "'");
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

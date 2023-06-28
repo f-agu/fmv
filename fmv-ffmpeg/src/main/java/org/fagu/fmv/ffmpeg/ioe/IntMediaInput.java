@@ -33,25 +33,16 @@ public class IntMediaInput extends AbstractIOEntity<IntMediaInput> implements Me
 
 	private final int i;
 
-	/**
-	 * @param i
-	 */
 	public IntMediaInput(int i) {
 		super(Integer.toString(i));
 		this.i = i;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public Optional<Duration> getDuration() {
 		return Optional.empty();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.ioe.AbstractIOEntity#toString()
-	 */
 	@Override
 	public String toString() {
 		return Integer.toString(i);

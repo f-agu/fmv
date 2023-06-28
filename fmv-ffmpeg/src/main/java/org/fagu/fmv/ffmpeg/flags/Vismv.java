@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.flags;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.format.IO;
 
 
@@ -46,11 +45,6 @@ public class Vismv extends Flags<Vismv> {
 	 */
 	public static final Vismv BB = new Vismv(2, "bb", IO.INPUT);
 
-	/**
-	 * @param index
-	 * @param flag
-	 * @param io
-	 */
 	protected Vismv(int index, String flag, IO io) {
 		super(Vismv.class, index, flag, io);
 	}

@@ -29,12 +29,5 @@ import org.fagu.fmv.ffmpeg.require.Require;
 @FunctionalInterface
 public interface InputProcessorFactory {
 
-	/**
-	 * @param inputParameters
-	 * @param input
-	 * @param index
-	 * @param require
-	 * @return
-	 */
 	InputProcessor create(InputParameters inputParameters, MediaInput input, int index, Require require);
 }

@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -71,9 +70,6 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 
 	private final List<LibLog> libLogs;
 
-	/**
-	 *
-	 */
 	protected AbstractOperation() {
 		filters = new ArrayList<>();
 		rawFilters = new LinkedHashSet<>();
@@ -83,10 +79,6 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 		libLogs = new ArrayList<>();
 	}
 
-	/**
-	 * @param filterNaming
-	 * @param require
-	 */
 	protected AbstractOperation(FilterNaming filterNaming, Require require) {
 		this();
 		this.filterNaming = filterNaming;
@@ -94,9 +86,6 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 		autoMap = AutoMaps.oneStreamByType(EnumSet.of(Type.VIDEO, Type.AUDIO), filterNaming);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#add(org.fagu.fmv.ffmpeg.operation.IOEntity[])
-	 */
 	@Override
 	public O add(IOEntity... entities) {
 		OperationListener operationListener = operationListener();
@@ -114,9 +103,6 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 		return getOThis();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#add(org.fagu.fmv.ffmpeg.operation.Parameter)
-	 */
 	@Override
 	public O add(Parameter parameter) {
 		OperationListener operationListener = operationListener();
@@ -135,9 +121,6 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 		return getOThis();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#add(Filter)
-	 */
 	@Override
 	public boolean add(Filter filter) {
 		if(rawFilters.contains(filter)) {
@@ -168,17 +151,14 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 			}
 		}
 
-		if(filter instanceof LibLog) {
-			libLogs.add((LibLog)filter);
+		if(filter instanceof LibLog ll) {
+			libLogs.add(ll);
 		}
 
 		operationListener.eventPostAddFilter(this, filter);
 		return true;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#addAll(java.util.Collection)
-	 */
 	@Override
 	public void addAll(Collection<Parameter> parameters) {
 		for(Parameter parameter : parameters) {
@@ -186,34 +166,22 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#removeParameter(java.lang.String)
-	 */
 	@Override
 	public void removeParameter(String name) {
 		getInputParameters().removeParameter(name);
 		getOutputParameters().removeParameter(name);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getGlobalParameters()
-	 */
 	@Override
 	public GlobalParameters getGlobalParameters() {
 		return globalParameters;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#containsGlobalParameter(java.lang.String)
-	 */
 	@Override
 	public boolean containsGlobalParameter(String parameter) {
 		return globalParameters.contains(parameter);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#toArguments()
-	 */
 	@Override
 	public List<String> toArguments() {
 		OperationListener operationListener = operationListener();
@@ -289,17 +257,11 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 		return arguments;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#containsFilterComplexs()
-	 */
 	@Override
 	public boolean containsFilterComplexs() {
 		return containsFilterComplex;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getFilterComplexs()
-	 */
 	@Override
 	public List<FilterComplex> getFilterComplexs() {
 		List<FilterComplex> list = new ArrayList<>();
@@ -309,49 +271,31 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 		return list;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getAutoMap()
-	 */
 	@Override
 	public AutoMap getAutoMap() {
 		return autoMap;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#setAutoMap(org.fagu.fmv.ffmpeg.operation.AutoMap)
-	 */
 	@Override
 	public void setAutoMap(AutoMap autoMap) {
 		this.autoMap = Objects.requireNonNull(autoMap);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#addListener(org.fagu.fmv.ffmpeg.operation.OperationListener)
-	 */
 	@Override
 	public void addListener(OperationListener operationListener) {
 		listeners.add(operationListener);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getListeners()
-	 */
 	@Override
 	public List<OperationListener> getListeners() {
 		return Collections.unmodifiableList(listeners);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getInputProcessorStream()
-	 */
 	@Override
 	public Stream<InputProcessor> getInputProcessorStream() {
 		return getProcessorStream(InputProcessor.class);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getOutputProcessorStream()
-	 */
 	@Override
 	public Stream<OutputProcessor> getOutputProcessorStream() {
 		return getProcessorStream(OutputProcessor.class);
@@ -369,9 +313,6 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 		return false;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getProcessorStream(java.lang.Class)
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends Processor<?>> Stream<T> getProcessorStream(Class<T> cls) {
@@ -381,68 +322,44 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 				.map(p -> (T)p);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getProcessor(org.fagu.fmv.ffmpeg.operation.IOEntity)
-	 */
 	@Override
 	public Processor<?> getProcessor(IOEntity ioEntity) {
 		return processorMap.get(ioEntity);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getProcessors()
-	 */
 	@Override
 	public Collection<Processor<?>> getProcessors() {
 		return Collections.unmodifiableCollection(processorMap.values());
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getFilterNaming()
-	 */
 	@Override
 	public FilterNaming getFilterNaming() {
 		return filterNaming;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getFilterGraph()
-	 */
 	@Override
 	public FilterGraph getFilterGraph() {
 		return FilterGraph.of(this);
 	}
 
-	/**
-	 * @return the executables
-	 */
 	@Override
 	public List<LibLog> getLibLogs() {
 		return Collections.unmodifiableList(libLogs);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#add(org.fagu.fmv.ffmpeg.operation.LibLog)
-	 */
 	@Override
 	public void add(LibLog libLog) {
 		libLogs.add(Objects.requireNonNull(libLog));
 	}
 
-	/**
-	 * @return
-	 */
 	public Require require() {
 		return require;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder(100);
-		buf.append("Operation[global=");
+		StringBuilder buf = new StringBuilder(100)
+				.append("Operation[global=");
 		if( ! globalParameters.isEmpty()) {
 			buf.append(globalParameters);
 		}
@@ -459,40 +376,26 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 		if( ! filters.isEmpty()) {
 			buf.append(";filter=").append(filters);
 		}
-		buf.append(']');
-		return buf.toString();
+		return buf.append(']')
+				.toString();
 	}
 
 	// ***************************************
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	protected O getOThis() {
 		return (O)this;
 	}
 
-	/**
-	 * @return
-	 */
 	public List<Filter> getFilters() {
 		return filters;
 	}
 
-	/**
-	 * @param ioEntity
-	 * @param processor
-	 */
 	protected Processor<?> addProcessor(IOEntity ioEntity, Processor<?> processor) {
 		processorMap.put(ioEntity, processor);
 		return processor;
 	}
 
-	/**
-	 * @param processorClass
-	 * @return
-	 */
 	protected int countIOEntity(Class<?> processorClass) {
 		int count = 0;
 		for(Processor<?> processor : processorMap.values()) {
@@ -505,9 +408,6 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 
 	// ***************************************
 
-	/**
-	 * @param filter
-	 */
 	private void addRawFilter(Filter filter) {
 		if( ! (filter instanceof FilterComplexBase)) {
 			require.filter(filter.name());
@@ -515,26 +415,17 @@ public abstract class AbstractOperation<R, O> implements Operation<R, O> {
 		rawFilters.add(filter);
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	private List<Filter> getFilterSimples(Type type) {
-		return filters.stream().filter(filter -> ! (filter instanceof FilterComplexBase) && filter.getTypes().contains(type)).collect(Collectors
-				.toList());
+		return filters.stream()
+				.filter(filter -> ! (filter instanceof FilterComplexBase) && filter.getTypes().contains(type))
+				.toList();
 	}
 
-	/**
-	 * @return
-	 */
 	private boolean containsMap() {
 		OutputParameters outputParameters = getOutputParameters();
 		return outputParameters.contains("-map");
 	}
 
-	/**
-	 * @return
-	 */
 	private OperationListener operationListener() {
 		return new Proxifier<>(OperationListener.class).addAll(listeners).proxify();
 	}

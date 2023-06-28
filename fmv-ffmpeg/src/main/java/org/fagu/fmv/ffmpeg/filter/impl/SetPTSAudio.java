@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -32,32 +31,20 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class SetPTSAudio extends SetPTS<SetPTSAudio> {
 
-	/**
-	 * @param name
-	 */
 	protected SetPTSAudio() {
 		super("asetpts");
 	}
 
-	/**
-	 * @return
-	 */
 	public static SetPTSAudio build() {
 		return new SetPTSAudio();
 	}
 
-	/**
-	 * @return
-	 */
 	public static SetPTSAudio createStartAtFirstFrame() {
 		SetPTSAudio setPTSAudio = new SetPTSAudio();
 		setPTSAudio.startAtFirstFrame();
 		return setPTSAudio;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);

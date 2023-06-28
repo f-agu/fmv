@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.flags;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.format.IO;
 
 
@@ -95,10 +94,6 @@ public class CPUFlags extends Flags<CPUFlags> {
 
 	public static final CPUFlags K8 = new CPUFlags("k8", null);
 
-	/**
-	 * @param name
-	 * @param io
-	 */
 	public CPUFlags(String name, IO io) {
 		super(CPUFlags.class, index++, name, io);
 	}

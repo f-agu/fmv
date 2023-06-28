@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,23 +32,14 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class HFlip extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected HFlip() {
 		super("hflip");
 	}
 
-	/**
-	 * @return
-	 */
 	public static HFlip build() {
 		return new HFlip();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

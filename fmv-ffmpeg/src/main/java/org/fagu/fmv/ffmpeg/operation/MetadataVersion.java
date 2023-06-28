@@ -55,19 +55,13 @@ public class MetadataVersion {
 		FORMAT_MAP.put("mp3", "comment");
 	}
 
-	/**
-	 *
-	 */
 	private MetadataVersion() {}
 
-	/**
-	 * @param outputProcessor
-	 */
 	public static void add(OutputProcessor outputProcessor) {
 		String tagName = null;
 		MediaOutput mediaOutput = outputProcessor.getMediaOutput();
-		if(mediaOutput instanceof FileMediaOutput) {
-			String extension = FilenameUtils.getExtension(((FileMediaOutput)mediaOutput).getFile().getName());
+		if(mediaOutput instanceof FileMediaOutput fmo) {
+			String extension = FilenameUtils.getExtension(fmo.getFile().getName());
 			tagName = tagForFormat(extension);
 		}
 
@@ -78,9 +72,6 @@ public class MetadataVersion {
 
 	// *********************************************
 
-	/**
-	 * @return
-	 */
 	private static String getVersion() {
 		// ImplementationVersion
 		String version = MetadataVersion.class.getPackage().getImplementationVersion();
@@ -108,14 +99,9 @@ public class MetadataVersion {
 				}
 			}
 		}
-
 		return "?";
 	}
 
-	/**
-	 * @param extension
-	 * @return
-	 */
 	private static String tagForFormat(String extension) {
 		if(extension == null) {
 			return null;

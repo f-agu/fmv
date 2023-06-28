@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.flags;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.format.IO;
 
 
@@ -36,11 +35,6 @@ public class SwrFlags extends Flags<SwrFlags> {
 	 */
 	public static final SwrFlags RES = new SwrFlags(0, "res", null);
 
-	/**
-	 * @param index
-	 * @param flag
-	 * @param io
-	 */
 	protected SwrFlags(int index, String flag, IO io) {
 		super(SwrFlags.class, index, flag, io);
 	}

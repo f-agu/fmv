@@ -28,16 +28,10 @@ import java.util.Collection;
  */
 public class GlobalParameters extends IOParameters {
 
-	/**
-	 * @param abstractOperation
-	 */
 	public GlobalParameters(AbstractOperation<?, ?> abstractOperation) {
 		super(abstractOperation);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.IOParameters#add(org.fagu.fmv.ffmpeg.operation.Parameter)
-	 */
 	@Override
 	public void add(Parameter parameter) {
 		if(parameter.isGlobal()) {
@@ -45,9 +39,6 @@ public class GlobalParameters extends IOParameters {
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.IOParameters#add(int, org.fagu.fmv.ffmpeg.operation.Parameter)
-	 */
 	@Override
 	public void add(int index, Parameter parameter) {
 		if(parameter.isGlobal()) {
@@ -55,9 +46,6 @@ public class GlobalParameters extends IOParameters {
 		}
 	}
 
-	/**
-	 * @param commands
-	 */
 	@Override
 	public void toArguments(Collection<String> commands) {
 		for(Parameter parameter : getParameters(null, null)) {
@@ -67,9 +55,6 @@ public class GlobalParameters extends IOParameters {
 
 	// *******************************************
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.IOParameters#getCommandPrefixFile()
-	 */
 	@Override
 	String getCommandPrefixFile() {
 		return null;

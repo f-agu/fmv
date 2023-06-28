@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -37,9 +36,6 @@ public class FrameRate extends AbstractFilter {
 
 	// ----------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public enum Round {
 		ZERO, // zero round towards 0
 		INF, // round away from 0
@@ -50,65 +46,38 @@ public class FrameRate extends AbstractFilter {
 
 	// ----------------------------------------
 
-	/**
-	 * 
-	 */
 	protected FrameRate() {
 		super("fps");
 	}
 
-	/**
-	 * @param fps
-	 */
 	protected FrameRate(FPS fps) {
 		this();
 		rate(fps);
 	}
 
-	/**
-	 * @return
-	 */
 	public static FrameRate build() {
 		return new FrameRate();
 	}
 
-	/**
-	 * @return
-	 */
 	public static FrameRate to(FPS fps) {
 		return new FrameRate(fps);
 	}
 
-	/**
-	 * @param fps
-	 * @return
-	 */
 	public FrameRate rate(FPS fps) {
 		parameter("fps", fps.toString());
 		return this;
 	}
 
-	/**
-	 * @param round
-	 * @return
-	 */
 	public FrameRate round(Round round) {
 		parameter("round", round.toString().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @param startTime
-	 * @return
-	 */
 	public FrameRate startTime(Time startTime) {
 		parameter("start_time", Double.toString(startTime.toSeconds()));
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

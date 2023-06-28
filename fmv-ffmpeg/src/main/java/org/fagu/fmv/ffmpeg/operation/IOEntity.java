@@ -26,10 +26,6 @@ package org.fagu.fmv.ffmpeg.operation;
 @FunctionalInterface
 public interface IOEntity {
 
-	/**
-	 * @param processor
-	 * @param ioEntity
-	 */
 	void eventAdded(Processor<?> processor, IOEntity ioEntity);
 
 }

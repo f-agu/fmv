@@ -28,49 +28,22 @@ import org.fagu.fmv.utils.time.Time;
  */
 public interface Progress {
 
-	/**
-	 * @return
-	 */
 	int getFrame();
 
-	/**
-	 * @return
-	 */
 	int getFps();
 
-	/**
-	 * @return
-	 */
 	int getQ();
 
-	/**
-	 * @return
-	 */
 	int getSizeKb();
 
-	/**
-	 * @return
-	 */
 	Time getTime();
 
-	/**
-	 * @return
-	 */
 	Double getBitRateKb();
 
-	/**
-	 * @return
-	 */
 	Integer getDup();
 
-	/**
-	 * @return
-	 */
 	Integer getDrop();
 
-	/**
-	 * @return
-	 */
 	Float getSpeed();
 
 }

@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -32,39 +31,24 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class TrimAudio extends Trim<TrimAudio> {
 
-	/**
-	 * @param name
-	 */
 	protected TrimAudio() {
 		super("atrim");
 	}
 
-	/**
-	 * @return
-	 */
 	public static TrimAudio build() {
 		return new TrimAudio();
 	}
 
-	/**
-	 * @param number
-	 */
 	public TrimAudio startSample(int number) {
 		parameter("start_sample", Integer.toString(number));
 		return this;
 	}
 
-	/**
-	 * @param number
-	 */
 	public TrimAudio endSample(int number) {
 		parameter("end_sample", Integer.toString(number));
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);

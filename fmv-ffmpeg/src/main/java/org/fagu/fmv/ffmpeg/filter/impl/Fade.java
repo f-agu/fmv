@@ -37,19 +37,10 @@ import org.fagu.fmv.utils.time.Time;
  */
 public class Fade extends FilterComplexCombined {
 
-	/**
-	 * @param fadeType
-	 * @param filterComplexs
-	 */
 	private Fade(FadeType fadeType, List<FilterComplex> filterComplexs) {
 		super("fade-" + fadeType.name().toLowerCase(), filterComplexs);
 	}
 
-	/**
-	 * @param fadeType
-	 * @param startTime
-	 * @param duration
-	 */
 	public static Fade create(FadeType fadeType, Time startTime, Duration duration) {
 		List<FilterComplex> filterComplexs = new ArrayList<>(2);
 		filterComplexs.add(FilterComplex.create(FadeVideo.with(fadeType).startTime(startTime).duration(duration)));
@@ -57,27 +48,14 @@ public class Fade extends FilterComplexCombined {
 		return new Fade(fadeType, filterComplexs);
 	}
 
-	/**
-	 * @param startTime
-	 * @param duration
-	 * @return
-	 */
 	public static Fade in(Time startTime, Duration duration) {
 		return create(FadeType.IN, startTime, duration);
 	}
 
-	/**
-	 * @param startTime
-	 * @param duration
-	 * @return
-	 */
 	public static Fade out(Time startTime, Duration duration) {
 		return create(FadeType.OUT, startTime, duration);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return EnumSet.of(Type.AUDIO, Type.VIDEO);

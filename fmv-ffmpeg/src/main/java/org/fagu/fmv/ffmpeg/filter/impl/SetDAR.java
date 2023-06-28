@@ -20,22 +20,15 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 /**
  * @author f.agu
  */
 public class SetDAR extends SetAR<SetDAR> {
 
-	/**
-	 * 
-	 */
 	protected SetDAR() {
 		super("setdar");
 	}
 
-	/**
-	 * @return
-	 */
 	public static SetDAR build() {
 		return new SetDAR();
 	}

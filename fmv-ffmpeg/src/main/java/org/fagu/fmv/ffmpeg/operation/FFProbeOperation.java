@@ -2,7 +2,6 @@ package org.fagu.fmv.ffmpeg.operation;
 
 import org.fagu.fmv.ffmpeg.soft.FFProbeSoftProvider;
 
-
 /*
  * #%L
  * fmv-ffmpeg
@@ -23,21 +22,16 @@ import org.fagu.fmv.ffmpeg.soft.FFProbeSoftProvider;
  * #L%
  */
 
+
 /**
  * @author f.agu
  */
 public abstract class FFProbeOperation<R> extends AbstractIOOperation<R, FFProbeOperation<R>> {
 
-	/**
-	 * @param entitie
-	 */
 	protected FFProbeOperation() {
 		super(null, null);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getFFName()
-	 */
 	@Override
 	public String getFFName() {
 		return FFProbeSoftProvider.NAME;

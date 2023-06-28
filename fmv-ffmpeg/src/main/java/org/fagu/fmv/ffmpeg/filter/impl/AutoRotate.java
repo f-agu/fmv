@@ -99,10 +99,6 @@ public class AutoRotate extends FilterCombined {
 	}
 	// *******************************************
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterCombined#beforeAddAround(org.fagu.fmv.ffmpeg.operation.Operation,
-	 *      org.fagu.fmv.ffmpeg.filter.FilterNaming)
-	 */
 	@Override
 	protected void beforeAddAround(Operation<?, ?> operation, FilterNaming filterNaming) {
 		super.beforeAddAround(operation, filterNaming);

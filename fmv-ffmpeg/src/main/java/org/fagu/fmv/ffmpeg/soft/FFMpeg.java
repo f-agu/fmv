@@ -28,16 +28,10 @@ import org.fagu.fmv.soft.Soft;
  */
 public class FFMpeg {
 
-	/**
-	 * 
-	 */
 	private FFMpeg() {
 		throw new AssertionError("No instances for you!");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Soft search() {
 		return Soft.search(new FFMpegSoftProvider());
 	}

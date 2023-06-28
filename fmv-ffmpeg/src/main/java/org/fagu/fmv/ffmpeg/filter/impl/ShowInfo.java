@@ -71,10 +71,6 @@ public class ShowInfo extends AbstractFilter implements LibLog {
 
 		private PictureType pictureType;
 
-		/**
-		 * @param line
-		 * @return
-		 */
 		static Info parse(String line) {
 			Info info = new Info();
 			String[] split = line.split(":");
@@ -118,95 +114,59 @@ public class ShowInfo extends AbstractFilter implements LibLog {
 			return info;
 		}
 
-		/**
-		 * @return
-		 */
 		boolean isComplete() {
 			return frameNumber >= 0 && ptsTime != null && pts > 0 && position > 0 && pixelFormat != null && sar != null && size != null
 					&& interlace != null && pictureType != null;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getFrameNumber() {
 			return frameNumber;
 		}
 
-		/**
-		 * @return
-		 */
 		public Time getPtsTime() {
 			return ptsTime;
 		}
 
-		/**
-		 * @return
-		 */
 		public long getPts() {
 			return pts;
 		}
 
-		/**
-		 * @return
-		 */
 		public long getPosition() {
 			return position;
 		}
 
-		/**
-		 * @return
-		 */
 		public PixelFormat getPixelFormat() {
 			return pixelFormat;
 		}
 
-		/**
-		 * @return
-		 */
 		public Ratio getSar() {
 			return sar;
 		}
 
-		/**
-		 * @return
-		 */
 		public Size getSize() {
 			return size;
 		}
 
-		/**
-		 * @return
-		 */
 		public Interlace getInterlace() {
 			return interlace;
 		}
 
-		/**
-		 * @return
-		 */
 		public boolean isFrameKey() {
 			return isFrameKey;
 		}
 
-		/**
-		 * @return
-		 */
 		public PictureType getPictureType() {
 			return pictureType;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
-			StringBuilder buf = new StringBuilder(150);
-			buf.append("n:").append(frameNumber).append(" pts:").append(pts).append(" pts_time:").append(ptsTime);
-			buf.append(" pos:").append(position).append(" fmt:").append(pixelFormat.getName()).append(" sar:").append(sar);
-			buf.append(" s:").append(size).append(" i:").append(interlace.name().charAt(0)).append(" iskey:").append(isFrameKey ? '1' : '0');
-			buf.append(" type:").append(pictureType.name().charAt(0));
-			return buf.toString();
+			return new StringBuilder(150)
+					.append("n:").append(frameNumber).append(" pts:").append(pts).append(" pts_time:").append(ptsTime)
+					.append(" pos:").append(position).append(" fmt:").append(pixelFormat.getName()).append(" sar:").append(sar)
+					.append(" s:").append(size).append(" i:").append(interlace.name().charAt(0)).append(" iskey:").append(isFrameKey ? '1' : '0')
+					.append(" type:").append(pictureType.name().charAt(0))
+					.toString();
 		}
 
 	}
@@ -217,6 +177,7 @@ public class ShowInfo extends AbstractFilter implements LibLog {
 	 * @author f.agu
 	 */
 	public enum Interlace {
+
 		/**
 		 * progressive
 		 */
@@ -254,6 +215,7 @@ public class ShowInfo extends AbstractFilter implements LibLog {
 	 * @author f.agu
 	 */
 	public enum PictureType {
+
 		IFRAME, PFRAME, BFRAME, UNKNOW;
 
 		/**

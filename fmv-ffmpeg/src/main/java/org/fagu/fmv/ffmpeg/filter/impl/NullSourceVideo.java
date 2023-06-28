@@ -31,23 +31,15 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class NullSourceVideo extends SrcVideo<NullSourceVideo> {
 
-	/**
-	 * 
-	 */
 	protected NullSourceVideo() {
 		super("nullsrc");
 	}
 
-	/**
-	 * @return
-	 */
 	public static NullSourceVideo build() {
 		return new NullSourceVideo();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
+	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);
 	}

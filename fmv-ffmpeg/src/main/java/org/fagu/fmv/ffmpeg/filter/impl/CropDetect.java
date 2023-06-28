@@ -35,17 +35,11 @@ public class CropDetect extends AbstractFilter implements ParsedLibLog {
 
 	private final CropDetection cropDetection;
 
-	/**
-	 *
-	 */
 	protected CropDetect() {
 		super("cropdetect");
 		cropDetection = new CropDetection();
 	}
 
-	/**
-	 * @return
-	 */
 	public static CropDetect build() {
 		return new CropDetect();
 	}
@@ -120,25 +114,16 @@ public class CropDetect extends AbstractFilter implements ParsedLibLog {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.LibLog#log(java.lang.String, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public void log(String title, String somethings, String log) {
 		cropDetection.add(log);
 	}
 
-	/**
-	 * @return
-	 */
 	public CropDetection getCropSizeDetected() {
 		return cropDetection;
 	}

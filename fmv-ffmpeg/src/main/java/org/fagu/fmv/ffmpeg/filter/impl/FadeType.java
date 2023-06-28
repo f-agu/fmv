@@ -20,10 +20,10 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 /**
  * @author f.agu
  */
 public enum FadeType {
-	IN, OUT
+	IN,
+	OUT
 }

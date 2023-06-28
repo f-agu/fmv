@@ -43,33 +43,20 @@ public class LibLogReadLine implements ReadLine {
 
 	private MapList<Predicate<String>, LibLog> libLogMap;
 
-	/**
-	 *
-	 */
 	public LibLogReadLine() {
 		libLogMap = MultiValueMaps.hashMapArrayList();
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isEmpty() {
 		return libLogMap.isEmpty();
 	}
 
-	/**
-	 * @param filter
-	 * @param libLog
-	 */
 	public void add(Predicate<String> filter, LibLog libLog) {
 		Objects.requireNonNull(filter);
 		Objects.requireNonNull(libLog);
 		libLogMap.add(filter, libLog);
 	}
 
-	/**
-	 * @see org.fagu.fmv.utils.exec.ReadLine#read(java.lang.String)
-	 */
 	@Override
 	public void read(String line) {
 		if(libLogMap.isEmpty()) {
@@ -91,9 +78,6 @@ public class LibLogReadLine implements ReadLine {
 		}
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Lib";

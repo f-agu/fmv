@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -35,55 +34,32 @@ import org.fagu.fmv.ffmpeg.utils.ChannelLayout;
  */
 public class AudioModifier extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected AudioModifier() {
 		super("aeval");
 	}
 
-	/**
-	 * @return
-	 */
 	public static AudioModifier build() {
 		return new AudioModifier();
 	}
 
-	/**
-	 * @return
-	 */
 	public AudioModifier halfVolume() {
 		return expr("val(ch)/2");
 	}
 
-	/**
-	 * @return
-	 */
 	public AudioModifier invertPhase() {
 		return expr("-val(ch)");
 	}
 
-	/**
-	 * @param exprs
-	 * @return
-	 */
 	public AudioModifier expr(String... exprs) {
 		parameter("exprs", "'" + StringUtils.join(exprs, '|') + "'");
 		return this;
 	}
 
-	/**
-	 * @param channelLayout
-	 * @return
-	 */
 	public AudioModifier channelLayout(ChannelLayout channelLayout) {
 		parameter("c", channelLayout.toString());
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.AbstractFilter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);

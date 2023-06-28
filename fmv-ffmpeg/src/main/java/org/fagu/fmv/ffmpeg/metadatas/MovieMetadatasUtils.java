@@ -33,15 +33,8 @@ import org.fagu.fmv.utils.time.Duration;
  */
 public class MovieMetadatasUtils {
 
-	/**
-	 * 
-	 */
 	private MovieMetadatasUtils() {}
 
-	/**
-	 * @param movieMetadatas
-	 * @return
-	 */
 	public static Optional<Duration> getDuration(MovieMetadatas movieMetadatas) {
 		VideoStream videoStream = movieMetadatas.getVideoStream();
 		if(videoStream != null) {
@@ -54,10 +47,6 @@ public class MovieMetadatasUtils {
 		return Optional.empty();
 	}
 
-	/**
-	 * @param movieMetadatas
-	 * @return
-	 */
 	public static Set<Type> getTypes(MovieMetadatas movieMetadatas) {
 		Set<Type> types = new HashSet<>(8);
 		for(Type type : Type.values()) {

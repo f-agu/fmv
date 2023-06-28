@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -32,23 +31,14 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class SplitVideo extends Split {
 
-	/**
-	 * 
-	 */
 	protected SplitVideo() {
 		super("split");
 	}
 
-	/**
-	 * @return
-	 */
 	public static SplitVideo build() {
 		return new SplitVideo();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.AbstractFilter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

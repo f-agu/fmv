@@ -35,47 +35,29 @@ public class VolumeDetect extends AbstractFilter implements ParsedLibLog {
 
 	private final VolumeDetection volumeDetectReadLine;
 
-	/**
-	 *
-	 */
 	protected VolumeDetect() {
 		super("volumedetect");
 		volumeDetectReadLine = new VolumeDetection();
 	}
 
-	/**
-	 * @return
-	 */
 	public static VolumeDetect build() {
 		return new VolumeDetect();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.LibLog#log(java.lang.String, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public void log(String title, String somethings, String log) {
 		volumeDetectReadLine.add(log);
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isDetected() {
 		return volumeDetectReadLine.isDetected();
 	}
 
-	/**
-	 * @return
-	 */
 	public VolumeDetected getDetected() {
 		return volumeDetectReadLine.getDetected();
 	}

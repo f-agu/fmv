@@ -63,17 +63,11 @@ public class ByFrame extends By {
 		this.numberOfFrames = builder.numberOfFrames;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public IntSupplier progressInPercent() {
 		return () -> 100 * progress.getFrame() / numberOfFrames;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public Part etaPart() {
 		long startTime = System.currentTimeMillis();

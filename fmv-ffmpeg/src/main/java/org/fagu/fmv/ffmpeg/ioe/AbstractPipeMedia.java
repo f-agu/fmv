@@ -27,9 +27,6 @@ public class AbstractPipeMedia<P extends AbstractPipeMedia<?>> extends AbstractI
 
 	private final Pipe pipe;
 
-	/**
-	 * @param pipe
-	 */
 	public AbstractPipeMedia(Pipe pipe) {
 		super(pipe.toCode());
 		this.pipe = pipe;
@@ -48,25 +45,17 @@ public class AbstractPipeMedia<P extends AbstractPipeMedia<?>> extends AbstractI
 		return getThis();
 	}
 
-	/**
-	 * @return
-	 */
 	public Pipe getPipe() {
 		return pipe;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
 	public String toString() {
 		return "pipe:" + pipe.ordinal();
 	}
 
 	// ******************************************
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	private P getThis() {
 		return (P)this;

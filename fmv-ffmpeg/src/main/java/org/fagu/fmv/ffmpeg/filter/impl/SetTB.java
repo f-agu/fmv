@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.filter.AbstractFilter;
 
 
@@ -29,9 +28,6 @@ import org.fagu.fmv.ffmpeg.filter.AbstractFilter;
  */
 public abstract class SetTB<T> extends AbstractFilter {
 
-	/**
-	 * @param name
-	 */
 	protected SetTB(String name) {
 		super(name);
 	}
@@ -53,9 +49,6 @@ public abstract class SetTB<T> extends AbstractFilter {
 
 	// **********************************************
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	private T getThis() {
 		return (T)this;

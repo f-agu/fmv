@@ -50,9 +50,6 @@ public class FFMPEGProgressReadLine implements ProgressReadLine {
 
 	private Float speed;
 
-	/**
-	 * @see org.fagu.fmv.utils.exec.ReadLine#read(java.lang.String)
-	 */
 	@Override
 	public void read(String line) {
 		StringTokenizer tokenizer = new StringTokenizer(line, " \n\r\t=");
@@ -62,6 +59,8 @@ public class FFMPEGProgressReadLine implements ProgressReadLine {
 				break;
 			}
 			// frame= 46 fps=0.0 q=0.0 size= 0kB time=00:00:01.56 bitrate= 0.2kbits/s dup=1 drop=0
+			// frame= 212 fps= 88 q=-1.0 Lsize= 1158kB time=00:00:01.74 bitrate=5445.7kbits/s dup=160 drop=0
+			// speed=0.725x
 			String value = tokenizer.nextToken();
 			if("frame".equals(next)) {
 				frame = NumberUtils.toInt(value);
@@ -69,7 +68,7 @@ public class FFMPEGProgressReadLine implements ProgressReadLine {
 				fps = (int)NumberUtils.toFloat(value);
 			} else if("q".equals(next)) {
 				q = (int)NumberUtils.toFloat(value);
-			} else if("size".equals(next)) {
+			} else if("size".equals(next) || "Lsize".equals(next)) {
 				sizeKb = NumberUtils.toInt(StringUtils.substringBefore(value, "k"));
 			} else if("time".equals(next)) {
 				try {

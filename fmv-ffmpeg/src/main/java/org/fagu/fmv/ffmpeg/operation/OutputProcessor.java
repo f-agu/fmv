@@ -58,13 +58,6 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 
 	private Map map;
 
-	/**
-	 * @param outputParameters
-	 * @param output
-	 * @param filterNaming
-	 * @param index
-	 * @param require
-	 */
 	protected OutputProcessor(OutputParameters outputParameters, MediaOutput output, FilterNaming filterNaming, int index, Require require) {
 		super(outputParameters, output, index, require);
 		this.outputParameters = outputParameters;
@@ -74,42 +67,24 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		MetadataVersion.add(this);
 	}
 
-	/**
-	 * @return
-	 */
 	public MediaOutput getMediaOutput() {
 		return output;
 	}
 
-	/**
-	 * @return
-	 */
 	public OutputParameters getOutputParameters() {
 		return outputParameters;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Processor#codec(org.fagu.fmv.ffmpeg.operation.Type, java.lang.String)
-	 */
 	@Override
 	public OutputProcessor codec(Type type, String codec) {
 		require().encoder(codec);
 		return super.codec(type, codec);
 	}
 
-	/**
-	 * @param videoCodec
-	 * @return
-	 */
 	public OutputProcessor videoCodecCopy() {
 		return videoCodec("copy");
 	}
 
-	/**
-	 * @param type
-	 * @param rate
-	 * @return
-	 */
 	public OutputProcessor bitRate(Type type, String rate) {
 		outputParameters.add(Parameter.before(output, Type.concat("-b", type), rate));
 		return this;
@@ -131,10 +106,6 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return add(Parameter.before(output, "-dn"));
 	}
 
-	/**
-	 * @param rate
-	 * @return
-	 */
 	public OutputProcessor audioBitRate(int rate) {
 		if(rate <= 0) {
 			throw new IllegalArgumentException("Rate must be positive: " + rate);
@@ -142,35 +113,19 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return bitRate(Type.AUDIO, Integer.toString(rate));
 	}
 
-	/**
-	 * @param rate
-	 * @return
-	 */
 	public OutputProcessor audioBitRate(String rate) {
 		return bitRate(Type.AUDIO, rate);
 	}
 
-	/**
-	 * @param count
-	 * @return
-	 */
 	public OutputProcessor audioChannel(int count) {
 		outputParameters.add(Parameter.before(output, "-ac", Integer.toString(count)));
 		return this;
 	}
 
-	/**
-	 * @param frequency
-	 * @return
-	 */
 	public OutputProcessor audioSamplingFrequency(int frequency) {
 		return frameRate(Type.AUDIO, FrameRate.perSecond(frequency));
 	}
 
-	/**
-	 * @param frequency
-	 * @return
-	 */
 	public OutputProcessor videoRate(int frequency) {
 		return frameRate(Type.VIDEO, FrameRate.perSecond(frequency));
 	}
@@ -238,10 +193,6 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return this;
 	}
 
-	/**
-	 * @param scale
-	 * @return
-	 */
 	public OutputProcessor numberOfVideoFrameToRecord(int number) {
 		return numberOfFrameToRecord(Type.VIDEO, number);
 	}
@@ -257,26 +208,14 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return this;
 	}
 
-	/**
-	 * @param scale
-	 * @return
-	 */
 	public OutputProcessor qualityScale(int scale) {
 		return qualityScaleAudio(scale).qualityScaleVideo(scale);
 	}
 
-	/**
-	 * @param scale
-	 * @return
-	 */
 	public OutputProcessor qualityScaleAudio(int scale) {
 		return qualityScale(Type.AUDIO, scale);
 	}
 
-	/**
-	 * @param scale
-	 * @return
-	 */
 	public OutputProcessor qualityScaleVideo(int scale) {
 		return qualityScale(Type.VIDEO, scale);
 	}
@@ -299,47 +238,22 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return this;
 	}
 
-	/**
-	 * @param metadata
-	 * @return
-	 */
 	public OutputProcessor metadataStream(Type type, String key, String value) {
 		return metadataStream(type, - 1, key, value);
 	}
 
-	/**
-	 * @param type
-	 * @param streamIndex
-	 * @param key
-	 * @param value
-	 * @return
-	 */
 	public OutputProcessor metadataStream(Type type, int streamIndex, String key, String value) {
 		return metadata('s', type, streamIndex, key, value);
 	}
 
-	/**
-	 * @param key
-	 * @param value
-	 * @return
-	 */
 	public OutputProcessor metadataGlobal(String key, String value) {
 		return metadata('g', null, null, key, value);
 	}
 
-	/**
-	 * @param chapterIndex
-	 * @param key
-	 * @param value
-	 * @return
-	 */
 	public OutputProcessor metadataChapter(int chapterIndex, String key, String value) {
 		return metadata('c', null, chapterIndex, key, value);
 	}
 
-	/**
-	 * @return
-	 */
 	public OutputProcessor codecAutoSelectAAC() {
 		if(Encoders.AAC.exists()) {
 			try {
@@ -351,10 +265,6 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return this;
 	}
 
-	/**
-	 * @param scaler
-	 * @return
-	 */
 	public OutputProcessor scaler(Scaler scaler) {
 		if(this.scaler == null) {
 			this.scaler = scaler;
@@ -363,10 +273,6 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return this;
 	}
 
-	/**
-	 * @param resampler
-	 * @return
-	 */
 	public OutputProcessor resampler(Resampler resampler) {
 		if(this.resampler == null) {
 			this.resampler = resampler;
@@ -379,27 +285,14 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return add("-dash", "1");
 	}
 
-	/**
-	 * @return
-	 */
 	public OutputProcessor disableChapters() {
 		return mapChapters( - 1);
 	}
 
-	/**
-	 * @param type
-	 * @param bitStreamFilters
-	 * @return
-	 */
 	public OutputProcessor bitStream(Type type, BitStreamFilter... bitStreamFilters) {
 		return bitStream(type, Arrays.asList(bitStreamFilters));
 	}
 
-	/**
-	 * @param type
-	 * @param bitStreamFilters
-	 * @return
-	 */
 	public OutputProcessor bitStream(Type type, Collection<BitStreamFilter> bitStreamFilters) {
 		if(CollectionUtils.isNotEmpty(bitStreamFilters)) {
 			outputParameters.add(Parameter.before(output, "-bsf:" + type.code(), bitStreamFilters.stream().map(BitStreamFilter::getName).collect(
@@ -408,9 +301,6 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	public Map map() {
 		if(map == null) {
 			map = new Map(this, filterNaming);
@@ -418,31 +308,14 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 		return map;
 	}
 
-	/**
-	 * @param inputProcessor
-	 * @return
-	 * @throws IOException
-	 */
 	public OutputProcessor mapAllStreams(InputProcessor inputProcessor) throws IOException {
 		return mapStreams(stream -> true, inputProcessor);
 	}
 
-	/**
-	 * @param type
-	 * @param inputProcessor
-	 * @return
-	 * @throws IOException
-	 */
 	public OutputProcessor mapStreamsBy(Type type, InputProcessor inputProcessor) throws IOException {
 		return mapStreams(stream -> stream.is(type), inputProcessor);
 	}
 
-	/**
-	 * @param predicate
-	 * @param forInputProcessor
-	 * @return
-	 * @throws IOException
-	 */
 	public OutputProcessor mapStreams(Predicate<Stream> predicate, InputProcessor forInputProcessor) throws IOException {
 		Map myMap = map();
 		MovieMetadatas movieMetadatas = forInputProcessor.getMovieMetadatas();
@@ -456,23 +329,11 @@ public class OutputProcessor extends Processor<OutputProcessor> {
 
 	// *******************************************************
 
-	/**
-	 * @param outputFile
-	 * @return
-	 */
 	private OutputProcessor mapChapters(int inputFileIndex) {
 		outputParameters.add(Parameter.before(output, "map_chapters", Integer.toString(inputFileIndex)));
 		return this;
 	}
 
-	/**
-	 * @param perMetadata
-	 * @param type
-	 * @param streamIndex
-	 * @param key
-	 * @param value
-	 * @return
-	 */
 	private OutputProcessor metadata(char perMetadata, Type type, Integer streamIndex, String key, String value) {
 		StringBuilder buf = new StringBuilder();
 		buf.append("-metadata:").append(perMetadata);

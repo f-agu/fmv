@@ -35,16 +35,10 @@ import org.fagu.fmv.utils.media.Size;
  */
 public class Ebur128 extends AbstractFilter implements ParsedLibLog {
 
-	/**
-	 *
-	 */
 	protected Ebur128() {
 		super("ebur128");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Ebur128 build() {
 		return new Ebur128();
 	}
@@ -143,17 +137,11 @@ public class Ebur128 extends AbstractFilter implements ParsedLibLog {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.LibLog#log(java.lang.String, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public void log(String title, String somethings, String log) {
 		// NOTHING
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);

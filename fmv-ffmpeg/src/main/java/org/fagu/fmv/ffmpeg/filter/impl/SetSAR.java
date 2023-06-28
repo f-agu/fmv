@@ -20,37 +20,24 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 /**
  * @author f.agu
  */
 public class SetSAR extends SetAR<SetSAR> {
 
-	/**
-	 * 
-	 */
 	protected SetSAR() {
 		super("setsar");
 	}
 
-	/**
-	 * @param ratio
-	 */
 	protected SetSAR(String ratio) {
 		this();
 		ratio(ratio);
 	}
 
-	/**
-	 * @return
-	 */
 	public static SetSAR build() {
 		return new SetSAR();
 	}
 
-	/**
-	 * @return
-	 */
 	public static SetSAR toRatio(String ratio) {
 		return new SetSAR(ratio);
 	}

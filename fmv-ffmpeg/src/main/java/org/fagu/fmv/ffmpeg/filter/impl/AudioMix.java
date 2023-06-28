@@ -54,78 +54,45 @@ public class AudioMix extends FilterComplex {
 	 */
 	private final Map<FilterInput, Time> filterInputMap;
 
-	/**
-	 * 
-	 */
 	protected AudioMix() {
 		super("amix");
 		filterInputMap = new LinkedHashMap<>();
 	}
 
-	/**
-	 * @return
-	 */
 	public static AudioMix build() {
 		return new AudioMix();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterComplex#addInput(org.fagu.fmv.ffmpeg.filter.FilterInput,
-	 *      org.fagu.fmv.ffmpeg.operation.Type[])
-	 */
 	@Override
 	public FilterComplex addInput(FilterInput filterInput, Type... types) {
 		return addInput(filterInput, null, types);
 	}
 
-	/**
-	 * @param filterInput
-	 * @param startTime
-	 * @return
-	 */
 	public FilterComplex addInput(FilterInput filterInput, Time audioStart, Type... types) {
 		filterInputMap.put(filterInput, audioStart);
 		return super.addInput(filterInput, types);
 	}
 
-	/**
-	 * @param countInputs
-	 * @return
-	 */
 	public AudioMix inputs(int countInputs) {
 		parameter("inputs", Integer.toString(countInputs));
 		return this;
 	}
 
-	/**
-	 * @param mixAudioDuration
-	 * @return
-	 */
 	public AudioMix duration(MixAudioDuration mixAudioDuration) {
 		parameter("duration", mixAudioDuration.name().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @param duration
-	 * @return
-	 */
 	public AudioMix dropoutTransition(Duration duration) {
 		parameter("dropout_transition", Double.toString(duration.toSeconds()));
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#upgradeInputProcessor(org.fagu.fmv.ffmpeg.operation.InputProcessor)
-	 */
 	@Override
 	public void upgradeInputProcessor(InputProcessor inputProcessor) {
 		Time audioStart = filterInputMap.get(inputProcessor);
@@ -134,9 +101,6 @@ public class AudioMix extends FilterComplex {
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#toString()
-	 */
 	@Override
 	public String toString() {
 		if( ! containsParameter("inputs")) {

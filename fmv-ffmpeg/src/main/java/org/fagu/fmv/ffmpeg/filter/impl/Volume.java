@@ -67,24 +67,14 @@ public class Volume extends AbstractFilter {
 
 	// ------------------------------------------
 
-	/**
-	 *
-	 */
 	protected Volume() {
 		super("volume");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Volume build() {
 		return new Volume();
 	}
 
-	/**
-	 * @param volumeDetected
-	 * @return
-	 */
 	public Volume increaseToMax(VolumeDetected volumeDetected) {
 		float max = volumeDetected.getMax();
 		if(max >= 0) {
@@ -93,26 +83,15 @@ public class Volume extends AbstractFilter {
 		return expr(Float.toString( - max) + "dB");
 	}
 
-	/**
-	 * @return
-	 */
 	public Volume same() {
 		return expr("1");
 	}
 
-	/**
-	 * @param expr
-	 * @return
-	 */
 	public Volume expr(String expr) {
 		parameter("volume", "'" + expr + "'");
 		return this;
 	}
 
-	/**
-	 * @param factor
-	 * @return
-	 */
 	public Volume volume(double factor) {
 		if(factor < 0) {
 			throw new IllegalArgumentException("factor must be positive");
@@ -120,45 +99,26 @@ public class Volume extends AbstractFilter {
 		return expr(Double.toString(factor));
 	}
 
-	/**
-	 * @param precision
-	 * @return
-	 */
 	public Volume precision(Precision precision) {
 		parameter("precision", precision.name().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @param replayGain
-	 * @return
-	 */
 	public Volume replayGain(ReplayGain replayGain) {
 		parameter("replaygain", replayGain.name().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @param count
-	 * @return
-	 */
 	public Volume replayGainPreAmplification(double value) {
 		parameter("replaygain_preamp", Double.toString(value));
 		return this;
 	}
 
-	/**
-	 * @param eval
-	 * @return
-	 */
 	public Volume replayGain(Eval eval) {
 		parameter("eval", eval.name().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);

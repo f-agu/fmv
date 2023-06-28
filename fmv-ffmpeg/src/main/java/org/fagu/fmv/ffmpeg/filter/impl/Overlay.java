@@ -38,9 +38,6 @@ public class Overlay extends FilterComplex {
 
 	// ---------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public enum EOFAction {
 		/**
 		 * Repeat the last frame (the default)
@@ -58,161 +55,88 @@ public class Overlay extends FilterComplex {
 
 	// ---------------------------------------------
 
-	/**
-	 * 
-	 */
 	protected Overlay() {
 		super("overlay");
 	}
 
-	/**
-	 * @param filterInput1
-	 * @param filterInput2
-	 */
 	protected Overlay(FilterInput filterInput1, FilterInput filterInput2) {
 		this();
 		addInput(filterInput1);
 		addInput(filterInput2);
 	}
 
-	/**
-	 * @return
-	 */
 	public static Overlay build() {
 		return new Overlay();
 	}
 
-	/**
-	 * @param filterInput1
-	 * @param filterInput2
-	 * @return
-	 */
 	public static Overlay with(FilterInput filterInput1, FilterInput filterInput2) {
 		return new Overlay(filterInput1, filterInput2);
 	}
 
-	/**
-	 * @param x
-	 * @return
-	 */
 	public Overlay x(int x) {
 		return x(Integer.toString(x));
 	}
 
-	/**
-	 * @param x
-	 * @return
-	 */
 	public Overlay x(String x) {
 		parameter("x", x);
 		return this;
 	}
 
-	/**
-	 * @param y
-	 * @return
-	 */
 	public Overlay y(int y) {
 		return y(Integer.toString(y));
 	}
 
-	/**
-	 * @param x
-	 * @return
-	 */
 	public Overlay y(String y) {
 		parameter("y", y);
 		return this;
 	}
 
-	/**
-	 * @param x
-	 * @param y
-	 * @return
-	 */
 	public Overlay position(int x, int y) {
 		return x(x).y(y);
 	}
 
-	/**
-	 * @param x
-	 * @param y
-	 * @return
-	 */
 	public Overlay position(String x, String y) {
 		return x(x).y(y);
 	}
 
-	/**
-	 * @param shortest
-	 * @return
-	 */
 	public Overlay shortest(boolean shortest) {
 		parameter("shortest", Integer.toString(shortest ? 1 : 0));
 		return this;
 	}
 
-	/**
-	 * @param startSecond
-	 * @param speed
-	 * @return
-	 */
 	public Overlay scrollLeftToRight(float startSecond, float speed) {
-		StringBuilder buf = new StringBuilder(30);
-		buf.append("'if(gte(t,").append(startSecond).append("-w+(t-").append(startSecond);
-		buf.append(")*").append(speed).append(", NAN)'");
+		StringBuilder buf = new StringBuilder(30)
+				.append("'if(gte(t,").append(startSecond).append("-w+(t-").append(startSecond)
+				.append(")*").append(speed).append(", NAN)'");
 		return x(buf.toString());
 	}
 
-	/**
-	 * @param startSecond
-	 * @param speed
-	 * @return
-	 */
 	public Overlay scrollTopToBottom(float startSecond, float speed) {
-		StringBuilder buf = new StringBuilder(30);
-		buf.append("'if(gte(t,").append(startSecond).append("-h+(t-").append(startSecond);
-		buf.append(")*").append(speed).append(", NAN)'");
+		StringBuilder buf = new StringBuilder(30)
+				.append("'if(gte(t,").append(startSecond).append("-h+(t-").append(startSecond)
+				.append(")*").append(speed).append(", NAN)'");
 		return y(buf.toString());
 	}
 
-	/**
-	 * @return
-	 */
 	public Overlay positionMiddle() {
 		return x("(W-w)/2").y("(H-h)/2");
 	}
 
-	/**
-	 * @param eofAction
-	 * @return
-	 */
 	public Overlay eofAction(EOFAction eofAction) {
 		parameter("eof_action", eofAction.name().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @param mixAudioDuration
-	 * @return
-	 */
 	public Overlay duration(MixAudioDuration mixAudioDuration) {
 		parameter("duration", mixAudioDuration.name().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @param duration
-	 * @return
-	 */
 	public Overlay dropoutTransition(Duration duration) {
 		parameter("dropout_transition", Double.toString(duration.toSeconds()));
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Type.valuesSet(this);

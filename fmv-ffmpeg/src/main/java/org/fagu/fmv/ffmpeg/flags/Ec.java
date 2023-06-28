@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.flags;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.format.IO;
 
 
@@ -46,11 +45,6 @@ public class Ec extends Flags<Ec> {
 	 */
 	public static final Ec FAVOR_INTER = new Ec(2, "favor_inter", IO.INPUT);
 
-	/**
-	 * @param index
-	 * @param flag
-	 * @param io
-	 */
 	protected Ec(int index, String flag, IO io) {
 		super(Ec.class, index, flag, io);
 	}

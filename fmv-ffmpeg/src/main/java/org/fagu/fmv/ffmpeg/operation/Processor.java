@@ -153,10 +153,6 @@ public abstract class Processor<P extends Processor<?>> {
 		return getThis();
 	}
 
-	/**
-	 * @param format
-	 * @return
-	 */
 	public P format(String format) {
 		if(StringUtils.isNotBlank(format)) {
 			add(Parameter.before(ioEntity, "-f", format));
@@ -164,27 +160,14 @@ public abstract class Processor<P extends Processor<?>> {
 		return getThis();
 	}
 
-	/**
-	 * @param audioCodec
-	 * @return
-	 */
 	public P audioCodec(String audioCodec) {
 		return codec(Type.AUDIO, audioCodec);
 	}
 
-	/**
-	 * @param videoCodec
-	 * @return
-	 */
 	public P videoCodec(String videoCodec) {
 		return codec(Type.VIDEO, videoCodec);
 	}
 
-	/**
-	 * @param type
-	 * @param codec
-	 * @return
-	 */
 	public P codecCopy(Type type) {
 		return codec(type, "copy");
 	}

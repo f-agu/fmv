@@ -38,20 +38,18 @@ public class Lowpass extends AbstractFilter {
 	 * @author f.agu
 	 */
 	public enum WidthType {
-		HZ("h"), Q_FACTOR("q"), OCTAVE("o"), SLOPE("s");
+
+		HZ("h"),
+		Q_FACTOR("q"),
+		OCTAVE("o"),
+		SLOPE("s");
 
 		private final String code;
 
-		/**
-		 * @param code
-		 */
 		private WidthType(String code) {
 			this.code = code;
 		}
 
-		/**
-		 * @return the code
-		 */
 		public String getCode() {
 			return code;
 		}
@@ -59,24 +57,14 @@ public class Lowpass extends AbstractFilter {
 
 	// ------------------------------------------------------------
 
-	/**
-	 * 
-	 */
 	protected Lowpass() {
 		super("lowpass");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Lowpass build() {
 		return new Lowpass();
 	}
 
-	/**
-	 * @param freq
-	 * @return
-	 */
 	public Lowpass frequency(int freq) {
 		if(freq < 0) {
 			throw new IllegalArgumentException("frequency must be positive");
@@ -85,10 +73,6 @@ public class Lowpass extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @param count
-	 * @return
-	 */
 	public Lowpass poles(int count) {
 		if(count < 0) {
 			throw new IllegalArgumentException("frequency must be positive");
@@ -97,27 +81,16 @@ public class Lowpass extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @param widthType
-	 * @return
-	 */
 	public Lowpass widthType(WidthType widthType) {
 		parameter("width_type", widthType.getCode());
 		return this;
 	}
 
-	/**
-	 * @param value
-	 * @return
-	 */
 	public Lowpass bandwidth(double value) {
 		parameter("w", Double.toString(value));
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);

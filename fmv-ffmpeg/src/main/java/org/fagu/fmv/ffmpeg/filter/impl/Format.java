@@ -39,57 +39,32 @@ public class Format extends AbstractFilter {
 
 	private static final String CODE = "format";
 
-	/**
-	 * 
-	 */
 	protected Format() {
 		super(CODE);
 	}
 
-	/**
-	 * @param formats
-	 */
 	protected Format(PixelFormat... formats) {
 		super(CODE);
 		set(formats);
 	}
 
-	/**
-	 * @param formats
-	 */
 	public Format(Collection<PixelFormat> formats) {
 		super(CODE);
 		set(formats);
 	}
 
-	/**
-	 * @param formats
-	 * @return
-	 */
 	public static Format with(PixelFormat... formats) {
 		return new Format(formats);
 	}
 
-	/**
-	 * @param formats
-	 * @return
-	 */
 	public static Format with(Collection<PixelFormat> formats) {
 		return new Format(formats);
 	}
 
-	/**
-	 * @param formats
-	 * @return
-	 */
 	public Format set(PixelFormat... formats) {
 		return set(Arrays.asList(formats));
 	}
 
-	/**
-	 * @param formats
-	 * @return
-	 */
 	public Format set(Collection<PixelFormat> formats) {
 		if(formats.isEmpty()) {
 			throw new IllegalArgumentException();
@@ -98,9 +73,6 @@ public class Format extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);
@@ -108,24 +80,14 @@ public class Format extends AbstractFilter {
 
 	// *************************************************
 
-	/**
-	 * @param iterator
-	 * @return
-	 */
 	private Iterator<String> iterator(final Iterator<PixelFormat> iterator) {
 		return new Iterator<String>() {
 
-			/**
-			 * @see java.util.Iterator#next()
-			 */
 			@Override
 			public String next() {
 				return iterator.next().toString();
 			}
 
-			/**
-			 * @see java.util.Iterator#hasNext()
-			 */
 			@Override
 			public boolean hasNext() {
 				return iterator.hasNext();

@@ -42,14 +42,8 @@ import org.fagu.fmv.utils.collection.MultiValueMaps;
  */
 public class AutoMaps {
 
-	/**
-	 *
-	 */
 	private AutoMaps() {}
 
-	/**
-	 * @return
-	 */
 	public static AutoMap disable() {
 		return new AutoMap() {
 
@@ -65,10 +59,6 @@ public class AutoMaps {
 		};
 	}
 
-	/**
-	 * @param types
-	 * @return
-	 */
 	public static AutoMap oneStreamByType(Set<Type> types, FilterNaming filterNaming) {
 		return new AutoMap() {
 

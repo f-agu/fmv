@@ -37,9 +37,6 @@ import org.fagu.fmv.utils.media.Rotation;
  */
 public class Rotate extends FilterCombined {
 
-	/**
-	 * @param filters
-	 */
 	private Rotate(List<Filter> filters) {
 		super("rotate", filters);
 		if( ! filters.isEmpty()) {
@@ -47,10 +44,6 @@ public class Rotate extends FilterCombined {
 		}
 	}
 
-	/**
-	 * @param rotation
-	 * @return
-	 */
 	public static Rotate create(Rotation rotation) {
 		List<Filter> filters = new ArrayList<>(2);
 		if(rotation != null) {
@@ -70,9 +63,6 @@ public class Rotate extends FilterCombined {
 		return new Rotate(filters);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

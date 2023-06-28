@@ -42,7 +42,7 @@ public class Visitors {
 	public static Visitor<String> print(PrintStream printStream) {
 		return (inLabel, inFilters, filterComplex, outFilters, outLabel, depth) -> {
 			String indent = StringUtils.leftPad("", depth * 3);
-			System.out.println(indent + filterComplex + "  " + filterComplex.getTypes() + "  {" + inLabel + " ; " + outLabel + "}");
+			printStream.println(indent + filterComplex + "  " + filterComplex.getTypes() + "  {" + inLabel + " ; " + outLabel + "}");
 		};
 	}
 

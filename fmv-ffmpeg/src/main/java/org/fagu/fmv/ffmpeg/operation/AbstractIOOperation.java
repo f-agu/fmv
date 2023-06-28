@@ -34,67 +34,39 @@ public abstract class AbstractIOOperation<R, O> extends AbstractOperation<R, O> 
 
 	private final OutputParameters outputParameters;
 
-	/**
-	 * 
-	 */
 	protected AbstractIOOperation() {
 		inputParameters = new InputParameters(this);
 		outputParameters = new OutputParameters(this);
 	}
 
-	/**
-	 * @param filterNaming
-	 * @param require
-	 */
 	protected AbstractIOOperation(FilterNaming filterNaming, Require require) {
 		super(filterNaming, require);
 		inputParameters = new InputParameters(this);
 		outputParameters = new OutputParameters(this);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getInputParameters()
-	 */
 	@Override
 	public InputParameters getInputParameters() {
 		return inputParameters;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getOutputParameters()
-	 */
 	@Override
 	public OutputParameters getOutputParameters() {
 		return outputParameters;
 	}
 
-	/**
-	 * @return
-	 */
 	public O hideBanner() {
 		return addParameter("-hide_banner");
 	}
 
-	/**
-	 * @return
-	 */
 	public O logLevel(LogLevel logLevel) {
 		return addParameter("-loglevel", logLevel.name().toLowerCase());
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public O addParameter(String name) {
 		return add(Parameter.createGlobal(name));
 	}
 
-	/**
-	 * @param name
-	 * @param value
-	 * @return
-	 */
 	public O addParameter(String name, String value) {
 		return add(Parameter.createGlobal(name, value));
 	}

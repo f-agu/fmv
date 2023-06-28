@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,16 +32,10 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class Sab extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected Sab() {
 		super("sab");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Sab build() {
 		return new Sab();
 	}
@@ -215,9 +208,6 @@ public class Sab extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

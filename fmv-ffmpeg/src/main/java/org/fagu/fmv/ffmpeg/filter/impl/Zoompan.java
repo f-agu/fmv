@@ -35,16 +35,10 @@ import org.fagu.fmv.utils.media.Size;
  */
 public class Zoompan extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected Zoompan() {
 		super("zoompan");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Zoompan build() {
 		return new Zoompan();
 	}
@@ -60,11 +54,6 @@ public class Zoompan extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @param factor
-	 * @param durationInFrames
-	 * @return
-	 */
 	public Zoompan zoomInSmooth(int factor, int durationInFrames) {
 		if(durationInFrames <= 0) {
 			throw new IllegalArgumentException("durationInFrames must be at least 0: " + Integer.toString(durationInFrames));
@@ -98,30 +87,18 @@ public class Zoompan extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	public Zoompan left() {
 		return x("0");
 	}
 
-	/**
-	 * @return
-	 */
 	public Zoompan right() {
 		return x("iw");
 	}
 
-	/**
-	 * @return
-	 */
 	public Zoompan top() {
 		return y("0");
 	}
 
-	/**
-	 * @return
-	 */
 	public Zoompan bottom() {
 		return y("ih");
 	}
@@ -138,10 +115,6 @@ public class Zoompan extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @param countFrames
-	 * @return
-	 */
 	public Zoompan duration(int countFrames) {
 		if(countFrames <= 0) {
 			throw new IllegalArgumentException(Integer.toString(countFrames));
@@ -160,9 +133,6 @@ public class Zoompan extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

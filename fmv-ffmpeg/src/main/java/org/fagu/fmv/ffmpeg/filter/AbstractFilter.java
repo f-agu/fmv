@@ -71,10 +71,10 @@ public abstract class AbstractFilter extends Element<Filter> implements Filter {
 	@Override
 	public void upgrade(Operation<?, ?> operation) {
 		for(Processor<?> processor : operation.getProcessors()) {
-			if(processor instanceof InputProcessor) {
-				upgradeInputProcessor((InputProcessor)processor);
-			} else if(processor instanceof OutputProcessor) {
-				upgradeOutputProcessor((OutputProcessor)processor);
+			if(processor instanceof InputProcessor ip) {
+				upgradeInputProcessor(ip);
+			} else if(processor instanceof OutputProcessor op) {
+				upgradeOutputProcessor(op);
 			}
 		}
 	}
@@ -118,11 +118,10 @@ public abstract class AbstractFilter extends Element<Filter> implements Filter {
 
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder(32);
-		buf.append(name);
+		StringBuilder buf = new StringBuilder(32)
+				.append(name);
 		if( ! parameterMap.isEmpty()) {
 			buf.append('=');
-
 			Iterator<Entry<String, PseudoParam>> it = parameterMap.entrySet().iterator();
 			for(;;) {
 				Entry<String, PseudoParam> entry = it.next();
@@ -136,10 +135,10 @@ public abstract class AbstractFilter extends Element<Filter> implements Filter {
 				buf.append(':');
 			}
 		}
-
 		return buf.toString();
 	}
 
 	// **************************************************
+
 	protected void beforeAddAround(Operation<?, ?> operation, FilterNaming filterNaming) {}
 }

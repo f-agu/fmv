@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.filter.AbstractFilter;
 
 
@@ -53,25 +52,15 @@ import org.fagu.fmv.ffmpeg.filter.AbstractFilter;
  */
 public abstract class SetPTS<T> extends AbstractFilter {
 
-	/**
-	 * @param name
-	 */
 	protected SetPTS(String name) {
 		super(name);
 	}
 
-	/**
-	 * @return
-	 */
 	public T startAtFirstFrame() {
 		setMainParameter("PTS-STARTPTS");
 		return getThis();
 	}
 
-	/**
-	 * @param multiplyBy
-	 * @return
-	 */
 	public T speed(float multiplyBy) {
 		setMainParameter("1/" + multiplyBy + "*PTS");
 		return getThis();
@@ -79,9 +68,6 @@ public abstract class SetPTS<T> extends AbstractFilter {
 
 	// **********************************************
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	private T getThis() {
 		return (T)this;

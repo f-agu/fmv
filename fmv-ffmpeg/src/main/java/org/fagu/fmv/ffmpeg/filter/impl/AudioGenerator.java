@@ -42,101 +42,60 @@ public class AudioGenerator extends AbstractFilter implements MediaInput, Genera
 
 	private Duration duration;
 
-	/**
-	 * 
-	 */
 	protected AudioGenerator() {
 		super("aevalsrc");
 	}
 
-	/**
-	 * @return
-	 */
 	public static AudioGenerator build() {
 		return new AudioGenerator();
 	}
 
-	/**
-	 * 
-	 */
 	public AudioGenerator silence() {
 		expr("0");
 		return this;
 	}
 
-	/**
-	 * @param frequency
-	 */
 	public AudioGenerator sinOnechannel(int frequency) {
 		expr("sin(" + frequency + "*2*PI*t)");
 		return this;
 	}
 
-	/**
-	 * @param channel1Frequency
-	 * @param channel2Frequency
-	 * @return
-	 */
 	public AudioGenerator sinCosTwochannel(int channel1Frequency, int channel2Frequency) {
 		expr("sin(" + channel1Frequency + "*2*PI*t)", "cos(" + channel2Frequency + "*2*PI*t)");
 		return this;
 	}
 
-	/**
-	 * @param exprs
-	 * @return
-	 */
 	public AudioGenerator expr(String... exprs) {
 		parameter("exprs", "'" + StringUtils.join(exprs, '|') + "'");
 		return this;
 	}
 
-	/**
-	 * @param duration
-	 * @return
-	 */
 	public AudioGenerator duration(Duration duration) {
 		this.duration = duration;
 		parameter("d", Double.toString(duration.toSeconds()));
 		return this;
 	}
 
-	/**
-	 * @param rate
-	 * @return
-	 */
 	public AudioGenerator sampleRate(int rate) {
 		parameter("s", Integer.toString(rate));
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.IOEntity#eventAdded(org.fagu.fmv.ffmpeg.operation.Processor, IOEntity)
-	 */
 	@Override
 	public void eventAdded(Processor<?> processor, IOEntity ioEntity) {
 		// NOTHING
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.GeneratedSource#forInput()
-	 */
 	@Override
 	public MediaInput forInput() {
 		return new GeneratedSourceMediaInput(this);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.GeneratedSource#getDuration()
-	 */
 	@Override
 	public Optional<Duration> getDuration() {
 		return Optional.ofNullable(duration);

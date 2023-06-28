@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,16 +32,10 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class Smartblur extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected Smartblur() {
 		super("smartblur");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Smartblur build() {
 		return new Smartblur();
 	}
@@ -215,9 +208,6 @@ public class Smartblur extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

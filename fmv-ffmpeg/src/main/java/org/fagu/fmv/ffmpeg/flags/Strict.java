@@ -41,25 +41,15 @@ public enum Strict {
 
 	private final IO io;
 
-	/**
-	 * @param flag
-	 * @param io
-	 */
 	private Strict(String flag, IO io) {
 		this.flag = flag;
 		this.io = io;
 	}
 
-	/**
-	 * @return
-	 */
 	public String flag() {
 		return flag;
 	}
 
-	/**
-	 * @return
-	 */
 	public IO io() {
 		return io;
 	}

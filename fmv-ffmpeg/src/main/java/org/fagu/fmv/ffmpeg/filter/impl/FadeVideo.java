@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -36,55 +35,31 @@ import org.fagu.fmv.utils.time.Time;
  */
 public class FadeVideo extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected FadeVideo() {
 		super("fade");
 	}
 
-	/**
-	 * @return
-	 */
 	public static FadeVideo build() {
 		return new FadeVideo();
 	}
 
-	/**
-	 * @param fadeType
-	 * @return
-	 */
 	public static FadeVideo with(FadeType fadeType) {
 		return new FadeVideo().type(fadeType);
 	}
 
-	/**
-	 * 
-	 */
 	public static FadeVideo in() {
 		return with(FadeType.IN);
 	}
 
-	/**
-	 * 
-	 */
 	public static FadeVideo out() {
 		return with(FadeType.OUT);
 	}
 
-	/**
-	 * @param fadeType
-	 * @return
-	 */
 	public FadeVideo type(FadeType fadeType) {
 		parameter("t", fadeType.name().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @param startFrame
-	 * @return
-	 */
 	public FadeVideo startFrame(int startFrame) {
 		if(startFrame < 0) {
 			throw new IllegalArgumentException("startFrame must be positive");
@@ -94,10 +69,6 @@ public class FadeVideo extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @param countFrame
-	 * @return
-	 */
 	public FadeVideo countFrame(int countFrame) {
 		if(countFrame < 0) {
 			throw new IllegalArgumentException("countFrame must be positive");
@@ -107,47 +78,28 @@ public class FadeVideo extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @param startTime
-	 * @return
-	 */
 	public FadeVideo startTime(Time startTime) {
 		removeParameter("s");
 		parameter("st", Double.toString(startTime.toSeconds()));
 		return this;
 	}
 
-	/**
-	 * @param duration
-	 * @return
-	 */
 	public FadeVideo duration(Duration duration) {
 		removeParameter("n");
 		parameter("d", Double.toString(duration.toSeconds()));
 		return this;
 	}
 
-	/**
-	 * @param alphaChannel
-	 * @return
-	 */
 	public FadeVideo alpha(boolean alphaChannel) {
 		parameter("alpha", alphaChannel ? "1" : "0");
 		return this;
 	}
 
-	/**
-	 * @param color
-	 * @return
-	 */
 	public FadeVideo color(Color color) {
 		parameter("c", color.toString());
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

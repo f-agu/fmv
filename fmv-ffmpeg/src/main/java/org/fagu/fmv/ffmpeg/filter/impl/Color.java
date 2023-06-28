@@ -31,23 +31,14 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class Color extends SrcVideo<Color> {
 
-	/**
-	 * 
-	 */
 	protected Color() {
 		super("color");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Color build() {
 		return new Color();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

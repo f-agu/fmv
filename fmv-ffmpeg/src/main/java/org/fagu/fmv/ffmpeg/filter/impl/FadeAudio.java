@@ -36,10 +36,8 @@ public class FadeAudio extends AbstractFilter {
 
 	// -----------------------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public enum Curve {
+
 		LINEAR("tri"), //
 		QUARTER_OF_SINE_WAVE("qsin"), //
 		HALF_OF_SINE_WAVE("hsin"), //
@@ -53,16 +51,10 @@ public class FadeAudio extends AbstractFilter {
 
 		private final String value;
 
-		/**
-		 * @param value
-		 */
 		private Curve(String value) {
 			this.value = value;
 		}
 
-		/**
-		 * @return
-		 */
 		public String getValue() {
 			return value;
 		}
@@ -70,55 +62,31 @@ public class FadeAudio extends AbstractFilter {
 
 	// -----------------------------------------------------------
 
-	/**
-	 * 
-	 */
 	protected FadeAudio() {
 		super("afade");
 	}
 
-	/**
-	 * @return
-	 */
 	public static FadeAudio build() {
 		return new FadeAudio();
 	}
 
-	/**
-	 * @param fadeType
-	 * @return
-	 */
 	public static FadeAudio with(FadeType fadeType) {
 		return new FadeAudio().type(fadeType);
 	}
 
-	/**
-	 * 
-	 */
 	public static FadeAudio in() {
 		return with(FadeType.IN);
 	}
 
-	/**
-	 * 
-	 */
 	public static FadeAudio out() {
 		return with(FadeType.OUT);
 	}
 
-	/**
-	 * @param fadeType
-	 * @return
-	 */
 	public FadeAudio type(FadeType fadeType) {
 		parameter("t", fadeType.name().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @param startSample
-	 * @return
-	 */
 	public FadeAudio startSample(int startSample) {
 		if(startSample < 0) {
 			throw new IllegalArgumentException("startSample must be positive");
@@ -128,10 +96,6 @@ public class FadeAudio extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @param nbSamples
-	 * @return
-	 */
 	public FadeAudio numberSample(int nbSamples) {
 		if(nbSamples < 0) {
 			throw new IllegalArgumentException("nbSamples must be positive");
@@ -141,38 +105,23 @@ public class FadeAudio extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @param startTime
-	 * @return
-	 */
 	public FadeAudio startTime(Time startTime) {
 		removeParameter("s");
 		parameter("st", Double.toString(startTime.toSeconds()));
 		return this;
 	}
 
-	/**
-	 * @param duration
-	 * @return
-	 */
 	public FadeAudio duration(Duration duration) {
 		removeParameter("n");
 		parameter("d", Double.toString(duration.toSeconds()));
 		return this;
 	}
 
-	/**
-	 * @param curve
-	 * @return
-	 */
 	public FadeAudio curve(Curve curve) {
 		parameter("curve", curve.getValue());
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);

@@ -29,17 +29,10 @@ import org.fagu.fmv.ffmpeg.require.Require;
  */
 public class DefaultFFMPEGOperation<R> extends FFMPEGOperation<R> {
 
-	/**
-	 * @param builder
-	 * @param filterNaming
-	 */
 	public DefaultFFMPEGOperation(FilterNaming filterNaming, Require require) {
 		super(filterNaming, require);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getResult()
-	 */
 	@Override
 	public R getResult() {
 		return null;

@@ -45,16 +45,10 @@ class VolumeDetection {
 
 	private final SortedMap<Integer, Long> histogram;
 
-	/**
-	 *
-	 */
 	VolumeDetection() {
 		histogram = new TreeMap<>();
 	}
 
-	/**
-	 * @param log
-	 */
 	void add(String log) {
 		Matcher matcher = LOG_PATTERN.matcher(log);
 		if(matcher.matches()) {
@@ -83,16 +77,10 @@ class VolumeDetection {
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	boolean isDetected() {
 		return countSample != null && mean != null && max != null;
 	}
 
-	/**
-	 * @return
-	 */
 	VolumeDetected getDetected() {
 		if( ! isDetected()) {
 			throw new RuntimeException("not detected");
@@ -102,10 +90,6 @@ class VolumeDetection {
 
 	// ************************************************
 
-	/**
-	 * @param str
-	 * @return
-	 */
 	private static Long toLong(String str) {
 		if(str == null) {
 			return null;
@@ -117,10 +101,6 @@ class VolumeDetection {
 		}
 	}
 
-	/**
-	 * @param str
-	 * @return
-	 */
 	private static Float toFloat(String str) {
 		if(str == null) {
 			return null;

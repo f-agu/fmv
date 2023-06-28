@@ -42,12 +42,6 @@ public class VolumeDetected {
 
 	private final SortedMap<Integer, Long> histogram;
 
-	/**
-	 * @param countSample
-	 * @param mean
-	 * @param max
-	 * @param histogram
-	 */
 	VolumeDetected(long countSample, float mean, float max, SortedMap<Integer, Long> histogram) {
 		this.countSample = countSample;
 		this.mean = mean;
@@ -55,57 +49,37 @@ public class VolumeDetected {
 		this.histogram = Collections.unmodifiableSortedMap(histogram);
 	}
 
-	/**
-	 * @return
-	 */
 	public long countSample() {
 		return countSample;
 	}
 
-	/**
-	 * @return
-	 */
 	public float getMean() {
 		return mean;
 	}
 
-	/**
-	 * @return
-	 */
 	public float getMax() {
 		return max;
 	}
 
-	/**
-	 * @return
-	 */
 	public Volume toMaxVolume() {
 		return Volume.build().increaseToMax(this);
 	}
 
-	/**
-	 * @return
-	 */
 	public SortedMap<Integer, Long> getHistogram() {
 		return histogram;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder();
-		buf.append("count:").append(countSample).append(",mean:").append(mean).append(",max:").append(max);
-		buf.append(",histogram:[").append(histogram.entrySet().stream().map(e -> e.getKey().toString() + "=" + e.getValue()).collect(Collectors
-				.joining(";"))).append(']');
-		return buf.toString();
+		return new StringBuilder()
+				.append("count:").append(countSample).append(",mean:").append(mean).append(",max:").append(max)
+				.append(",histogram:[")
+				.append(histogram.entrySet().stream()
+						.map(e -> e.getKey().toString() + "=" + e.getValue())
+						.collect(Collectors.joining(";"))).append(']')
+				.toString();
 	}
 
-	/**
-	 * @param line
-	 * @return
-	 */
 	public static VolumeDetected parse(String line) {
 		Long countSample = null;
 		Float mean = null;

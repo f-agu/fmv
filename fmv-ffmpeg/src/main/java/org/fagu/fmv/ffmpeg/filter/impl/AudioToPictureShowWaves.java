@@ -39,6 +39,7 @@ public class AudioToPictureShowWaves extends AbstractFilter {
 	 * @author f.agu
 	 */
 	public enum Scale {
+
 		// linear
 		LIN("lin"),
 		// logarithmic
@@ -50,16 +51,10 @@ public class AudioToPictureShowWaves extends AbstractFilter {
 
 		private final String flag;
 
-		/**
-		 * @param flag
-		 */
 		private Scale(String flag) {
 			this.flag = flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
@@ -67,16 +62,10 @@ public class AudioToPictureShowWaves extends AbstractFilter {
 
 	// -----------------------------------------------
 
-	/**
-	 * 
-	 */
 	protected AudioToPictureShowWaves() {
 		super("showwavespic");
 	}
 
-	/**
-	 * @return
-	 */
 	public static AudioToPictureShowWaves build() {
 		return new AudioToPictureShowWaves();
 	}
@@ -136,9 +125,6 @@ public class AudioToPictureShowWaves extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

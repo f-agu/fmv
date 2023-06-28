@@ -81,14 +81,8 @@ public class Bug extends Flags<Bug> {
 	 */
 	public static final Bug EDGE = new Bug(11, "edge", IO.INPUT);
 
-	/**
-	 * 
-	 */
 	public static final Bug HPEL_CHROMA = new Bug(12, "hpel_chroma", IO.INPUT);
 
-	/**
-	 * 
-	 */
 	public static final Bug DC_CLIP = new Bug(13, "dc_clip", IO.INPUT);
 
 	/**
@@ -101,11 +95,6 @@ public class Bug extends Flags<Bug> {
 	 */
 	public static final Bug TRUNC = new Bug(15, "trunc", IO.INPUT);
 
-	/**
-	 * @param index
-	 * @param flag
-	 * @param io
-	 */
 	protected Bug(int index, String flag, IO io) {
 		super(Bug.class, index, flag, io);
 	}

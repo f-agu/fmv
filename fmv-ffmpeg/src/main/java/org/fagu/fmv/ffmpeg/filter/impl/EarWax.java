@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,23 +32,14 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class EarWax extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected EarWax() {
 		super("earwax");
 	}
 
-	/**
-	 * @return
-	 */
 	public static EarWax build() {
 		return new EarWax();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);

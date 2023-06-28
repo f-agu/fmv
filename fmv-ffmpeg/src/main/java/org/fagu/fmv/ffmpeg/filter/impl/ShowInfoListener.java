@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.filter.impl.ShowInfo.Info;
 
 
@@ -29,8 +28,5 @@ import org.fagu.fmv.ffmpeg.filter.impl.ShowInfo.Info;
  */
 public interface ShowInfoListener {
 
-	/**
-	 * @param info
-	 */
 	void event(Info info);
 }

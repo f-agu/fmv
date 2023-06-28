@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.filter.AbstractFilter;
 import org.fagu.fmv.utils.time.Duration;
 import org.fagu.fmv.utils.time.Time;
@@ -31,53 +30,30 @@ import org.fagu.fmv.utils.time.Time;
  */
 public abstract class Trim<T> extends AbstractFilter {
 
-	/**
-	 * @param name
-	 */
 	protected Trim(String name) {
 		super(name);
 	}
 
-	/**
-	 * @param startTime
-	 * @return
-	 */
 	public T start(Time startTime) {
 		parameter("start", Double.toString(startTime.toSeconds()));
 		return getThis();
 	}
 
-	/**
-	 * @param endTime
-	 * @return
-	 */
 	public T end(Time endTime) {
 		parameter("end", Double.toString(endTime.toSeconds()));
 		return getThis();
 	}
 
-	/**
-	 * @param duration
-	 * @return
-	 */
 	public T duration(Duration duration) {
 		parameter("duration", Double.toString(duration.toSeconds()));
 		return getThis();
 	}
 
-	/**
-	 * @param startTime
-	 * @return
-	 */
 	public T startPTS(String startPts) {
 		parameter("start_pts", startPts);
 		return getThis();
 	}
 
-	/**
-	 * @param endTime
-	 * @return
-	 */
 	public T endPTS(String endPts) {
 		parameter("end_pts", endPts);
 		return getThis();
@@ -85,9 +61,6 @@ public abstract class Trim<T> extends AbstractFilter {
 
 	// **********************************************
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	private T getThis() {
 		return (T)this;

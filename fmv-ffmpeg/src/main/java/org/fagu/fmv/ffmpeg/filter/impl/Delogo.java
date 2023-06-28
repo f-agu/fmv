@@ -32,16 +32,10 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class Delogo extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected Delogo() {
 		super("delogo");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Delogo build() {
 		return new Delogo();
 	}
@@ -141,9 +135,6 @@ public class Delogo extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

@@ -32,16 +32,10 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class Hue extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected Hue() {
 		super("hue");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Hue build() {
 		return new Hue();
 	}
@@ -97,9 +91,6 @@ public class Hue extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

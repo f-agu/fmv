@@ -28,9 +28,6 @@ import org.fagu.fmv.utils.media.Size;
  */
 public interface ScaleMode {
 
-	/**
-	 * @return
-	 */
 	public static ScaleMode fitToWidth() {
 		return (scale, size) -> {
 			scale.width(size.getWidth());
@@ -62,9 +59,6 @@ public interface ScaleMode {
 		};
 	}
 
-	/**
-	 * @return
-	 */
 	public static ScaleMode fitToBoxKeepAspectRatio() {
 		return (scale, size) -> {
 			int width = size.getWidth();
@@ -83,9 +77,6 @@ public interface ScaleMode {
 		};
 	}
 
-	/**
-	 * @return
-	 */
 	public static ScaleMode growUpIfNecesserayKeepAspectRatio() {
 		return (scale, size) -> {
 			int width = size.getWidth();
@@ -103,10 +94,6 @@ public interface ScaleMode {
 		};
 	}
 
-	/**
-	 * @param scale
-	 * @param size
-	 */
 	void apply(Scale scale, Size size);
 
 }

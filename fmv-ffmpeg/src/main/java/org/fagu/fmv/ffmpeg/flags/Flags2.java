@@ -75,11 +75,6 @@ public class Flags2 extends Flags<Flags2> {
 	 */
 	public static final Flags2 ASS_RO_FLUSH_NOOP = new Flags2(8, "ass_ro_flush_noop", IO.INPUT);
 
-	/**
-	 * @param index
-	 * @param flag
-	 * @param io
-	 */
 	protected Flags2(int index, String flag, IO io) {
 		super(Flags2.class, index, flag, io);
 	}

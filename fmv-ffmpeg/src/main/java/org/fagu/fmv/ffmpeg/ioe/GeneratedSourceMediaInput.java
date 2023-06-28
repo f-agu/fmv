@@ -37,33 +37,21 @@ public class GeneratedSourceMediaInput extends AbstractIOEntity<GeneratedSourceM
 
 	private final GeneratedSource generatedSource;
 
-	/**
-	 * @param generatedSource
-	 */
 	public GeneratedSourceMediaInput(GeneratedSource generatedSource) {
 		super("lavfi");
 		this.generatedSource = Objects.requireNonNull(generatedSource);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.ioe.AbstractIOEntity#eventAdded(org.fagu.fmv.ffmpeg.operation.Processor, IOEntity)
-	 */
 	@Override
 	public void eventAdded(Processor<?> processor, IOEntity ioEntity) {
 		processor.format("lavfi");
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.MediaInput#getDuration()
-	 */
 	@Override
 	public Optional<Duration> getDuration() {
 		return generatedSource.getDuration();
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return generatedSource.toString();

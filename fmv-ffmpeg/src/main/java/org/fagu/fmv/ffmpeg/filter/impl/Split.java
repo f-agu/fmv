@@ -28,16 +28,10 @@ import org.fagu.fmv.ffmpeg.filter.FilterComplex;
  */
 public abstract class Split extends FilterComplex {
 
-	/**
-	 * @param name
-	 */
 	protected Split(String name) {
 		super(name, false);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterComplexBase#toString()
-	 */
 	@Override
 	public String toString() {
 		int size = outputList.size();

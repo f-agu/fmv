@@ -37,25 +37,14 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class Speed extends FilterComplexCombined {
 
-	/**
-	 * @param filterComplexs
-	 */
 	private Speed(List<FilterComplex> filterComplexs) {
 		super(null, filterComplexs);
 	}
 
-	/**
-	 * @param multiplyBy
-	 * @param acceptTypes
-	 */
 	public static Speed multiply(float multiplyBy, Type... acceptTypes) {
 		return multiply(multiplyBy, Arrays.asList(acceptTypes));
 	}
 
-	/**
-	 * @param multiplyBy
-	 * @param acceptTypes
-	 */
 	public static Speed multiply(float multiplyBy, Collection<Type> acceptTypes) {
 		if(multiplyBy <= 0) {
 			throw new IllegalArgumentException("multiplyBy must be positive: " + multiplyBy);
@@ -74,9 +63,6 @@ public class Speed extends FilterComplexCombined {
 		return new Speed(filterComplexs);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Type.valuesSet(this);

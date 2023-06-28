@@ -42,33 +42,20 @@ public abstract class FFMPEGOperation<R> extends AbstractIOOperation<R, FFMPEGOp
 
 	private ProgressReadLine progressReadLine;
 
-	/**
-	 *
-	 */
 	protected FFMPEGOperation() {
 		init();
 	}
 
-	/**
-	 * @param filterNaming
-	 * @param require
-	 */
 	protected FFMPEGOperation(FilterNaming filterNaming, Require require) {
 		super(filterNaming, require);
 		init();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getFFName()
-	 */
 	@Override
 	public String getFFName() {
 		return FFMpegSoftProvider.NAME;
 	}
 
-	/**
-	 * @return
-	 */
 	public FFMPEGOperation<R> noStats() {
 		return addParameter("-nostats");
 	}
@@ -86,25 +73,16 @@ public abstract class FFMPEGOperation<R> extends AbstractIOOperation<R, FFMPEGOp
 		return addParameter("-progress", url);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.AbstractOperation#getOutReadLine()
-	 */
 	@Override
 	public ReadLine getOutReadLine() {
 		return outAndErrReadLine;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.AbstractOperation#getErrReadLine()
-	 */
 	@Override
 	public ReadLine getErrReadLine() {
 		return outAndErrReadLine;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.AbstractOperation#toArguments()
-	 */
 	@Override
 	public List<String> toArguments() {
 		List<Filter> filters = new ArrayList<>(getFilters());
@@ -114,34 +92,22 @@ public abstract class FFMPEGOperation<R> extends AbstractIOOperation<R, FFMPEGOp
 		return super.toArguments();
 	}
 
-	/**
-	 * @return
-	 */
 	public ProgressReadLine getProgressReadLine() {
 		return progressReadLine;
 	}
 
-	/**
-	 * @param progressReadLine
-	 */
 	public void setProgressReadLine(ProgressReadLine progressReadLine) {
 		this.progressReadLine = progressReadLine;
 	}
 
 	// *********************************************
 
-	/**
-	 * @return
-	 */
 	protected List<String> getSysOutAndErr() {
 		return outAndErr;
 	}
 
 	// *********************************************
 
-	/**
-	 *
-	 */
 	private void init() {
 		outAndErr = new ArrayList<>(40);
 		outAndErrReadLine = new BufferedReadLine(outAndErr);

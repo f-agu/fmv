@@ -31,23 +31,14 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class SetTBVideo extends SetTB<SetTBVideo> {
 
-	/**
-	 * @param name
-	 */
 	protected SetTBVideo() {
 		super("settb");
 	}
 
-	/**
-	 * @return
-	 */
 	public static SetTBVideo build() {
 		return new SetTBVideo();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.AbstractFilter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

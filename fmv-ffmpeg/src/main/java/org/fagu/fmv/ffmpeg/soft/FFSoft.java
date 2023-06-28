@@ -27,15 +27,8 @@ import org.fagu.fmv.soft.Soft;
  */
 public class FFSoft {
 
-	/**
-	 * 
-	 */
 	private FFSoft() {}
 
-	/**
-	 * @param ffName
-	 * @return
-	 */
 	public static Soft search(String ffName) {
 		if(FFMpegSoftProvider.NAME.equals(ffName)) {
 			return FFMpeg.search();

@@ -30,11 +30,6 @@ public class Fdebug extends Flags<Fdebug> {
 
 	public static final Fdebug TS = new Fdebug(0, "ts", IO.INPUT_OUTPUT);
 
-	/**
-	 * @param index
-	 * @param flag
-	 * @param io
-	 */
 	protected Fdebug(int index, String flag, IO io) {
 		super(Fdebug.class, index, flag, io);
 	}

@@ -150,13 +150,10 @@ public class FFInfo extends VersionDateSoftInfo {
 		return 0;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder(80);
-		buf.append(getName());
+		StringBuilder buf = new StringBuilder(80)
+				.append(getName());
 		if(version != null) {
 			buf.append(' ').append('v').append(version);
 		}
@@ -176,8 +173,8 @@ public class FFInfo extends VersionDateSoftInfo {
 		} else {
 			buf.append("File undefined");
 		}
-		buf.append(']');
-		return buf.toString();
+		return buf.append(']')
+				.toString();
 	}
 
 	// *****************************************************

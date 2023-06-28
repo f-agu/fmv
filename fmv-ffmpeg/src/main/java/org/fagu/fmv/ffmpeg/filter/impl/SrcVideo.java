@@ -40,67 +40,39 @@ public abstract class SrcVideo<T> extends AbstractFilter implements MediaInput, 
 
 	private Duration duration;
 
-	/**
-	 * @param name
-	 */
 	protected SrcVideo(String name) {
 		super(name);
 	}
 
-	/**
-	 * @param color
-	 * @return
-	 */
 	public T color(Color color) {
 		parameter("c", color.toString());
 		return getThis();
 	}
 
-	/**
-	 * @param size
-	 * @return
-	 */
 	public T size(Size size) {
 		parameter("s", size.toString());
 		return getThis();
 	}
 
-	/**
-	 * @param rate
-	 * @return
-	 */
 	public T rate(int rate) {
 		parameter("r", Integer.toString(rate));
 		return getThis();
 	}
 
-	/**
-	 * @param duration
-	 * @return
-	 */
 	public T duration(Duration duration) {
 		this.duration = duration;
 		parameter("d", Double.toString(duration.toSeconds()));
 		return getThis();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.IOEntity#eventAdded(org.fagu.fmv.ffmpeg.operation.Processor, IOEntity)
-	 */
 	@Override
 	public void eventAdded(Processor<?> processor, IOEntity ioEntity) {}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.GeneratedSource#forInput()
-	 */
 	@Override
 	public MediaInput forInput() {
 		return new GeneratedSourceMediaInput(this);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.GeneratedSource#getDuration()
-	 */
 	@Override
 	public Optional<Duration> getDuration() {
 		return Optional.ofNullable(duration);
@@ -108,9 +80,6 @@ public abstract class SrcVideo<T> extends AbstractFilter implements MediaInput, 
 
 	// **********************************************
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	private T getThis() {
 		return (T)this;

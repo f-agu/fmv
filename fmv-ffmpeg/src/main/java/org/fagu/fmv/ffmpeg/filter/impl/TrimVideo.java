@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -32,39 +31,24 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class TrimVideo extends Trim<TrimVideo> {
 
-	/**
-	 * @param name
-	 */
 	protected TrimVideo() {
 		super("trim");
 	}
 
-	/**
-	 * @return
-	 */
 	public static TrimVideo build() {
 		return new TrimVideo();
 	}
 
-	/**
-	 * @param number
-	 */
 	public TrimVideo startFrame(int number) {
 		parameter("start_frame", Integer.toString(number));
 		return this;
 	}
 
-	/**
-	 * @param number
-	 */
 	public TrimVideo endFrame(int number) {
 		parameter("end_frame", Integer.toString(number));
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

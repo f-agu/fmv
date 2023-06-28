@@ -24,12 +24,12 @@ package org.fagu.fmv.ffmpeg.ioe;
  * @author f.agu
  */
 public enum Pipe {
-	IN, OUT, ERR;
 
-	/**
-	 * @return
-	 */
+	IN,
+	OUT,
+	ERR;
+
 	public String toCode() {
-		return (new StringBuilder(5).append("pipe:").append(ordinal())).toString();
+		return new StringBuilder(5).append("pipe:").append(ordinal()).toString();
 	}
 }

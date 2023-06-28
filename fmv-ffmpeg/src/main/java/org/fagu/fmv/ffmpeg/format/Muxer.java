@@ -34,7 +34,7 @@ public abstract class Muxer<M> extends Format<M> implements MediaOutput {
 
 	private final MediaOutput mediaOutput;
 
-	public Muxer(String name, MediaOutput mediaOutput) {
+	protected Muxer(String name, MediaOutput mediaOutput) {
 		super(name);
 		this.mediaOutput = Objects.requireNonNull(mediaOutput);
 	}

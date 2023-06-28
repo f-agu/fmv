@@ -34,11 +34,6 @@ public class ThreadType extends Flags<ThreadType> {
 
 	public static final ThreadType FRAME = new ThreadType(1, "frame", IO.INPUT_OUTPUT);
 
-	/**
-	 * @param index
-	 * @param flag
-	 * @param io
-	 */
 	protected ThreadType(int index, String flag, IO io) {
 		super(ThreadType.class, index, flag, io);
 	}

@@ -32,33 +32,19 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class SelectAudio extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected SelectAudio() {
 		super("aselect");
 	}
 
-	/**
-	 * @return
-	 */
 	public static SelectAudio build() {
 		return new SelectAudio();
 	}
 
-	/**
-	 * @param exp
-	 * @return
-	 */
 	public SelectAudio expr(String exp) {
 		setMainParameter(exp);
 		return this;
 	}
 
-	/**
-	 * @param number
-	 * @return
-	 */
 	public SelectAudio numberOutputs(int number) {
 		if(number < 1) {
 			throw new IllegalArgumentException("outputs must be at least 1: " + number);
@@ -67,17 +53,10 @@ public class SelectAudio extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @param frameNumber
-	 * @return
-	 */
 	public SelectAudio onlyOverFrameNumber(int frameNumber) {
 		return expr("'gt(samples_n," + frameNumber + ")'");
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);

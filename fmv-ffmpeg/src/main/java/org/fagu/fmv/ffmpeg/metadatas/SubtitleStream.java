@@ -41,9 +41,8 @@ public class SubtitleStream extends Stream {
 
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder(100);
-		String language = language().orElse(null);
-		return buf.append("SubtitleStream[").append(language != null ? language : '?').append(']')
+		return new StringBuilder(100)
+				.append("SubtitleStream[").append(language().orElse("?")).append(']')
 				.toString();
 	}
 }

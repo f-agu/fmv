@@ -42,6 +42,7 @@ public class AudioToVideoShowWaves extends AbstractFilter {
 	 * @author f.agu
 	 */
 	public enum Mode {
+
 		// draw a point for each sample
 		POINT("point"),
 		// draw a line for each sample
@@ -53,16 +54,10 @@ public class AudioToVideoShowWaves extends AbstractFilter {
 
 		private final String flag;
 
-		/**
-		 * @param flag
-		 */
 		private Mode(String flag) {
 			this.flag = flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
@@ -74,6 +69,7 @@ public class AudioToVideoShowWaves extends AbstractFilter {
 	 * @author f.agu
 	 */
 	public enum Scale {
+
 		// linear
 		LIN("lin"),
 		// logarithmic
@@ -85,32 +81,20 @@ public class AudioToVideoShowWaves extends AbstractFilter {
 
 		private final String flag;
 
-		/**
-		 * @param flag
-		 */
 		private Scale(String flag) {
 			this.flag = flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 	}
 	// -----------------------------------------------
 
-	/**
-	* 
-	*/
 	protected AudioToVideoShowWaves() {
 		super("showwaves");
 	}
 
-	/**
-	 * @return
-	 */
 	public static AudioToVideoShowWaves build() {
 		return new AudioToVideoShowWaves();
 	}
@@ -217,9 +201,6 @@ public class AudioToVideoShowWaves extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

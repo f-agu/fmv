@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.flags;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.format.IO;
 
 
@@ -46,11 +45,6 @@ public class Peak extends Flags<Peak> {
 	 */
 	public static final Peak TRUE = new Peak(2, "true", IO.UNDEFINED);
 
-	/**
-	 * @param index
-	 * @param flag
-	 * @param io
-	 */
 	protected Peak(int index, String flag, IO io) {
 		super(Peak.class, index, flag, io);
 	}

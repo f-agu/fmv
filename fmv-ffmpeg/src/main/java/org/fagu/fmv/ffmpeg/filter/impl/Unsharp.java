@@ -32,16 +32,10 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class Unsharp extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected Unsharp() {
 		super("unsharp");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Unsharp build() {
 		return new Unsharp();
 	}
@@ -225,9 +219,6 @@ public class Unsharp extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

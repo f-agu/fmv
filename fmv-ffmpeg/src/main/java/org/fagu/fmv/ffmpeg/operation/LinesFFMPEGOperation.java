@@ -30,16 +30,10 @@ import org.fagu.fmv.ffmpeg.utils.LogLevel;
  */
 public class LinesFFMPEGOperation extends FFMPEGOperation<List<String>> {
 
-	/**
-	 * 
-	 */
 	public LinesFFMPEGOperation() {
 		logLevel(LogLevel.QUIET);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.operation.Operation#getResult()
-	 */
 	@Override
 	public List<String> getResult() {
 		return getSysOutAndErr();

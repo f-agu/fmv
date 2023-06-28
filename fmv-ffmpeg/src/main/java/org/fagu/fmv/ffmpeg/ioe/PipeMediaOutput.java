@@ -28,23 +28,14 @@ import org.fagu.fmv.ffmpeg.operation.MediaOutput;
  */
 public class PipeMediaOutput extends AbstractPipeMedia<PipeMediaOutput> implements MediaOutput {
 
-	/**
-	 * @param pipe
-	 */
 	public PipeMediaOutput(Pipe pipe) {
 		super(pipe);
 	}
 
-	/**
-	 * @return
-	 */
 	public static PipeMediaOutput out() {
 		return new PipeMediaOutput(Pipe.OUT);
 	}
 
-	/**
-	 * @return
-	 */
 	public static PipeMediaOutput err() {
 		return new PipeMediaOutput(Pipe.ERR);
 	}

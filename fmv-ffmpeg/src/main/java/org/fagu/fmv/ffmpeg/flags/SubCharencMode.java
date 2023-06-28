@@ -36,11 +36,6 @@ public class SubCharencMode extends Flags<SubCharencMode> {
 
 	public static final SubCharencMode PRE_DECODER = new SubCharencMode(2, "pre_decoder", IO.INPUT);
 
-	/**
-	 * @param index
-	 * @param flag
-	 * @param io
-	 */
 	protected SubCharencMode(int index, String flag, IO io) {
 		super(SubCharencMode.class, index, flag, io);
 	}

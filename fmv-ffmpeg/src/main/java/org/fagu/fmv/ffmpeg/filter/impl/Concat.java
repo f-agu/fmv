@@ -59,9 +59,6 @@ public class Concat extends FilterComplex {
 
 	private Integer countVideo;
 
-	/**
-	 * @param builder
-	 */
 	protected Concat(FFMPEGExecutorBuilder builder) {
 		super("concat");
 		this.builder = Objects.requireNonNull(builder);
@@ -71,11 +68,6 @@ public class Concat extends FilterComplex {
 		inputs = new ArrayList<>();
 	}
 
-	/**
-	 * @param builder
-	 * @param inputs
-	 * @return
-	 */
 	public static Concat create(FFMPEGExecutorBuilder builder, Object... inputs) {
 		Concat concat = new Concat(builder);
 		for(Object input : inputs) {
@@ -90,66 +82,41 @@ public class Concat extends FilterComplex {
 		return concat;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterComplex#addInput(org.fagu.fmv.ffmpeg.filter.FilterInput,
-	 *      org.fagu.fmv.ffmpeg.operation.Type[])
-	 */
 	@Override
 	public FilterComplex addInput(FilterInput filterInput, Type... types) {
 		inputs.add(filterInput);
 		return this;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isStartAtStartTime() {
 		return startAtStartTime;
 	}
 
-	/**
-	 * @param startAtStartTime
-	 */
 	public Concat setStartAtStartTime(boolean startAtStartTime) {
 		this.startAtStartTime = startAtStartTime;
 		return this;
 	}
 
-	/**
-	 * @param countAudio the countAudio to set
-	 */
 	public Concat countAudio(Integer countAudio) {
 		this.countAudio = countAudio;
 		return this;
 	}
 
-	/**
-	 * @param countVideo the countVideo to set
-	 */
 	public Concat countVideo(Integer countVideo) {
 		this.countVideo = countVideo;
 		return this;
 	}
 
-	/**
-	 * @param countInputs
-	 */
 	public Concat countInputs(Integer countInputs) {
 		this.countInputs = countInputs;
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Type.valuesSet(this);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.FilterComplex#toString()
-	 */
 	@Override
 	public String toString() {
 		Collection<Type> types = getTypes();
@@ -162,10 +129,6 @@ public class Concat extends FilterComplex {
 
 	// ****************************************************
 
-	/**
-	 * @param operation
-	 * @param filterNaming
-	 */
 	@Override
 	protected void beforeAddAround(Operation<?, ?> operation, FilterNaming filterNaming) {
 		ArrayList<Object> arrayList = new ArrayList<>(inputs); // copy pour acces concurrent
@@ -173,16 +136,16 @@ public class Concat extends FilterComplex {
 			Object inputObj = null;
 			Set<Type> types = Collections.emptySet();
 
-			if(input instanceof File) {
-				InputProcessor inputProcessor = builder.addMediaInputFile((File)input);
+			if(input instanceof File f) {
+				InputProcessor inputProcessor = builder.addMediaInputFile(f);
 				inputObj = inputProcessor;
 				types = getTypes(inputProcessor);
-			} else if(input instanceof InputProcessor) {
-				types = getTypes((InputProcessor)input);
+			} else if(input instanceof InputProcessor ip) {
+				types = getTypes(ip);
 				inputObj = input;
-			} else if(input instanceof FilterComplex) {
+			} else if(input instanceof FilterComplex fc) {
 				inputObj = input;
-				types = ((FilterComplex)input).getTypes();
+				types = fc.getTypes();
 			} else if(input instanceof Filter) {
 				throw new IllegalArgumentException("Filter forbidden: " + input.getClass().getName() + ". Wrap it with FilterComplex.create(...).");
 			}
@@ -207,9 +170,9 @@ public class Concat extends FilterComplex {
 					builder.filter((Filter)inputObj);
 					super.addInput((FilterInput)inputObj);
 				}
-			} else if(input instanceof FilterInput) {
+			} else if(input instanceof FilterInput fi) {
 				builder.filter((Filter)inputObj);
-				super.addInput((FilterInput)input);
+				super.addInput(fi);
 			} else {
 				throw new IllegalArgumentException(input.getClass().getName());
 			}
@@ -218,25 +181,17 @@ public class Concat extends FilterComplex {
 
 	// ****************************************************
 
-	/**
-	 * @param builder
-	 * @param setPTS
-	 * @param input
-	 */
 	private void addPTS(FFMPEGExecutorBuilder builder, SetPTS<?> setPTS, Object input) {
 		setPTS.startAtFirstFrame();
 		FilterComplex setPTSComplex = FilterComplex.create(setPTS);
 		setPTSComplex.addInput((FilterInput)input, setPTS.getTypes().iterator().next());
-		if(input instanceof Filter) {
-			builder.filter((Filter)input);
+		if(input instanceof Filter f) {
+			builder.filter(f);
 		}
 		builder.filter(setPTSComplex);
 		super.addInput(setPTSComplex);
 	}
 
-	/**
-	 * @return
-	 */
 	private Set<Type> getTypes(InputProcessor inputProcessor) {
 		Set<Type> types = new HashSet<>(2);
 		if(inputProcessor.contains(Type.AUDIO)) {

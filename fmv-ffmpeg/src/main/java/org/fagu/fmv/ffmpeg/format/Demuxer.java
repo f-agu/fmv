@@ -43,7 +43,7 @@ public abstract class Demuxer<M> extends Format<M> implements MediaInput {
 
 	private final Set<ErrDetect> errDetects;
 
-	public Demuxer(String name, MediaInput mediaInput) {
+	protected Demuxer(String name, MediaInput mediaInput) {
 		super(name);
 		this.mediaInput = mediaInput;
 		errDetects = new HashSet<>();

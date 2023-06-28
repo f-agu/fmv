@@ -32,31 +32,18 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class ResampleAudio extends AbstractFilter {
 
-	/**
-	 * @param name
-	 */
 	protected ResampleAudio() {
 		super("aresample");
 	}
 
-	/**
-	 * @return
-	 */
 	public static ResampleAudio build() {
 		return new ResampleAudio();
 	}
 
-	/**
-	 * @param hertz
-	 * @return
-	 */
 	public static ResampleAudio build(int hertz) {
 		return new ResampleAudio().frequency(hertz);
 	}
 
-	/**
-	 * @param hertz
-	 */
 	public ResampleAudio frequency(int hertz) {
 		if(hertz < 0) {
 			throw new IllegalArgumentException("frequency must be positive: " + hertz);
@@ -65,9 +52,6 @@ public class ResampleAudio extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);

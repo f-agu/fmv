@@ -75,31 +75,16 @@ public class Map {
 			return null;
 		}
 
-		/**
-		 * @param label
-		 * @param isLabel
-		 * @return
-		 */
 		private On label(String label, boolean isLabel) {
 			with(label, createIterator(), isLabel);
 			return this;
 		}
 
-		/**
-		 * @param label
-		 * @param isLabel
-		 * @return
-		 */
 		private On label(Label label, boolean isLabel) {
 			with(filterNaming.generate(label), createIterator(), isLabel);
 			return this;
 		}
 
-		/**
-		 * @param outputKey
-		 * @param isLabel
-		 * @return
-		 */
 		private On outputKey(OutputKey outputKey, boolean isLabel) {
 			return label(outputKey.getLabel(), isLabel);
 		}

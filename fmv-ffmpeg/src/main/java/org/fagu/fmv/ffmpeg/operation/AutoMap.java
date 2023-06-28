@@ -30,14 +30,7 @@ import org.fagu.fmv.ffmpeg.filter.Label;
  */
 public interface AutoMap {
 
-	/**
-	 * @return
-	 */
 	boolean useLabels();
 
-	/**
-	 * @param operation
-	 * @return
-	 */
 	Set<Label> find(Operation<?, ?> operation);
 }

@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,32 +32,20 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public abstract class SetAR<T> extends AbstractFilter {
 
-	/**
-	 * @param name
-	 */
 	protected SetAR(String name) {
 		super(name);
 	}
 
-	/**
-	 * @param expr
-	 */
 	public T ratio(String expr) {
 		parameter("ratio", expr);
 		return getThis();
 	}
 
-	/**
-	 * @param max
-	 */
 	public T max(int max) {
 		parameter("max", Integer.toString(max));
 		return getThis();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);
@@ -66,9 +53,6 @@ public abstract class SetAR<T> extends AbstractFilter {
 
 	// **********************************************
 
-	/**
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	private T getThis() {
 		return (T)this;

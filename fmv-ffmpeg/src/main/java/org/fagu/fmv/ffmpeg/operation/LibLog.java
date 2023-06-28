@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.operation;
  * #L%
  */
 
-
 import java.util.function.Predicate;
 
 
@@ -29,16 +28,8 @@ import java.util.function.Predicate;
  */
 public interface LibLog {
 
-	/**
-	 * @param title
-	 * @param somethings
-	 * @param log
-	 */
 	void log(String title, String somethings, String log);
 
-	/**
-	 * @return
-	 */
 	default Predicate<String> getLibLogFilter() {
 		return s -> true;
 	}

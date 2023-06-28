@@ -31,23 +31,14 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class SetTBAudio extends SetTB<SetTBAudio> {
 
-	/**
-	 * @param name
-	 */
 	protected SetTBAudio() {
 		super("asettb");
 	}
 
-	/**
-	 * @return
-	 */
 	public static SetTBAudio build() {
 		return new SetTBAudio();
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.AbstractFilter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.AUDIO);

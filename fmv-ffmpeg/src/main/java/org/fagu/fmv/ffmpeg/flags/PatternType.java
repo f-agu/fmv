@@ -34,16 +34,10 @@ public enum PatternType {
 
 	private String flag;
 
-	/**
-	 * @param flag
-	 */
 	private PatternType(String flag) {
 		this.flag = flag;
 	}
 
-	/**
-	 * @return
-	 */
 	public String flag() {
 		return flag;
 	}

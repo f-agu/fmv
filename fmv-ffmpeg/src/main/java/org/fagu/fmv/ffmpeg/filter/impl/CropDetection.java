@@ -81,10 +81,6 @@ public class CropDetection {
 
 		private final AtomicInteger totalCount;
 
-		/**
-		 * @param matcher
-		 * @param totalCount
-		 */
 		CropSize(Matcher matcher, AtomicInteger totalCount) {
 			x1 = Integer.parseInt(matcher.group(1));
 			x2 = Integer.parseInt(matcher.group(2));
@@ -98,135 +94,78 @@ public class CropDetection {
 			this.totalCount = totalCount;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getX1() {
 			return x1;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getX2() {
 			return x2;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getY1() {
 			return y1;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getY2() {
 			return y2;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getW() {
 			return w;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getH() {
 			return h;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getX() {
 			return x;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getY() {
 			return y;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getStartPTS() {
 			return startPTS;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getEndPTS() {
 			return endPTS;
 		}
 
-		/**
-		 * @return
-		 */
 		public Time getStartTime() {
 			return startTime;
 		}
 
-		/**
-		 * @return
-		 */
 		public Time getEndTime() {
 			return endTime;
 		}
 
-		/**
-		 * @return
-		 */
 		public Duration duration() {
 			return Duration.valueOf(endTime.toSeconds() - startTime.toSeconds());
 		}
 
-		/**
-		 * @return
-		 */
 		public int getCount() {
 			return count;
 		}
 
-		/**
-		 * @return
-		 */
 		public int getCountTotal() {
 			return totalCount.get();
 		}
 
-		/**
-		 * @return
-		 */
 		public float getCountPercent() {
 			return 100F * count / totalCount.get();
 		}
 
-		/**
-		 * @return
-		 */
 		public Size toSize() {
 			return Size.valueOf(w, h);
 		}
 
-		/**
-		 * @return
-		 */
 		public Crop toCrop() {
 			return Crop.build().x(x).y(y).height(h).width(w);
 		}
 
-		/**
-		 * @see java.lang.Object#hashCode()
-		 */
 		@Override
 		public int hashCode() {
 			final int prime = 31;
@@ -242,9 +181,6 @@ public class CropDetection {
 			return result;
 		}
 
-		/**
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
 		@Override
 		public boolean equals(Object obj) {
 			if(this == obj)
@@ -273,25 +209,22 @@ public class CropDetection {
 			return true;
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
-			StringBuilder buf = new StringBuilder(100);
-			buf.append("pts[").append(startPTS).append("->").append(endPTS).append("],");
-			buf.append("time[").append(startTime).append("->").append(endTime).append(']');
-			buf.append(",x1:").append(x1);
-			buf.append(",y1:").append(y1);
-			buf.append(",x2:").append(x2);
-			buf.append(",y2:").append(y2);
-			buf.append(",w:").append(w);
-			buf.append(",h:").append(h);
-			buf.append(",x:").append(x);
-			buf.append(",y:").append(y);
-			buf.append(",count:").append(count);
-			buf.append('(').append(new DecimalFormat("###.##").format(getCountPercent())).append("%)");
-			return buf.toString();
+			return new StringBuilder(100)
+					.append("pts[").append(startPTS).append("->").append(endPTS).append("],")
+					.append("time[").append(startTime).append("->").append(endTime).append(']')
+					.append(",x1:").append(x1)
+					.append(",y1:").append(y1)
+					.append(",x2:").append(x2)
+					.append(",y2:").append(y2)
+					.append(",w:").append(w)
+					.append(",h:").append(h)
+					.append(",x:").append(x)
+					.append(",y:").append(y)
+					.append(",count:").append(count)
+					.append('(').append(new DecimalFormat("###.##").format(getCountPercent())).append("%)")
+					.toString();
 		}
 
 	}
@@ -323,14 +256,8 @@ public class CropDetection {
 
 	private final List<Consumer<CropSize>> doneCropSize = new ArrayList<>();
 
-	/**
-	 *
-	 */
 	CropDetection() {}
 
-	/**
-	 * @param log
-	 */
 	void add(String log) {
 		Matcher matcher = LOG_PATTERN.matcher(log);
 		if(matcher.matches()) {
@@ -359,32 +286,20 @@ public class CropDetection {
 		}
 	}
 
-	/**
-	 * @param consumer
-	 */
 	public void addDoneCropSize(Consumer<CropSize> consumer) {
 		if(consumer != null) {
 			doneCropSize.add(consumer);
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	public int getTotalCount() {
 		return totalCount.get();
 	}
 
-	/**
-	 * @return
-	 */
 	public List<CropSize> getCropSizes() {
 		return Collections.unmodifiableList(cropSizes);
 	}
 
-	/**
-	 * @return
-	 */
 	public SortedSet<CropSize> getOrderedCropSizes() {
 		SortedSet<CropSize> set = new TreeSet<>(Collections.reverseOrder(new CropSizeComparator()));
 		set.addAll(cropSizes);

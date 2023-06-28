@@ -47,11 +47,6 @@ public class Parameter {
 
 	private Way way;
 
-	/**
-	 * @param source
-	 * @param name
-	 * @param value
-	 */
 	protected Parameter(String name, String value) {
 		if(name == null) {
 			throw new NullPointerException("name");
@@ -60,11 +55,6 @@ public class Parameter {
 		this.value = value;
 	}
 
-	/**
-	 * @param source
-	 * @param name
-	 * @param value
-	 */
 	protected Parameter(Way way, IOEntity ioEntity, String name, String value) {
 		if(way == null) {
 			throw new NullPointerException("way");
@@ -81,131 +71,62 @@ public class Parameter {
 		this.value = value;
 	}
 
-	/**
-	 * @param ioEntity
-	 * @param name
-	 * @return
-	 */
 	public static Parameter before(IOEntity ioEntity, String name) {
 		return new Parameter(Way.BEFORE, ioEntity, name, null);
 	}
 
-	/**
-	 * @param ioEntity
-	 * @param name
-	 * @param value
-	 * @return
-	 */
 	public static Parameter before(IOEntity ioEntity, String name, Object value) {
 		return new Parameter(Way.BEFORE, ioEntity, name, value.toString());
 	}
 
-	/**
-	 * @param ioEntity
-	 * @param name
-	 * @return
-	 */
 	public static Parameter after(IOEntity ioEntity, String name) {
 		return new Parameter(Way.AFTER, ioEntity, name, null);
 	}
 
-	/**
-	 * @param ioEntity
-	 * @param name
-	 * @param value
-	 * @return
-	 */
 	public static Parameter after(IOEntity ioEntity, String name, Object value) {
 		return new Parameter(Way.AFTER, ioEntity, name, value.toString());
 	}
 
-	/**
-	 * @param way
-	 * @param ioEntity
-	 * @param name
-	 * @return
-	 */
 	public static Parameter create(Way way, IOEntity ioEntity, String name) {
 		return new Parameter(way, ioEntity, name, null);
 	}
 
-	/**
-	 * @param way
-	 * @param ioEntity
-	 * @param name
-	 * @param value
-	 * @return
-	 */
 	public static Parameter create(Way way, IOEntity ioEntity, String name, Object value) {
 		return new Parameter(way, ioEntity, name, value.toString());
 	}
 
-	/**
-	 * @param way
-	 * @param ioEntity
-	 * @param name
-	 * @return
-	 */
 	public static Parameter createGlobal(String name) {
 		return new Parameter(name, null);
 	}
 
-	/**
-	 * @param way
-	 * @param ioEntity
-	 * @param name
-	 * @param value
-	 * @return
-	 */
 	public static Parameter createGlobal(String name, Object value) {
 		return new Parameter(name, value.toString());
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isGlobal() {
 		return way == null && ioEntity == null;
 	}
 
-	/**
-	 * @return
-	 */
 	public Way getWay() {
 		return way;
 	}
 
-	/**
-	 * @return
-	 */
 	public IOEntity getIOEntity() {
 		return ioEntity;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getValue() {
 		return value;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean hasValue() {
 		return value != null;
 	}
 
-	/**
-	 * @param commands
-	 */
 	public void addTo(Collection<String> commands) {
 		commands.add(name);
 		if(hasValue()) {
@@ -213,13 +134,10 @@ public class Parameter {
 		}
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder();
-		buf.append("Param[");
+		StringBuilder buf = new StringBuilder()
+				.append("Param[");
 		if(isGlobal()) {
 			buf.append("global,");
 		} else {
@@ -229,7 +147,7 @@ public class Parameter {
 		if(hasValue()) {
 			buf.append('=').append(value);
 		}
-		buf.append(']');
-		return buf.toString();
+		return buf.append(']')
+				.toString();
 	}
 }

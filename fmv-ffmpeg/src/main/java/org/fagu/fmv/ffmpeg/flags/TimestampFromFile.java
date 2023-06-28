@@ -24,6 +24,7 @@ package org.fagu.fmv.ffmpeg.flags;
  * @author f.agu
  */
 public enum TimestampFromFile {
+
 	// none
 	NONE("none"),
 	// second precision
@@ -33,16 +34,10 @@ public enum TimestampFromFile {
 
 	private final String flag;
 
-	/**
-	 * @param flag
-	 */
 	private TimestampFromFile(String flag) {
 		this.flag = flag;
 	}
 
-	/**
-	 * @return
-	 */
 	public String flag() {
 		return flag;
 	}

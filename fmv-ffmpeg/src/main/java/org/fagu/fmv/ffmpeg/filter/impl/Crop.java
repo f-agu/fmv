@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -35,50 +34,26 @@ import org.fagu.fmv.utils.media.Size;
  */
 public class Crop extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected Crop() {
 		super("crop");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Crop build() {
 		return new Crop();
 	}
 
-	/**
-	 * @param cropSize
-	 * @return
-	 */
 	public static Crop to(Size cropSize) {
 		return new Crop().size(cropSize);
 	}
 
-	/**
-	 * @param cropSize
-	 * @param x
-	 * @param y
-	 * @return
-	 */
 	public static Crop to(Size cropSize, int x, int y) {
 		return new Crop().size(cropSize).x(x).y(y);
 	}
 
-	/**
-	 * @param cropSize
-	 * @return
-	 */
 	public Crop size(Size cropSize) {
 		return width(cropSize.getWidth()).height(cropSize.getHeight());
 	}
 
-	/**
-	 * @param cropSize
-	 * @return
-	 */
 	public Crop fitByRatio(Ratio ratio) {
 		// w='if(gt(a*sar,4/3),in_w*3/4,in_w)'
 		// h='if(gt(a*sar,4/3),in_h,in_w*3/4)'
@@ -94,87 +69,52 @@ public class Crop extends AbstractFilter {
 		return width(widthsb.toString()).height(heightsb.toString());
 	}
 
-	/**
-	 * @param cropSize
-	 * @return
-	 */
 	public Crop centralArea(Size cropSize) {
 		clearParameters();
 		return width(cropSize.getWidth()).height(cropSize.getHeight());
 	}
 
-	/**
-	 * @param expr
-	 */
 	public Crop width(String expr) {
 		parameter("w", "'" + expr + "'");
 		return this;
 	}
 
-	/**
-	 * @param width
-	 */
 	public Crop width(int width) {
 		return width(Integer.toString(width));
 	}
 
-	/**
-	 * @param expr
-	 */
 	public Crop height(String expr) {
 		parameter("h", "'" + expr + "'");
 		return this;
 	}
 
-	/**
-	 * @param height
-	 */
 	public Crop height(int height) {
 		return height(Integer.toString(height));
 	}
 
-	/**
-	 * @param expr
-	 */
 	public Crop x(String expr) {
 		parameter("x", "'" + expr + "'");
 		return this;
 	}
 
-	/**
-	 * @param x
-	 */
 	public Crop x(int x) {
 		return x(Integer.toString(x));
 	}
 
-	/**
-	 * @param expr
-	 */
 	public Crop y(String expr) {
 		parameter("y", "'" + expr + "'");
 		return this;
 	}
 
-	/**
-	 * @param y
-	 */
 	public Crop y(int y) {
 		return y(Integer.toString(y));
 	}
 
-	/**
-	 * @param keep
-	 * @return
-	 */
 	public Crop keepAspect(boolean keep) {
 		parameter("keep_aspect", keep ? "1" : "0");
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

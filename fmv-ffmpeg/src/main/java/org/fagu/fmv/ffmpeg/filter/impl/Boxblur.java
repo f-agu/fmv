@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.filter.impl;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,16 +32,10 @@ import org.fagu.fmv.ffmpeg.operation.Type;
  */
 public class Boxblur extends AbstractFilter {
 
-	/**
-	 * 
-	 */
 	protected Boxblur() {
 		super("boxblur");
 	}
 
-	/**
-	 * @return
-	 */
 	public static Boxblur build() {
 		return new Boxblur();
 	}
@@ -182,9 +175,6 @@ public class Boxblur extends AbstractFilter {
 		return alphaPower(ap);
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);

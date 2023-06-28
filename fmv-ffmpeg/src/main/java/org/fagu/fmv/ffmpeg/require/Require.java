@@ -33,35 +33,20 @@ public class Require {
 
 	private boolean enable;
 
-	/**
-	 *
-	 */
 	public Require() {}
 
-	/**
-	 * @param enable
-	 */
 	public Require(boolean enable) {
 		this.enable = enable;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isEnable() {
 		return enable;
 	}
 
-	/**
-	 * @param enable
-	 */
 	public void setEnable(boolean enable) {
 		this.enable = enable;
 	}
 
-	/**
-	 * @param name
-	 */
 	public void device(String name) {
 		if( ! enable) {
 			return;
@@ -69,9 +54,6 @@ public class Require {
 		check("device", name, Devices.exists(name));
 	}
 
-	/**
-	 * @param name
-	 */
 	public void encoder(String name) {
 		if( ! enable) {
 			return;
@@ -82,9 +64,6 @@ public class Require {
 		check("encoder", name, Encoders.exists(name));
 	}
 
-	/**
-	 * @param name
-	 */
 	public void decoder(String name) {
 		if( ! enable) {
 			return;
@@ -95,9 +74,6 @@ public class Require {
 		check("decoder", name, Decoders.exists(name));
 	}
 
-	/**
-	 * @param name
-	 */
 	public void filter(String name) {
 		if( ! enable) {
 			return;
@@ -107,11 +83,6 @@ public class Require {
 
 	// *********************************************************
 
-	/**
-	 * @param category
-	 * @param name
-	 * @param exists
-	 */
 	private void check(String category, String name, boolean exists) {
 		if( ! exists) {
 			throw new RequiredException(category + " '" + name + '\'');

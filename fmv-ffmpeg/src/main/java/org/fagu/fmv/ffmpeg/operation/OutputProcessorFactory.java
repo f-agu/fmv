@@ -20,7 +20,6 @@ package org.fagu.fmv.ffmpeg.operation;
  * #L%
  */
 
-
 import org.fagu.fmv.ffmpeg.filter.FilterNaming;
 import org.fagu.fmv.ffmpeg.require.Require;
 
@@ -30,13 +29,5 @@ import org.fagu.fmv.ffmpeg.require.Require;
  */
 public interface OutputProcessorFactory {
 
-	/**
-	 * @param outputParameters
-	 * @param output
-	 * @param filterNaming
-	 * @param index
-	 * @param require
-	 * @return
-	 */
 	OutputProcessor create(OutputParameters outputParameters, MediaOutput output, FilterNaming filterNaming, int index, Require require);
 }

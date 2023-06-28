@@ -33,11 +33,6 @@ public class Avioflags extends Flags<Avioflags> {
 	 */
 	public static final Avioflags DIRECT = new Avioflags(0, "direct", IO.INPUT_OUTPUT);
 
-	/**
-	 * @param index
-	 * @param flag
-	 * @param io
-	 */
 	protected Avioflags(int index, String flag, IO io) {
 		super(Avioflags.class, index, flag, io);
 	}

@@ -36,153 +36,63 @@ import org.fagu.fmv.soft.exec.ReadLine;
  */
 public interface Operation<R, O> {
 
-	/**
-	 * @param entities
-	 */
 	O add(IOEntity... entities);
 
-	/**
-	 * @param parameter
-	 */
 	O add(Parameter parameter);
 
-	/**
-	 * @param filter
-	 */
 	boolean add(Filter filter);
 
-	/**
-	 * @param parameters
-	 */
 	void addAll(Collection<Parameter> parameters);
 
-	/**
-	 * @param name
-	 */
 	void removeParameter(String name);
 
-	/**
-	 * @return
-	 */
 	GlobalParameters getGlobalParameters();
 
-	/**
-	 * @return
-	 */
 	InputParameters getInputParameters();
 
-	/**
-	 * @return
-	 */
 	OutputParameters getOutputParameters();
 
-	/**
-	 * @param parameter
-	 * @return
-	 */
 	boolean containsGlobalParameter(String parameter);
 
-	/**
-	 * @return
-	 */
 	Stream<InputProcessor> getInputProcessorStream();
 
-	/**
-	 * @return
-	 */
 	Stream<OutputProcessor> getOutputProcessorStream();
 
 	boolean removeProcessorStream(Processor<?> processor);
 
-	/**
-	 * @return
-	 */
 	<T extends Processor<?>> Stream<T> getProcessorStream(Class<T> cls);
 
-	/**
-	 * @param ioEntity
-	 * @return
-	 */
 	Processor<?> getProcessor(IOEntity ioEntity);
 
-	/**
-	 * @param ioEntity
-	 * @return
-	 */
 	Collection<Processor<?>> getProcessors();
 
-	/**
-	 * @return
-	 */
 	FilterNaming getFilterNaming();
 
-	/**
-	 * @return
-	 */
 	FilterGraph getFilterGraph();
 
-	/**
-	 * @return
-	 */
 	String getFFName();
 
-	/**
-	 * @return
-	 */
 	List<LibLog> getLibLogs();
 
-	/**
-	 * @param libLog
-	 */
 	void add(LibLog libLog);
 
-	/**
-	 * @return
-	 */
 	ReadLine getOutReadLine();
 
-	/**
-	 * @return
-	 */
 	ReadLine getErrReadLine();
 
-	/**
-	 * @return
-	 */
 	R getResult();
 
-	/**
-	 * @return
-	 */
 	List<String> toArguments();
 
-	/**
-	 * @return
-	 */
 	boolean containsFilterComplexs();
 
-	/**
-	 * @return
-	 */
 	List<FilterComplex> getFilterComplexs();
 
-	/**
-	 * @return
-	 */
 	AutoMap getAutoMap();
 
-	/**
-	 * @param autoMap
-	 */
 	void setAutoMap(AutoMap autoMap);
 
-	/**
-	 * @param operationListener
-	 */
 	void addListener(OperationListener operationListener);
 
-	/**
-	 * @return
-	 */
 	List<OperationListener> getListeners();
 }

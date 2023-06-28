@@ -29,9 +29,6 @@ import org.fagu.fmv.ffmpeg.operation.IOEntity;
  */
 public abstract class AbstractIOEntity<M> extends ElementParameterized<M> implements IOEntity {
 
-	/**
-	 * @param name
-	 */
 	public AbstractIOEntity(String name) {
 		super(name);
 	}

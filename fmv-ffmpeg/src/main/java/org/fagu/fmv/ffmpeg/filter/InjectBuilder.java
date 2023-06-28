@@ -43,28 +43,25 @@ public class InjectBuilder {
 		// current toFilter
 		Class<? extends Filter> cls = toFilter.getClass();
 		for(Field field : FieldUtils.getAllFieldsList(cls)) {
-			if(field.getType() == Operation.class) {
-				field.setAccessible(true);
+			if(field.getType() == Operation.class && field.trySetAccessible()) {
 				try {
 					if(field.get(toFilter) == null) {
 						toFilter.beforeAdd(operation);
 						// field.set(toFilter, builder);
 					}
-				} catch(IllegalArgumentException e) {
-					throw new RuntimeException(e);
-				} catch(IllegalAccessException e) {
+				} catch(IllegalArgumentException | IllegalAccessException e) {
 					throw new RuntimeException(e);
 				}
 			}
 		}
 
 		// depends filters
-		if(toFilter instanceof FilterComplexBase) {
-			Map<IOKey, In> inputMap = ((FilterComplexBase)toFilter).getInputMap();
+		if(toFilter instanceof FilterComplexBase fcb) {
+			Map<IOKey, In> inputMap = fcb.getInputMap();
 			for(In in : inputMap.values()) {
 				FilterInput filterInput = in.getFilterInput();
-				if(filterInput instanceof Filter) {
-					inject((Filter)filterInput, operation);
+				if(filterInput instanceof Filter f) {
+					inject(f, operation);
 				}
 			}
 		}

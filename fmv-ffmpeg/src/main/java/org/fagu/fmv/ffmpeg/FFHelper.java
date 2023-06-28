@@ -916,10 +916,18 @@ public class FFHelper {
 		// audioToGraph(new File("D:\\tmp\\test.mp3"), new
 		// File("D:\\tmp\\test.mp3.png"));
 		// encoderList();
-		// reencodeToH264(new File("D:\\tmp\\GOPR3967.MP4"), new
-		// File("D:\\tmp\\GOPR3967-libx264.MP4"));
+		// reencodeToH264(new File("C:\\tmp\\transform-transformed\\fc.mp4"), new
+		// File("C:\\tmp\\transform-transformed\\fc2.mp4"));
+		// audioHalfVolume(new File("C:\\tmp\\transform-transformed\\fc.mp4"), new
+		// File("C:\\tmp\\transform-transformed\\fc2.mp4"));
 		// reencodeToH264(new File("D:\\tmp\\GOPR3967.MP4"), new File("D:\\tmp\\GOPR3967-h264_nvenc.MP4"));
-		extractSubtitles(new File("C:\\Personnel\\Films\\At Eternity's Gate.mkv"));
+		// extractSubtitles(new File("C:\\Personnel\\Films\\At Eternity's Gate.mkv"));
 		// extractSubtitles(new File("C:\\Personnel\\Films\\X-Men, Dark Phoenix.mkv"));
+
+		splitTo3(new File("C:\\tmp\\transform-transformed\\fc.mp4"),
+				new File("C:\\tmp\\transform-transformed\\fc-split1.mp4"),
+				new File("C:\\tmp\\transform-transformed\\fc-split2.mp4"),
+				new File("C:\\tmp\\transform-transformed\\fc-split3.mp4"));
+
 	}
 }

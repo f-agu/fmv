@@ -30,64 +30,30 @@ import org.fagu.fmv.soft.exec.FMVExecListener;
  */
 public interface OperationListener extends FMVExecListener {
 
-	/**
-	 * @param operation
-	 * @param ioEntity
-	 */
 	default void eventCreate(FFExecutor<?> ffExecutor) {}
 
 	// ===== ADD IOEntity =====
 
-	/**
-	 * @param operation
-	 * @param ioEntity
-	 */
 	default void eventPreAddIOEntity(Operation<?, ?> operation, IOEntity ioEntity) {}
 
-	/**
-	 * @param operation
-	 * @param ioEntity
-	 */
 	default void eventPostAddIOEntity(Operation<?, ?> operation, IOEntity ioEntity) {}
 
 	// ===== ADD Parameter =====
 
-	/**
-	 * @param operation
-	 * @param parameter
-	 */
 	default void eventPreAddParameter(Operation<?, ?> operation, Parameter parameter) {}
 
-	/**
-	 * @param operation
-	 * @param parameter
-	 */
 	default void eventPostAddParameter(Operation<?, ?> operation, Parameter parameter) {}
 
 	// ===== ADD Filter =====
 
-	/**
-	 * @param operation
-	 * @param filter
-	 */
 	default void eventPreAddFilter(Operation<?, ?> operation, Filter filter) {}
 
-	/**
-	 * @param operation
-	 * @param filter
-	 */
 	default void eventPostAddFilter(Operation<?, ?> operation, Filter filter) {}
 
 	// ===== to arguments =====
 
-	/**
-	 * @param operation
-	 */
 	default void eventPreToArguments(Operation<?, ?> operation) {}
 
-	/**
-	 * @param operation
-	 */
 	default void eventPostToArguments(Operation<?, ?> operation) {}
 
 }

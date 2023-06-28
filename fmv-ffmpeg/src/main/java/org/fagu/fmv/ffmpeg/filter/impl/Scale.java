@@ -39,10 +39,8 @@ public class Scale extends AbstractFilter {
 
 	// ----------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public enum Interlacing {
+
 		FORCE(1), // Force interlaced aware scaling
 		NO(0), // Do not apply interlaced scaling (default)
 		AUTO( - 1); // Select interlaced aware scaling depending on whether the source frames are flagged as interlaced
@@ -50,16 +48,10 @@ public class Scale extends AbstractFilter {
 
 		private final int value;
 
-		/**
-		 * @param value
-		 */
 		private Interlacing(int value) {
 			this.value = value;
 		}
 
-		/**
-		 * @return the value
-		 */
 		public int getValue() {
 			return value;
 		}
@@ -67,9 +59,6 @@ public class Scale extends AbstractFilter {
 
 	// ----------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public enum ColorMatrix {
 		AUTO, // Choose automatically.
 		BT709, // International Telecommunication Union (ITU) Recommendation BT.709.
@@ -83,19 +72,14 @@ public class Scale extends AbstractFilter {
 
 	// ----------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public enum ForceOriginalAspectRatio {
 		DISABLE, DECREASE, INCREASE
 	}
 
 	// ----------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public enum Range {
+
 		AUTO("auto"), //
 		FULL("full"), //
 		JPEG("jpeg"), //
@@ -105,16 +89,10 @@ public class Scale extends AbstractFilter {
 
 		private final String value;
 
-		/**
-		 * @param value
-		 */
 		private Range(String value) {
 			this.value = value;
 		}
 
-		/**
-		 * @return the value
-		 */
 		public String getValue() {
 			return value;
 		}
@@ -122,10 +100,8 @@ public class Scale extends AbstractFilter {
 
 	// -----------------------------------------------
 
-	/**
-	 * @author f.agu
-	 */
 	public enum SwsDither {
+
 		// leave choice to sws
 		AUTO("auto", IO.OUTPUT),
 		// bayer dither
@@ -141,25 +117,15 @@ public class Scale extends AbstractFilter {
 
 		private final IO io;
 
-		/**
-		 * @param flag
-		 * @param io
-		 */
 		private SwsDither(String flag, IO io) {
 			this.flag = flag;
 			this.io = io;
 		}
 
-		/**
-		 * @return
-		 */
 		public String flag() {
 			return flag;
 		}
 
-		/**
-		 * @return
-		 */
 		public IO io() {
 			return io;
 		}
@@ -171,43 +137,23 @@ public class Scale extends AbstractFilter {
 
 	private ScaleMode scaleMode;
 
-	/**
-	 * 
-	 */
 	protected Scale() {
 		super("scale");
 	}
 
-	/**
-	 * @param size
-	 * @param mode
-	 */
 	protected Scale(Size size, ScaleMode mode) {
 		this();
 		set(size, mode);
 	}
 
-	/**
-	 * @return
-	 */
 	public static Scale build() {
 		return new Scale();
 	}
 
-	/**
-	 * @param size
-	 * @param mode
-	 * @return
-	 */
 	public static Scale to(Size size, ScaleMode mode) {
 		return new Scale(size, mode);
 	}
 
-	/**
-	 * @param size
-	 * @param scaleMode
-	 * @return
-	 */
 	public Scale set(Size size, ScaleMode scaleMode) {
 		this.size = size;
 		this.scaleMode = scaleMode;
@@ -215,111 +161,61 @@ public class Scale extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @return the size
-	 */
 	public Size getSize() {
 		return size;
 	}
 
-	/**
-	 * @return the scaleMode
-	 */
 	public ScaleMode getScaleMode() {
 		return scaleMode;
 	}
 
-	/**
-	 * @param width
-	 * @return
-	 */
 	public Scale width(int width) {
 		return width(Integer.toString(width));
 	}
 
-	/**
-	 * @param expr
-	 * @return
-	 */
 	public Scale width(String expr) {
 		parameter("w", '\'' + expr + '\'');
 		return this;
 	}
 
-	/**
-	 * @param height
-	 * @return
-	 */
 	public Scale height(int height) {
 		return height(Integer.toString(height));
 	}
 
-	/**
-	 * @param expr
-	 * @return
-	 */
 	public Scale height(String expr) {
 		parameter("h", '\'' + expr + '\'');
 		return this;
 	}
 
-	/**
-	 * @param expr
-	 * @return
-	 */
 	public Scale size(Size size) {
 		return width(size.getWidth()).height(size.getHeight());
 	}
 
-	/**
-	 * @param expr
-	 * @return
-	 */
 	public Scale inputColorMatrix(ColorMatrix colorMatrix) {
 		parameter("in_color_matrix", colorMatrix.name().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @param expr
-	 * @return
-	 */
 	public Scale outputColorMatrix(ColorMatrix colorMatrix) {
 		parameter("out_color_matrix", colorMatrix.name().toLowerCase());
 		return this;
 	}
 
-	/**
-	 * @param interlacing
-	 * @return
-	 */
 	public Scale interlacing(Interlacing interlacing) {
 		parameter("interl", Integer.toString(interlacing.getValue()));
 		return this;
 	}
 
-	/**
-	 * @param range
-	 * @return
-	 */
 	public Scale inputRange(Range range) {
 		parameter("in_range", range.getValue());
 		return this;
 	}
 
-	/**
-	 * @param range
-	 * @return
-	 */
 	public Scale outputRange(Range range) {
 		parameter("out_range", range.getValue());
 		return this;
 	}
 
-	/**
-	 * @param foar
-	 * @return
-	 */
 	public Scale forceOriginalAspectRatio(ForceOriginalAspectRatio foar) {
 		parameter("force_original_aspect_ratio", foar.name().toLowerCase());
 		return this;
@@ -433,9 +329,6 @@ public class Scale extends AbstractFilter {
 		return this;
 	}
 
-	/**
-	 * @see org.fagu.fmv.ffmpeg.filter.Filter#getTypes()
-	 */
 	@Override
 	public Set<Type> getTypes() {
 		return Collections.singleton(Type.VIDEO);
