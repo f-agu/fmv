@@ -22,10 +22,12 @@ package org.fagu.fmv.mymedia.m3u;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -71,20 +73,30 @@ public class CopyOrderedBootstrap {
 
 	private static final Name NAME = Name.FILE_NAME;
 
+	private static final FileFilter M3U_FILTER = f -> "m3u".equals(FilenameUtils.getExtension(f.getName()))
+			|| "m3u8".equals(FilenameUtils.getExtension(f.getName()));
+
 	public static void main(String... args) throws Exception {
-		for(String arg : args) {
-			copy(arg);
+		File destFolder = new File(args[0]);
+		for(String arg : Arrays.copyOfRange(args, 1, args.length)) {
+			File file = new File(arg);
+			String name = file.getName();
+			name = StringUtils.substringBefore(name, " - best");
+			copy(new File(destFolder, name), file);
 		}
 	}
 
-	public static void copy(String folder) throws Exception {
-		File file = new File(folder);
+	public static void copy(File destFolder, File file) throws Exception {
 		if(file.isDirectory()) {
-			File[] files = file.listFiles(f -> "m3u".equals(FilenameUtils.getExtension(f.getName())));
+			File[] files = file.listFiles(M3U_FILTER);
 			if(ArrayUtils.isEmpty(files)) {
 				return;
 			}
 			file = files[0];
+		} else {
+			if( ! M3U_FILTER.accept(file)) {
+				return;
+			}
 		}
 		UnaryOperator<String> nameOperator = UnaryOperator.identity();
 		if(WITH_INDEX) {
@@ -95,8 +107,8 @@ public class CopyOrderedBootstrap {
 			};
 		}
 
-		// File destFolder = new File(args[1]);
-		File destFolder = new File("c:\\tmp\\zic", file.getName());
+		// File destFolder = new File(args[0]);
+		// File destFolder = new File("c:\\tmp\\zic", file.getName());
 		FileUtils.forceMkdir(destFolder);
 
 		File srcFolder = file.getParentFile();
