@@ -16,9 +16,9 @@ import org.apache.commons.lang3.StringUtils;
 public class DispatchRenameBootstrap {
 
 	private static final Path SRC = Paths.get(
-			"D:\\A graver\\eBooks\\_Divers\\TODO2\\60 Ebooks en Français");
+			"D:\\Download\\jdownloader\\PBellemare-Pack 41\\Pierre Bellemare-Pack 41www.bookys-gratuit.com");
 
-	private static final Path DEST = Paths.get("D:\\A graver\\eBooks\\Roman");
+	private static final Path DEST = Paths.get("D:\\A graver\\eBooks\\Roman\\P\\Pierre Bellemare");
 
 	private static final boolean DRY_RUN = false;
 
@@ -30,11 +30,11 @@ public class DispatchRenameBootstrap {
 					final String origName = p.getFileName().toString();
 
 					// suffix
-					String name = origName;
+					String name = "Pierre Bellemare - " + origName;
 					// name = suffix(origName, suffix);
 
 					// title - author(invert)
-					name = titleAuthorRevert(name);
+					// name = titleAuthorRevert(name);
 
 					if(name.equals(origName)) {
 						return;

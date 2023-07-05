@@ -56,18 +56,11 @@ public class Bootstrap {
 
 	private final Soft gsSoft;
 
-	/**
-	 * 
-	 */
 	public Bootstrap() {
 		convertSoft = Convert.search();
 		gsSoft = GS.search();
 	}
 
-	/**
-	 * @param files
-	 * @throws IOException
-	 */
 	private void mergeJpegToPDF(List<File> files) throws IOException {
 		List<File> jpgFiles = findImages(files);
 		long totalSize = jpgFiles.stream().mapToLong(File::length).sum();
@@ -83,9 +76,6 @@ public class Bootstrap {
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	private int getResizePercent() {
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
@@ -101,11 +91,6 @@ public class Bootstrap {
 		}
 	}
 
-	/**
-	 * @param parentFile
-	 * @return
-	 * @throws IOException
-	 */
 	private File getOutputFile(File parentFile) throws IOException {
 		File pdfFile = new File(parentFile, parentFile.getName() + ".pdf");
 		if( ! pdfFile.exists()) {
@@ -114,10 +99,6 @@ public class Bootstrap {
 		return createTmpJpegFile(pdfFile);
 	}
 
-	/**
-	 * @param files
-	 * @return
-	 */
 	private List<File> findImages(List<File> files) {
 		List<File> fs = new ArrayList<>(files.size());
 		List<File> folders = new ArrayList<>(2);
@@ -146,12 +127,6 @@ public class Bootstrap {
 		return fs;
 	}
 
-	/**
-	 * @param files
-	 * @param resizePercent
-	 * @return
-	 * @throws IOException
-	 */
 	private List<File> resizeToJpeg(List<File> files, int resizePercent) throws IOException {
 		List<File> outFiles = new ArrayList<>(files.size());
 		int length = files.size();
@@ -166,15 +141,12 @@ public class Bootstrap {
 		return outFiles;
 	}
 
-	/**
-	 * @param files
-	 * @throws IOException
-	 */
 	private void mergeJpeg(List<File> files, File outputPdf) throws IOException {
 		File viewJpegPSFile = new File(new File(gsSoft.getFile().getParentFile().getParentFile(), "lib"), "viewjpeg.ps");
 
 		List<String> parameters = new ArrayList<>();
 		parameters.add("-sDEVICE=pdfwrite");
+		parameters.add("-dNOSAFER");
 		parameters.add("-dPDFSETTINGS=/prepress");
 		parameters.add("-o");
 		parameters.add(outputPdf.getAbsolutePath());
