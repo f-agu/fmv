@@ -55,27 +55,35 @@ public class IMOperation {
 	// ======= image =======
 
 	public IMOperation image(String file) {
-		return image(file, null);
+		return image(file, null, null);
 	}
 
 	public IMOperation image(String file, String explicitImageFormat) {
-		return add(getExplicitImageFormat(explicitImageFormat) + file);
+		return image(file, null, explicitImageFormat);
 	}
 
-	public IMOperation image(String file, String special, String explicitImageFormat) {
-		return add(getExplicitImageFormat(explicitImageFormat) + file + (special != null ? special : ""));
+	public IMOperation image(String file, SelectedFrames selectedFrames) {
+		return image(file, selectedFrames, null);
+	}
+
+	public IMOperation image(String file, SelectedFrames selectedFrames, String explicitImageFormat) {
+		return add(getExplicitImageFormat(explicitImageFormat) + file + (selectedFrames != null ? selectedFrames.toString() : ""));
 	}
 
 	public IMOperation image(File file) {
-		return image(file, null);
+		return image(file, null, null);
 	}
 
 	public IMOperation image(File file, String explicitImageFormat) {
-		return image(file.getAbsolutePath(), explicitImageFormat);
+		return image(file.getAbsolutePath(), null, explicitImageFormat);
 	}
 
-	public IMOperation image(File file, String special, String explicitImageFormat) {
-		return image(file.getAbsolutePath(), special, explicitImageFormat);
+	public IMOperation image(File file, SelectedFrames selectedFrames) {
+		return image(file, selectedFrames, null);
+	}
+
+	public IMOperation image(File file, SelectedFrames selectedFrames, String explicitImageFormat) {
+		return image(file.getAbsolutePath(), selectedFrames, explicitImageFormat);
 	}
 
 	// ======= -adaptive-blur =======

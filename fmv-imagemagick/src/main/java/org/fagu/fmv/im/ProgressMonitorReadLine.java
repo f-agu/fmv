@@ -43,14 +43,8 @@ public class ProgressMonitorReadLine implements ReadLine {
 
 	private long max;
 
-	/**
-	 * 
-	 */
 	public ProgressMonitorReadLine() {}
 
-	/**
-	 * @see org.fagu.fmv.soft.exec.ReadLine#read(java.lang.String)
-	 */
 	@Override
 	public void read(String line) {
 		Matcher matcher = PATTERN.matcher(line);
@@ -63,37 +57,22 @@ public class ProgressMonitorReadLine implements ReadLine {
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	public String getTaskName() {
 		return taskName;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getFileName() {
 		return fileName;
 	}
 
-	/**
-	 * @return
-	 */
 	public int getPercent() {
 		return percent;
 	}
 
-	/**
-	 * @return
-	 */
 	public long getMax() {
 		return max;
 	}
 
-	/**
-	 * @return
-	 */
 	public long getValue() {
 		return value;
 	}

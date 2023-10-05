@@ -634,13 +634,23 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 			addImageFirstPage(imOperation, null);
 		}
 
-		void addImageFirstPage(IMOperation imOperation, String explicitImageFormat);
+		default void addImageFirstPage(IMOperation imOperation, String explicitImageFormat) {
+			addImage(imOperation, SelectedFrames.first(), explicitImageFormat);
+		}
 
 		default void addImageAllPages(IMOperation imOperation) {
 			addImageAllPages(imOperation, null);
 		}
 
-		void addImageAllPages(IMOperation imOperation, String explicitImageFormat);
+		default void addImageAllPages(IMOperation imOperation, String explicitImageFormat) {
+			addImage(imOperation, SelectedFrames.all(), explicitImageFormat);
+		}
+
+		default void addImage(IMOperation imOperation, SelectedFrames selectedFrames) {
+			addImage(imOperation, selectedFrames, null);
+		}
+
+		void addImage(IMOperation imOperation, SelectedFrames selectedFrames, String explicitImageFormat);
 
 		default Consumer<SoftExecutor> getSoftExecutor() {
 			return c -> {};
@@ -679,13 +689,8 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		}
 
 		@Override
-		public void addImageFirstPage(IMOperation imOperation, String explicitImageFormat) {
-			sourceFiles.forEach(file -> imOperation.image(file, "[0]", explicitImageFormat));
-		}
-
-		@Override
-		public void addImageAllPages(IMOperation imOperation, String explicitImageFormat) {
-			sourceFiles.forEach(f -> imOperation.image(f, explicitImageFormat));
+		public void addImage(IMOperation imOperation, SelectedFrames selectedFrames, String explicitImageFormat) {
+			sourceFiles.forEach(f -> imOperation.image(f, selectedFrames, explicitImageFormat));
 		}
 
 		@Override
@@ -713,16 +718,9 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		}
 
 		@Override
-		public void addImageFirstPage(IMOperation imOperation, String explicitImageFormat) {
+		public void addImage(IMOperation imOperation, SelectedFrames selectedFrames, String explicitImageFormat) {
 			// - : standard input
-			// [0] : first page of the image
-			imOperation.image("-[0]", explicitImageFormat);
-		}
-
-		@Override
-		public void addImageAllPages(IMOperation imOperation, String explicitImageFormat) {
-			// - : standard input
-			imOperation.image("-", explicitImageFormat);
+			imOperation.image("-", selectedFrames, explicitImageFormat);
 		}
 
 		@Override

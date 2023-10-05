@@ -25,6 +25,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.fagu.fmv.im.IMOperation;
+import org.fagu.fmv.im.SelectedFrames;
 import org.fagu.fmv.im.soft.Convert;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.Loggers;
@@ -63,7 +64,7 @@ public class IMReducer extends AbstractReducer {
 	public Reduced reduceMedia(File srcFile, String consolePrefixMessage, Logger logger) throws IOException {
 		File destFile = getTempFile(srcFile, format);
 		IMOperation op = new IMOperation();
-		op.image(srcFile, "[0]").autoOrient().quality(quality).image(destFile);
+		op.image(srcFile, SelectedFrames.first()).autoOrient().quality(quality).image(destFile);
 
 		Soft convertSoft = Convert.search();
 		convertSoft.withParameters(op.toList())

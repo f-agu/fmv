@@ -617,7 +617,7 @@ public class IMConvertImageMetadatas extends MapImageMetadatas implements Serial
 
 		@Override
 		public void addImageFirstPage(IMOperation imOperation) {
-			sourceFiles.forEach(file -> imOperation.image(file, "[0]"));
+			sourceFiles.forEach(file -> imOperation.image(file, SelectedFrames.first()));
 		}
 
 		@Override
