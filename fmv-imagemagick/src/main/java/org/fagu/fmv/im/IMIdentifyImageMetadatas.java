@@ -630,9 +630,17 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 		boolean has();
 
-		void addImageFirstPage(IMOperation imOperation);
+		default void addImageFirstPage(IMOperation imOperation) {
+			addImageFirstPage(imOperation, null);
+		}
 
-		void addImageAllPages(IMOperation imOperation);
+		void addImageFirstPage(IMOperation imOperation, String explicitImageFormat);
+
+		default void addImageAllPages(IMOperation imOperation) {
+			addImageAllPages(imOperation, null);
+		}
+
+		void addImageAllPages(IMOperation imOperation, String explicitImageFormat);
 
 		default Consumer<SoftExecutor> getSoftExecutor() {
 			return c -> {};
@@ -671,13 +679,13 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		}
 
 		@Override
-		public void addImageFirstPage(IMOperation imOperation) {
-			sourceFiles.forEach(file -> imOperation.image(file, "[0]"));
+		public void addImageFirstPage(IMOperation imOperation, String explicitImageFormat) {
+			sourceFiles.forEach(file -> imOperation.image(file, "[0]", explicitImageFormat));
 		}
 
 		@Override
-		public void addImageAllPages(IMOperation imOperation) {
-			sourceFiles.forEach(imOperation::image);
+		public void addImageAllPages(IMOperation imOperation, String explicitImageFormat) {
+			sourceFiles.forEach(f -> imOperation.image(f, explicitImageFormat));
 		}
 
 		@Override
@@ -705,16 +713,16 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		}
 
 		@Override
-		public void addImageFirstPage(IMOperation imOperation) {
+		public void addImageFirstPage(IMOperation imOperation, String explicitImageFormat) {
 			// - : standard input
 			// [0] : first page of the image
-			imOperation.image("-[0]");
+			imOperation.image("-[0]", explicitImageFormat);
 		}
 
 		@Override
-		public void addImageAllPages(IMOperation imOperation) {
+		public void addImageAllPages(IMOperation imOperation, String explicitImageFormat) {
 			// - : standard input
-			imOperation.image("-");
+			imOperation.image("-", explicitImageFormat);
 		}
 
 		@Override
