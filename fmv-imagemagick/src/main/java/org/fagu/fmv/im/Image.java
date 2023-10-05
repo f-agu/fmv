@@ -39,33 +39,20 @@ public class Image implements Media, Comparable<Image>, Serializable {
 
 	private IMIdentifyImageMetadatas metadatas;
 
-	/**
-	 * @param file
-	 */
 	public Image(File file) {
 		this.file = file;
 	}
 
-	/**
-	 * @param file
-	 * @param metadatas
-	 */
 	public Image(File file, IMIdentifyImageMetadatas metadatas) {
 		this.file = file;
 		this.metadatas = metadatas;
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.Media#getFile()
-	 */
 	@Override
 	public File getFile() {
 		return file;
 	}
 
-	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
 	@Override
 	public int compareTo(Image o) {
 		long t1 = getTime();
@@ -79,9 +66,6 @@ public class Image implements Media, Comparable<Image>, Serializable {
 		return file.getName().compareToIgnoreCase(o.file.getName());
 	}
 
-	/**
-	 * @see org.fagu.fmv.media.Media#getTime()
-	 */
 	@Override
 	public long getTime() {
 		if(time > 0) {
@@ -91,9 +75,6 @@ public class Image implements Media, Comparable<Image>, Serializable {
 		return time;
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.Media#getMetadatas()
-	 */
 	@Override
 	public IMIdentifyImageMetadatas getMetadatas() {
 		if(metadatas == null) {
@@ -106,9 +87,6 @@ public class Image implements Media, Comparable<Image>, Serializable {
 		return metadatas;
 	}
 
-	/**
-	 * @see org.fagu.fmv.media.Media#getDevice()
-	 */
 	@Override
 	public String getDevice() {
 		StringBuilder key = new StringBuilder();
@@ -124,7 +102,6 @@ public class Image implements Media, Comparable<Image>, Serializable {
 			key.append(deviceModel);
 		}
 		return key.toString();
-
 	}
 
 }

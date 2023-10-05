@@ -37,64 +37,40 @@ public class ColorSpaceCMYK extends ColorSpace {
 
 	private static final ColorSpace COLOR_SPACE_sRGB = ColorSpace.getInstance(ColorSpace.CS_sRGB);
 
-	/**
-	 * 
-	 */
 	public ColorSpaceCMYK() {
 		super(TYPE_CMYK, 4);
 	}
 
-	/**
-	 * @see java.awt.color.ColorSpace#getNumComponents()
-	 */
 	@Override
 	public int getNumComponents() {
 		return 4;
 	}
 
-	/**
-	 * @see java.awt.color.ColorSpace#getName(int)
-	 */
 	@Override
 	public String getName(int index) {
 		return NAMES[index];
 	}
 
-	/**
-	 * @see java.awt.color.ColorSpace#getType()
-	 */
 	@Override
 	public int getType() {
 		return TYPE_CMYK;
 	}
 
-	/**
-	 * @see java.awt.color.ColorSpace#fromCIEXYZ(float[])
-	 */
 	@Override
 	public float[] fromCIEXYZ(float[] colorvalue) {
 		return fromRGB(COLOR_SPACE_sRGB.fromCIEXYZ(colorvalue));
 	}
 
-	/**
-	 * @see java.awt.color.ColorSpace#toCIEXYZ(float[])
-	 */
 	@Override
 	public float[] toCIEXYZ(float[] colorvalue) {
 		return COLOR_SPACE_sRGB.toCIEXYZ(toRGB(colorvalue));
 	}
 
-	/**
-	 * @see java.awt.color.ColorSpace#isCS_sRGB()
-	 */
 	@Override
 	public boolean isCS_sRGB() {
 		return false;
 	}
 
-	/**
-	 * @see java.awt.color.ColorSpace#fromRGB(float[])
-	 */
 	@Override
 	public float[] fromRGB(float[] rgbValues) {
 		float c = 1.0f - rgbValues[0];
@@ -117,9 +93,6 @@ public class ColorSpaceCMYK extends ColorSpace {
 		return cmykValues;
 	}
 
-	/**
-	 * @see java.awt.color.ColorSpace#toRGB(float[])
-	 */
 	@Override
 	public float[] toRGB(float[] cmykValues) {
 		// System.out.println("CMYK: " + cmykValues[0] + " " + cmykValues[1] + " " + cmykValues[2] + " " +

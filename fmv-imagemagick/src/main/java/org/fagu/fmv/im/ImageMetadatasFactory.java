@@ -35,33 +35,21 @@ import org.fagu.fmv.media.MetadatasFactory;
  */
 public class ImageMetadatasFactory extends MetadatasFactory {
 
-	/**
-	 * 
-	 */
 	public ImageMetadatasFactory() {
 		super(IMExceptionKnownAnalyzer.class);
 	}
 
-	/**
-	 * @see java.util.function.Predicate#test(java.lang.Object)
-	 */
 	@Override
 	public boolean test(FileType t) {
 		return t == FileType.IMAGE;
 	}
 
-	/**
-	 * @see org.fagu.fmv.media.MetadatasFactory#withFile(java.io.File)
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public MetadatasBuilder withFile(File file) {
 		return IMIdentifyImageMetadatas.with(file);
 	}
 
-	/**
-	 * @see org.fagu.fmv.media.MetadatasFactory#parseJSON(java.lang.String)
-	 */
 	@Override
 	public Metadatas parseJSON(String json) {
 		return IMIdentifyImageMetadatas.parseJSON(json);

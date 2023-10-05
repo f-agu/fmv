@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.fagu.fmv.im.IMOperation;
+import org.fagu.fmv.im.SelectedFrames;
 import org.fagu.fmv.im.soft.Convert;
 import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
@@ -44,7 +45,7 @@ class ReduceImageConvertertestCase {
 		try (ReduceImageConverter converter = new ReduceImageConverter(new File("."))) {
 			converter.setSize(Size.HD720);
 			IMOperation op = new IMOperation();
-			op.image("source.jpg", "[0]");
+			op.image("source.jpg", SelectedFrames.first());
 			converter.populateOperation(op);
 			op.image("dest.jpg");
 

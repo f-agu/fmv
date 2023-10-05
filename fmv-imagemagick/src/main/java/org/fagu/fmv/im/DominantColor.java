@@ -63,7 +63,7 @@ public class DominantColor {
 	}
 
 	public Color getDominantColor(File file, Consumer<CommandLine> logger) throws IOException {
-		IMOperation op = createIMOperation(o -> o.image(file, "[0]"));
+		IMOperation op = createIMOperation(o -> o.image(file, SelectedFrames.first()));
 		List<String> outputs = new ArrayList<>();
 		convertSoft.withParameters(op.toList())
 				.addCommonReadLine(outputs::add)
@@ -78,7 +78,13 @@ public class DominantColor {
 
 	public Color getDominantColor(InputStreamSupplier inputStreamSupplier, Consumer<CommandLine> logger, Consumer<IMOperation> imOpCons)
 			throws IOException {
-		IMOperation op = createIMOperation(o -> o.image("-", "[0]"));
+		return getDominantColor(inputStreamSupplier, logger, imOpCons, null);
+	}
+
+	public Color getDominantColor(InputStreamSupplier inputStreamSupplier, Consumer<CommandLine> logger, Consumer<IMOperation> imOpCons,
+			String explicitImageFormat)
+			throws IOException {
+		IMOperation op = createIMOperation(o -> o.image("-", SelectedFrames.first(), explicitImageFormat));
 		if(imOpCons != null) {
 			imOpCons.accept(op);
 		}
