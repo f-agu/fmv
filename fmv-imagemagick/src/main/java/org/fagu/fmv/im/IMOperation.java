@@ -55,19 +55,27 @@ public class IMOperation {
 	// ======= image =======
 
 	public IMOperation image(String file) {
-		return add(file);
+		return image(file, null);
 	}
 
-	public IMOperation image(String file, String special) {
-		return add(file + (special != null ? special : ""));
+	public IMOperation image(String file, String explicitImageFormat) {
+		return add(getExplicitImageFormat(explicitImageFormat) + file);
+	}
+
+	public IMOperation image(String file, String special, String explicitImageFormat) {
+		return add(getExplicitImageFormat(explicitImageFormat) + file + (special != null ? special : ""));
 	}
 
 	public IMOperation image(File file) {
-		return image(file.getAbsolutePath());
+		return image(file, null);
 	}
 
-	public IMOperation image(File file, String special) {
-		return image(file.getAbsolutePath(), special);
+	public IMOperation image(File file, String explicitImageFormat) {
+		return image(file.getAbsolutePath(), explicitImageFormat);
+	}
+
+	public IMOperation image(File file, String special, String explicitImageFormat) {
+		return image(file.getAbsolutePath(), special, explicitImageFormat);
 	}
 
 	// ======= -adaptive-blur =======
@@ -2823,6 +2831,12 @@ public class IMOperation {
 	@Override
 	public String toString() {
 		return CommandLineUtils.toLine(arguments);
+	}
+
+	// *********************************************************
+
+	private static String getExplicitImageFormat(String format) {
+		return StringUtils.isBlank(format) ? StringUtils.EMPTY : format.toLowerCase() + ':';
 	}
 
 }
