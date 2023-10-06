@@ -3,11 +3,7 @@ git clone https://github.com/f-agu/fmv.git
 cd fmv
 del release.properties pom.xml.releaseBackup
 mvn compile test
-<<<<<<< HEAD
-mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.24.4 -DreleaseVersion=0.24.4 -DdevelopmentVersion=0.25.0-SNAPSHOT -U -B release:prepare
-=======
-mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.25.2 -DreleaseVersion=0.25.2 -DdevelopmentVersion=0.26.0-SNAPSHOT -U -B release:prepare
->>>>>>> ea606a17 (Fix selectedFrames)
+mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.24.5 -DreleaseVersion=0.24.5 -DdevelopmentVersion=0.24.6-SNAPSHOT -U -B release:prepare
 
 
 
