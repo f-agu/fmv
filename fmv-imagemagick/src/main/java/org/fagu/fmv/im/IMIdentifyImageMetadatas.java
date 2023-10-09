@@ -108,6 +108,8 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 		boolean checkAnimated;
 
+		String explicitImageFormat;
+
 		private ImageMetadatasSourcesBuilder(Sources<T> sources) {
 			this.sources = sources;
 			identifySoft = Identify.search();
@@ -135,10 +137,15 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 			return getThis();
 		}
 
+		public B withExplicitImageFormat(String explicitImageFormat) {
+			this.explicitImageFormat = explicitImageFormat;
+			return getThis();
+		}
+
 		@Override
 		public IMIdentifyImageMetadatas extract() throws IOException {
 			Map<T, IMIdentifyImageMetadatas> extract = IMIdentifyImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor,
-					checkAnimated);
+					checkAnimated, explicitImageFormat);
 			return extract.values().iterator().next();
 		}
 
@@ -170,7 +177,7 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		}
 
 		public Map<File, IMIdentifyImageMetadatas> extractAll() throws IOException {
-			return IMIdentifyImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor, checkAnimated);
+			return IMIdentifyImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor, checkAnimated, explicitImageFormat);
 		}
 
 	}
@@ -503,7 +510,7 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 			Sources<T> sources,
 			Consumer<CommandLine> logger,
 			Consumer<SoftExecutor> customizeExecutor,
-			boolean checkAnimated)
+			boolean checkAnimated, String explicitImageFormat)
 			throws IOException {
 
 		Objects.requireNonNull(identifySoft);
@@ -530,9 +537,9 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 		op.ping().format(joiner.toString());
 
 		if(checkAnimated) {
-			sources.addImageAllPages(op);
+			sources.addImageAllPages(op, explicitImageFormat);
 		} else {
-			sources.addImageFirstPage(op);
+			sources.addImageFirstPage(op, explicitImageFormat);
 		}
 
 		List<String> outputs = new ArrayList<>();
