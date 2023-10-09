@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.fagu</groupId>
 	<artifactId>fmv-parent</artifactId>
-	<version>0.24.8-SNAPSHOT</version>
+	<version>0.24.9-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>fmv-parent</name>
 	<description>FMV parent</description>
