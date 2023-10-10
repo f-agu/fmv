@@ -43,6 +43,7 @@
 		<module>fmv-soft-auto</module>
 		<!-- <module>fmv-soft-spring-boot-1.x</module> -->
 		<module>fmv-soft-spring-boot-2.x</module>
+		<module>fmv-soft-spring-boot-3.x</module>
 		<module>fmv-textprogressbar</module>
 		<module>fmv-ui</module>
 		<module>fmv-ui-web</module>
@@ -65,7 +66,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
 		<spring-boot1.version>1.5.22.RELEASE</spring-boot1.version>
-		<spring-boot2.version>2.7.13</spring-boot2.version>
+		<spring-boot2.version>2.7.16</spring-boot2.version>
+		<spring-boot3.version>3.1.4</spring-boot3.version>
 		
 		<commons-cli.version>1.5.0</commons-cli.version>
 		<commons-codec.version>1.16.0</commons-codec.version>

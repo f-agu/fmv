@@ -65,6 +65,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.fagu</groupId>
+				<artifactId>fmv-soft-spring-boot-3.x</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.fagu</groupId>
 				<artifactId>fmv-textprogress</artifactId>
 				<version>${project.version}</version>
 			</dependency>

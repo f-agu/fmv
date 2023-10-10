@@ -34,6 +34,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.Fraction;
 
 
@@ -207,7 +208,7 @@ public class Parsers {
 			@Override
 			public Byte parse(Object i) {
 				try {
-					return Byte.parseByte((String)i);
+					return Byte.parseByte(fixNumberEndsWithComa((String)i));
 				} catch(NumberFormatException e) {
 					return Fraction.getFraction((String)i).byteValue();
 				}
@@ -221,7 +222,7 @@ public class Parsers {
 			@Override
 			public Short parse(Object i) {
 				try {
-					return Short.parseShort((String)i);
+					return Short.parseShort(fixNumberEndsWithComa((String)i));
 				} catch(NumberFormatException e) {
 					return Fraction.getFraction((String)i).shortValue();
 				}
@@ -235,7 +236,7 @@ public class Parsers {
 			@Override
 			public Integer parse(Object i) {
 				try {
-					return Integer.parseInt((String)i);
+					return Integer.parseInt(fixNumberEndsWithComa((String)i));
 				} catch(NumberFormatException e) {
 					return Fraction.getFraction((String)i).intValue();
 				}
@@ -249,7 +250,7 @@ public class Parsers {
 			@Override
 			public Long parse(Object i) {
 				try {
-					return Long.parseLong((String)i);
+					return Long.parseLong(fixNumberEndsWithComa((String)i));
 				} catch(NumberFormatException e) {
 					return Fraction.getFraction((String)i).longValue();
 				}
@@ -263,7 +264,7 @@ public class Parsers {
 			@Override
 			public Float parse(Object i) {
 				try {
-					return Float.parseFloat((String)i);
+					return Float.parseFloat(fixNumberEndsWithComa((String)i));
 				} catch(NumberFormatException e) {
 					return Fraction.getFraction((String)i).floatValue();
 				}
@@ -277,7 +278,7 @@ public class Parsers {
 			@Override
 			public Double parse(Object i) {
 				try {
-					return Double.parseDouble(((String)i).replace(',', '.'));
+					return Double.parseDouble(fixNumberEndsWithComa((String)i).replace(',', '.'));
 				} catch(NumberFormatException e) {
 					return Fraction.getFraction((String)i).doubleValue();
 				}
@@ -291,7 +292,7 @@ public class Parsers {
 			@Override
 			public Number parse(Object o) {
 				try {
-					return Double.parseDouble(((String)o).replace(',', '.'));
+					return Double.parseDouble(fixNumberEndsWithComa((String)o).replace(',', '.'));
 				} catch(NumberFormatException e) {
 					return Fraction.getFraction((String)o).doubleValue();
 				}
@@ -307,6 +308,17 @@ public class Parsers {
 				return Fraction.getFraction((String)o);
 			}
 		};
+	}
+
+	public static String fixNumberEndsWithComa(String s) {
+		if(s == null) {
+			return null;
+		}
+		String trimmed = s.trim();
+		if(trimmed.endsWith(",")) {
+			return StringUtils.substringBeforeLast(trimmed, ",");
+		}
+		return s;
 	}
 
 	public static Parser<LocalDate> objectToLocalDate() {

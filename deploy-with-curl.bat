@@ -26,6 +26,7 @@ call:artefact fmv-soft
 call:artefact fmv-soft-auto
 call:artefact fmv-soft-spring-boot-1.x
 call:artefact fmv-soft-spring-boot-2.x
+call:artefact fmv-soft-spring-boot-3.x
 call:artefact fmv-utils
 call:artefact fmv-version
 
