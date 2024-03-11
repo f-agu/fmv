@@ -40,7 +40,7 @@ class DominantColorTestCase {
 	void testRealImageRGB_File() throws IOException {
 		File file = ImageResourceUtils.extractFile(ImageResourceUtils.BAD_ASS_TOTTOO_FAIL);
 		try {
-			Color dominantColor = DominantColor.getInstance().getDominantColor(file, s -> {});
+			Color dominantColor = DominantColor.getInstance().getDominantColor(file, s -> {}, null);
 			ColorTestUtils.assertAround(dominantColor, 85, 69, 70, 1);
 		} finally {
 			if(file != null) {
