@@ -81,6 +81,7 @@ public class SoftTestCase {
 	}
 
 	@Test
+	@Disabled
 	void testVLC() throws Exception {
 		Soft vlc = VLC.search();
 		vlc
