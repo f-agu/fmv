@@ -9,6 +9,7 @@ import org.fagu.fmv.soft.find.FoundReasons;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.policy.VersionSoftPolicy;
 import org.fagu.fmv.soft.gs.GSSoftProvider;
+import org.fagu.fmv.soft.vlc.VLC;
 import org.fagu.version.Version;
 /*-
  * #%L
@@ -77,6 +78,15 @@ public class SoftTestCase {
 		SoftLogger softChecker = new SoftLogger(Collections.singletonList(soft));
 		softChecker.log(System.out::println);
 		// System.out.println(soft);
+	}
+
+	@Test
+	void testVLC() throws Exception {
+		Soft vlc = VLC.search();
+		vlc
+				.withoutParameter()
+				.timeOut(5_000)
+				.execute();
 	}
 
 }

@@ -9,16 +9,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Collections;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.StringJoiner;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -39,72 +35,29 @@ public class BackupZipBootstrap {
 
 	public static void main(String... args) throws IOException {
 		if(args.length != 2) {
-			System.out.println("Usage: java org.fagu.fmv.mymedia.sources.BackupZipBootstrap <file-list-folders|path-to-backup> <output-folder>");
+			System.out.println("Usage: java " + BackupZipBootstrap.class.getName() + " <file-list-folders|path-to-backup> <output-folder>");
 			return;
 		}
-		List<Path> folders = loadFolders(args[0]);
+		List<Path> folders = FileListFolders.loadFolders(args[0]);
 		Path outputFolder = Paths.get(args[1]);
 		Files.createDirectories(outputFolder);
-		BackupZipBootstrap backupZipBootstrap = new BackupZipBootstrap();
 		NavigableSet<ProjectStats> projectStatsSet = new TreeSet<>();
 		for(Path folder : folders) {
-			backupZipBootstrap.searchProject(folder, outputFolder, projectStatsSet::add);
+			ProjectWalker.searchProject(folder, path -> {
+				Path pomPath = path.resolve("pom.xml");
+				String group = folder.getFileName().toString();
+				ReadPomXML readPomXML = new ReadPomXML("version");
+				ProjectStats projectStats = new ProjectStats(group, path.getFileName().toString(), readPomXML.getInfo(pomPath));
+				GitFileTools.findURL(path).ifPresent(projectStats::setGitUrl);
+				backupProject(folder, path, outputFolder, projectStats);
+				projectStatsSet.add(projectStats);
+				return FileVisitResult.SKIP_SUBTREE;
+			});
 		}
 		displayStats(projectStatsSet);
 	}
 
-	private static List<Path> loadFolders(String foldersFile) throws IOException {
-		Path path = Paths.get(foldersFile);
-		if(Files.isDirectory(path)) {
-			return Collections.singletonList(path);
-		}
-		try (Stream<String> lines = Files.lines(path)) {
-			return lines
-					.map(String::trim)
-					.filter(s -> ! s.isEmpty() && ! s.startsWith("#"))
-					.map(Paths::get)
-					.collect(Collectors.toList());
-		}
-	}
-
-	private void searchProject(Path dir, Path outputFolder, Consumer<ProjectStats> projectStatsConsumer) throws IOException {
-		System.out.println(dir);
-		String group = dir.getFileName().toString();
-		Files.walkFileTree(dir, new FileVisitor<Path>() {
-
-			@Override
-			public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes atts) throws IOException {
-				Path pomPath = path.resolve("pom.xml");
-				if(Files.exists(pomPath)) {
-					ReadPomXML readPomXML = new ReadPomXML("version");
-					ProjectStats projectStats = new ProjectStats(group, path.getFileName().toString(), readPomXML.getInfo(pomPath));
-					GitTools.findURL(path).ifPresent(projectStats::setGitUrl);
-					backupProject(dir, path, outputFolder, projectStats);
-					projectStatsConsumer.accept(projectStats);
-					return FileVisitResult.SKIP_SUBTREE;
-				}
-				return FileVisitResult.CONTINUE;
-			}
-
-			@Override
-			public FileVisitResult visitFile(Path path, BasicFileAttributes mainAtts) throws IOException {
-				return FileVisitResult.CONTINUE;
-			}
-
-			@Override
-			public FileVisitResult postVisitDirectory(Path path, IOException exc) throws IOException {
-				return FileVisitResult.CONTINUE;
-			}
-
-			@Override
-			public FileVisitResult visitFileFailed(Path path, IOException exc) throws IOException {
-				return path.equals(dir) ? FileVisitResult.TERMINATE : FileVisitResult.CONTINUE;
-			}
-
-		});
-	}
-
-	private ProjectStats backupProject(Path rootPath, Path dir, Path outputFolder, ProjectStats projectStats) throws IOException {
+	private static ProjectStats backupProject(Path rootPath, Path dir, Path outputFolder, ProjectStats projectStats) throws IOException {
 		Filter<Path> filter = GitIgnoreFilter.open(dir);
 		Path outputFile = outputFolder.resolve(projectStats.getName() + '_' + projectStats.getVersion() + ".zip");
 		if(Files.exists(outputFile)) {
@@ -132,7 +85,8 @@ public class BackupZipBootstrap {
 		return projectStats;
 	}
 
-	private void browseProject(Path rootPath, Path dir, DirectoryStream.Filter<Path> filter, ZipOutputStream zipOutputStream, AtomicInteger countPath,
+	private static void browseProject(Path rootPath, Path dir, DirectoryStream.Filter<Path> filter, ZipOutputStream zipOutputStream,
+			AtomicInteger countPath,
 			ProjectStats projectStats)
 			throws IOException {
 		Files.walkFileTree(dir, new FileVisitor<Path>() {

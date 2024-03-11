@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.Soft;
+import org.fagu.fmv.soft.SoftExecutor;
 import org.fagu.fmv.utils.io.InputStreamSupplier;
 
 
@@ -59,30 +60,34 @@ public class DominantColor {
 	}
 
 	public Color getDominantColor(File file) throws IOException {
-		return getDominantColor(file, null);
+		return getDominantColor(file, null, null);
 	}
 
-	public Color getDominantColor(File file, Consumer<CommandLine> logger) throws IOException {
+	public Color getDominantColor(File file, Consumer<CommandLine> logger, Consumer<SoftExecutor> softExecutorConsumer) throws IOException {
 		IMOperation op = createIMOperation(o -> o.image(file, SelectedFrames.first()));
 		List<String> outputs = new ArrayList<>();
-		convertSoft.withParameters(op.toList())
+		SoftExecutor executor = convertSoft.withParameters(op.toList())
 				.addCommonReadLine(outputs::add)
-				.logCommandLine(logger)
+				.logCommandLine(logger);
+		if(softExecutorConsumer != null) {
+			softExecutorConsumer.accept(executor);
+		}
+		executor
 				.execute();
 		return parseColor(outputs);
 	}
 
 	public Color getDominantColor(InputStreamSupplier inputStreamSupplier, Consumer<CommandLine> logger) throws IOException {
-		return getDominantColor(inputStreamSupplier, logger, null);
+		return getDominantColor(inputStreamSupplier, logger, null, null, null);
 	}
 
 	public Color getDominantColor(InputStreamSupplier inputStreamSupplier, Consumer<CommandLine> logger, Consumer<IMOperation> imOpCons)
 			throws IOException {
-		return getDominantColor(inputStreamSupplier, logger, imOpCons, null);
+		return getDominantColor(inputStreamSupplier, logger, imOpCons, null, null);
 	}
 
 	public Color getDominantColor(InputStreamSupplier inputStreamSupplier, Consumer<CommandLine> logger, Consumer<IMOperation> imOpCons,
-			String explicitImageFormat)
+			String explicitImageFormat, Consumer<SoftExecutor> softExecutorConsumer)
 			throws IOException {
 		IMOperation op = createIMOperation(o -> o.image("-", SelectedFrames.first(), explicitImageFormat));
 		if(imOpCons != null) {
@@ -91,10 +96,14 @@ public class DominantColor {
 		List<String> outputs = new ArrayList<>();
 		try (InputStream inputStream = inputStreamSupplier.getInputStream()) {
 			Objects.requireNonNull(inputStream);
-			convertSoft.withParameters(op.toList())
+			SoftExecutor executor = convertSoft.withParameters(op.toList())
 					.addCommonReadLine(outputs::add)
 					.logCommandLine(logger)
-					.input(inputStream)
+					.input(inputStream);
+			if(softExecutorConsumer != null) {
+				softExecutorConsumer.accept(executor);
+			}
+			executor
 					.execute();
 		}
 		return parseColor(outputs);

@@ -17,9 +17,9 @@ import org.apache.commons.lang3.StringUtils;
  * @author f.agu
  * @created 27 juil. 2022 12:09:58
  */
-class GitTools {
+class GitFileTools {
 
-	GitTools() {}
+	GitFileTools() {}
 
 	static Optional<String> findURL(Path path) {
 		Path configPath = path.resolve(".git").resolve("config");

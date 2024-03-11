@@ -83,7 +83,6 @@ class GSExceptionKnowAnalyzeTestCase {
 		} finally {
 			FileUtils.deleteDirectory(folder);
 		}
-
 	}
 
 	@Test

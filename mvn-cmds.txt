@@ -3,7 +3,7 @@ git clone https://github.com/f-agu/fmv.git
 cd fmv
 del release.properties pom.xml.releaseBackup
 mvn compile test
-mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.25.2 -DreleaseVersion=0.25.2 -DdevelopmentVersion=0.26.0-SNAPSHOT -U -B release:prepare
+mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.25.3 -DreleaseVersion=0.25.3 -DdevelopmentVersion=0.26.0-SNAPSHOT -U -B release:prepare
 
 
 
@@ -17,7 +17,7 @@ git add .
 git commit -m "set version"
 git push origin master
 
-git checkout tags/0.25.1
+git checkout tags/0.25.3
 mvn install -DskipTests
 
 
