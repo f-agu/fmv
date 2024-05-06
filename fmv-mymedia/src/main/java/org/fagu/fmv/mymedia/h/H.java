@@ -52,6 +52,7 @@ public class H {
 			Map<Predicate<String>, Consumer<String>> switcherMap = new LinkedHashMap<>();
 			switcherMap.put("Mas"::equals, l -> containsSpace(l, H::mas));
 			switcherMap.put("Cpl"::equals, l -> containsSpace(l, H::cpl));
+			switcherMap.put("vv+h"::equals, l -> containsSpace(l, H::vvh));
 			switcherMap.put(l -> l.startsWith("ref"), l -> containsSpace(l, H::dtl));
 			switcherMap.put(l -> l.startsWith("dat"), l -> containsSpace(l, H::dtl));
 			switcherMap.put(l -> l.startsWith("reg"), l -> containsSpace(l, H::reg));
@@ -125,6 +126,15 @@ public class H {
 	}
 
 	private static void dmtl(String line) {
+		if(DATE.matcher(line.trim()).matches()) {
+			System.out.println();
+			System.out.println(line);
+			return;
+		}
+		System.out.println(line);
+	}
+
+	private static void vvh(String line) {
 		if(DATE.matcher(line.trim()).matches()) {
 			System.out.println();
 			System.out.println(line);
