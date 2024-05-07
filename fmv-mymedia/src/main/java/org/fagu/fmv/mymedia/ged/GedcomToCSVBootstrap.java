@@ -1,59 +1,95 @@
 package org.fagu.fmv.mymedia.ged;
 
 import java.io.File;
-import java.time.LocalDate;
-import java.time.Year;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.Temporal;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
-import java.util.StringJoiner;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
+import org.apache.commons.io.FilenameUtils;
 import org.folg.gedcom.model.Gedcom;
 import org.folg.gedcom.model.Person;
 import org.folg.gedcom.parser.ModelParser;
+import org.xml.sax.SAXException;
 
 
+/**
+ * @author f.agu
+ * @created 7 mai 2024 11:07:45
+ */
 public class GedcomToCSVBootstrap {
 
-	public static void main(String... args) throws Exception {
-		File gedcomIn = new File("d:\\tmp\\base.ged");
-		ModelParser modelParser = new ModelParser();
-		Gedcom gedcom = modelParser.parseGedcom(gedcomIn);
+	private static final List<Column> COLUMNS = List.of(
+			new Columns.Id(),
+			new Columns.Sex(),
+			new Columns.Lastname(),
+			new Columns.Firstnames(),
+			new Columns.BirthDate(),
+			new Columns.BirthPlace(),
+			new Columns.DeathDate(),
+			new Columns.DeathPlace());
 
-		StringJoiner joiner = new StringJoiner("\t");
-		joiner.add("ID").add("Sexe")
-				.add("Nom")
-				.add("Prénoms")
-				.add("Date de naissance")
-				.add("Lieu de naissance")
-				.add("Date de décès")
-				.add("Lieu de décès");
-		System.out.println(joiner);
+	private static final String COLUMN_SEPARATOR = "\t";
+
+	public static void main(String... args) throws Exception {
+		if(args.length != 1) {
+			System.out.println("Usage: java -cp . org.fagu.fmv.mymedia.ged.GedcomToCSVBootstrap <ged or zip file>");
+			return;
+		}
+		File file = new File(args[0]);
+		if( ! file.exists()) {
+			System.out.println("File not found: " + file);
+			return;
+		}
+		if( ! file.isFile()) {
+			System.out.println("It is not a file: " + file);
+			return;
+		}
+		String extension = FilenameUtils.getExtension(file.getName());
+		if("ged".equalsIgnoreCase(extension)) {
+			exportGed(file);
+		} else if("zip".equalsIgnoreCase(extension)) {
+			exportZip(file);
+		} else {
+			System.out.println("Ignore: " + file);
+		}
+	}
+
+	private static void exportGed(File file) throws IOException, SAXException {
+		try (InputStream inputStream = new FileInputStream(file)) {
+			export(inputStream);
+		}
+	}
+
+	private static void exportZip(File file) throws IOException, SAXException {
+		try (ZipInputStream inputStream = new ZipInputStream(new FileInputStream(file))) {
+			ZipEntry zipEntry = null;
+			while((zipEntry = inputStream.getNextEntry()) != null) {
+				String extension = FilenameUtils.getExtension(zipEntry.getName());
+				if("ged".equalsIgnoreCase(extension)) {
+					export(inputStream);
+					break;
+				}
+			}
+		}
+	}
+
+	private static void export(InputStream inputStream) throws IOException, SAXException {
+		ModelParser modelParser = new ModelParser();
+		Gedcom gedcom = modelParser.parseGedcom(inputStream);
+
+		System.out.println(COLUMNS.stream()
+				.map(Column::getTitle)
+				.collect(Collectors.joining(COLUMN_SEPARATOR)));
 		List<Person> people = gedcom.getPeople();
 		for(Person person : people) {
-			joiner = new StringJoiner("\t");
-			joiner
-					.add(person.getId())
-					.add(PersonUtils.getSex(person).name())
-					.add(PersonUtils.getLastname(person))
-					.add(PersonUtils.getFirstnames(person))
-					.add(PersonUtils.getBirthDate(person).map(t -> formatDate(t)).orElse(""))
-					.add(PersonUtils.getBirthPlace(person).orElse(""))
-					.add(PersonUtils.getDeathDate(person).map(t -> formatDate(t)).orElse(""))
-					.add(PersonUtils.getDeathPlace(person).orElse(""));
-			// .add(person.);
-			System.out.println(joiner);
+			System.out.println(COLUMNS.stream()
+					.map(c -> c.getValue(person))
+					.collect(Collectors.joining(COLUMN_SEPARATOR)));
 		}
 	}
 
-	private static String formatDate(Temporal temporal) {
-		if(temporal instanceof LocalDate t) {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-			return t.format(formatter);
-		}
-		if(temporal instanceof Year t) {
-			return t.toString();
-		}
-		return "?";
-	}
 }
