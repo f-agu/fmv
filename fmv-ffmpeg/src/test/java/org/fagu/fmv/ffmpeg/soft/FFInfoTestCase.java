@@ -343,6 +343,26 @@ class FFInfoTestCase {
 		assertFull(newParserFFMpeg(lines), lines, null, LocalDate.of(2022, 1, 24), null);
 	}
 
+	@Test
+	void testFFMpeg_7_0_1_full_windows() throws Exception {
+		Lines lines = new Lines();
+
+		lines.addOut("ffmpeg version 7.0.1-full_build-www.gyan.dev Copyright (c) 2000-2024 the FFmpeg developers");
+		lines.addOut("built with gcc 13.2.0 (Rev5, Built by MSYS2 project)");
+		lines.addOut(
+				"configuration: --enable-gpl --enable-version3 --enable-static --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-libsnappy --enable-zlib --enable-librist --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-libbluray --enable-libcaca --enable-sdl2 --enable-libaribb24 --enable-libaribcaption --enable-libdav1d --enable-libdavs2 --enable-libuavs3d --enable-libxevd --enable-libzvbi --enable-librav1e --enable-libsvtav1 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxeve --enable-libxvid --enable-libaom --enable-libjxl --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-frei0r --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-liblensfun --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-dxva2 --enable-d3d11va --enable-d3d12va --enable-ffnvcodec --enable-libvpl --enable-nvdec --enable-nvenc --enable-vaapi --enable-libshaderc --enable-vulkan --enable-libplacebo --enable-opencl --enable-libcdio --enable-libgme --enable-libmodplug --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libshine --enable-libtheora --enable-libtwolame --enable-libvo-amrwbenc --enable-libcodec2 --enable-libilbc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-ladspa --enable-libbs2b --enable-libflite --enable-libmysofa --enable-librubberband --enable-libsoxr --enable-chromaprint");
+		lines.addOut("libavutil      59.  8.100 / 59.  8.100");
+		lines.addOut("libavcodec     61.  3.100 / 61.  3.100");
+		lines.addOut("libavformat    61.  1.100 / 61.  1.100");
+		lines.addOut("libavdevice    61.  1.100 / 61.  1.100");
+		lines.addOut("libavfilter    10.  1.100 / 10.  1.100");
+		lines.addOut("libswscale      8.  1.100 /  8.  1.100");
+		lines.addOut("libswresample   5.  1.100 /  5.  1.100");
+		lines.addOut("libpostproc    58.  1.100 / 58.  1.100");
+
+		assertFull(newParserFFMpeg(lines), lines, new Version(7, 0, 1), LocalDate.of(2024, 4, 5), null);
+	}
+
 	// ********************************************************
 
 	private Parser newParserProbe(Lines lines) {

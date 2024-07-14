@@ -76,6 +76,17 @@ public class BuildMapping {
 		// from http://ffmpeg.org/releases/
 
 		NavigableMap<Version, LocalDate> map = new TreeMap<>();
+
+		// ==== 7.x.x
+		map.put(new Version(7, 0, 1), LocalDate.of(2024, 5, 26));
+		map.put(new Version(7, 0), LocalDate.of(2024, 4, 5));
+
+		// ==== 6.x.x
+		map.put(new Version(6, 0), LocalDate.of(2023, 2, 27));
+
+		// ==== 5.x.x
+		map.put(new Version(5, 0), LocalDate.of(2022, 1, 14));
+
 		// ==== 4.x.x
 		map.put(new Version(4, 2, 1), LocalDate.of(2019, 9, 7));
 		map.put(new Version(4, 2), LocalDate.of(2019, 8, 6));

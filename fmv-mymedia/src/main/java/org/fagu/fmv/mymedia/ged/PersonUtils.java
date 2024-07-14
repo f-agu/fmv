@@ -97,6 +97,7 @@ public class PersonUtils {
 		String d = s.startsWith("ABT ") ? s.substring(4) : s;
 		d = d.startsWith("EST ") ? d.substring(4) : d;
 		d = d.startsWith("BEF ") ? d.substring(4) : d;
+		d = d.startsWith("AFT ") ? d.substring(4) : d;
 		if(DATE_D_M_Y.matcher(d).matches()) {
 			try {
 				int day = Integer.parseInt(StringUtils.substringBefore(d, " "));
