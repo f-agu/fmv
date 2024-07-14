@@ -68,12 +68,6 @@ public class Bootstrap {
 		}
 	}
 
-	/**
-	 * @param args
-	 * @param logger
-	 * @return
-	 * @throws IOException
-	 */
 	private static List<SyncConfig> loadConfig(String[] args, Logger logger) throws IOException {
 		List<SyncConfig> configs = new LinkedList<>();
 		for(String arg : args) {
@@ -87,10 +81,6 @@ public class Bootstrap {
 		return configs;
 	}
 
-	/**
-	 * @param configs
-	 * @param logger
-	 */
 	private static void displayConfig(List<SyncConfig> configs, Logger logger) {
 		logger.log("Synchronizations declared:");
 		configs.stream()
@@ -107,11 +97,6 @@ public class Bootstrap {
 				});
 	}
 
-	/**
-	 * @param configs
-	 * @param logger
-	 * @throws IOException
-	 */
 	private static void synchronize(List<SyncConfig> configs, Logger logger) throws IOException {
 		logger.log("Synchronizing...");
 		for(SyncConfig syncConfig : configs) {
@@ -121,12 +106,6 @@ public class Bootstrap {
 		}
 	}
 
-	/**
-	 * @param logger
-	 * @param sourceFile
-	 * @param destFiles
-	 * @throws IOException
-	 */
 	private static void synchronize(Logger logger, File sourceFile, List<File> destFiles) throws IOException {
 		List<Storage> destStorages = null;
 		try (Storage sourceStrage = new FileStorage(sourceFile)) {
@@ -147,10 +126,6 @@ public class Bootstrap {
 		}
 	}
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	private static Logger openLogger() throws IOException {
 		String property = System.getProperty(LOG_FILE_PROPERTY);
 		if(property == null) {

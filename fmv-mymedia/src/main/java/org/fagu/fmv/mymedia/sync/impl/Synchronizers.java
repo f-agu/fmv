@@ -29,17 +29,10 @@ import org.fagu.fmv.mymedia.sync.Synchronizer;
  */
 public class Synchronizers {
 
-	/**
-	 * 
-	 */
 	private Synchronizers() {}
 
 	// --------------------------------------------------
 
-	/**
-	 * @param logger
-	 * @return
-	 */
 	public static Synchronizer getDefault(Logger logger) {
 		return new ConfirmDeleteSynchronizer(new LogSynchronizer(new StandardSynchronizer(), logger));
 	}

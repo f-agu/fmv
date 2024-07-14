@@ -32,73 +32,25 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public interface Synchronizer extends Closeable {
 
-	/**
-	 * @param sourceStorage
-	 * @param destStorages
-	 */
 	default void start(Storage sourceStorage, List<Storage> destStorages) {}
 
-	/**
-	 * @param item
-	 */
 	default void doNothingOnFolder(Item item) {}
 
-	/**
-	 * @param item
-	 */
 	default void doNothingOnFile(Item item) {}
 
-	/**
-	 * @param destItem
-	 * @param name
-	 * @return
-	 * @throws IOException
-	 */
 	Item mkdir(Item destItem, String name) throws IOException;
 
-	/**
-	 * @param destItem
-	 * @param name
-	 * @return
-	 * @throws IOException
-	 */
 	Item createFile(Item destItem, String name) throws IOException;
 
-	/**
-	 * @param srcItem
-	 * @param destItem
-	 * @param progress
-	 * @throws IOException
-	 */
 	default void copyForNew(Item srcItem, Item destItem, AtomicLong progress) throws IOException {}
 
-	/**
-	 * @param srcItem
-	 * @param destItem
-	 * @param progress
-	 * @throws IOException
-	 */
 	default void copyForUpdate(Item srcItem, Item destItem, AtomicLong progress) throws IOException {}
 
-	/**
-	 * @param item
-	 * @return
-	 * @throws IOException
-	 */
 	boolean delete(Item item) throws IOException;
 
-	/**
-	 * @param path
-	 */
 	default void conflict(String path) {}
 
-	/**
-	 * @param path
-	 */
 	default void ignore(String path) {}
 
-	/**
-	 * @param path
-	 */
 	default void unknown(String path) {}
 }

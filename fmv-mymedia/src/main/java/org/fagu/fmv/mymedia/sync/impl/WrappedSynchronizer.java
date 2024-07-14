@@ -37,123 +37,75 @@ public class WrappedSynchronizer implements Synchronizer {
 
 	protected final Synchronizer synchronizer;
 
-	/**
-	 * @param synchronizer
-	 * @param printStream
-	 */
 	public WrappedSynchronizer(Synchronizer synchronizer) {
 		this.synchronizer = Objects.requireNonNull(synchronizer);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#start(org.fagu.fmv.mymedia.sync.Storage, java.util.List)
-	 */
 	@Override
 	public void start(Storage sourceStorage, List<Storage> destStorages) {
 		synchronizer.start(sourceStorage, destStorages);
 	}
 
-	/**
-	 * @see java.io.Closeable#close()
-	 */
 	@Override
 	public void close() throws IOException {
 		synchronizer.close();
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#doNothingOnFile(org.fagu.fmv.mymedia.sync.Item)
-	 */
 	@Override
 	public void doNothingOnFile(Item item) {
 		synchronizer.doNothingOnFile(item);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#doNothingOnFolder(org.fagu.fmv.mymedia.sync.Item)
-	 */
 	@Override
 	public void doNothingOnFolder(Item item) {
 		synchronizer.doNothingOnFolder(item);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#mkdir(org.fagu.fmv.mymedia.sync.Item, java.lang.String)
-	 */
 	@Override
 	public Item mkdir(Item destItem, String name) throws IOException {
 		return synchronizer.mkdir(destItem, name);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#createFile(org.fagu.fmv.mymedia.sync.Item, java.lang.String)
-	 */
 	@Override
 	public Item createFile(Item destItem, String name) throws IOException {
 		return synchronizer.createFile(destItem, name);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#copyForNew(org.fagu.fmv.mymedia.sync.Item,
-	 *      org.fagu.fmv.mymedia.sync.Item, AtomicLong)
-	 */
 	@Override
 	public void copyForNew(Item srcItem, Item destItem, AtomicLong progress) throws IOException {
 		synchronizer.copyForNew(srcItem, destItem, progress);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#copyForUpdate(org.fagu.fmv.mymedia.sync.Item,
-	 *      org.fagu.fmv.mymedia.sync.Item, AtomicLong)
-	 */
 	@Override
 	public void copyForUpdate(Item srcItem, Item destItem, AtomicLong progress) throws IOException {
 		synchronizer.copyForUpdate(srcItem, destItem, progress);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#delete(org.fagu.fmv.mymedia.sync.Item)
-	 */
 	@Override
 	public boolean delete(Item item) throws IOException {
 		return synchronizer.delete(item);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#conflict(java.lang.String)
-	 */
 	@Override
 	public void conflict(String path) {
 		synchronizer.conflict(path);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#ignore(java.lang.String)
-	 */
 	@Override
 	public void ignore(String path) {
 		synchronizer.ignore(path);
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.sync.Synchronizer#unknown(java.lang.String)
-	 */
 	@Override
 	public void unknown(String path) {
 		synchronizer.unknown(path);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Wrapped(" + synchronizer + ')';
 	}
 
-	/**
-	 * @return
-	 */
 	public Synchronizer getDelegatedSynchronizer() {
 		return synchronizer;
 	}

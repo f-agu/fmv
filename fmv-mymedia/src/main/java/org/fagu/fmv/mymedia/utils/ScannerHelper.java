@@ -53,7 +53,7 @@ public class ScannerHelper {
 
 	public interface Answer {
 
-		char getChar();
+		String getValue();
 
 		default Collection<String> getVariants() {
 			return Collections.emptySet();
@@ -67,8 +67,8 @@ public class ScannerHelper {
 		YES {
 
 			@Override
-			public char getChar() {
-				return 'y';
+			public String getValue() {
+				return "y";
 			}
 
 			@Override
@@ -80,8 +80,8 @@ public class ScannerHelper {
 		NO {
 
 			@Override
-			public char getChar() {
-				return 'n';
+			public String getValue() {
+				return "n";
 			}
 
 			@Override
@@ -102,7 +102,7 @@ public class ScannerHelper {
 		};
 		answers.stream()
 				.forEach(a -> {
-					appender.accept(Character.toString(a.getChar()), a);
+					appender.accept(a.getValue(), a);
 					Collection<String> variants = a.getVariants();
 					if(variants != null) {
 						for(String variant : variants) {
@@ -112,7 +112,7 @@ public class ScannerHelper {
 				});
 
 		String prompt = question + " ? " + answers.stream()
-				.map(a -> a == defaultAnswer ? Character.toUpperCase(a.getChar()) : Character.toLowerCase(a.getChar()))
+				.map(a -> a == defaultAnswer ? a.getValue().toUpperCase() : a.getValue().toLowerCase())
 				.map(c -> c.toString())
 				.collect(Collectors.joining("/", "[", "]")) + ' ';
 		System.out.print(prompt);

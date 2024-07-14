@@ -21,13 +21,10 @@ package org.fagu.fmv.mymedia.sync.ftp.outfile;
  */
 
 import java.io.File;
-import java.util.NavigableMap;
 import java.util.Properties;
 
-import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.mymedia.sync.Storage;
 import org.fagu.fmv.mymedia.sync.StorageFactory;
-import org.fagu.fmv.soft.find.SoftPolicy;
 
 
 /**
@@ -37,25 +34,20 @@ public class FTPOutFileStorageFactory extends StorageFactory {
 
 	private static final String NAME = "ftp-out-file";
 
-	/**
-	 * 
-	 */
 	public FTPOutFileStorageFactory() {
 		super(NAME);
 	}
 
-	/**
-	 * @see org.fagu.sync.StorageFactory#create(NavigableMap, MovieMetadatas, SoftPolicy)
-	 */
 	@Override
 	public Storage create(Properties properties) {
 		String host = properties.getProperty("host");
+		Integer port = Integer.parseInt(properties.getProperty("port"));
 		String login = properties.getProperty("login");
 		String password = properties.getProperty("password");
 		String path = properties.getProperty("path");
 		String outFile = properties.getProperty("out-file");
 		try {
-			return new FTPOutFileStorage(host, login, password, path, new File(outFile));
+			return new FTPOutFileStorage(host, port, login, password, path, new File(outFile));
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}

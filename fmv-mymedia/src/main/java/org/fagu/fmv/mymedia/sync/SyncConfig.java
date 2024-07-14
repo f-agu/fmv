@@ -76,11 +76,6 @@ public class SyncConfig {
 		this.elements = Collections.unmodifiableList(elements);
 	}
 
-	/**
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
 	public static SyncConfig load(File file, Logger logger) throws IOException {
 		logger.log("Load config file: " + file);
 		List<SyncElement> elements = new ArrayList<>();

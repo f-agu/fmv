@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.logger;
  * #L%
  */
 
-
 import java.io.Closeable;
 
 
@@ -29,13 +28,7 @@ import java.io.Closeable;
  */
 public interface Logger extends Closeable {
 
-	/**
-	 * @param message
-	 */
 	void log(String message);
 
-	/**
-	 * @param throwable
-	 */
 	void log(Throwable throwable);
 }

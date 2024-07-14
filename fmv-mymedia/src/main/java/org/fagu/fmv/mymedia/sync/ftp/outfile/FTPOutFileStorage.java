@@ -37,33 +37,16 @@ public class FTPOutFileStorage extends FTPStorage {
 
 	private final File outFile;
 
-	/**
-	 * @param ftpClient
-	 * @param ftpPath
-	 * @param outFile
-	 */
 	public FTPOutFileStorage(FTPClient ftpClient, String ftpPath, File outFile) {
 		super(ftpClient, ftpPath);
 		this.outFile = Objects.requireNonNull(outFile);
 	}
 
-	/**
-	 * @param host
-	 * @param login
-	 * @param password
-	 * @param ftpPath
-	 * @param outFile
-	 * @throws SocketException
-	 * @throws IOException
-	 */
-	public FTPOutFileStorage(String host, String login, String password, String ftpPath, File outFile) throws SocketException, IOException {
-		super(host, login, password, ftpPath);
+	public FTPOutFileStorage(String host, int port, String login, String password, String ftpPath, File outFile) throws SocketException, IOException {
+		super(host, port, login, password, ftpPath);
 		this.outFile = outFile;
 	}
 
-	/**
-	 * @see org.fagu.sync.Storage#getRoot()
-	 */
 	@Override
 	public Item getRoot() throws IOException {
 		return new FTPOutFileItem(ftpClient, ftpPath, ftpClient.mlistFile(ftpPath), outFile);

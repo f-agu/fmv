@@ -63,31 +63,16 @@ public abstract class StorageFactory {
 
 	private final String name;
 
-	/**
-	 * @param name
-	 */
 	public StorageFactory(String name) {
 		this.name = Objects.requireNonNull(name);
 	}
 
-	/**
-	 * @return
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @param properties
-	 * @return
-	 */
 	public abstract Storage create(Properties properties);
 
-	/**
-	 * @param propertiesFile
-	 * @return
-	 * @throws IOException
-	 */
 	public static Storage create(File propertiesFile) throws IOException {
 		Properties properties = new Properties();
 		try (InputStream inputStream = new FileInputStream(propertiesFile)) {
@@ -98,9 +83,6 @@ public abstract class StorageFactory {
 		return factory != null ? factory.create(properties) : null;
 	}
 
-	/**
-	 * @param factory
-	 */
 	public static void register(StorageFactory factory) {
 		FACTORY_MAP.put(factory.getName(), factory);
 	}

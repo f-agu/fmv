@@ -38,48 +38,34 @@ public class FTPStorage implements Storage {
 
 	protected final String host;
 
+	protected final int port;
+
 	protected final String ftpPath;
 
-	/**
-	 * @param ftpClient
-	 * @param ftpPath
-	 */
 	public FTPStorage(FTPClient ftpClient, String ftpPath) {
 		this.ftpClient = Objects.requireNonNull(ftpClient);
 		this.ftpPath = Objects.requireNonNull(ftpPath);
 		host = "?";
+		port = - 1;
 	}
 
-	/**
-	 * @param host
-	 * @param login
-	 * @param password
-	 * @param ftpPath
-	 * @throws SocketException
-	 * @throws IOException
-	 */
-	public FTPStorage(String host, String login, String password, String ftpPath) throws SocketException, IOException {
+	public FTPStorage(String host, int port, String login, String password, String ftpPath) throws SocketException, IOException {
 		ftpClient = new FTPClient();
 		ftpClient.setControlEncoding("UTF-8");
-		ftpClient.connect(host);
+		ftpClient.connect(host, port);
 		ftpClient.login(login, password);
 		ftpClient.enterLocalPassiveMode();
 		ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
 		this.host = host;
+		this.port = port;
 		this.ftpPath = ftpPath;
 	}
 
-	/**
-	 * @see org.fagu.sync.Storage#getRoot()
-	 */
 	@Override
 	public Item getRoot() throws IOException {
 		return new FTPItem(ftpClient, ftpPath, ftpClient.mlistFile(ftpPath));
 	}
 
-	/**
-	 * @see java.io.Closeable#close()
-	 */
 	@Override
 	public void close() throws IOException {
 		try {
@@ -89,11 +75,8 @@ public class FTPStorage implements Storage {
 		}
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "ftp://" + host + ftpPath;
+		return "ftp://" + host + ":" + port + ftpPath;
 	}
 }
