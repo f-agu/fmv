@@ -213,7 +213,14 @@ public class FMVExecutor extends DefaultExecutor {
 	}
 
 	public void addProcessDestroyer(ProcessDestroyer processDestroyer) {
+		if(processDestroyer == null) {
+			return;
+		}
 		ProcessDestroyer pd = getProcessDestroyer();
+		if(pd == null) {
+			setProcessDestroyer(pd);
+			return;
+		}
 		AggregateProcessDestroyer aggregateProcessDestroyer = null;
 		if(pd instanceof AggregateProcessDestroyer) {
 			aggregateProcessDestroyer = (AggregateProcessDestroyer)pd;
