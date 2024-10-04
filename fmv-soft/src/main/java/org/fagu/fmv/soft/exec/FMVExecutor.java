@@ -226,6 +226,7 @@ public class FMVExecutor extends DefaultExecutor {
 			aggregateProcessDestroyer = (AggregateProcessDestroyer)pd;
 		} else {
 			aggregateProcessDestroyer = new AggregateProcessDestroyer();
+			setProcessDestroyer(aggregateProcessDestroyer);
 			aggregateProcessDestroyer.add(pd);
 		}
 		aggregateProcessDestroyer.add(processDestroyer);
