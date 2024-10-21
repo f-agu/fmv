@@ -70,7 +70,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.fagu</groupId>
-				<artifactId>fmv-textprogress</artifactId>
+				<artifactId>fmv-textprogressbar</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

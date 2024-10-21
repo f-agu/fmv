@@ -135,6 +135,22 @@ class SoftTestCase {
 
 	@Test
 	@Disabled
+	void testTimeout2() throws Exception {
+		Soft soft = Soft.withExecFile("timeout");
+		System.out.println(soft);
+		System.out.println(soft.getFounds());
+		System.out.println(1);
+		soft.withParameters("10", "2>", "nul")
+				.timeOut(2000)
+				.input(System.in)
+				.output(System.out)
+				.err(System.out)
+				.execute();
+		System.out.println(2);
+	}
+
+	@Test
+	@Disabled
 	void test2() throws Exception {
 		Soft soft = Soft.withExecFile("cmd");
 		System.out.println(soft);
