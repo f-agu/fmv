@@ -258,7 +258,7 @@ public class FFExecutor<R> {
 		return prepare;
 	}
 
-	public Executed<R> execute() throws IOException {
+	public FFExecuted<R> execute() throws IOException {
 		if(prepare != null) {
 			throw new RuntimeException("Already executed");
 		}
@@ -319,21 +319,6 @@ public class FFExecutor<R> {
 		listeners.forEach(fmvExecutor::addListener);
 	}
 
-	protected Executed<R> createExecuted(long duration, R result) {
-		return new Executed<R>() {
-
-			@Override
-			public long getDurationInMilliseconds() {
-				return duration;
-			}
-
-			@Override
-			public R getResult() {
-				return result;
-			}
-		};
-	}
-
 	// *****************************************************
 
 	private Soft findSoft() {
@@ -388,13 +373,13 @@ public class FFExecutor<R> {
 			return new UnmodifiableCommandLine(soft.withParameters(operation.toArguments()).getCommandLine());
 		}
 
-		public Executed<R> execute() throws IOException {
+		public FFExecuted<R> execute() throws IOException {
 			try {
 				return _execute();
 			} catch(IOException e) {
 				FFExecListener ffExecListener = new Proxifier<>(FFExecListener.class).addAll(ffExecListeners).proxify();
 				ffExecListener.eventExecFailed(e, new UnmodifiableCommandLine(getCommandLine()));
-				Executed<R> runFallbacks = runFallbacks(e, ffExecListener);
+				FFExecuted<R> runFallbacks = runFallbacks(e, ffExecListener);
 				if(runFallbacks != null) {
 					return runFallbacks;
 				}
@@ -405,7 +390,7 @@ public class FFExecutor<R> {
 
 		// **************************************************
 
-		protected Executed<R> runFallbacks(IOException originalException, FFExecListener ffExecListener) throws IOException {
+		protected FFExecuted<R> runFallbacks(IOException originalException, FFExecListener ffExecListener) throws IOException {
 			if(fallbacks.isEmpty()) {
 				return null;
 			}
@@ -453,13 +438,11 @@ public class FFExecutor<R> {
 			return null;
 		}
 
-		protected Executed<R> _execute() throws IOException {
+		protected FFExecuted<R> _execute() throws IOException {
 			org.fagu.fmv.soft.SoftExecutor.Executed executed = getSoftExecutor().execute();
-			return createExecuted(executed.getExecuteTime(), operation.getResult());
+			return FFExecuted.create(executed, operation.getResult());
 		}
 
 	}
-
-	// ---------------------------------------------------------
 
 }

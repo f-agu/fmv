@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.fagu.fmv.ffmpeg.executor.Executed;
+import org.fagu.fmv.ffmpeg.executor.FFExecuted;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFExecutorFactory;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
@@ -63,7 +63,7 @@ public class MockFFMPEGExecutorBuilder {
 					return new FFExecutor<R>(operation) {
 
 						@Override
-						public Executed<R> execute() throws IOException {
+						public FFExecuted<R> execute() throws IOException {
 							commandExecute.accept(getCommandLineString());
 							return null;
 						}

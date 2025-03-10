@@ -26,7 +26,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import org.fagu.fmv.ffmpeg.coder.Libx264;
-import org.fagu.fmv.ffmpeg.executor.Executed;
+import org.fagu.fmv.ffmpeg.executor.FFExecuted;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.executor.FFMPEGExecutorBuilder;
 import org.fagu.fmv.ffmpeg.filter.impl.Rotate;
@@ -91,7 +91,7 @@ class StreamTestCase {
 		FFExecutor<MovieMetadatas> executor = new FFExecutor<>(infoOperation);
 		System.out.println(executor.getCommandLineString());
 		executor.input(() -> ResourceUtils.open(resource));
-		Executed<MovieMetadatas> execute = executor.execute();
+		FFExecuted<MovieMetadatas> execute = executor.execute();
 		System.out.println(execute.getResult());
 	}
 
