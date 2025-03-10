@@ -1,5 +1,5 @@
 -- release
-git clone https://github.com/f-agu/fmv.git
+git clone https://gitlab.com/fagu/fmv.git
 cd fmv
 del release.properties pom.xml.releaseBackup
 mvn compile test
@@ -40,7 +40,7 @@ mvn -Dtag=0.5.7 -DreleaseVersion=0.5.7 -DdevelopmentVersion=0.5.8-SNAPSHOT -Dmav
 
 
 --git token conf
-git remote set-url origin https://<token>@github.com/f-agu/fmv.git
+git remote set-url origin https://<token>@gitlab.com/fagu/fmv.git
 
 
 -- extract
