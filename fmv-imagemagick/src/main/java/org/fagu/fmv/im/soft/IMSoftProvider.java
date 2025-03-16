@@ -145,13 +145,8 @@ public abstract class IMSoftProvider extends SoftProvider {
 				VersionSoftInfo versionSoftInfo = (VersionSoftInfo)softInfo;
 				Optional<Version> version = versionSoftInfo.getVersion();
 				if(version.isPresent() && version.get().isUpperOrEqualsThan(V7)) {
-					List<String> newParams;
-					if(ConvertSoftProvider.NAME.equals(getName())) {
-						newParams = parameters;
-					} else {
-						newParams = new ArrayList<>(parameters);
-						newParams.add(0, getName());
-					}
+					List<String> newParams = new ArrayList<>(parameters);
+					newParams.add(0, getName());
 					return new SoftExecutor(this, execFile, newParams);
 				}
 			}

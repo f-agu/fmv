@@ -1,9 +1,9 @@
 -- release
-git clone https://gitlab.com/fagu/fmv.git
+git clone https://github.com/f-agu/fmv.git
 cd fmv
 del release.properties pom.xml.releaseBackup
 mvn compile test
-mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.25.7 -DreleaseVersion=0.25.7 -DdevelopmentVersion=0.26.0-SNAPSHOT -U -B release:prepare
+mvn -Dmaven.test.skip=true -DskipTests -Dtag=0.25.4 -DreleaseVersion=0.25.4 -DdevelopmentVersion=0.26.0-SNAPSHOT -U -B release:prepare
 
 
 
@@ -17,7 +17,7 @@ git add .
 git commit -m "set version"
 git push origin master
 
-git checkout tags/0.25.7
+git checkout tags/0.25.4
 mvn install -DskipTests
 
 
@@ -40,7 +40,7 @@ mvn -Dtag=0.5.7 -DreleaseVersion=0.5.7 -DdevelopmentVersion=0.5.8-SNAPSHOT -Dmav
 
 
 --git token conf
-git remote set-url origin https://<token>@gitlab.com/fagu/fmv.git
+git remote set-url origin https://<token>@github.com/f-agu/fmv.git
 
 
 -- extract

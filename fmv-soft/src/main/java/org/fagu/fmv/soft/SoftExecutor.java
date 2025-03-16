@@ -181,7 +181,6 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 				time = System.currentTimeMillis() - startTime;
 				execListener.eventExecuted(commandLine, exitValue, time);
 			} catch(ExecuteException e) {
-				exitValue = e.getExitValue();
 				final String cmdLineStr = toStringCommandLine.apply(commandLine);
 				FMVExecuteException fmvExecuteException = new FMVExecuteException(softProvider.getExceptionKnownAnalyzerClass(), e, cmdLineStr,
 						readLineList);
@@ -242,7 +241,7 @@ public class SoftExecutor extends ExecHelper<SoftExecutor> {
 
 		private final long executeTime;
 
-		public Executed(OptionalLong pid, int exitValue, long executeTime) {
+		private Executed(OptionalLong pid, int exitValue, long executeTime) {
 			this.pid = pid;
 			this.exitValue = exitValue;
 			this.executeTime = executeTime;

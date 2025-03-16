@@ -38,7 +38,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import org.fagu.fmv.ffmpeg.executor.FFExecuted;
+import org.fagu.fmv.ffmpeg.executor.Executed;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.ioe.FileMediaInput;
 import org.fagu.fmv.ffmpeg.ioe.PipeMediaInput;
@@ -103,7 +103,7 @@ public class MovieMetadatas implements Metadatas {
 			FFExecutor<MovieMetadatas> executor = new FFExecutor<>(infoOperation);
 			customizeSoftExecutors.forEach(executor::customizeSoftExecutor);
 			executor.setSoft(soft);
-			FFExecuted<MovieMetadatas> execute = executor.execute();
+			Executed<MovieMetadatas> execute = executor.execute();
 			return execute.getResult();
 		}
 
