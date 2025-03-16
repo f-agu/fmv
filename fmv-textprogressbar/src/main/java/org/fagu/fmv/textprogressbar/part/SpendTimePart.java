@@ -32,9 +32,6 @@ public class SpendTimePart implements Part {
 
 	private final long startTime = System.currentTimeMillis();
 
-	/**
-	 * @see org.fagu.fmv.textprogressbar.Part#getWith(ProgressStatus)
-	 */
 	@Override
 	public String getWith(ProgressStatus status) {
 		StringBuilder buf = new StringBuilder();

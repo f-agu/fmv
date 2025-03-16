@@ -28,15 +28,7 @@ import java.awt.Color;
  */
 public interface Colors {
 
-	/**
-	 * @param color
-	 * @return
-	 */
 	String getPrefix(Color color);
 
-	/**
-	 * @param color
-	 * @return
-	 */
 	String getSuffix(Color color);
 }

@@ -20,9 +20,9 @@ package org.fagu.fmv.mymedia.file;
  * #L%
  */
 
-
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.utils.file.FileFinder;
@@ -34,30 +34,13 @@ import org.fagu.fmv.utils.file.FileFinder.FileFound;
  */
 public interface InfoFile {
 
-	/**
-	 * @return
-	 */
-	char getCode();
+	public record Line(char code, String value) {}
 
-	/**
-	 * @param object
-	 * @return
-	 */
+	List<Character> getCodes();
+
 	boolean isMine(Object object);
 
-	/**
-	 * @param fileFound
-	 * @param media
-	 * @return
-	 * @throws IOException
-	 */
-	String toLine(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException;
+	List<Line> toLines(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException;
 
-	/**
-	 * @param file
-	 * @param line
-	 * @return
-	 * @throws IOException
-	 */
 	Object parse(File file, String line) throws IOException;
 }

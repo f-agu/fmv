@@ -40,24 +40,17 @@ public class ByteSizePart implements Part {
 
 	private final Locale locale;
 
-	/**
-	 * @param currentSize
-	 * @param totalSize
-	 */
 	public ByteSizePart(LongSupplier currentSize, long totalSize, Locale locale) {
 		this.currentSize = Objects.requireNonNull(currentSize);
 		this.locale = locale;
 		this.totalSize = ByteSize.formatSize(totalSize, locale);
 	}
 
-	/**
-	 * @see org.fagu.fmv.textprogressbar.Part#getWith(ProgressStatus)
-	 */
 	@Override
 	public String getWith(ProgressStatus status) {
-		StringBuilder buf = new StringBuilder();
-		buf.append(ByteSize.formatSize(currentSize.getAsLong(), locale)).append(" / ").append(totalSize);
-		return buf.toString();
+		return new StringBuilder()
+				.append(ByteSize.formatSize(currentSize.getAsLong(), locale)).append(" / ").append(totalSize)
+				.toString();
 	}
 
 }

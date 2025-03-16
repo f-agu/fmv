@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -31,8 +32,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatasFactory;
-import org.fagu.fmv.im.Image;
 import org.fagu.fmv.im.IMIdentifyImageMetadatas;
+import org.fagu.fmv.im.Image;
 import org.fagu.fmv.im.ImageMetadatasFactory;
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.media.Metadatas;
@@ -52,10 +53,6 @@ public class MediaWithMetadatasInfoFile implements InfoFile {
 
 	private final MediaFactory<Media> mediaFactory;
 
-	/**
-	 * @param metadatasFactory
-	 * @param mediaFactory
-	 */
 	private MediaWithMetadatasInfoFile(MetadatasFactory metadatasFactory, MediaFactory<Media> mediaFactory) {
 		this.metadatasFactory = metadatasFactory;
 		this.mediaFactory = mediaFactory;
@@ -63,42 +60,26 @@ public class MediaWithMetadatasInfoFile implements InfoFile {
 
 	// *************
 
-	/**
-	 * @return
-	 */
 	public static MediaWithMetadatasInfoFile image() {
 		return new MediaWithMetadatasInfoFile(new ImageMetadatasFactory(), (file, metadatas) -> new Image(file, (IMIdentifyImageMetadatas)metadatas));
 	}
 
-	/**
-	 * @return
-	 */
 	public static MediaWithMetadatasInfoFile movie() {
 		return new MediaWithMetadatasInfoFile(new MovieMetadatasFactory(), (file, metadatas) -> new Movie(file, (MovieMetadatas)metadatas));
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.file.InfoFile#getCode()
-	 */
 	@Override
-	public char getCode() {
-		return 'M';
+	public List<Character> getCodes() {
+		return List.of(Character.valueOf('M'));
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.file.InfoFile#isMine(java.lang.Object)
-	 */
 	@Override
 	public boolean isMine(Object object) {
 		return object instanceof Media;
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.file.InfoFile#toLine(org.fagu.fmv.utils.file.FileFinder.FileFound,
-	 *      org.fagu.fmv.media.Media)
-	 */
 	@Override
-	public String toLine(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException {
+	public List<Line> toLines(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException {
 		Metadatas metadatas = infosFile.getMain().getMetadatas();
 		String json = metadatas.toJSON();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(500);
@@ -109,12 +90,9 @@ public class MediaWithMetadatasInfoFile implements InfoFile {
 			throw new RuntimeException(e);
 		}
 
-		return Base64.encodeBase64String(baos.toByteArray());
+		return List.of(new Line('M', Base64.encodeBase64String(baos.toByteArray())));
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.file.InfoFile#parse(java.io.File, java.lang.String)
-	 */
 	@Override
 	public Object parse(File file, String line) throws IOException {
 		ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decodeBase64(line));

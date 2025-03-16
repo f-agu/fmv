@@ -41,51 +41,31 @@ public class ColorPart implements Part {
 
 	private final Part part;
 
-	/**
-	 * @param colors
-	 * @param color
-	 */
 	public ColorPart(Colors colors, Color color, Part part) {
 		this.colors = Objects.requireNonNull(colors);
 		this.color = Objects.requireNonNull(color);
 		this.part = Objects.requireNonNull(part);
 	}
 
-	/**
-	 * @param color
-	 * @param part
-	 * @return
-	 */
 	public static ColorPart background(Color color, Part part) {
 		Colors colors = isOnEclipse() ? new NoColors() : new BackgroundISO8613_3Colors();
 		return new ColorPart(colors, color, part);
 	}
 
-	/**
-	 * @param color
-	 * @param part
-	 * @return
-	 */
 	public static ColorPart foreground(Color color, Part part) {
 		Colors colors = isOnEclipse() ? new NoColors() : new ForegroundISO8613_3Colors();
 		return new ColorPart(colors, color, part);
 	}
 
-	/**
-	 * @see org.fagu.fmv.textprogressbar.Part#getWith(ProgressStatus)
-	 */
 	@Override
 	public String getWith(ProgressStatus status) {
-		StringBuilder buf = new StringBuilder();
-		buf.append(colors.getPrefix(color)).append(part.getWith(status)).append(colors.getSuffix(color));
-		return buf.toString();
+		return new StringBuilder()
+				.append(colors.getPrefix(color)).append(part.getWith(status)).append(colors.getSuffix(color))
+				.toString();
 	}
 
 	// **********************************
 
-	/**
-	 * @return
-	 */
 	private static boolean isOnEclipse() {
 		return System.getenv("PATH").contains("eclipse");
 	}

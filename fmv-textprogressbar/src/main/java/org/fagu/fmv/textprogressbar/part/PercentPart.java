@@ -29,9 +29,6 @@ import org.fagu.fmv.textprogressbar.ProgressStatus;
  */
 public class PercentPart implements Part {
 
-	/**
-	 * @see org.fagu.fmv.textprogressbar.Part#getWith(ProgressStatus)
-	 */
 	@Override
 	public String getWith(ProgressStatus status) {
 		return new StringBuilder().append(status.getPercent()).append("%").toString();

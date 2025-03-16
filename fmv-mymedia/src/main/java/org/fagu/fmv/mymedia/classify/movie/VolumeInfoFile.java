@@ -22,6 +22,7 @@ package org.fagu.fmv.mymedia.classify.movie;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
@@ -45,8 +46,8 @@ import org.fagu.fmv.utils.file.FileFinder.FileFound;
 public class VolumeInfoFile implements InfoFile {
 
 	@Override
-	public char getCode() {
-		return 'V';
+	public List<Character> getCodes() {
+		return List.of(Character.valueOf('V'));
 	}
 
 	@Override
@@ -55,11 +56,11 @@ public class VolumeInfoFile implements InfoFile {
 	}
 
 	@Override
-	public String toLine(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException {
+	public List<Line> toLines(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException {
 		Media main = infosFile.getMain();
 		MovieMetadatas metadatas = (MovieMetadatas)main.getMetadatas();
 		if(metadatas == null || metadatas.getAudioStreams().isEmpty()) {
-			return "";
+			return List.of();
 		}
 
 		FFMPEGExecutorBuilder builder = FFMPEGExecutorBuilder.create();
@@ -85,9 +86,9 @@ public class VolumeInfoFile implements InfoFile {
 		}
 		if(volumeDetect.isDetected()) {
 			VolumeDetected volumeDetected = volumeDetect.getDetected();
-			return volumeDetected.toString();
+			return List.of(new Line('V', volumeDetected.toString()));
 		}
-		return "";
+		return List.of();
 	}
 
 	@Override

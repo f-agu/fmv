@@ -198,7 +198,21 @@ public abstract class FileFinder<T> implements Serializable {
 
 		IntConsumer atEndExt = null;
 		if(findProgress != null) { // with progress
-			int countTotal = files.stream().mapToInt(file -> find(file, file, findProgress, (rf, f) -> accept(f), null)).sum();
+			findProgress.start();
+			AtomicInteger currentCount = new AtomicInteger();
+			findProgress.progress("Counting files...");
+			int countTotal = files.stream()
+					.mapToInt(file -> find(
+							file,
+							file,
+							(rf, f) -> {
+								if(accept(f)) {
+									findProgress.progress("Counting files...  " + currentCount.incrementAndGet() + " files found");
+									return true;
+								}
+								return false;
+							},
+							null)).sum();
 			AtomicInteger doneCount = new AtomicInteger();
 			final IntConsumer atEndM = count -> {
 				flushBuffer(l -> {
@@ -218,7 +232,7 @@ public abstract class FileFinder<T> implements Serializable {
 
 		final IntConsumer atEnd = atEndExt;
 		final BiFunction<File, File, Boolean> addFunction = (rf, f) -> add(rf, f, atEnd);
-		int count = files.stream().mapToInt(file -> find(file, file, findProgress, addFunction, atEnd)).sum();
+		int count = files.stream().mapToInt(file -> find(file, file, addFunction, atEnd)).sum();
 
 		// wait the end of all futures
 		// System.out.println("futures: " + futures.size());
@@ -301,7 +315,7 @@ public abstract class FileFinder<T> implements Serializable {
 		return true;
 	}
 
-	private int find(File rootFolder, File file, FindProgress findProgress, BiFunction<File, File, Boolean> addFunction, IntConsumer atEnd) {
+	private int find(File rootFolder, File file, BiFunction<File, File, Boolean> addFunction, IntConsumer atEnd) {
 		if(file.isFile()) {
 			return addFunction.apply(rootFolder, file) ? 1 : 0;
 		}
@@ -312,7 +326,7 @@ public abstract class FileFinder<T> implements Serializable {
 		int count = 0;
 		for(File child : childs) {
 			if(child.isDirectory()) {
-				count += find(rootFolder, child, findProgress, addFunction, atEnd);
+				count += find(rootFolder, child, addFunction, atEnd);
 			} else if(child.isFile() && ! contains(new FileFound(rootFolder, child))) {
 				if(addFunction.apply(rootFolder, child)) {
 					++count;

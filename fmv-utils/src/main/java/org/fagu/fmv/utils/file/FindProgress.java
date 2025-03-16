@@ -1,5 +1,7 @@
 package org.fagu.fmv.utils.file;
 
+import java.io.Closeable;
+
 /*
  * #%L
  * fmv-utils
@@ -20,15 +22,15 @@ package org.fagu.fmv.utils.file;
  * #L%
  */
 
+
 /**
  * @author f.agu
  */
-@FunctionalInterface
-public interface FindProgress {
+public interface FindProgress extends Closeable {
 
-	/**
-	 * @param done
-	 * @param total
-	 */
+	void start();
+
+	void progress(String text);
+
 	void progress(int done, int total);
 }

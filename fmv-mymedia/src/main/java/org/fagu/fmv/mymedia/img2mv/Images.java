@@ -47,20 +47,11 @@ public class Images {
 
 	private File sourceFolder;
 
-	/**
-	 * @param sourceFolder
-	 * @param imageFinder
-	 */
 	private Images(File sourceFolder, ImageFinder imageFinder) {
 		this.sourceFolder = sourceFolder;
 		this.imageFinder = imageFinder;
 	}
 
-	/**
-	 * @param folder
-	 * @return
-	 * @throws IOException
-	 */
 	public static Images find(File folder) throws IOException {
 		try (ImageFinder imageFinder = new ImageFinder(new File(folder, "image.save"))) {
 			imageFinder.find(folder);
@@ -68,16 +59,10 @@ public class Images {
 		}
 	}
 
-	/**
-	 * @return the imageList
-	 */
 	public Collection<FileFinder<Image>.InfosFile> getImages() {
 		return Collections.unmodifiableCollection(imageFinder.getAll());
 	}
 
-	/**
-	 * @param size
-	 */
 	public PreparedImages prepare(Size size) throws IOException {
 		final int COUNT_TOTAL = getImages().size();
 		File destFolder = new File(sourceFolder.getParent(), sourceFolder.getName() + "-img2mov");
@@ -90,10 +75,6 @@ public class Images {
 		final AtomicInteger count = new AtomicInteger();
 		ConverterListener<Image> converterListener = new ConverterListener<Image>() {
 
-			/**
-			 * @see org.fagu.fmv.mymedia.classify.ConverterListener#eventPreConvert(org.fagu.fmv.media.Media,
-			 *      java.io.File)
-			 */
 			@Override
 			public void eventPreConvert(Image srcMedia, File destFile) {
 				System.out.println("Convert (" + count.incrementAndGet() + "/" + COUNT_TOTAL + "): " + srcMedia.getFile());

@@ -44,35 +44,20 @@ public class ProgressPart implements Part {
 
 		private ProgressChar progressChar = new BasicProgressChar();
 
-		/**
-		 * @param width
-		 */
 		private ProgressPartBuilder(int width) {
 			this.width = width;
 		}
 
-		/**
-		 * @param leftBound
-		 * @return
-		 */
 		public ProgressPartBuilder leftBound(String leftBound) {
 			this.leftBound = leftBound;
 			return this;
 		}
 
-		/**
-		 * @param rightBound
-		 * @return
-		 */
 		public ProgressPartBuilder rightBound(String rightBound) {
 			this.rightBound = rightBound;
 			return this;
 		}
 
-		/**
-		 * @param progressChar
-		 * @return
-		 */
 		public ProgressPartBuilder progressChars(ProgressChar progressChar) {
 			if(progressChar != null) {
 				this.progressChar = progressChar;
@@ -80,9 +65,6 @@ public class ProgressPart implements Part {
 			return this;
 		}
 
-		/**
-		 * @return
-		 */
 		public ProgressPart build() {
 			leftBound = StringUtils.defaultString(leftBound);
 			rightBound = StringUtils.defaultString(rightBound);
@@ -194,17 +176,10 @@ public class ProgressPart implements Part {
 		this.progressChar = builder.progressChar;
 	}
 
-	/**
-	 * @param width
-	 * @return
-	 */
 	public static ProgressPartBuilder width(int width) {
 		return new ProgressPartBuilder(width);
 	}
 
-	/**
-	 * @see org.fagu.fmv.textprogressbar.Part#getWith(org.fagu.fmv.textprogressbar.ProgressStatus)
-	 */
 	@Override
 	public String getWith(ProgressStatus status) {
 		StringBuilder buf = new StringBuilder(width);

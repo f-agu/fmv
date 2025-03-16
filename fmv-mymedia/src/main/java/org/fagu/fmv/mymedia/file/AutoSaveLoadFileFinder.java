@@ -28,7 +28,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +38,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.fagu.fmv.media.Media;
-import org.fagu.fmv.utils.collection.MapList;
-import org.fagu.fmv.utils.collection.MultiValueMaps;
+import org.fagu.fmv.textprogressbar.TextProgressBar;
+import org.fagu.fmv.textprogressbar.part.SpinnerPart;
+import org.fagu.fmv.textprogressbar.part.SupplierTextPart;
+import org.fagu.fmv.textprogressbar.part.TextPart;
 import org.fagu.fmv.utils.file.FileFinder;
 import org.fagu.fmv.utils.file.FindProgress;
 
@@ -57,12 +61,6 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 
 	private final Map<Character, InfoFile> infoFileMap;
 
-	/**
-	 * @param extensions
-	 * @param bufferSize
-	 * @param saveFile
-	 * @param metadatasInfoFile
-	 */
 	public AutoSaveLoadFileFinder(Set<String> extensions, int bufferSize, File saveFile, MediaWithMetadatasInfoFile metadatasInfoFile) {
 		super(extensions, bufferSize);
 		this.saveFile = saveFile;
@@ -78,29 +76,38 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 		}
 	}
 
-	/**
-	 * @param infoFile
-	 */
 	public void addInfoFile(InfoFile infoFile) {
-		char code = infoFile.getCode();
-		if(code == 'P' || code == 'R' || infoFileMap.containsKey(code)) {
-			throw new IllegalArgumentException("InfoFile code '" + code + "' already used");
+		List<Character> codes = infoFile.getCodes();
+		for(Character code : codes) {
+			if(code == 'P' || code == 'R' || infoFileMap.containsKey(code)) {
+				InfoFile inff = infoFileMap.get(code);
+				throw new IllegalArgumentException("InfoFile code '" + code + "' already used by "
+						+ (inff != null ? inff.getClass().getSimpleName() : "system"));
+			}
+			infoFileMap.put(code, infoFile);
 		}
-		infoFileMap.put(code, infoFile);
 	}
 
-	/**
-	 * @see org.fagu.fmv.utils.file.FileFinder#find(java.util.Collection, org.fagu.fmv.utils.file.FindProgress)
-	 */
 	@Override
 	public int find(Collection<File> files, FindProgress findProgress) {
-		load();
+		if(saveFile.exists()) {
+			SupplierTextPart supplierTextPart = new SupplierTextPart();
+			try (TextProgressBar textProgressBar = TextProgressBar.newBar()
+					.append(new TextPart("Loading...  "))
+					.append(new SpinnerPart())
+					.append(new TextPart("   "))
+					.append(supplierTextPart)
+					.autoPrintFull(false)
+					.buildAndSchedule()) {
+				load(supplierTextPart);
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println();
+		}
 		return super.find(files, findProgress);
 	}
 
-	/**
-	 * @see java.io.Closeable#close()
-	 */
 	@Override
 	public void close() throws IOException {
 		printStream.close();
@@ -108,20 +115,16 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 
 	// ***********************************************
 
-	/**
-	 * @param map
-	 * @throws IOException
-	 */
 	@SuppressWarnings("unchecked")
 	protected void afterFlush(Map<FileFound, InfosFile> map) throws IOException {
-		MapList<FileFound, String> lines = MultiValueMaps.hashMapArrayList();
+		Map<FileFound, List<String>> lines = new HashMap<>();
 		for(Entry<FileFound, InfosFile> entry : map.entrySet()) {
-			for(Entry<Character, InfoFile> iFEntry : infoFileMap.entrySet()) {
-				InfoFile infoFile = iFEntry.getValue();
+			for(InfoFile infoFile : infoFileMap.values()) {
 				StringBuilder line = new StringBuilder(100);
 				FileFinder<T>.InfosFile value = entry.getValue();
-				line.append(iFEntry.getKey()).append(' ').append(infoFile.toLine(entry.getKey(), (FileFinder<Media>.InfosFile)value));
-				lines.add(entry.getKey(), line.toString());
+				infoFile.toLines(entry.getKey(), (FileFinder<Media>.InfosFile)value)
+						.forEach(l -> lines.computeIfAbsent(entry.getKey(), k -> new ArrayList<>())
+								.add(line.append(l.code()).append(' ').append(l.value()).toString()));
 			}
 		}
 
@@ -137,26 +140,22 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 
 	// ***********************************************
 
-	/**
-	 *
-	 */
-	private void load() {
-		if( ! saveFile.exists()) {
-			return;
-		}
-		System.out.println("Loading... " + saveFile);
+	private void load(SupplierTextPart supplierTextPart) {
+		supplierTextPart.setText("Loading... ");
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(saveFile))) {
 
 			File currentRootFolder = null;
 			File currentFile = null;
 			String line = null;
 			int number = 0;
+			int countFiles = 0;
 			while((line = bufferedReader.readLine()) != null) {
 				++number;
 				if(line.charAt(1) != ' ') {
 					throw new RuntimeException("Unreadable file (line " + number + ")");
 				}
 				if(line.startsWith("P ")) {
+					supplierTextPart.setText("Loading... " + countFiles);
 					currentFile = new File(line.substring(2));
 					continue;
 				}
@@ -196,6 +195,5 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
-		System.out.println(count() + " files loaded");
 	}
 }

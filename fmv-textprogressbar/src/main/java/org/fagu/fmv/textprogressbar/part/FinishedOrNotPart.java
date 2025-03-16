@@ -35,18 +35,11 @@ public class FinishedOrNotPart implements Part {
 
 	private final Part finishedPart;
 
-	/**
-	 * @param notFinishedPart
-	 * @param finishedPart
-	 */
 	public FinishedOrNotPart(Part notFinishedPart, Part finishedPart) {
 		this.notFinishedPart = Objects.requireNonNull(notFinishedPart);
 		this.finishedPart = Objects.requireNonNull(finishedPart);
 	}
 
-	/**
-	 * @see org.fagu.fmv.textprogressbar.Part#getWith(ProgressStatus)
-	 */
 	@Override
 	public String getWith(ProgressStatus status) {
 		return status.isFinished() ? finishedPart.getWith(status) : notFinishedPart.getWith(status);

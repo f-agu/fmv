@@ -45,11 +45,6 @@ public class FixWidthPart implements Part {
 
 	private final BiFunction<String, Integer, String> padding;
 
-	/**
-	 * @param part
-	 * @param width
-	 * @param padding
-	 */
 	public FixWidthPart(Part part, int width, BiFunction<String, Integer, String> padding) {
 		if(width < 0) {
 			throw new IllegalArgumentException("width must be positive: " + width);
@@ -59,36 +54,18 @@ public class FixWidthPart implements Part {
 		this.padding = Objects.requireNonNull(padding);
 	}
 
-	/**
-	 * @param part
-	 * @param width
-	 * @return
-	 */
 	public static FixWidthPart leftPad(Part part, int width) {
 		return new FixWidthPart(part, width, LEFT_PAD);
 	}
 
-	/**
-	 * @param part
-	 * @param width
-	 * @return
-	 */
 	public static FixWidthPart rightPad(Part part, int width) {
 		return new FixWidthPart(part, width, RIGHT_PAD);
 	}
 
-	/**
-	 * @param part
-	 * @param width
-	 * @return
-	 */
 	public static FixWidthPart centerPad(Part part, int width) {
 		return new FixWidthPart(part, width, CENTER_PAD);
 	}
 
-	/**
-	 * @see org.fagu.fmv.textprogressbar.Part#getWith(ProgressStatus)
-	 */
 	@Override
 	public String getWith(ProgressStatus status) {
 		String str = StringUtils.defaultString(part.getWith(status));

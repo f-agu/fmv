@@ -41,23 +41,14 @@ public class SpinnerPart implements Part {
 
 	private final OptionalLong refresh;
 
-	/**
-	 * 
-	 */
 	public SpinnerPart() {
 		this(1);
 	}
 
-	/**
-	 * @param numberOfTurnsPerSecond
-	 */
 	public SpinnerPart(double numberOfTurnsPerSecond) {
 		refresh = OptionalLong.of((long)(1000D / (numberOfTurnsPerSecond * NB_CHARS)));
 	}
 
-	/**
-	 * @see org.fagu.fmv.textprogressbar.Part#getWith(org.fagu.fmv.textprogressbar.ProgressStatus)
-	 */
 	@Override
 	public String getWith(ProgressStatus status) {
 		if(status.isFinished()) {
@@ -66,9 +57,6 @@ public class SpinnerPart implements Part {
 		return Character.toString(CHARS[counter++ % NB_CHARS]);
 	}
 
-	/**
-	 * @see org.fagu.fmv.textprogressbar.Part#getRefreshInMilliseconds()
-	 */
 	@Override
 	public OptionalLong getRefreshInMilliseconds() {
 		return refresh;

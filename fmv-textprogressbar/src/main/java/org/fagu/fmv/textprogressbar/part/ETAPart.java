@@ -44,10 +44,10 @@ public class ETAPart implements Part {
 		Integer etaInSeconds = etaInSecondsSupplier.apply(status);
 		if(etaInSeconds != null && etaInSeconds > 0) {
 			int seconds = etaInSeconds;
-			StringBuilder buf = new StringBuilder();
-			buf.append(StringUtils.leftPad(Integer.toString(seconds / 60), 2, '0')).append(':');
-			buf.append(StringUtils.leftPad(Integer.toString(seconds % 60), 2, '0')).append(" ETA");
-			return buf.toString();
+			return new StringBuilder()
+					.append(StringUtils.leftPad(Integer.toString(seconds / 60), 2, '0')).append(':')
+					.append(StringUtils.leftPad(Integer.toString(seconds % 60), 2, '0')).append(" ETA")
+					.toString();
 		}
 		return StringUtils.EMPTY;
 	}

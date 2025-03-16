@@ -33,16 +33,10 @@ public class TextPart implements Part {
 
 	private final String text;
 
-	/**
-	 * @param text
-	 */
 	public TextPart(String text) {
 		this.text = Objects.requireNonNull(text);
 	}
 
-	/**
-	 * @see org.fagu.fmv.textprogressbar.Part#getWith(ProgressStatus)
-	 */
 	@Override
 	public String getWith(ProgressStatus status) {
 		return text;

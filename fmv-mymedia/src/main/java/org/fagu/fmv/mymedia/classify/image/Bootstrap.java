@@ -28,6 +28,8 @@ import org.fagu.fmv.im.Image;
 import org.fagu.fmv.mymedia.classify.Organizer;
 import org.fagu.fmv.mymedia.file.ImageFinder;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
+import org.fagu.fmv.textprogressbar.part.SupplierTextPart;
+import org.fagu.fmv.textprogressbar.part.TextPart;
 import org.fagu.fmv.utils.file.FindProgress;
 
 
@@ -43,42 +45,45 @@ public class Bootstrap {
 	private ImageFinder findImage(File saveFile, File... srcFiles) throws IOException {
 
 		ImageFinder imagesFinder = new ImageFinder(saveFile);
-		// imagesFinder.addListener(new FileFinderListener<Image>() {
-		//
-		// private int count;
-		//
-		// /**
-		// * @see org.fagu.fmv.utils.file.FileFinderListener#eventFind(java.io.File, java.lang.Object)
-		// */
-		// @Override
-		// public void eventFind(File file, Image image) {
-		// ImageMetadatas metadatas = image.getMetadatas();
-		// String model = metadatas.getDeviceModel();
-		// String device = metadatas.getDevice();
-		//
-		// System.out.println(count + ": " + file.getName() + " : " + device + ", " + model);
-		// ++count;
-		// }
-		// });
+		try (FindProgress findProgress = new FindProgress() {
 
-		FindProgress findProgress = new FindProgress() {
+			private TextProgressBar textProgressBar;
 
-			private TextProgressBar textProgressBar = TextProgressBar.newBar()
-					.fixWidth(40).withText("Finding images")
-					.buildForPrinting();
+			private SupplierTextPart supplierTextPart = new SupplierTextPart();
+
+			@Override
+			public void start() {
+				textProgressBar = TextProgressBar.newBar()
+						.append(new TextPart("Finding images: "))
+						.append(supplierTextPart)
+						.buildAndSchedule();
+			}
 
 			@Override
 			public void progress(int done, int total) {
-				textProgressBar.print((100 * done) / total);
+				if(total != 0) {
+					supplierTextPart.setText(done + "/" + total + " (" + Integer.toString((100 * done) / total) + " %)");
+				} else {
+					supplierTextPart.setText(done + "/" + total);
+				}
 			}
-		};
 
-		imagesFinder.find(Arrays.asList(srcFiles), findProgress);
+			@Override
+			public void progress(String text) {
+				supplierTextPart.setText(text);
+			}
 
+			@Override
+			public void close() throws IOException {
+				textProgressBar.close();
+			}
+		}) {
+			imagesFinder.find(Arrays.asList(srcFiles), findProgress);
+		}
 		return imagesFinder;
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String... args) throws IOException {
 		File source = new File(args[0]);
 
 		File saveFile = new File(source, "image.save");
