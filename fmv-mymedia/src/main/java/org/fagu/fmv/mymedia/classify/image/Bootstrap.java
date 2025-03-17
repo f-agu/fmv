@@ -75,7 +75,9 @@ public class Bootstrap {
 
 			@Override
 			public void close() throws IOException {
-				textProgressBar.close();
+				if(textProgressBar != null) {
+					textProgressBar.close();
+				}
 			}
 		}) {
 			imagesFinder.find(Arrays.asList(srcFiles), findProgress);
@@ -91,6 +93,7 @@ public class Bootstrap {
 
 		Bootstrap bootstrap = new Bootstrap();
 		try (ImageFinder imageFinder = bootstrap.findImage(saveFile, source)) {
+			imageFinder.displayStats();
 			Organizer<ImageFinder, Image> organizer = new Organizer<>(Image.class);
 			organizer.organize(destFolder, imageFinder);
 		}

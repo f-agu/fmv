@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -142,6 +143,14 @@ public abstract class FileFinder<T> implements Serializable {
 
 		public List<Object> getInfos() {
 			return infos;
+		}
+
+		@SuppressWarnings("unchecked")
+		public <N> Optional<N> getInfo(Class<N> cls) {
+			return infos.stream()
+					.filter(o -> cls.isAssignableFrom(o.getClass()))
+					.map(o -> (N)o)
+					.findFirst();
 		}
 	}
 

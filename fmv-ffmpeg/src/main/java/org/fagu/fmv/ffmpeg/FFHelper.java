@@ -32,7 +32,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.ffmpeg.coder.Encoders;
 import org.fagu.fmv.ffmpeg.coder.H264;
 import org.fagu.fmv.ffmpeg.coder.LibFDK_AAC;
-import org.fagu.fmv.ffmpeg.executor.Executed;
+import org.fagu.fmv.ffmpeg.executor.FFExecuted;
 import org.fagu.fmv.ffmpeg.executor.FFExecFallback;
 import org.fagu.fmv.ffmpeg.executor.FFExecListener;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
@@ -116,7 +116,7 @@ public class FFHelper {
 		MediaInput input = new FileMediaInput(inFile);
 		InfoOperation infoOperation = new InfoOperation(input);
 		FFExecutor<MovieMetadatas> executor = new FFExecutor<>(infoOperation);
-		Executed<MovieMetadatas> execute = executor.execute();
+		FFExecuted<MovieMetadatas> execute = executor.execute();
 		return execute.getResult();
 	}
 

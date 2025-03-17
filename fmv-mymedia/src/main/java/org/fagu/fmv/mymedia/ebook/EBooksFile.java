@@ -93,7 +93,6 @@ public class EBooksFile {
 					Element rootElement = document.getRootElement();
 					Element metadataElement = rootElement.element("metadata");
 
-					@SuppressWarnings("unchecked")
 					List<Element> elements = metadataElement.elements();
 					metadataMap = new HashMap<>();
 					for(Element element : elements) {

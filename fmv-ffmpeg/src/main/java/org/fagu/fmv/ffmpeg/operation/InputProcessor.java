@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.fagu.fmv.ffmpeg.executor.Executed;
+import org.fagu.fmv.ffmpeg.executor.FFExecuted;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.filter.FilterInput;
 import org.fagu.fmv.ffmpeg.filter.IOKey;
@@ -59,7 +59,7 @@ public class InputProcessor extends Processor<InputProcessor> implements FilterI
 		if(videoMetadatas == null) {
 			InfoOperation infoOperation = new InfoOperation(input);
 			FFExecutor<MovieMetadatas> executor = new FFExecutor<>(infoOperation);
-			Executed<MovieMetadatas> execute = executor.execute();
+			FFExecuted<MovieMetadatas> execute = executor.execute();
 			videoMetadatas = execute.getResult();
 		}
 		return videoMetadatas;

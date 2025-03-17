@@ -57,17 +57,17 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 
 	private final PrintStream printStream;
 
-	private final MediaWithMetadatasInfoFile metadatasInfoFile;
+	private final List<InfoFile> infoFiles;
 
 	private final Map<Character, InfoFile> infoFileMap;
 
-	public AutoSaveLoadFileFinder(Set<String> extensions, int bufferSize, File saveFile, MediaWithMetadatasInfoFile metadatasInfoFile) {
+	public AutoSaveLoadFileFinder(Set<String> extensions, int bufferSize, File saveFile, List<InfoFile> infoFiles) {
 		super(extensions, bufferSize);
 		this.saveFile = saveFile;
-		this.metadatasInfoFile = metadatasInfoFile;
+		this.infoFiles = infoFiles != null ? infoFiles : List.of();
 
 		infoFileMap = new LinkedHashMap<>();
-		addInfoFile(metadatasInfoFile);
+		infoFiles.forEach(this::addInfoFile);
 
 		try {
 			printStream = new PrintStream(new FileOutputStream(saveFile, true));
@@ -141,7 +141,6 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 	// ***********************************************
 
 	private void load(SupplierTextPart supplierTextPart) {
-		supplierTextPart.setText("Loading... ");
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(saveFile))) {
 
 			File currentRootFolder = null;
@@ -155,7 +154,7 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 					throw new RuntimeException("Unreadable file (line " + number + ")");
 				}
 				if(line.startsWith("P ")) {
-					supplierTextPart.setText("Loading... " + countFiles);
+					supplierTextPart.setText(Integer.toString(++countFiles));
 					currentFile = new File(line.substring(2));
 					continue;
 				}
@@ -181,12 +180,14 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 							infosFile = new InfosFile();
 							add(fileFound, infosFile);
 						}
-						if(metadatasInfoFile.isMine(info)) {
-							@SuppressWarnings("unchecked")
-							T t = (T)info;
-							infosFile.setMain(t);
-						} else {
-							infosFile.addInfo(info);
+						for(InfoFile inff : infoFiles) {
+							if(inff.isMine(info)) {
+								@SuppressWarnings("unchecked")
+								T t = (T)info;
+								infosFile.setMain(t);
+							} else {
+								infosFile.addInfo(info);
+							}
 						}
 					}
 				}

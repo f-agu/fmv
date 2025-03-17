@@ -23,24 +23,31 @@ package org.fagu.fmv.mymedia.file;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.fagu.fmv.im.Image;
 import org.fagu.fmv.im.IMIdentifyImageMetadatas;
+import org.fagu.fmv.im.Image;
+import org.fagu.fmv.utils.ByteSize;
 import org.fagu.fmv.utils.file.DoneFuture;
+import org.fagu.fmv.utils.file.MD5Sum;
 
 
 /**
@@ -56,19 +63,12 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 
 	private final ExecutorService executorService;
 
-	/**
-	 * @param saveFile
-	 */
 	public ImageFinder(File saveFile) {
 		this(saveFile, Runtime.getRuntime().availableProcessors());
 	}
 
-	/**
-	 * @param saveFile
-	 * @param nThreads
-	 */
 	public ImageFinder(File saveFile, int nThreads) {
-		super(EXTENSIONS, BUFFER_SIZE, saveFile, MediaWithMetadatasInfoFile.image());
+		super(EXTENSIONS, BUFFER_SIZE, saveFile, List.of(MediaWithMetadatasInfoFile.image(), new MD5InfoFile()));
 		if(nThreads > 1) {
 			executorService = Executors.newFixedThreadPool(nThreads);
 		} else {
@@ -76,9 +76,52 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.mymedia.file.AutoSaveLoadFileFinder#close()
-	 */
+	public void displayStats() {
+		NavigableMap<Long, List<FileInfosFile>> bySizes = new TreeMap<>();
+		Map<String, List<FileInfosFile>> byMD5s = new HashMap<>();
+		getAllMap().forEach((fileFound, infosFile) -> {
+			bySizes.computeIfAbsent(
+					fileFound.getFileFound().length(),
+					k -> new ArrayList<>())
+					.add(new FileInfosFile(fileFound.getFileFound(), infosFile));
+			infosFile.getInfo(MD5Sum.class)
+					.ifPresent(md5 -> byMD5s.computeIfAbsent(md5.value(), k -> new ArrayList<>())
+							.add(new FileInfosFile(fileFound.getFileFound(), infosFile)));
+		});
+		System.out.println();
+
+		AtomicBoolean start = new AtomicBoolean();
+
+		bySizes.forEach((size, infosFiles) -> {
+			if(infosFiles.size() > 1) {
+				if( ! start.getAndSet(true)) {
+					System.out.println();
+					System.out.println("Somes files have the same size :");
+				}
+				System.out.println("  " + ByteSize.formatSize(size) + " (" + size + "): " + infosFiles.size() + " files");
+				System.out.println("     " + infosFiles.stream().map(inff -> inff.file().getName()).collect(Collectors.joining(", ")));
+			}
+		});
+		if(start.get()) {
+			System.out.println();
+		}
+		start.set(false);
+		byMD5s.forEach((md5, infosFiles) -> {
+			if(infosFiles.size() > 1) {
+				if( ! start.getAndSet(true)) {
+					System.out.println("Somes files have the same content :");
+				}
+				System.out.println("  " + md5 + ": " + infosFiles.size() + " files");
+				System.out.println("     " + infosFiles.stream().map(inff -> inff.file().getName()).collect(Collectors.joining(", ")));
+			}
+		});
+		if(start.get()) {
+			System.out.println();
+		}
+	}
+
+	private record FileInfosFile(File file, InfosFile infosFile) {}
+
 	@Override
 	public void close() throws IOException {
 		if(executorService != null) {
@@ -94,9 +137,6 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 
 	// *****************************************
 
-	/**
-	 * @see org.fagu.fmv.utils.file.FileFinder#flushToMap(java.util.List, java.util.function.Consumer)
-	 */
 	@Override
 	protected Future<Map<FileFound, InfosFile>> flushToMap(List<FileFound> buffer, Consumer<List<FileFound>> consumer) {
 		Callable<Map<FileFound, InfosFile>> callable = create(buffer, consumer);
@@ -112,11 +152,6 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 
 	// *****************************************
 
-	/**
-	 * @param buffer
-	 * @param consumer
-	 * @return
-	 */
 	// private Callable<Map<File, Image>> createMock(List<File> buffer, Consumer<List<File>> consumer) {
 	// final Map<File, Image> outMap = buffer.stream().collect(Collectors.toMap(f -> f, f -> new Image(f)));
 	// return () -> {
@@ -126,17 +161,14 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 	// };
 	// }
 
-	/**
-	 * @param buffer
-	 * @param consumer
-	 * @return
-	 */
 	private Callable<Map<FileFound, InfosFile>> create(List<FileFound> buffer, Consumer<List<FileFound>> consumer) {
 		List<File> files = buffer.stream().map(FileFound::getFileFound).collect(Collectors.toList());
 		return () -> {
 			Map<File, IMIdentifyImageMetadatas> map = null;
 			try {
-				map = IMIdentifyImageMetadatas.with(files).extractAll();
+				map = IMIdentifyImageMetadatas.with(files)
+						// .logger(cl -> System.out.println(CommandLineUtils.toLine(cl)))
+						.extractAll();
 			} catch(IOException e) {
 				throw new RuntimeException(e);
 			}

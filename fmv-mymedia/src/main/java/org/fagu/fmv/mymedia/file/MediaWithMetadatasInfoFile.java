@@ -24,6 +24,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
@@ -35,6 +37,7 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatasFactory;
 import org.fagu.fmv.im.IMIdentifyImageMetadatas;
 import org.fagu.fmv.im.Image;
 import org.fagu.fmv.im.ImageMetadatasFactory;
+import org.fagu.fmv.im.soft.Identify;
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.media.Metadatas;
 import org.fagu.fmv.media.MetadatasFactory;
@@ -53,14 +56,18 @@ public class MediaWithMetadatasInfoFile implements InfoFile {
 
 	private final MediaFactory<Media> mediaFactory;
 
-	private MediaWithMetadatasInfoFile(MetadatasFactory metadatasFactory, MediaFactory<Media> mediaFactory) {
+	private final List<InfoFile> subInfoFiles;
+
+	private MediaWithMetadatasInfoFile(MetadatasFactory metadatasFactory, MediaFactory<Media> mediaFactory, InfoFile... subInfoFiles) {
 		this.metadatasFactory = metadatasFactory;
 		this.mediaFactory = mediaFactory;
+		this.subInfoFiles = subInfoFiles != null ? Arrays.asList(subInfoFiles) : List.of();
 	}
 
 	// *************
 
 	public static MediaWithMetadatasInfoFile image() {
+		Identify.search(); // load cache
 		return new MediaWithMetadatasInfoFile(new ImageMetadatasFactory(), (file, metadatas) -> new Image(file, (IMIdentifyImageMetadatas)metadatas));
 	}
 
@@ -70,7 +77,10 @@ public class MediaWithMetadatasInfoFile implements InfoFile {
 
 	@Override
 	public List<Character> getCodes() {
-		return List.of(Character.valueOf('M'));
+		List<Character> list = new ArrayList<>(subInfoFiles.size() + 1);
+		list.add(Character.valueOf('M'));
+		subInfoFiles.forEach(inff -> list.addAll(inff.getCodes()));
+		return list;
 	}
 
 	@Override

@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 class JavaTest {
 
 	@Test
-	@Disabled
+	// @Disabled
 	void testAll() {
 		Java.search().getFounds()
 				.forEach(sf -> System.out.println(sf.getFile()));

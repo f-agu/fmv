@@ -50,7 +50,7 @@ public class MovieFinder extends AutoSaveLoadFileFinder<Movie> {
 	private static final Set<String> EXTENSIONS = new HashSet<>(Arrays.asList("mp4", "mov", "avi", "3gp"));
 
 	public MovieFinder(File saveFile) {
-		super(EXTENSIONS, BUFFER_SIZE, saveFile, MediaWithMetadatasInfoFile.movie());
+		super(EXTENSIONS, BUFFER_SIZE, saveFile, List.of(MediaWithMetadatasInfoFile.movie()));
 	}
 
 	// *****************************************

@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.fagu.fmv.ffmpeg.executor.Executed;
+import org.fagu.fmv.ffmpeg.executor.FFExecuted;
 import org.fagu.fmv.ffmpeg.executor.FFExecutor;
 import org.fagu.fmv.ffmpeg.operation.LinesFFMPEGOperation;
 
@@ -45,7 +45,7 @@ public class FullHelpExtract {
 		operation.addParameter("-h", "full");
 		try {
 			FFExecutor<List<String>> executor = new FFExecutor<>(operation);
-			Executed<List<String>> execute = executor.execute();
+			FFExecuted<List<String>> execute = executor.execute();
 
 			Pattern paramPattern = Pattern.compile("(\\s+)([\\-\\w]+)\\s+(?:\\<(\\w+)\\>\\s+)?([EDFVASXR\\.]{8})(.*)");
 

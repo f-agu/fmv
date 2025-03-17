@@ -44,7 +44,6 @@ import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.ProcessDestroyer;
-import org.apache.commons.exec.ShutdownHookProcessDestroyer;
 import org.fagu.fmv.soft.AroundExecute;
 import org.fagu.fmv.soft.AroundExecuteSupplier;
 import org.fagu.fmv.soft.ExecuteDelegate;
@@ -159,7 +158,6 @@ public class FMVExecutor extends DefaultExecutor {
 
 		this.enabledDefaultInvalidExitValue = builder.enabledDefaultInvalidExitValue;
 
-		addProcessDestroyer(new ShutdownHookProcessDestroyer());
 		addListener(ExecStats.getInstance().getExecListener());
 
 		addProcessOperator(new IgnoreNullOutputStreamProcessOperator());
@@ -213,12 +211,20 @@ public class FMVExecutor extends DefaultExecutor {
 	}
 
 	public void addProcessDestroyer(ProcessDestroyer processDestroyer) {
+		if(processDestroyer == null) {
+			return;
+		}
 		ProcessDestroyer pd = getProcessDestroyer();
+		if(pd == null) {
+			setProcessDestroyer(processDestroyer);
+			return;
+		}
 		AggregateProcessDestroyer aggregateProcessDestroyer = null;
 		if(pd instanceof AggregateProcessDestroyer) {
 			aggregateProcessDestroyer = (AggregateProcessDestroyer)pd;
 		} else {
 			aggregateProcessDestroyer = new AggregateProcessDestroyer();
+			setProcessDestroyer(aggregateProcessDestroyer);
 			aggregateProcessDestroyer.add(pd);
 		}
 		aggregateProcessDestroyer.add(processDestroyer);
