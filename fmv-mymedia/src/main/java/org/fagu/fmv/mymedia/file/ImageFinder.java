@@ -68,7 +68,10 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 	}
 
 	public ImageFinder(File saveFile, int nThreads) {
-		super(EXTENSIONS, BUFFER_SIZE, saveFile, List.of(MediaWithMetadatasInfoFile.image(), new MD5InfoFile()));
+		super(EXTENSIONS, BUFFER_SIZE, saveFile, List.of(
+				MediaWithMetadatasInfoFile.image(),
+				new MD5InfoFile(),
+				new PerceptionHashInfoFile()));
 		if(nThreads > 1) {
 			executorService = Executors.newFixedThreadPool(nThreads);
 		} else {
@@ -88,10 +91,9 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 					.ifPresent(md5 -> byMD5s.computeIfAbsent(md5.value(), k -> new ArrayList<>())
 							.add(new FileInfosFile(fileFound.getFileFound(), infosFile)));
 		});
+
 		System.out.println();
-
 		AtomicBoolean start = new AtomicBoolean();
-
 		bySizes.forEach((size, infosFiles) -> {
 			if(infosFiles.size() > 1) {
 				if( ! start.getAndSet(true)) {
