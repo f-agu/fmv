@@ -23,10 +23,19 @@ package org.fagu.fmv.mymedia.classify.image;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import org.fagu.fmv.im.Image;
 import org.fagu.fmv.mymedia.classify.Organizer;
+import org.fagu.fmv.mymedia.classify.duplicate.DuplicateCleanPolicy;
+import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles;
+import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles.FileInfosFile;
+import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedResult;
+import org.fagu.fmv.mymedia.classify.duplicate.KeepOlderDuplicateCleanPolicy;
 import org.fagu.fmv.mymedia.file.ImageFinder;
+import org.fagu.fmv.mymedia.logger.Logger;
+import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.textprogressbar.part.SupplierTextPart;
 import org.fagu.fmv.textprogressbar.part.TextPart;
@@ -42,9 +51,9 @@ public class Bootstrap {
 
 	// ---------------------------------------------------
 
-	private ImageFinder findImage(File saveFile, File... srcFiles) throws IOException {
+	private ImageFinder findImage(Logger logger, File saveFile, File... srcFiles) throws IOException {
 
-		ImageFinder imagesFinder = new ImageFinder(saveFile);
+		ImageFinder imagesFinder = new ImageFinder(logger, saveFile);
 		try (FindProgress findProgress = new FindProgress() {
 
 			private TextProgressBar textProgressBar;
@@ -85,15 +94,32 @@ public class Bootstrap {
 		return imagesFinder;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void main(String... args) throws IOException {
 		File source = new File(args[0]);
 
 		File saveFile = new File(source, "image.save");
 		File destFolder = new File(source.getParentFile(), source.getName() + "-out");
 
+		DuplicateCleanPolicy duplicateCleanPolicy = new KeepOlderDuplicateCleanPolicy();
+
 		Bootstrap bootstrap = new Bootstrap();
-		try (ImageFinder imageFinder = bootstrap.findImage(saveFile, source)) {
-			imageFinder.displayStats();
+		try (Logger logger = LoggerFactory.openLogger(LoggerFactory.getLogFile(source, "imagelog", "image.log"));
+				ImageFinder imageFinder = bootstrap.findImage(logger, saveFile, source)) {
+
+			List<DuplicatedFiles<?>> duplicatedFilesList = List.of(
+					// DuplicatedFiles.bySize(),
+					DuplicatedFiles.byMD5Sum(),
+					DuplicatedFiles.byPerceptionHash(0.01D, true, logger)
+			//
+			);
+
+			DuplicatedResult duplicatedResult = imageFinder.analyzeDuplicatedFiles(duplicatedFilesList);
+			if(duplicatedResult.haveDuplicates()) {
+				for(DuplicatedFiles<?> duplicatedFiles : duplicatedFilesList) {
+					duplicateCleanPolicy.clean((Map<Object, List<FileInfosFile>>)duplicatedFiles.getDuplicateds());
+				}
+			}
 			Organizer<ImageFinder, Image> organizer = new Organizer<>(Image.class);
 			organizer.organize(destFolder, imageFinder);
 		}

@@ -23,31 +23,27 @@ package org.fagu.fmv.mymedia.file;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.NavigableMap;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.fagu.fmv.im.IMIdentifyImageMetadatas;
 import org.fagu.fmv.im.Image;
-import org.fagu.fmv.utils.ByteSize;
+import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles;
+import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedResult;
+import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.utils.file.DoneFuture;
-import org.fagu.fmv.utils.file.MD5Sum;
 
 
 /**
@@ -63,15 +59,18 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 
 	private final ExecutorService executorService;
 
-	public ImageFinder(File saveFile) {
-		this(saveFile, Runtime.getRuntime().availableProcessors());
+	private final Logger logger;
+
+	public ImageFinder(Logger logger, File saveFile) {
+		this(logger, saveFile, Runtime.getRuntime().availableProcessors());
 	}
 
-	public ImageFinder(File saveFile, int nThreads) {
+	public ImageFinder(Logger logger, File saveFile, int nThreads) {
 		super(EXTENSIONS, BUFFER_SIZE, saveFile, List.of(
 				MediaWithMetadatasInfoFile.image(),
 				new MD5InfoFile(),
 				new PerceptionHashInfoFile()));
+		this.logger = logger;
 		if(nThreads > 1) {
 			executorService = Executors.newFixedThreadPool(nThreads);
 		} else {
@@ -79,50 +78,23 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 		}
 	}
 
-	public void displayStats() {
-		NavigableMap<Long, List<FileInfosFile>> bySizes = new TreeMap<>();
-		Map<String, List<FileInfosFile>> byMD5s = new HashMap<>();
-		getAllMap().forEach((fileFound, infosFile) -> {
-			bySizes.computeIfAbsent(
-					fileFound.getFileFound().length(),
-					k -> new ArrayList<>())
-					.add(new FileInfosFile(fileFound.getFileFound(), infosFile));
-			infosFile.getInfo(MD5Sum.class)
-					.ifPresent(md5 -> byMD5s.computeIfAbsent(md5.value(), k -> new ArrayList<>())
-							.add(new FileInfosFile(fileFound.getFileFound(), infosFile)));
-		});
+	public DuplicatedResult analyzeDuplicatedFiles(List<DuplicatedFiles<?>> duplicatedFilesList) {
+		getAllMap().forEach((fileFound, infosFile) -> duplicatedFilesList.forEach(df -> df.populate(fileFound, infosFile)));
 
 		System.out.println();
-		AtomicBoolean start = new AtomicBoolean();
-		bySizes.forEach((size, infosFiles) -> {
-			if(infosFiles.size() > 1) {
-				if( ! start.getAndSet(true)) {
-					System.out.println();
-					System.out.println("Somes files have the same size :");
-				}
-				System.out.println("  " + ByteSize.formatSize(size) + " (" + size + "): " + infosFiles.size() + " files");
-				System.out.println("     " + infosFiles.stream().map(inff -> inff.file().getName()).collect(Collectors.joining(", ")));
+		boolean previousDup = false;
+		for(DuplicatedFiles<?> duplicatedFiles : duplicatedFilesList) {
+			if(previousDup) {
+				System.out.println();
+				previousDup = false;
 			}
-		});
-		if(start.get()) {
+			previousDup = duplicatedFiles.analyze();
+		}
+		if(previousDup) {
 			System.out.println();
 		}
-		start.set(false);
-		byMD5s.forEach((md5, infosFiles) -> {
-			if(infosFiles.size() > 1) {
-				if( ! start.getAndSet(true)) {
-					System.out.println("Somes files have the same content :");
-				}
-				System.out.println("  " + md5 + ": " + infosFiles.size() + " files");
-				System.out.println("     " + infosFiles.stream().map(inff -> inff.file().getName()).collect(Collectors.joining(", ")));
-			}
-		});
-		if(start.get()) {
-			System.out.println();
-		}
+		return new DuplicatedResult(duplicatedFilesList);
 	}
-
-	private record FileInfosFile(File file, InfosFile infosFile) {}
 
 	@Override
 	public void close() throws IOException {

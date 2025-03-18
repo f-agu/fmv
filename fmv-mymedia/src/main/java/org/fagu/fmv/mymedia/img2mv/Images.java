@@ -53,7 +53,7 @@ public class Images {
 	}
 
 	public static Images find(File folder) throws IOException {
-		try (ImageFinder imageFinder = new ImageFinder(new File(folder, "image.save"))) {
+		try (ImageFinder imageFinder = new ImageFinder(null, new File(folder, "image.save"))) {
 			imageFinder.find(folder);
 			return new Images(folder, imageFinder);
 		}

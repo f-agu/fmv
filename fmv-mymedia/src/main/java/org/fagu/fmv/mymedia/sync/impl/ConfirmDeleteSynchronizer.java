@@ -39,7 +39,7 @@ public class ConfirmDeleteSynchronizer extends WrappedSynchronizer {
 
 	@Override
 	public boolean delete(Item item) throws IOException {
-		if(YesNo.YES.equals(ScannerHelper.yesNo("> Delete " + item))) {
+		if(YesNo.YES.equals(ScannerHelper.yesNo("> Delete " + item, YesNo.YES))) {
 			return synchronizer.delete(item);
 		}
 		return false;
