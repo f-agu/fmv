@@ -28,14 +28,7 @@ import org.fagu.fmv.utils.file.FileFinder.FileFound;
  */
 public interface FileFinderListener<T> {
 
-	/**
-	 * @param fileFound
-	 */
 	default void eventFindPre(FileFound fileFound) {}
 
-	/**
-	 * @param fileFound
-	 * @param infosFile
-	 */
 	default void eventFindPost(FileFound fileFound, FileFinder<T>.InfosFile infosFile) {}
 }

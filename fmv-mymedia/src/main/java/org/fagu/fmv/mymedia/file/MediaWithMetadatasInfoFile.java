@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -89,7 +90,7 @@ public class MediaWithMetadatasInfoFile implements InfoFile {
 	}
 
 	@Override
-	public List<Line> toLines(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException {
+	public Optional<Info> toInfo(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException {
 		Metadatas metadatas = infosFile.getMain().getMetadatas();
 		String json = metadatas.toJSON();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(500);
@@ -100,7 +101,10 @@ public class MediaWithMetadatasInfoFile implements InfoFile {
 			throw new RuntimeException(e);
 		}
 
-		return List.of(new Line('M', Base64.encodeBase64String(baos.toByteArray())));
+		return Optional.of(
+				new Info(
+						metadatas,
+						new Line('M', Base64.encodeBase64String(baos.toByteArray()))));
 	}
 
 	@Override

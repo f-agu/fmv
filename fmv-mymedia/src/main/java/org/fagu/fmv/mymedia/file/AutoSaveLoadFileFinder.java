@@ -122,9 +122,12 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 			for(InfoFile infoFile : infoFileMap.values()) {
 				StringBuilder line = new StringBuilder(100);
 				FileFinder<T>.InfosFile value = entry.getValue();
-				infoFile.toLines(entry.getKey(), (FileFinder<Media>.InfosFile)value)
-						.forEach(l -> lines.computeIfAbsent(entry.getKey(), k -> new ArrayList<>())
-								.add(line.append(l.code()).append(' ').append(l.value()).toString()));
+				infoFile.toInfo(entry.getKey(), (FileFinder<Media>.InfosFile)value)
+						.ifPresent(info -> {
+							lines.computeIfAbsent(entry.getKey(), k -> new ArrayList<>())
+									.add(line.append(info.line().code()).append(' ').append(info.line().value()).toString());
+							value.addInfo(info.object());
+						});
 			}
 		}
 

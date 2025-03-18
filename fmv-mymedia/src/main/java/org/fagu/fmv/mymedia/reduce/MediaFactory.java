@@ -20,7 +20,6 @@ package org.fagu.fmv.mymedia.reduce;
  * #L%
  */
 
-
 import java.io.File;
 
 import org.fagu.fmv.media.Media;
@@ -32,10 +31,5 @@ import org.fagu.fmv.media.Metadatas;
  */
 public interface MediaFactory<T extends Media> {
 
-	/**
-	 * @param file
-	 * @param metadatas
-	 * @return
-	 */
 	T create(File file, Metadatas metadatas);
 }

@@ -39,6 +39,7 @@ import org.fagu.fmv.mymedia.logger.LoggerFactory;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.textprogressbar.part.SupplierTextPart;
 import org.fagu.fmv.textprogressbar.part.TextPart;
+import org.fagu.fmv.utils.file.FileFinderListener;
 import org.fagu.fmv.utils.file.FindProgress;
 
 
@@ -54,6 +55,9 @@ public class Bootstrap {
 	private ImageFinder findImage(Logger logger, File saveFile, File... srcFiles) throws IOException {
 
 		ImageFinder imagesFinder = new ImageFinder(logger, saveFile);
+		imagesFinder.addListener(new FileFinderListener<Image>() {
+
+		});
 		try (FindProgress findProgress = new FindProgress() {
 
 			private TextProgressBar textProgressBar;
@@ -99,6 +103,7 @@ public class Bootstrap {
 		File source = new File(args[0]);
 
 		File saveFile = new File(source, "image.save");
+		saveFile.delete();
 		File destFolder = new File(source.getParentFile(), source.getName() + "-out");
 
 		DuplicateCleanPolicy duplicateCleanPolicy = new KeepOlderDuplicateCleanPolicy();

@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.fagu.fmv.media.Media;
@@ -32,16 +33,17 @@ public class MD5InfoFile implements InfoFile {
 	}
 
 	@Override
-	public List<Line> toLines(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException {
+	public Optional<Info> toInfo(FileFound fileFound, FileFinder<Media>.InfosFile infosFile) throws IOException {
 		File file = fileFound.getFileFound();
 		if(file != null) {
 			MessageDigest messageDigest = getMessageDigest();
 			try (MessageDigestInputStream messageDigestInputStream = new MessageDigestInputStream(new FileInputStream(file), messageDigest)) {
 				IOUtils.copyLarge(messageDigestInputStream, OutputStream.nullOutputStream());
-				return List.of(new Line('5', messageDigestInputStream.getStringDigest()));
+				String digest = messageDigestInputStream.getStringDigest();
+				return Optional.of(new Info(new MD5Sum(digest), new Line('5', digest)));
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	@Override
