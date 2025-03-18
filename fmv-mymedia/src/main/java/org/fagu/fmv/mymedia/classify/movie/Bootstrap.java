@@ -41,7 +41,7 @@ public class Bootstrap {
 	// ---------------------------------------------------
 
 	private MovieFinder findMovie(File saveFile, File... srcFiles) throws IOException {
-		MovieFinder movieFinder = new MovieFinder(saveFile);
+		MovieFinder movieFinder = new MovieFinder(null, saveFile);
 		if(Boolean.parseBoolean(System.getProperty("fmv.classify.movies.volume-detect", "true"))) {
 			movieFinder.addInfoFile(new VolumeInfoFile());
 		}

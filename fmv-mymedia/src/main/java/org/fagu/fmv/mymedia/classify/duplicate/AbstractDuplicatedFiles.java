@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+
+import org.fagu.fmv.mymedia.logger.Logger;
 
 
 /**
@@ -17,6 +20,8 @@ import java.util.function.Supplier;
  */
 public abstract class AbstractDuplicatedFiles<K> implements DuplicatedFiles<K> {
 
+	protected final Logger logger;
+
 	private final String title;
 
 	private BiFunction<K, List<FileInfosFile>, String> chapterTitleFunction;
@@ -25,8 +30,9 @@ public abstract class AbstractDuplicatedFiles<K> implements DuplicatedFiles<K> {
 
 	protected Map<K, List<FileInfosFile>> cache;
 
-	protected AbstractDuplicatedFiles(String title, BiFunction<K, List<FileInfosFile>, String> chapterTitleFunction,
+	protected AbstractDuplicatedFiles(Logger logger, String title, BiFunction<K, List<FileInfosFile>, String> chapterTitleFunction,
 			BiFunction<K, List<FileInfosFile>, String> detailsFunction) {
+		this.logger = Objects.requireNonNull(logger);
 		this.title = Objects.requireNonNull(title);
 		this.chapterTitleFunction = Objects.requireNonNull(chapterTitleFunction);
 		this.detailsFunction = Objects.requireNonNull(detailsFunction);
@@ -35,18 +41,14 @@ public abstract class AbstractDuplicatedFiles<K> implements DuplicatedFiles<K> {
 	@Override
 	public Map<K, List<FileInfosFile>> getDuplicateds() {
 		if(cache == null) {
-			Map<K, List<FileInfosFile>> map = getMap();
-			Supplier<Map<K, List<FileInfosFile>>> mapSupplier = HashMap::new;
-			if(map instanceof SortedMap) {
-				mapSupplier = TreeMap::new;
-			}
-			Map<K, List<FileInfosFile>> retMap = mapSupplier.get();
-			map.forEach((key, infosFiles) -> {
+			cache = loadCache();
+			AtomicInteger totalToDelete = new AtomicInteger();
+			cache.forEach((key, infosFiles) -> {
 				if(infosFiles.size() > 1) {
-					retMap.put(key, infosFiles);
+					totalToDelete.addAndGet(infosFiles.size() - 1);
 				}
 			});
-			cache = retMap;
+			logger.log(getClass().getSimpleName() + " can delete " + totalToDelete + " file(s)");
 		}
 		return cache;
 	}
@@ -57,13 +59,35 @@ public abstract class AbstractDuplicatedFiles<K> implements DuplicatedFiles<K> {
 		if(map.isEmpty()) {
 			return false;
 		}
-		System.out.println();
-		System.out.println("Somes files have the same " + title + " :");
+		showAndLog("");
+		showAndLog("Somes files have the same " + title + " :");
 		map.forEach((key, infosFiles) -> {
-			System.out.println("  " + chapterTitleFunction.apply(key, infosFiles));
-			System.out.println("     " + detailsFunction.apply(key, infosFiles));
+			showAndLog("  " + chapterTitleFunction.apply(key, infosFiles));
+			showAndLog("     " + detailsFunction.apply(key, infosFiles));
 		});
 		return true;
+	}
+
+	// ************************************************
+
+	protected void showAndLog(String msg) {
+		logger.log(msg);
+		System.out.println(msg);
+	}
+
+	protected Map<K, List<FileInfosFile>> loadCache() {
+		Map<K, List<FileInfosFile>> map = getMap();
+		Supplier<Map<K, List<FileInfosFile>>> mapSupplier = HashMap::new;
+		if(map instanceof SortedMap) {
+			mapSupplier = TreeMap::new;
+		}
+		Map<K, List<FileInfosFile>> retMap = mapSupplier.get();
+		map.forEach((key, infosFiles) -> {
+			if(infosFiles.size() > 1) {
+				retMap.put(key, infosFiles);
+			}
+		});
+		return retMap;
 	}
 
 }

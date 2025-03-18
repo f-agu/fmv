@@ -28,6 +28,8 @@ import java.util.Map;
 
 import org.fagu.fmv.im.Image;
 import org.fagu.fmv.mymedia.classify.Organizer;
+import org.fagu.fmv.mymedia.classify.duplicate.ByMD5DuplicatedFiles;
+import org.fagu.fmv.mymedia.classify.duplicate.ByPerceptionHashDuplicatedFiles;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicateCleanPolicy;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles.FileInfosFile;
@@ -103,7 +105,6 @@ public class Bootstrap {
 		File source = new File(args[0]);
 
 		File saveFile = new File(source, "image.save");
-		saveFile.delete();
 		File destFolder = new File(source.getParentFile(), source.getName() + "-out");
 
 		DuplicateCleanPolicy duplicateCleanPolicy = new KeepOlderDuplicateCleanPolicy();
@@ -112,10 +113,12 @@ public class Bootstrap {
 		try (Logger logger = LoggerFactory.openLogger(LoggerFactory.getLogFile(source, "imagelog", "image.log"));
 				ImageFinder imageFinder = bootstrap.findImage(logger, saveFile, source)) {
 
+			logger.log("***************************************************");
+
 			List<DuplicatedFiles<?>> duplicatedFilesList = List.of(
-					// DuplicatedFiles.bySize(),
-					DuplicatedFiles.byMD5Sum(),
-					DuplicatedFiles.byPerceptionHash(0.01D, true, logger)
+					// new BySizeDuplicatedFiles(logger),
+					new ByMD5DuplicatedFiles(logger),
+					new ByPerceptionHashDuplicatedFiles(logger, 0.01D, true)
 			//
 			);
 

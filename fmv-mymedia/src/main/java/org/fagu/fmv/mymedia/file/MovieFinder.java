@@ -35,6 +35,7 @@ import java.util.function.Consumer;
 import org.fagu.fmv.ffmpeg.FFHelper;
 import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatas;
 import org.fagu.fmv.mymedia.classify.movie.Movie;
+import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.utils.file.DoneFuture;
 
 
@@ -49,8 +50,8 @@ public class MovieFinder extends AutoSaveLoadFileFinder<Movie> {
 
 	private static final Set<String> EXTENSIONS = new HashSet<>(Arrays.asList("mp4", "mov", "avi", "3gp"));
 
-	public MovieFinder(File saveFile) {
-		super(EXTENSIONS, BUFFER_SIZE, saveFile, List.of(MediaWithMetadatasInfoFile.movie()));
+	public MovieFinder(Logger logger, File saveFile) {
+		super(logger, EXTENSIONS, BUFFER_SIZE, saveFile, List.of(MediaWithMetadatasInfoFile.movie()));
 	}
 
 	// *****************************************

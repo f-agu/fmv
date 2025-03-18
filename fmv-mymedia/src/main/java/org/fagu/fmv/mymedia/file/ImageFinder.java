@@ -43,6 +43,7 @@ import org.fagu.fmv.im.Image;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedResult;
 import org.fagu.fmv.mymedia.logger.Logger;
+import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.utils.file.DoneFuture;
 
 
@@ -59,19 +60,17 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 
 	private final ExecutorService executorService;
 
-	private final Logger logger;
-
 	public ImageFinder(Logger logger, File saveFile) {
 		this(logger, saveFile, Runtime.getRuntime().availableProcessors());
 	}
 
 	public ImageFinder(Logger logger, File saveFile, int nThreads) {
-		super(EXTENSIONS, BUFFER_SIZE, saveFile, List.of(
+		super(logger, EXTENSIONS, BUFFER_SIZE, saveFile, List.of(
 				MediaWithMetadatasInfoFile.image(),
 				new MD5InfoFile(),
 				new PerceptionHashInfoFile()));
-		this.logger = logger;
 		if(nThreads > 1) {
+			logger.log("Use " + nThreads + " threads");
 			executorService = Executors.newFixedThreadPool(nThreads);
 		} else {
 			executorService = null;
@@ -81,17 +80,17 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 	public DuplicatedResult analyzeDuplicatedFiles(List<DuplicatedFiles<?>> duplicatedFilesList) {
 		getAllMap().forEach((fileFound, infosFile) -> duplicatedFilesList.forEach(df -> df.populate(fileFound, infosFile)));
 
-		System.out.println();
+		showAndLog("");
 		boolean previousDup = false;
 		for(DuplicatedFiles<?> duplicatedFiles : duplicatedFilesList) {
 			if(previousDup) {
-				System.out.println();
+				showAndLog("");
 				previousDup = false;
 			}
 			previousDup = duplicatedFiles.analyze();
 		}
 		if(previousDup) {
-			System.out.println();
+			showAndLog("");
 		}
 		return new DuplicatedResult(duplicatedFilesList);
 	}
@@ -129,7 +128,7 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 	// private Callable<Map<File, Image>> createMock(List<File> buffer, Consumer<List<File>> consumer) {
 	// final Map<File, Image> outMap = buffer.stream().collect(Collectors.toMap(f -> f, f -> new Image(f)));
 	// return () -> {
-	// System.out.println(outMap.size());
+	// showAndLog(outMap.size());
 	// Thread.sleep(2000);
 	// return outMap;
 	// };
@@ -141,7 +140,7 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 			Map<File, IMIdentifyImageMetadatas> map = null;
 			try {
 				map = IMIdentifyImageMetadatas.with(files)
-						// .logger(cl -> System.out.println(CommandLineUtils.toLine(cl)))
+						.logger(cl -> logger.log(CommandLineUtils.toLine(cl)))
 						.extractAll();
 			} catch(IOException e) {
 				throw new RuntimeException(e);
@@ -161,4 +160,5 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 			return outMap;
 		};
 	}
+
 }

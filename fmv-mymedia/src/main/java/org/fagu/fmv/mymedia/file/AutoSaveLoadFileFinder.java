@@ -38,6 +38,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.fagu.fmv.media.Media;
+import org.fagu.fmv.mymedia.logger.Logger;
+import org.fagu.fmv.mymedia.logger.Loggers;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.textprogressbar.part.SpinnerPart;
 import org.fagu.fmv.textprogressbar.part.SupplierTextPart;
@@ -53,6 +55,8 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 
 	private static final long serialVersionUID = 7384099271785096843L;
 
+	protected final Logger logger;
+
 	private final File saveFile;
 
 	private final PrintStream printStream;
@@ -61,8 +65,9 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 
 	private final Map<Character, InfoFile> infoFileMap;
 
-	public AutoSaveLoadFileFinder(Set<String> extensions, int bufferSize, File saveFile, List<InfoFile> infoFiles) {
+	public AutoSaveLoadFileFinder(Logger logger, Set<String> extensions, int bufferSize, File saveFile, List<InfoFile> infoFiles) {
 		super(extensions, bufferSize);
+		this.logger = logger != null ? logger : Loggers.noOperation();
 		this.saveFile = saveFile;
 		this.infoFiles = infoFiles != null ? infoFiles : List.of();
 
@@ -91,6 +96,7 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 	@Override
 	public int find(Collection<File> files, FindProgress findProgress) {
 		if(saveFile.exists()) {
+			logger.log("Loading from " + saveFile);
 			SupplierTextPart supplierTextPart = new SupplierTextPart();
 			try (TextProgressBar textProgressBar = TextProgressBar.newBar()
 					.append(new TextPart("Loading...  "))
@@ -114,6 +120,11 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 	}
 
 	// ***********************************************
+
+	protected void showAndLog(String msg) {
+		logger.log(msg);
+		System.out.println(msg);
+	}
 
 	@SuppressWarnings("unchecked")
 	protected void afterFlush(Map<FileFound, InfosFile> map) throws IOException {
