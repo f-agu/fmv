@@ -24,9 +24,7 @@ import dev.brachtendorf.jimagehash.hashAlgorithms.PerceptiveHash;
 
 
 /**
- * @author Oodrive
  * @author f.agu
- * @created 17 mars 2025 18:20:07
  */
 public class HashingInfoFile implements InfoFile {
 

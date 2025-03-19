@@ -286,7 +286,7 @@ public class Size implements Serializable {
 	}
 
 	public Ratio getRatio() {
-		int pgcd = (int)org.fagu.fmv.utils.Math.greatestCommonDivisor(width, height);
+		int pgcd = (int)org.fagu.fmv.utils.MathUtils.greatestCommonDivisor(width, height);
 		return Ratio.valueOf(width / pgcd, height / pgcd);
 	}
 

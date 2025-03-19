@@ -24,16 +24,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.fagu.fmv.im.Image;
+import org.fagu.fmv.im.soft.Convert;
 import org.fagu.fmv.im.soft.Identify;
 import org.fagu.fmv.mymedia.classify.Organizer;
 import org.fagu.fmv.mymedia.classify.duplicate.AskDelete;
-import org.fagu.fmv.mymedia.classify.duplicate.ByMD5DuplicatedFiles;
-import org.fagu.fmv.mymedia.classify.duplicate.ByPerceptionHashDuplicatedFiles;
 import org.fagu.fmv.mymedia.classify.duplicate.DeletePolicy;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicateCleanPolicy;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles;
+import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles.FileInfosFile;
+import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedResult;
 import org.fagu.fmv.mymedia.classify.duplicate.KeepOlderDuplicateCleanPolicy;
 import org.fagu.fmv.mymedia.file.ImageFinder;
 import org.fagu.fmv.mymedia.logger.Logger;
@@ -123,19 +125,18 @@ public class Bootstrap {
 					imageFinder);
 
 			List<DuplicatedFiles<?>> duplicatedFilesList = List.of(
-					// new BySizeDuplicatedFiles(logger),
-					new ByMD5DuplicatedFiles(logger),
-					new ByPerceptionHashDuplicatedFiles(logger, 0.01D, true)
+			// new BySizeDuplicatedFiles(logger),
+			// new ByMD5DuplicatedFiles(logger),
+			// new ByPerceptionHashDuplicatedFiles(logger, 0.01D, true)
 			//
 			);
 
-			// DuplicatedResult duplicatedResult = imageFinder.analyzeDuplicatedFiles(duplicatedFilesList);
-			// if(duplicatedResult.haveDuplicates()) {
-			// for(DuplicatedFiles<?> duplicatedFiles : duplicatedFilesList) {
-			// duplicateCleanPolicy.clean(duplicatedFiles, (Map<Object,
-			// List<FileInfosFile>>)duplicatedFiles.getDuplicateds());
-			// }
-			// }
+			DuplicatedResult duplicatedResult = imageFinder.analyzeDuplicatedFiles(duplicatedFilesList);
+			if(duplicatedResult.haveDuplicates()) {
+				for(DuplicatedFiles<?> duplicatedFiles : duplicatedFilesList) {
+					duplicateCleanPolicy.clean(duplicatedFiles, (Map<Object, List<FileInfosFile>>)duplicatedFiles.getDuplicateds());
+				}
+			}
 			Organizer<ImageFinder, Image> organizer = new Organizer<>(Image.class);
 			organizer.organize(destFolder, imageFinder);
 		}
@@ -144,7 +145,9 @@ public class Bootstrap {
 	// *******************************************************
 
 	private static void checkSoft() {
-		SoftLogger softLogger = SoftLogger.withSofts(List.of(Identify.search()))
+		SoftLogger softLogger = SoftLogger.withSofts(List.of(
+				Identify.search(),
+				Convert.search()))
 				.withColorization(true)
 				.build();
 		softLogger.log(System.out::println);

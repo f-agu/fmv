@@ -1,5 +1,10 @@
 package org.fagu.fmv.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+
 /*
  * #%L
  * fmv-utils
@@ -20,26 +25,22 @@ package org.fagu.fmv.utils;
  * #L%
  */
 
+
 /**
  * @author f.agu
  */
-public class Math {
+class MathUtilsTestCase {
 
-	private Math() {}
-
-	public static long greatestCommonDivisor(long a, long b) {
-		if(a <= 0) {
-			throw new IllegalArgumentException("a is zero or negative");
-		}
-		if(b <= 0) {
-			throw new IllegalArgumentException("b is zero or negative");
-		}
-		long r = 0;
-		if(a < b) {
-			long temp = a;
-			a = b;
-			b = temp;
-		}
-		return (r = a % b) == 0 ? b : greatestCommonDivisor(b, r);
+	@Test
+	void testGreatestCommonDivisor_ok() {
+		assertEquals(1, MathUtils.greatestCommonDivisor(1, 2));
+		assertEquals(160, MathUtils.greatestCommonDivisor(640, 480));
+		assertEquals(80, MathUtils.greatestCommonDivisor(1280, 720));
 	}
+
+	@Test
+	void testGreatestCommonDivisor_nok() {
+		assertThrows(IllegalArgumentException.class, () -> MathUtils.greatestCommonDivisor( - 1, - 2));
+	}
+
 }

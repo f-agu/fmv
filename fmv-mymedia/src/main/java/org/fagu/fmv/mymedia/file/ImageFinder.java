@@ -38,8 +38,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.fagu.fmv.im.DominantColor;
 import org.fagu.fmv.im.IMIdentifyImageMetadatas;
 import org.fagu.fmv.im.Image;
+import org.fagu.fmv.im.soft.Convert;
 import org.fagu.fmv.im.soft.Identify;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedResult;
@@ -71,8 +73,11 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 	public ImageFinder(Logger logger, File saveFile, int nThreads) {
 		super(logger, EXTENSIONS, BUFFER_SIZE, saveFile, List.of(
 				MediaWithMetadatasInfoFile.image(),
-				new MD5InfoFile(),
-				HashingInfoFile.perceptionHash()));
+				// new MD5InfoFile(),
+				// HashingInfoFile.perceptionHash()
+				new DominantColorInfoFile(DominantColor.getInstance(Convert.search()))
+		//
+		));
 		if(nThreads > 1) {
 			logger.log("Use " + nThreads + " threads");
 			executorService = Executors.newFixedThreadPool(nThreads);
@@ -83,6 +88,9 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 	}
 
 	public DuplicatedResult analyzeDuplicatedFiles(List<DuplicatedFiles<?>> duplicatedFilesList) {
+		if(duplicatedFilesList.isEmpty()) {
+			return new DuplicatedResult(List.of());
+		}
 		getAllMap().forEach((fileFound, infosFile) -> duplicatedFilesList.forEach(df -> df.populate(fileFound, infosFile)));
 
 		showAndLog("");
