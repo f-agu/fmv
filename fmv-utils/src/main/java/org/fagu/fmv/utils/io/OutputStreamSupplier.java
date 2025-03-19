@@ -30,10 +30,6 @@ import java.io.OutputStream;
 @FunctionalInterface
 public interface OutputStreamSupplier {
 
-	/**
-	 * @return
-	 * @throws IOException
-	 */
 	OutputStream getOutputStream() throws IOException;
 
 }

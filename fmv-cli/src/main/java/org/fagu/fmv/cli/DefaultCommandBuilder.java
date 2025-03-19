@@ -69,9 +69,6 @@ public class DefaultCommandBuilder implements CommandBuilder {
 
 	private MapList<String, Completer> completerMap;
 
-	/**
-	 * @param environnement
-	 */
 	public DefaultCommandBuilder(Environnement environnement) {
 		this.environnement = environnement;
 		this.fmvCliConfig = environnement.getFMVCLIConfig();
@@ -81,9 +78,6 @@ public class DefaultCommandBuilder implements CommandBuilder {
 		completerMap = MultiValueMaps.hashMapArrayList();
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.CommandBuilder#add(java.lang.Class)
-	 */
 	@Override
 	public void add(final Class<? extends Command> cmdClass) {
 		final org.fagu.fmv.cli.annotation.Command cmd = cmdClass.getAnnotation(org.fagu.fmv.cli.annotation.Command.class);
@@ -92,18 +86,11 @@ public class DefaultCommandBuilder implements CommandBuilder {
 		}
 		add(new CommandFactory() {
 
-			/**
-			 * @see org.fagu.fmv.cli.CommandFactory#getCommandName()
-			 */
 			@Override
 			public String getCommandName() {
 				return cmd.value();
 			}
 
-			/**
-			 * @see org.fagu.fmv.cli.CommandFactory#create(jline.console.ConsoleReader, org.fagu.fmv.cli.CommandBuilder,
-			 *      org.fagu.fmv.core.project.Project, java.lang.String, String[])
-			 */
 			@Override
 			public Command create(ConsoleReader consoleReader, CommandBuilder commandBuilder, Project project, String executable, String[] args)
 					throws LineParseException {
@@ -150,9 +137,6 @@ public class DefaultCommandBuilder implements CommandBuilder {
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.CommandBuilder#add(java.lang.String)
-	 */
 	@Override
 	public void add(String packageName) {
 		ClassResolver classResolver = new ClassResolver();
@@ -173,49 +157,31 @@ public class DefaultCommandBuilder implements CommandBuilder {
 		}
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.CommandBuilder#add(java.lang.Package)
-	 */
 	@Override
 	public void add(Package pckg) {
 		add(pckg.getName());
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.CommandBuilder#add(org.fagu.fmv.cli.CommandFactory)
-	 */
 	@Override
 	public void add(CommandFactory commandFactory) {
 		cmdBuilderMap.put(commandFactory.getCommandName().toLowerCase(), commandFactory);
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.CommandBuilder#addAlias(java.lang.String, java.lang.String)
-	 */
 	@Override
 	public void addAlias(String name, String line) {
 		add(new AliasCustomCommandFactory(name, line));
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.CommandBuilder#getCommandFactory(java.lang.String)
-	 */
 	@Override
 	public CommandFactory getCommandFactory(String name) {
 		return cmdBuilderMap.get(name);
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.CommandBuilder#getCommandFactories()
-	 */
 	@Override
 	public Collection<CommandFactory> getCommandFactories() {
 		return cmdBuilderMap.values();
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.CommandBuilder#remove(java.lang.String)
-	 */
 	@Override
 	public CommandFactory remove(String name) {
 		String lcName = name.toLowerCase();
@@ -226,9 +192,6 @@ public class DefaultCommandBuilder implements CommandBuilder {
 		return removed;
 	}
 
-	/**
-	 * @see org.fagu.fmv.cli.CommandBuilder#createAndExec(java.lang.String)
-	 */
 	@Override
 	public Command createAndExec(String line) throws LineParseException {
 		CommandLine parse = new CommandLine("ignore");
@@ -265,10 +228,6 @@ public class DefaultCommandBuilder implements CommandBuilder {
 		return command;
 	}
 
-	/**
-	 * @param cmdClass
-	 * @return
-	 */
 	protected Command build(Class<? extends Command> cmdClass) {
 		try {
 			Command command = cmdClass.newInstance();
@@ -287,10 +246,6 @@ public class DefaultCommandBuilder implements CommandBuilder {
 		}
 	}
 
-	/**
-	 * @param c
-	 * @return
-	 */
 	protected Object getInstanceOf(Class<?> c) {
 		if(c == Environnement.class) {
 			return environnement;

@@ -44,29 +44,15 @@ public abstract class AbstractTime {
 
 	private boolean negative;
 
-	/**
-	 * @param seconds
-	 */
 	public AbstractTime(double seconds) {
 		init(Math.abs(seconds));
 		negative = Math.signum(seconds) < 0;
 	}
 
-	/**
-	 * @param hour
-	 * @param minute
-	 * @param second
-	 */
 	public AbstractTime(int hour, int minute, double second) {
 		this(hour, minute, second, false);
 	}
 
-	/**
-	 * @param hour
-	 * @param minute
-	 * @param second
-	 * @param negative
-	 */
 	public AbstractTime(int hour, int minute, double second, boolean negative) {
 		if(hour < 0) {
 			throw new IllegalArgumentException("hour negative: " + hour);
@@ -81,54 +67,33 @@ public abstract class AbstractTime {
 		init(toSeconds(hour, minute, second, false));
 	}
 
-	/**
-	 * @return the negative
-	 */
 	public boolean isNegative() {
 		return negative;
 	}
 
-	/**
-	 * @return
-	 */
 	public int hour() {
 		return hour;
 	}
 
-	/**
-	 * @return
-	 */
 	public int minute() {
 		return minute;
 	}
 
-	/**
-	 * @return
-	 */
 	public double second() {
 		return second;
 	}
 
-	/**
-	 * @return
-	 */
 	public double toSeconds() {
 		double d = toSeconds(hour, minute, second, negative);
 		return Math.floor(d * 10000D) / 10000D;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public int hashCode() {
 		long bits = Double.doubleToLongBits(toSeconds());
 		return (int)(bits ^ (bits >>> 32));
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if( ! (obj instanceof AbstractTime)) {
@@ -138,17 +103,10 @@ public abstract class AbstractTime {
 		return negative == other.negative && hour == other.hour && minute == other.minute && NumberUtils.equals(second, other.second, 0.001F);
 	}
 
-	/**
-	 * @param other
-	 * @return
-	 */
 	public int compareTo(AbstractTime other) {
 		return Double.compare(toSeconds(), other.toSeconds());
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder(16);
@@ -164,23 +122,12 @@ public abstract class AbstractTime {
 		return buf.toString();
 	}
 
-	/**
-	 * @param hour
-	 * @param minute
-	 * @param second
-	 * @param negative
-	 * @return
-	 */
 	public static double toSeconds(int hour, int minute, double second, boolean negative) {
 		return (negative ? - 1D : 1D) * (60D * ((60D * hour) + minute) + second);
 	}
 
 	// *****************************************************
 
-	/**
-	 * @param abstractTime
-	 * @return
-	 */
 	protected boolean equals(AbstractTime abstractTime) {
 		if(abstractTime == null) {
 			return false;
@@ -190,9 +137,6 @@ public abstract class AbstractTime {
 
 	// *****************************************************
 
-	/**
-	 * @param second
-	 */
 	private void init(double seconds) {
 		int s = (int)seconds;
 		second = s % 60 + seconds - Math.floor(seconds);

@@ -73,85 +73,45 @@ public class Duration extends AbstractTime implements Comparable<Duration> {
 		}
 	};
 
-	/**
-	 * @param seconds
-	 */
 	private Duration(double seconds) {
 		super(seconds);
 	}
 
 	// *****************
 
-	/**
-	 * @return
-	 */
 	public static Duration unlimited() {
 		return UNLIMITED;
 	}
 
-	/**
-	 * @param seconds
-	 * @return
-	 */
 	public static Duration valueOf(double seconds) {
 		return new Duration(seconds);
 	}
 
-	/**
-	 * @param hour
-	 * @param minute
-	 * @param second
-	 */
 	public Duration(int hour, int minute, double second) {
 		super(hour, minute, second);
 	}
 
-	/**
-	 * @param hour
-	 * @param minute
-	 * @param second
-	 * @param negative
-	 */
 	public Duration(int hour, int minute, double second, boolean negative) {
 		super(hour, minute, second, negative);
 	}
 
-	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
 	@Override
 	public int compareTo(Duration o) {
 		return super.compareTo(o);
 	}
 
-	/**
-	 * @param duration
-	 * @return
-	 */
 	public Duration add(Duration duration) {
 		return add(duration.toSeconds());
 	}
 
-	/**
-	 * @param duration
-	 * @return
-	 */
 	public Duration add(double seconds) {
 		return Duration.valueOf(toSeconds() + seconds);
 	}
 
-	/**
-	 * @param multiple
-	 * @return
-	 */
 	public Duration multiplyBy(double multiple) {
 		return valueOf(toSeconds() * multiple);
 	}
 
-	/**
-	 * @param str
-	 * @return
-	 */
 	public static Duration parse(String str) {
 		Matcher matcher = PATTERN.matcher(str);
 		if( ! matcher.matches()) {

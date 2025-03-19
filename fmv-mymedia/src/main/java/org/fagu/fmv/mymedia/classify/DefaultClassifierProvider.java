@@ -78,6 +78,7 @@ public class DefaultClassifierProvider implements ClassifierProvider {
 		List<ClassifierFactory<F, M>> list = new ArrayList<>();
 		if(mediaCls == Image.class) {
 			list.add((ClassifierFactory<F, M>)ClassifierFactories.imageSejour());
+			list.add((ClassifierFactory<F, M>)ClassifierFactories.imageMonth());
 		} else if(mediaCls == Movie.class) {
 			list.add((ClassifierFactory<F, M>)ClassifierFactories.movie());
 		}

@@ -32,19 +32,12 @@ public class Time extends AbstractTime implements Comparable<Time> {
 
 	private static final Time T0 = new Time(0);
 
-	/**
-	 * @param seconds
-	 */
 	private Time(double seconds) {
 		super(seconds);
 	}
 
 	// *****************
 
-	/**
-	 * @param seconds
-	 * @return
-	 */
 	public static Time valueOf(double seconds) {
 		if(seconds == 0) {
 			return T0;
@@ -52,69 +45,35 @@ public class Time extends AbstractTime implements Comparable<Time> {
 		return new Time(seconds);
 	}
 
-	/**
-	 * @param hour
-	 * @param minute
-	 * @param second
-	 */
 	public Time(int hour, int minute, double second) {
 		super(hour, minute, second);
 	}
 
-	/**
-	 * @param hour
-	 * @param minute
-	 * @param second
-	 * @param negative
-	 */
 	public Time(int hour, int minute, double second, boolean negative) {
 		super(hour, minute, second, negative);
 	}
 
-	/**
-	 * @param duration
-	 * @return
-	 */
 	public Time add(Duration duration) {
 		return new Time(toSeconds() + duration.toSeconds());
 	}
 
-	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
 	@Override
 	public int compareTo(Time o) {
 		return super.compareTo(o);
 	}
 
-	/**
-	 * @param other
-	 * @return
-	 */
 	public Duration diff(Time other) {
 		return Duration.valueOf(Math.abs(other.toSeconds() - toSeconds()));
 	}
 
-	/**
-	 * @param other
-	 * @return
-	 */
 	public boolean after(Time other) {
 		return other.toSeconds() < toSeconds();
 	}
 
-	/**
-	 * @param other
-	 * @return
-	 */
 	public boolean before(Time other) {
 		return other.toSeconds() > toSeconds();
 	}
 
-	/**
-	 * @param str
-	 * @return
-	 */
 	public static Time parse(String str) {
 		Matcher matcher = PATTERN.matcher(str);
 		if( ! matcher.matches()) {

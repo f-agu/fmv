@@ -20,7 +20,6 @@ package org.fagu.fmv.utils.collection;
  * #L%
  */
 
-
 import java.util.Collection;
 import java.util.Map;
 
@@ -30,39 +29,16 @@ import java.util.Map;
  */
 public interface MultiValueMap<K, C extends Collection<V>, V> extends Map<K, C> {
 
-	/**
-	 * @param key
-	 */
 	C addEmpty(K key);
 
-	/**
-	 * @param key
-	 * @param value
-	 */
 	boolean add(K key, V value);
 
-	/**
-	 * @param key
-	 * @param values
-	 */
 	boolean addAll(K key, Collection<V> values);
 
-	/**
-	 * @param key
-	 * @return
-	 */
 	int size(K key);
 
-	/**
-	 * @param key
-	 * @return
-	 */
 	int sizeValues();
 
-	/**
-	 * @param key
-	 * @return
-	 */
 	V getFirst(K key);
 
 }

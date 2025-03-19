@@ -11,7 +11,6 @@ import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles.FileInfosFile;
 import org.fagu.fmv.mymedia.utils.ScannerHelper;
 import org.fagu.fmv.mymedia.utils.ScannerHelper.Answer;
 import org.fagu.fmv.mymedia.utils.ScannerHelper.YesNo;
-import org.fagu.fmv.mymedia.utils.ScannerHelper.YesNoAlways;
 
 
 /**

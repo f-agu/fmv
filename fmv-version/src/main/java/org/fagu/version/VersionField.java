@@ -21,6 +21,7 @@ package org.fagu.version;
  */
 
 import java.io.Serializable;
+import java.util.Objects;
 
 
 /**
@@ -36,62 +37,40 @@ public class VersionField implements Comparable<VersionField>, Serializable, Clo
 
 	private final VersionUnit versionUnit;
 
-	/**
-	 * @param value
-	 * @param versionUnit
-	 */
 	public VersionField(VersionUnit versionUnit, int value) {
-		if(versionUnit == null) {
-			throw new NullPointerException("VersionUnit is null");
-		}
+		this.versionUnit = Objects.requireNonNull(versionUnit);
 		if(value < 0) {
 			throw new IllegalArgumentException("Value must be positive:" + value);
 		}
 		this.value = value;
-		this.versionUnit = versionUnit;
 	}
 
-	/**
-	 * @param versionField
-	 */
 	public VersionField(VersionField versionField) {
 		this(versionField.versionUnit, versionField.value);
 	}
 
-	/**
-	 * @return
-	 */
 	public int getValue() {
 		return value;
 	}
 
-	/**
-	 * @return
-	 */
 	public VersionUnit getVersionUnit() {
 		return versionUnit;
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		return 31 * value + versionUnit.getPosition();
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
+		if( ! (obj instanceof VersionField)) {
+			return false;
+		}
 		VersionField other = (VersionField)obj;
 		return other.value == value && other.versionUnit.equals(versionUnit);
 	}
 
-	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
 	@Override
 	public int compareTo(VersionField other) {
 		// moi petit => -1
@@ -106,31 +85,20 @@ public class VersionField implements Comparable<VersionField>, Serializable, Clo
 		return value == other.value ? 0 : 1;
 	}
 
-	/**
-	 * @see java.lang.Object#clone()
-	 */
 	@Override
 	public Object clone() {
 		return new VersionField(this);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder(10);
-		buf.append(versionUnit.toString()).append('=').append(value);
-		return buf.toString();
+		return new StringBuilder()
+				.append(versionUnit.toString()).append('=').append(value)
+				.toString();
 	}
 
 	// ******************************************
 
-	/**
-	 * @param value
-	 * @param position
-	 * @return
-	 */
 	public static VersionField valueOf(int position, int value) {
 		VersionUnit versionUnit = VersionUnit.parse(position);
 		return versionUnit != null ? new VersionField(versionUnit, value) : null;

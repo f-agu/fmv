@@ -23,55 +23,38 @@ package org.fagu.version;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fagu.version.parser.DotNumberRLCVersionParser;
+import org.fagu.version.parser.DotNumberVersionParser;
+import org.fagu.version.parser.RemoveOtherVersionParser;
+
 
 /**
  * @author f.agu
  */
 public class VersionParserManager {
 
-	private static final List<VersionParser> PARSERS = new ArrayList<>(2);
+	private static final List<VersionParser> PARSERS = new ArrayList<>();
 
 	static {
 		addParser(new DotNumberVersionParser());
+		addParser(new DotNumberRLCVersionParser());
 		addParser(new RemoveOtherVersionParser());
 	}
 
-	/**
-	 *
-	 */
 	private VersionParserManager() {}
 
 	// ********************************************************
 
-	/**
-	 * @param str
-	 */
 	public static boolean isParsable(String str) {
-		for(VersionParser versionParser : PARSERS) {
-			if(versionParser.test(str)) {
-				return true;
-			}
-		}
-		return false;
+		return PARSERS.stream().anyMatch(parser -> parser.test(str));
 	}
 
-	/**
-	 * @param str
-	 * @return
-	 * @throws VersionParseException
-	 */
 	public static Version parse(String str) throws VersionParseException {
-		for(VersionParser versionParser : PARSERS) {
-			if(versionParser.test(str)) {
-				return versionParser.parse(str);
-			}
-		}
-		throw new VersionParseException(str);
+		VersionParser versionParser = PARSERS.stream().filter(parser -> parser.test(str)).findFirst().orElseThrow(() -> new VersionParseException(
+				str));
+		return versionParser.parse(str);
 	}
 
-	/**
-	 * @param versionParser
-	 */
 	public static void addParser(VersionParser versionParser) {
 		if(versionParser != null) {
 			PARSERS.add(versionParser);

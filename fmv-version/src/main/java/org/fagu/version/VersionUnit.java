@@ -84,20 +84,13 @@ public class VersionUnit implements Comparable<VersionUnit>, Serializable {
 
 	private final int position;
 
-	/**
-	 * @param position
-	 */
 	protected VersionUnit(int position) {
-		this(position, "");
+		this(position, null);
 	}
 
-	/**
-	 * @param position
-	 * @param name
-	 */
 	protected VersionUnit(int position, String name) {
 		this.position = position;
-		this.name = name;
+		this.name = name == null ? "" : name;
 		synchronized(VersionUnit.class) {
 			init();
 		}
@@ -105,56 +98,35 @@ public class VersionUnit implements Comparable<VersionUnit>, Serializable {
 
 	// **************************************************
 
-	/**
-	 * @return
-	 */
 	public int getPosition() {
 		return position;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @return
-	 */
 	public VersionUnit next() {
 		return parse(position + 1);
 	}
 
-	/**
-	 * @return
-	 */
 	public VersionUnit previous() {
 		return parse(position - 1);
 	}
 
-	/**
-	 *
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		return position * 17;
 	}
 
-	/**
-	 *
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
-		return position == ((VersionUnit)obj).position;
+		if(obj instanceof VersionUnit vu) {
+			return position == vu.position;
+		}
+		return false;
 	}
 
-	/**
-	 *
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
 	@Override
 	public int compareTo(VersionUnit versionUnit) {
 		// moi petit => -1
@@ -165,54 +137,31 @@ public class VersionUnit implements Comparable<VersionUnit>, Serializable {
 		return equals(versionUnit) ? 0 : 1;
 	}
 
-	/**
-	 *
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
 		buf.append(position);
 		String curName = getName();
 		if(curName != null && ! "".equals(curName)) {
-			buf.append('/');
-			buf.append(curName);
+			buf.append('/').append(curName);
 		}
 		return buf.toString();
 	}
 
 	// **************************************************
 
-	/**
-	 * @return
-	 */
 	public static VersionUnit upper() {
 		return POSITION_MAP.get(POSITION_MAP.lastKey());
 	}
 
-	/**
-	 * @param vu1
-	 * @param vu2
-	 * @return
-	 */
 	public static VersionUnit max(VersionUnit vu1, VersionUnit vu2) {
 		return vu1.position <= vu2.position ? vu1 : vu2;
 	}
 
-	/**
-	 * @param vu1
-	 * @param vu2
-	 * @return
-	 */
 	public static VersionUnit min(VersionUnit vu1, VersionUnit vu2) {
 		return vu1.position >= vu2.position ? vu1 : vu2;
 	}
 
-	/**
-	 * @param position
-	 * @return
-	 * @throws IllegalArgumentException
-	 */
 	public static VersionUnit parse(int position) {
 		if(position < 0) {
 			throw new IllegalArgumentException("Position must be positive:" + position);
@@ -220,23 +169,18 @@ public class VersionUnit implements Comparable<VersionUnit>, Serializable {
 		return POSITION_MAP.get(Integer.valueOf(position));
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
 	public static VersionUnit parse(String name) {
 		VersionUnit versionUnit = NAME_MAP.get(name);
 		if(versionUnit == null) {
 			try {
 				versionUnit = parse(Integer.parseInt(name));
-			} catch(Exception ignored) {}
+			} catch(Exception ignored) {
+				// ignore
+			}
 		}
 		return versionUnit;
 	}
 
-	/**
-	 * @return
-	 */
 	public static Iterable<VersionUnit> iterable() {
 		return Collections.unmodifiableCollection(POSITION_MAP.values());
 	}
@@ -250,25 +194,21 @@ public class VersionUnit implements Comparable<VersionUnit>, Serializable {
 	 */
 	public static Iterable<VersionUnit> iterable(VersionUnit firstVersionUnit, VersionUnit lastVersionUnit) {
 		VersionUnit lastunit = lastVersionUnit.next();
-		SortedMap<Integer, VersionUnit> sortedMap;
+		SortedMap<Integer, VersionUnit> sortedMap = null;
 		if(lastunit != null) {
-			sortedMap = POSITION_MAP.subMap(Integer.valueOf(firstVersionUnit.getPosition()), Integer.valueOf(lastVersionUnit.next().getPosition()));
+			sortedMap = POSITION_MAP.subMap(firstVersionUnit.getPosition(), lastVersionUnit.next().getPosition());
 		} else {
-			sortedMap = POSITION_MAP.tailMap(Integer.valueOf(firstVersionUnit.getPosition()));
+			sortedMap = POSITION_MAP.tailMap(firstVersionUnit.getPosition());
 		}
 		return Collections.unmodifiableCollection(sortedMap.values());
 	}
 
 	// **************************************************
 
-	/**
-	 *
-	 */
 	private void init() {
 		POSITION_MAP.put(Integer.valueOf(position), this);
-		String curName = getName();
-		if(curName != null && ! "".equals(curName)) {
-			NAME_MAP.put(curName, this);
+		if(name != null && ! "".equals(name)) {
+			NAME_MAP.put(name, this);
 		}
 	}
 

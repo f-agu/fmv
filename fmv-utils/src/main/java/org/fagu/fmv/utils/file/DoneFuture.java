@@ -33,56 +33,30 @@ public class DoneFuture<V> implements Future<V> {
 
 	private final V value;
 
-	/**
-	 * @param value
-	 */
 	public DoneFuture(V value) {
 		this.value = value;
 	}
 
-	/**
-	 * @param mayInterruptIfRunning
-	 * @return
-	 */
 	@Override
 	public boolean cancel(boolean mayInterruptIfRunning) {
 		return false;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public boolean isCancelled() {
 		return false;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public boolean isDone() {
 		return true;
 	}
 
-	/**
-	 * @return
-	 * @throws InterruptedException
-	 * @throws ExecutionException
-	 */
 	@Override
 	public V get() throws InterruptedException, ExecutionException {
 		return value;
 	}
 
-	/**
-	 * @param timeout
-	 * @param unit
-	 * @return
-	 * @throws InterruptedException
-	 * @throws ExecutionException
-	 * @throws TimeoutException
-	 */
 	@Override
 	public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 		return value;

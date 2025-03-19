@@ -1,4 +1,9 @@
-package org.fagu.version;
+package org.fagu.version.parser;
+
+import org.fagu.version.Version;
+import org.fagu.version.Version.VersionBuilder;
+import org.fagu.version.VersionParseException;
+import org.fagu.version.VersionParser;
 
 /*
  * #%L
@@ -20,19 +25,12 @@ package org.fagu.version;
  * #L%
  */
 
+
 /**
  * @author f.agu
  */
 public class RemoveOtherVersionParser implements VersionParser {
 
-	/**
-	 * 
-	 */
-	public RemoveOtherVersionParser() {}
-
-	/**
-	 * @see java.util.function.Predicate#test(java.lang.Object)
-	 */
 	@Override
 	public boolean test(String str) {
 		if(str == null) {
@@ -45,22 +43,17 @@ public class RemoveOtherVersionParser implements VersionParser {
 		return DotNumberVersionParser.INSTANCE.test(newValue);
 	}
 
-	/**
-	 * @see org.fagu.version.VersionParser#parse(java.lang.String)
-	 */
 	@Override
 	public Version parse(String str) throws VersionParseException {
-		if( ! test(str)) {
-			throw new VersionParseException(str);
+		if(test(str)) {
+			VersionBuilder versionBuilder = DotNumberVersionParser.parseToBuilder(getNewValue(str));
+			return versionBuilder.text(str).build();
 		}
-		return new ExtendedVersion(str, DotNumberVersionParser.INSTANCE.parse(getNewValue(str)));
+		throw new VersionParseException(str);
 	}
 
 	// ************************************************
-	/**
-	 * @param value
-	 * @return
-	 */
+
 	private static String getNewValue(String value) {
 		if(value == null || "".equals(value)) {
 			return null;

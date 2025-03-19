@@ -2,9 +2,12 @@ package org.fagu.version;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.HashSet;
 
 /*-
  * #%L
@@ -27,8 +30,10 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 
+import org.fagu.version.Version.VersionBuilder;
 import org.junit.jupiter.api.Test;
 
 
@@ -134,6 +139,22 @@ class VersionTestCase {
 	}
 
 	@Test
+	void testEquals2() throws Exception {
+		assertEquals(new Version(2), new Version(2, 0));
+		assertEquals(new Version(2), new Version(2, 0, 0));
+		assertEquals(new Version(2), new Version(2, 0, 0, 0));
+		assertEquals(new Version(2), new Version(2, 0, 0, 0, 0, 0, 0, 0));
+	}
+
+	@Test
+	void testHashCode() {
+		assertEquals(Version.V1.hashCode(), Version.parse("1").hashCode());
+		assertEquals(Version.V1.hashCode(), new Version(1).hashCode());
+		assertEquals(Version.V1.hashCode(), VersionBuilder.v(1).build().hashCode());
+		assertEquals(Version.V1.hashCode(), VersionBuilder.major(1).build().hashCode());
+	}
+
+	@Test
 	void testContains() throws Exception {
 		// 88.0.5.0.99
 		Version version = new Version(VersionField.valueOf(2, 5), VersionField.valueOf(4, 99), VersionField.valueOf(0, 88));
@@ -147,6 +168,24 @@ class VersionTestCase {
 		assertFalse(version.contains(VersionUnit.VF_7));
 		assertFalse(version.contains(VersionUnit.VF_8));
 		assertFalse(version.contains(VersionUnit.VF_9));
+	}
+
+	@Test
+	void testSetContains1() throws Exception {
+		Set<Version> set = new HashSet<>();
+		set.add(new Version(2));
+		assertTrue(set.contains(new Version(2)));
+		assertTrue(set.contains(new Version(2, 0)));
+		assertTrue(set.contains(new Version(2, 0, 0, 0)));
+	}
+
+	@Test
+	void testSetContains2() throws Exception {
+		Set<Version> set = new HashSet<>();
+		set.add(new Version(2, 0, 0, 0));
+		assertTrue(set.contains(new Version(2)));
+		assertTrue(set.contains(new Version(2, 0)));
+		assertTrue(set.contains(new Version(2, 0, 0, 0)));
 	}
 
 	@Test
@@ -196,7 +235,6 @@ class VersionTestCase {
 		assertOK("1.0.0.0.1", Version.parse("1.0.0.0.1"), 1, 0, 0, 0, 1);
 		assertOK("88.0.5.0.99", Version.parse("88.0.5.0.99"), 88, 0, 5, 0, 99);
 		assertOK("5.1.16.", Version.parse("5.1.16."), 5, 1, 16);
-		assertOK("1.8.0_20", Version.parse("1.8.0_20"), 1, 8, 0, 20);
 	}
 
 	@Test
@@ -213,12 +251,12 @@ class VersionTestCase {
 		Version v480 = new Version(4, 8, 0);
 		Version v480000000 = new Version(4, 8, 0, 0, 0, 0, 0, 0, 0);
 		Version v481 = new Version(4, 8, 1);
-		assertTrue(v48.equals(v480));
-		assertTrue(v480.equals(v48));
-		assertTrue(v48.equals(v480000000));
-		assertTrue(v480000000.equals(v48));
-		assertFalse(v48.equals(v481));
-		assertFalse(v481.equals(v48));
+		assertEquals(v48, v480);
+		assertEquals(v480, v48);
+		assertEquals(v48, v480000000);
+		assertEquals(v480000000, v48);
+		assertNotEquals(v48, v481);
+		assertNotEquals(v481, v48);
 	}
 
 	@Test
@@ -243,6 +281,40 @@ class VersionTestCase {
 		assertOK("5.1.2.3", new Version(5, 1, 2, 3).cut(VersionUnit.VF_3_BUILD), 5, 1, 2, 3);
 	}
 
+	@Test
+	void testCompareRLC() throws Exception {
+
+		Version v100 = Version.parse("1.0.0");
+		Version v100snapshot = Version.parse("1.0.0-SNAPSHOT");
+		Version v110snapshot = Version.parse("1.1.0-SNAPSHOT");
+		Version v100xxx = Version.parse("1.0.0-XXX");
+
+		// Set<Version> set = new TreeSet<>();
+		// set.add(Version.parse("1.0.0"));
+		// set.add(Version.parse("1.0.0-XXX"));
+		// set.add(v100snapshot);
+		// set.add(v110snapshot);
+		// System.out.println(set);
+
+		assertEquals(0, v100snapshot.compareTo(v100snapshot));
+		assertTrue(v110snapshot.compareTo(v100snapshot) > 0);
+		assertTrue(v100snapshot.compareTo(v110snapshot) < 0);
+
+		assertTrue(v100snapshot.compareTo(v100xxx) < 0);
+		assertTrue(v110snapshot.compareTo(v100xxx) > 0);
+		assertTrue(v100.compareTo(v100xxx) < 0);
+		assertTrue(v100.compareTo(v100snapshot) > 0);
+
+	}
+
+	@Test
+	void testRemoveExtraValue() throws Exception {
+		Version v100snapshot = Version.parse("1.0.0-SNAPSHOT");
+		assertEquals(new Version(1), v100snapshot.removeText());
+		assertEquals(new Version(1, 0), v100snapshot.removeText());
+		assertEquals(new Version(1, 0, 0), v100snapshot.removeText());
+	}
+
 	// *****************************************************
 
 	private void assertOK(String message, Version version, int... values) {
@@ -251,12 +323,12 @@ class VersionTestCase {
 		assertEquals(version.size(), len);
 
 		for(int i = 0; i < len; ++i) {
-			assertEquals(version.getFieldValue(VersionUnit.parse(i), NOT_SET), values[i], "position n°" + i + ".value, " + message);
+			assertEquals(version.getFieldValue(VersionUnit.parse(i), NOT_SET), values[i], "position n°" + i + ".value");
 		}
 
 		for(int i = 0; i < len; ++i) {
 			VersionUnit unit = VersionUnit.parse(i);
-			assertEquals(version.getField(unit), new VersionField(unit, values[i]), "position n°" + i + ".field, " + message);
+			assertEquals(version.getField(unit), new VersionField(unit, values[i]), "position n°" + i + ".field");
 		}
 	}
 

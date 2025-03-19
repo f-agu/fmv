@@ -1,17 +1,22 @@
 package org.fagu.fmv.mymedia.classify.duplicate;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.TreeSet;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles.FileInfosFile;
-import org.fagu.fmv.mymedia.utils.ScannerHelper.YesNoAlways;
+import org.fagu.fmv.mymedia.utils.ScannerHelper.Answer;
 import org.fagu.fmv.utils.file.FileFinder;
 
 
@@ -39,17 +44,72 @@ public class KeepOlderDuplicateCleanPolicy implements DuplicateCleanPolicy {
 		if(list.isEmpty()) {
 			return;
 		}
-		NavigableSet<FileInfosFile> set = new TreeSet<>(new MyComparator());
-		set.addAll(list);
-		set.stream()
-				.skip(1)
-				.filter(fif -> fif.fileFound().getFileFound().exists())
-				.forEach(fif -> {
-					if(YesNoAlways.YES.equals(askDelete.ask(duplicatedFiles, fif))
-							&& deletePolicy.delete(fif.fileFound().getFileFound())) {
-						fileFinder.remove(fif.fileFound());
-					}
-				});
+		List<File> tmpFolders = new ArrayList<>();
+		Runnable cleanTmpFolders = () -> tmpFolders.forEach(t -> {
+			try {
+				FileUtils.deleteDirectory(t);
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		});
+		try {
+			NavigableSet<FileInfosFile> set = new TreeSet<>(new MyComparator());
+			set.addAll(list);
+			set.stream()
+					.skip(1)
+					.filter(fif -> fif.fileFound().getFileFound().exists())
+					.forEach(fif -> {
+						Answer answer = null;
+						try {
+							for(;;) {
+								answer = askDelete.ask(duplicatedFiles, fif);
+								if(answer == YesNoAlways.COMPARE) {
+									tmpFolders.add(compare(list));
+								} else if(YesNoAlways.YES.equals(answer)) {
+									if(deletePolicy.delete(fif.fileFound().getFileFound())) {
+										fileFinder.remove(fif.fileFound());
+									}
+									return;
+								} else {
+									return;
+								}
+							}
+						} finally {
+							cleanTmpFolders.run();
+						}
+					});
+		} finally {
+			cleanTmpFolders.run();
+		}
+	}
+
+	// **************************************************************
+
+	private File compare(List<FileInfosFile> list) {
+		File rootFolder = list.get(0).fileFound().getRootFolder();
+		try {
+			File tmpFolder = Files.createTempDirectory(rootFolder.toPath(), "compare-").toFile();
+			for(FileInfosFile fif : list) {
+				File src = fif.fileFound().getFileFound();
+				String name = src.getName();
+				File dest = new File(tmpFolder, name);
+				if(dest.exists()) {
+					dest = File.createTempFile(FilenameUtils.getBaseName(name), '.' + FilenameUtils.getExtension(name), tmpFolder);
+				}
+				FileUtils.copyFile(src, dest);
+			}
+
+			try {
+				ProcessBuilder processBuilder = new ProcessBuilder(List.of("explorer.exe", tmpFolder.toString()));
+				processBuilder.start();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+
+			return tmpFolder;
+		} catch(IOException e) {
+			throw new UncheckedIOException(e);
+		}
 	}
 
 	// ---------------------------------------------------------------

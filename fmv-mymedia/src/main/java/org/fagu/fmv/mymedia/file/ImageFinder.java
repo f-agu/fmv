@@ -40,9 +40,11 @@ import java.util.stream.Collectors;
 
 import org.fagu.fmv.im.IMIdentifyImageMetadatas;
 import org.fagu.fmv.im.Image;
+import org.fagu.fmv.im.soft.Identify;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedResult;
 import org.fagu.fmv.mymedia.logger.Logger;
+import org.fagu.fmv.soft.Soft;
 import org.fagu.fmv.soft.exec.CommandLineUtils;
 import org.fagu.fmv.utils.file.DoneFuture;
 
@@ -60,6 +62,8 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 
 	private final ExecutorService executorService;
 
+	private final Soft identifySoft;
+
 	public ImageFinder(Logger logger, File saveFile) {
 		this(logger, saveFile, Runtime.getRuntime().availableProcessors());
 	}
@@ -68,13 +72,14 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 		super(logger, EXTENSIONS, BUFFER_SIZE, saveFile, List.of(
 				MediaWithMetadatasInfoFile.image(),
 				new MD5InfoFile(),
-				new PerceptionHashInfoFile()));
+				HashingInfoFile.perceptionHash()));
 		if(nThreads > 1) {
 			logger.log("Use " + nThreads + " threads");
 			executorService = Executors.newFixedThreadPool(nThreads);
 		} else {
 			executorService = null;
 		}
+		identifySoft = Identify.search();
 	}
 
 	public DuplicatedResult analyzeDuplicatedFiles(List<DuplicatedFiles<?>> duplicatedFilesList) {
@@ -135,11 +140,15 @@ public class ImageFinder extends AutoSaveLoadFileFinder<Image> implements Serial
 	// }
 
 	private Callable<Map<FileFound, InfosFile>> create(List<FileFound> buffer, Consumer<List<FileFound>> consumer) {
-		List<File> files = buffer.stream().map(FileFound::getFileFound).collect(Collectors.toList());
+		List<File> files = buffer.stream()
+				.map(FileFound::getFileFound)
+				.filter(f -> f.length() > 1000L)
+				.collect(Collectors.toList());
 		return () -> {
 			Map<File, IMIdentifyImageMetadatas> map = null;
 			try {
 				map = IMIdentifyImageMetadatas.with(files)
+						.soft(identifySoft)
 						.logger(cl -> logger.log(CommandLineUtils.toLine(cl)))
 						.extractAll();
 			} catch(IOException e) {

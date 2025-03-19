@@ -144,6 +144,9 @@ public class IMIdentifyImageMetadatas extends MapImageMetadatas implements Seria
 
 		@Override
 		public IMIdentifyImageMetadatas extract() throws IOException {
+			if( ! identifySoft.isFound()) {
+				throw new IOException("Soft not found: IM identify");
+			}
 			Map<T, IMIdentifyImageMetadatas> extract = IMIdentifyImageMetadatas.extract(identifySoft, sources, logger, customizeExecutor,
 					checkAnimated, explicitImageFormat);
 			return extract.values().iterator().next();

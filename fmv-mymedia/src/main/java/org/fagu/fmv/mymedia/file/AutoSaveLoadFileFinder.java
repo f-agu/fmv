@@ -111,6 +111,7 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 				e.printStackTrace();
 			}
 			System.out.println();
+			System.out.println(count() + " files loaded");
 		}
 		return super.find(files, findProgress);
 	}

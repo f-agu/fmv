@@ -38,7 +38,6 @@ import org.fagu.fmv.ffmpeg.metadatas.MovieMetadatasFactory;
 import org.fagu.fmv.im.IMIdentifyImageMetadatas;
 import org.fagu.fmv.im.Image;
 import org.fagu.fmv.im.ImageMetadatasFactory;
-import org.fagu.fmv.im.soft.Identify;
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.media.Metadatas;
 import org.fagu.fmv.media.MetadatasFactory;
@@ -68,7 +67,6 @@ public class MediaWithMetadatasInfoFile implements InfoFile {
 	// *************
 
 	public static MediaWithMetadatasInfoFile image() {
-		Identify.search(); // load cache
 		return new MediaWithMetadatasInfoFile(new ImageMetadatasFactory(), (file, metadatas) -> new Image(file, (IMIdentifyImageMetadatas)metadatas));
 	}
 

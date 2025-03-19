@@ -1,0 +1,3 @@
+org.fagu.version.comparator.DigitVersionComparator
+org.fagu.version.comparator.ReleaseLifeCyleVersionComparator
+org.fagu.version.comparator.TextVersionComparator

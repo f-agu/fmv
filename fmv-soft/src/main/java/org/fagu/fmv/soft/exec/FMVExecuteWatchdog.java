@@ -1,5 +1,8 @@
 package org.fagu.fmv.soft.exec;
 
+import java.time.Duration;
+import java.util.concurrent.ThreadFactory;
+
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.Watchdog;
 import org.fagu.fmv.soft.exec.exception.TimeoutExecuteException;
@@ -12,26 +15,17 @@ import org.fagu.fmv.soft.exec.exception.TimeoutExecuteException;
  */
 public class FMVExecuteWatchdog extends ExecuteWatchdog {
 
-	private final Watchdog watchdog;
-
-	private final long timeout;
+	private final Duration timeout;
 
 	private boolean timeoutOccured;
 
-	public FMVExecuteWatchdog(long timeout) {
-		super(ExecuteWatchdog.INFINITE_TIMEOUT);
-		if(timeout == INFINITE_TIMEOUT) {
+	public FMVExecuteWatchdog(ThreadFactory threadFactory, Duration timeout) {
+		// super(threadFactory, ExecuteWatchdog.INFINITE_TIMEOUT_DURATION);
+		super(0);
+		if(timeout == INFINITE_TIMEOUT_DURATION) {
 			throw new IllegalArgumentException();
 		}
 		this.timeout = timeout;
-		this.watchdog = new Watchdog(timeout);
-		this.watchdog.addTimeoutObserver(this);
-	}
-
-	@Override
-	public synchronized void start(final Process processToMonitor) {
-		super.start(processToMonitor);
-		watchdog.start();
 	}
 
 	@Override
@@ -48,9 +42,4 @@ public class FMVExecuteWatchdog extends ExecuteWatchdog {
 		}
 	}
 
-	@Override
-	public synchronized void stop() {
-		super.stop();
-		watchdog.stop();
-	}
 }

@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft.exec.exception;
 
+import java.time.Duration;
+
 import org.apache.commons.exec.ExecuteException;
 
 
@@ -12,19 +14,19 @@ public class TimeoutExecuteException extends ExecuteException {
 
 	private static final long serialVersionUID = 453371740733460317L;
 
-	private final long timeout;
+	private final Duration timeout;
 
-	public TimeoutExecuteException(long timeout) {
-		super(timeout + "ms", Integer.MAX_VALUE);
+	public TimeoutExecuteException(Duration timeout) {
+		super(timeout.toString(), Integer.MAX_VALUE);
 		this.timeout = timeout;
 	}
 
-	public TimeoutExecuteException(long timeout, Throwable cause) {
-		super(timeout + "ms", Integer.MAX_VALUE, cause);
+	public TimeoutExecuteException(Duration timeout, Throwable cause) {
+		super(timeout.toString(), Integer.MAX_VALUE, cause);
 		this.timeout = timeout;
 	}
 
-	public long getTimeout() {
+	public Duration getTimeout() {
 		return timeout;
 	}
 

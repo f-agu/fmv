@@ -1,4 +1,4 @@
-package org.fagu.version;
+package org.fagu.version.parser;
 
 /*
  * #%L
@@ -25,6 +25,12 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
+import org.fagu.version.Version;
+import org.fagu.version.Version.VersionBuilder;
+import org.fagu.version.VersionParseException;
+import org.fagu.version.VersionParser;
+import org.fagu.version.VersionUnit;
+
 
 /**
  * @author f.agu
@@ -37,28 +43,18 @@ public class DotNumberVersionParser implements VersionParser {
 
 	public static final DotNumberVersionParser INSTANCE = new DotNumberVersionParser();
 
-	/**
-	 *
-	 */
-	public DotNumberVersionParser() {}
-
-	/**
-	 * @see java.util.function.Predicate#test(java.lang.Object)
-	 */
 	@Override
 	public boolean test(String str) {
-		if(str == null) {
-			return false;
-		}
-		return PATTERN.matcher(str).matches();
+		return str == null ? false : PATTERN.matcher(str).matches();
 	}
 
-	/**
-	 * @see org.fagu.version.VersionParser#parse(java.lang.String)
-	 */
 	@Override
 	public Version parse(String str) throws VersionParseException {
-		if( ! test(str)) {
+		return parseToBuilder(str).text(str).build();
+	}
+
+	public static VersionBuilder parseToBuilder(String str) throws VersionParseException {
+		if( ! INSTANCE.test(str)) {
 			throw new VersionParseException(str);
 		}
 		final int maxSize = VersionUnit.upper().getPosition();
@@ -67,6 +63,12 @@ public class DotNumberVersionParser implements VersionParser {
 		while(st.hasMoreTokens() && list.size() < maxSize) {
 			list.add(Integer.parseInt(st.nextToken()));
 		}
-		return new Version(list);
+
+		int[] ints = new int[list.size()];
+		for(int i = 0; i < ints.length; ++i) {
+			ints[i] = list.get(i);
+		}
+
+		return VersionBuilder.v(ints);
 	}
 }

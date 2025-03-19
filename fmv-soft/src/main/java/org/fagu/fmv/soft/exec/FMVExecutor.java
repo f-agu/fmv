@@ -23,6 +23,7 @@ package org.fagu.fmv.soft.exec;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -176,7 +177,9 @@ public class FMVExecutor extends DefaultExecutor {
 			throw new IllegalArgumentException("Incredible timeout: " + timeOutMilliSeconds + "ms");
 		}
 		this.timeOutMilliSeconds = Math.max(timeOutMilliSeconds, org.apache.commons.exec.ExecuteWatchdog.INFINITE_TIMEOUT);
-		executeWatchdog = new FMVExecuteWatchdog(timeOutMilliSeconds);
+		executeWatchdog = ExecuteWatchdog.builder()
+				.setTimeout(Duration.ofMillis(timeOutMilliSeconds))
+				.get();
 		setWatchdog(executeWatchdog);
 	}
 

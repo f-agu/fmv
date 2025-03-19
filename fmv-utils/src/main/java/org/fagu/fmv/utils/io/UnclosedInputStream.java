@@ -20,7 +20,6 @@ package org.fagu.fmv.utils.io;
  * #L%
  */
 
-
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,23 +30,15 @@ import java.io.InputStream;
  */
 public class UnclosedInputStream extends FilterInputStream {
 
-	/**
-	 * @param in
-	 */
 	public UnclosedInputStream(InputStream in) {
 		super(in);
 	}
 
-	/**
-	 * @see java.io.FilterInputStream#close()
-	 */
+	@Override
 	public void close() throws IOException {
 		// DO NOTHING
 	}
 
-	/**
-	 * @throws IOException
-	 */
 	public void closeForce() throws IOException {
 		super.close();
 	}

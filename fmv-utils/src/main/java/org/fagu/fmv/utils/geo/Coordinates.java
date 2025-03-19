@@ -43,10 +43,6 @@ public class Coordinates {
 	 */
 	private final double longitude;
 
-	/**
-	 * @param latitude
-	 * @param longitude
-	 */
 	public Coordinates(double latitude, double longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;

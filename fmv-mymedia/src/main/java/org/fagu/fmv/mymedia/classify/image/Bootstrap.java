@@ -24,9 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.fagu.fmv.im.Image;
+import org.fagu.fmv.im.soft.Identify;
 import org.fagu.fmv.mymedia.classify.Organizer;
 import org.fagu.fmv.mymedia.classify.duplicate.AskDelete;
 import org.fagu.fmv.mymedia.classify.duplicate.ByMD5DuplicatedFiles;
@@ -34,12 +34,11 @@ import org.fagu.fmv.mymedia.classify.duplicate.ByPerceptionHashDuplicatedFiles;
 import org.fagu.fmv.mymedia.classify.duplicate.DeletePolicy;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicateCleanPolicy;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles;
-import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles.FileInfosFile;
-import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedResult;
 import org.fagu.fmv.mymedia.classify.duplicate.KeepOlderDuplicateCleanPolicy;
 import org.fagu.fmv.mymedia.file.ImageFinder;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
+import org.fagu.fmv.soft.SoftLogger;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.textprogressbar.part.SupplierTextPart;
 import org.fagu.fmv.textprogressbar.part.TextPart;
@@ -104,6 +103,8 @@ public class Bootstrap {
 
 	@SuppressWarnings("unchecked")
 	public static void main(String... args) throws IOException {
+		checkSoft();
+		System.out.println();
 		File source = new File(args[0]);
 
 		File saveFile = new File(source, "image.save");
@@ -128,14 +129,24 @@ public class Bootstrap {
 			//
 			);
 
-			DuplicatedResult duplicatedResult = imageFinder.analyzeDuplicatedFiles(duplicatedFilesList);
-			if(duplicatedResult.haveDuplicates()) {
-				for(DuplicatedFiles<?> duplicatedFiles : duplicatedFilesList) {
-					duplicateCleanPolicy.clean(duplicatedFiles, (Map<Object, List<FileInfosFile>>)duplicatedFiles.getDuplicateds());
-				}
-			}
+			// DuplicatedResult duplicatedResult = imageFinder.analyzeDuplicatedFiles(duplicatedFilesList);
+			// if(duplicatedResult.haveDuplicates()) {
+			// for(DuplicatedFiles<?> duplicatedFiles : duplicatedFilesList) {
+			// duplicateCleanPolicy.clean(duplicatedFiles, (Map<Object,
+			// List<FileInfosFile>>)duplicatedFiles.getDuplicateds());
+			// }
+			// }
 			Organizer<ImageFinder, Image> organizer = new Organizer<>(Image.class);
 			organizer.organize(destFolder, imageFinder);
 		}
+	}
+
+	// *******************************************************
+
+	private static void checkSoft() {
+		SoftLogger softLogger = SoftLogger.withSofts(List.of(Identify.search()))
+				.withColorization(true)
+				.build();
+		softLogger.log(System.out::println);
 	}
 }

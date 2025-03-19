@@ -20,7 +20,6 @@ package org.fagu.version;
  * #L%
  */
 
-
 import java.util.function.Predicate;
 
 
@@ -29,10 +28,5 @@ import java.util.function.Predicate;
  */
 public interface VersionParser extends Predicate<String> {
 
-	/**
-	 * @param str
-	 * @return
-	 * @throws VersionParseException
-	 */
 	Version parse(String str) throws VersionParseException;
 }

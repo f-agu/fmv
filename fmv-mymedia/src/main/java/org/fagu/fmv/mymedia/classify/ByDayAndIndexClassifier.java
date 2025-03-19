@@ -77,9 +77,9 @@ public class ByDayAndIndexClassifier extends Classifier<FileFinder<Media>, Media
 			for(FileFinder<Media>.InfosFile infosFile : entry.getValue()) {
 				Media media = infosFile.getMain();
 				File srcFile = media.getFile();
-				StringBuilder buf = new StringBuilder();
-				buf.append(StringUtils.leftPad(Integer.toString(++index), idxLen, '0')).append('.');
-				buf.append(FilenameUtils.getExtension(srcFile.getName()).toLowerCase());
+				StringBuilder buf = new StringBuilder()
+						.append(StringUtils.leftPad(Integer.toString(++index), idxLen, '0')).append('.')
+						.append(FilenameUtils.getExtension(srcFile.getName()).toLowerCase());
 				File destFile = new File(curFolder, buf.toString());
 				converter.convert(media, infosFile, destFile, listener);
 				files.add(destFile);
