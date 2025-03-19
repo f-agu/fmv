@@ -28,8 +28,10 @@ import java.util.Map;
 
 import org.fagu.fmv.im.Image;
 import org.fagu.fmv.mymedia.classify.Organizer;
+import org.fagu.fmv.mymedia.classify.duplicate.AskDelete;
 import org.fagu.fmv.mymedia.classify.duplicate.ByMD5DuplicatedFiles;
 import org.fagu.fmv.mymedia.classify.duplicate.ByPerceptionHashDuplicatedFiles;
+import org.fagu.fmv.mymedia.classify.duplicate.DeletePolicy;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicateCleanPolicy;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles.FileInfosFile;
@@ -77,9 +79,9 @@ public class Bootstrap {
 			@Override
 			public void progress(int done, int total) {
 				if(total != 0) {
-					supplierTextPart.setText(done + "/" + total + " (" + Integer.toString((100 * done) / total) + " %)");
+					supplierTextPart.setText(done + "/" + total + " (" + Integer.toString((100 * done) / total) + " %)                       ");
 				} else {
-					supplierTextPart.setText(done + "/" + total);
+					supplierTextPart.setText(done + "/" + total + "                                ");
 				}
 			}
 
@@ -106,14 +108,18 @@ public class Bootstrap {
 
 		File saveFile = new File(source, "image.save");
 		File destFolder = new File(source.getParentFile(), source.getName() + "-out");
-
-		DuplicateCleanPolicy duplicateCleanPolicy = new KeepOlderDuplicateCleanPolicy();
+		File deletedFolder = new File(source.getParentFile(), source.getName() + "-deleted");
 
 		Bootstrap bootstrap = new Bootstrap();
 		try (Logger logger = LoggerFactory.openLogger(LoggerFactory.getLogFile(source, "imagelog", "image.log"));
 				ImageFinder imageFinder = bootstrap.findImage(logger, saveFile, source)) {
 
 			logger.log("***************************************************");
+
+			DuplicateCleanPolicy duplicateCleanPolicy = new KeepOlderDuplicateCleanPolicy(
+					AskDelete.yesNoAlways(),
+					DeletePolicy.moveTo(logger, deletedFolder),
+					imageFinder);
 
 			List<DuplicatedFiles<?>> duplicatedFilesList = List.of(
 					// new BySizeDuplicatedFiles(logger),
@@ -125,7 +131,7 @@ public class Bootstrap {
 			DuplicatedResult duplicatedResult = imageFinder.analyzeDuplicatedFiles(duplicatedFilesList);
 			if(duplicatedResult.haveDuplicates()) {
 				for(DuplicatedFiles<?> duplicatedFiles : duplicatedFilesList) {
-					duplicateCleanPolicy.clean((Map<Object, List<FileInfosFile>>)duplicatedFiles.getDuplicateds());
+					duplicateCleanPolicy.clean(duplicatedFiles, (Map<Object, List<FileInfosFile>>)duplicatedFiles.getDuplicateds());
 				}
 			}
 			Organizer<ImageFinder, Image> organizer = new Organizer<>(Image.class);

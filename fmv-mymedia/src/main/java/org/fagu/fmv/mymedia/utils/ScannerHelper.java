@@ -93,6 +93,65 @@ public class ScannerHelper {
 
 	// ------------------------------------------------
 
+	public enum YesNoAlways implements Answer {
+
+		YES {
+
+			@Override
+			public String getValue() {
+				return "Yes";
+			}
+
+			@Override
+			public Collection<String> getVariants() {
+				return Collections.singleton("y");
+			}
+		},
+
+		NO {
+
+			@Override
+			public String getValue() {
+				return "No";
+			}
+
+			@Override
+			public Collection<String> getVariants() {
+				return Collections.singleton("n");
+			}
+		},
+
+		YES_ALWAYS {
+
+			@Override
+			public String getValue() {
+				return "yes-AlwAys";
+			}
+
+			@Override
+			public Collection<String> getVariants() {
+				return Collections.singleton("a");
+			}
+
+		},
+
+		NO_ALWAYS {
+
+			@Override
+			public String getValue() {
+				return "nO-always";
+			}
+
+			@Override
+			public Collection<String> getVariants() {
+				return Collections.singleton("o");
+			}
+
+		}
+	}
+
+	// ------------------------------------------------
+
 	public static Answer ask(String question, Collection<Answer> answers, Answer defaultAnswer) {
 		Map<String, Answer> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 		BiConsumer<String, Answer> appender = (s, a) -> {
@@ -112,7 +171,7 @@ public class ScannerHelper {
 				});
 
 		String prompt = question + " ? " + answers.stream()
-				.map(a -> a == defaultAnswer ? a.getValue().toUpperCase() : a.getValue().toLowerCase())
+				.map(a -> a == defaultAnswer ? a.getValue().toUpperCase() : a.getValue())
 				.map(c -> c.toString())
 				.collect(Collectors.joining("/", "[", "]")) + ' ';
 		System.out.print(prompt);

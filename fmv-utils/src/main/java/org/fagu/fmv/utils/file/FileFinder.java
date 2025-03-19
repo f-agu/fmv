@@ -113,9 +113,9 @@ public abstract class FileFinder<T> implements Serializable {
 
 		private final List<Object> infos;
 
-		public InfosFile() {
-			this.infos = new ArrayList<>();
-		}
+		// public InfosFile() {
+		// this.infos = new ArrayList<>();
+		// }
 
 		public InfosFile(T mainInfo, Object... infos) {
 			this.mainInfo = mainInfo;
@@ -277,6 +277,10 @@ public abstract class FileFinder<T> implements Serializable {
 		return fileMap.containsKey(source);
 	}
 
+	public boolean remove(FileFound source) {
+		return fileMap.remove(source) != null;
+	}
+
 	// *****************************************
 
 	abstract protected Future<Map<FileFound, InfosFile>> flushToMap(List<FileFound> buffer, Consumer<List<FileFound>> consumer);
@@ -284,12 +288,14 @@ public abstract class FileFinder<T> implements Serializable {
 	// *****************************************
 
 	protected void add(FileFound file, InfosFile infosFile) {
-		fileMap.put(file, infosFile);
+		if(file.getFileFound().exists()) {
+			fileMap.put(file, infosFile);
+		}
 	}
 
 	protected void addAll(Map<FileFound, InfosFile> map) {
 		for(Entry<FileFound, InfosFile> entry : map.entrySet()) {
-			fileMap.put(entry.getKey(), entry.getValue());
+			add(entry.getKey(), entry.getValue());
 			fileFinderListener.eventFindPost(entry.getKey(), entry.getValue());
 		}
 	}

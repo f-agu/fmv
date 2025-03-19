@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.mymedia.logger.Logger;
@@ -157,56 +158,63 @@ public abstract class AutoSaveLoadFileFinder<T extends Media> extends FileFinder
 	private void load(SupplierTextPart supplierTextPart) {
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(saveFile))) {
 
-			File currentRootFolder = null;
-			File currentFile = null;
+			AtomicReference<File> currentRootFolder = new AtomicReference<>();
+			AtomicReference<File> currentFile = new AtomicReference<>();
 			String line = null;
 			int number = 0;
 			int countFiles = 0;
+			AtomicReference<T> mainInfo = new AtomicReference<>();
+			List<Object> infos = new ArrayList<>(5);
+
+			Runnable flush = () -> {
+				if(currentFile.get() == null || ! currentFile.get().exists()) {
+					return;
+				}
+				InfosFile infosFile = new InfosFile(mainInfo.get(), infos);
+				FileFound fileFound = new FileFound(currentRootFolder.get(), currentFile.get());
+				add(fileFound, infosFile);
+				mainInfo.set(null);
+				infos.clear();
+			};
+
 			while((line = bufferedReader.readLine()) != null) {
 				++number;
 				if(line.charAt(1) != ' ') {
 					throw new RuntimeException("Unreadable file (line " + number + ")");
 				}
 				if(line.startsWith("P ")) {
+					if(number > 1) {
+						flush.run();
+					}
 					supplierTextPart.setText(Integer.toString(++countFiles));
-					currentFile = new File(line.substring(2));
+					currentFile.set(new File(line.substring(2)));
 					continue;
 				}
-				if(currentFile != null && currentFile.exists()) {
+				if(currentFile != null && currentFile.get().exists()) {
 					if(line.startsWith("R ")) {
-						currentRootFolder = new File(line.substring(2));
-						if( ! currentRootFolder.exists()) {
-							currentRootFolder = null;
+						currentRootFolder.set(new File(line.substring(2)));
+						if( ! currentRootFolder.get().exists()) {
+							currentRootFolder.set(null);
 						}
 					} else {
 						char code = line.charAt(0);
 						line = line.substring(2);
-
 						InfoFile infoFile = infoFileMap.get(code);
 						if(infoFile == null) {
 							throw new RuntimeException("InfoFile code not found: " + code);
 						}
-						FileFound fileFound = new FileFound(currentRootFolder, currentFile);
-
-						Object info = infoFile.parse(currentFile, line);
-						FileFinder<T>.InfosFile infosFile = get(fileFound);
-						if(infosFile == null) {
-							infosFile = new InfosFile();
-							add(fileFound, infosFile);
-						}
-						for(InfoFile inff : infoFiles) {
-							if(inff.isMine(info)) {
-								@SuppressWarnings("unchecked")
-								T t = (T)info;
-								infosFile.setMain(t);
-							} else {
-								infosFile.addInfo(info);
-							}
+						Object info = infoFile.parse(currentFile.get(), line);
+						if(infoFile.isMine(info)) {
+							@SuppressWarnings("unchecked")
+							T t = (T)info;
+							mainInfo.set(t);
+						} else {
+							infos.add(info);
 						}
 					}
 				}
 			}
-
+			flush.run();
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}

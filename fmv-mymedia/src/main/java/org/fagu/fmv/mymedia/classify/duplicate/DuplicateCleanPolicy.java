@@ -14,13 +14,13 @@ import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles.FileInfosFile;
  */
 public interface DuplicateCleanPolicy {
 
-	default void clean(Map<Object, List<FileInfosFile>> map) {
+	default void clean(DuplicatedFiles<?> duplicatedFiles, Map<Object, List<FileInfosFile>> map) {
 		for(Entry<Object, List<FileInfosFile>> entry : map.entrySet()) {
-			System.out.println("Cleaning for " + entry.getKey() + "...");
-			clean(entry.getValue());
+			System.out.println("Cleaning with " + duplicatedFiles.getClass().getSimpleName() + " for " + entry.getKey() + "...");
+			clean(duplicatedFiles, entry.getValue());
 		}
 	}
 
-	void clean(List<FileInfosFile> list);
+	void clean(DuplicatedFiles<?> duplicatedFiles, List<FileInfosFile> list);
 
 }

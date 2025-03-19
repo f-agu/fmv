@@ -145,6 +145,7 @@ public class ByPatternClassifier<F extends FileFinder<M>, M extends Media> exten
 		File srcFile = media.getFile();
 		map.put("basename", FilenameUtils.getBaseName(srcFile.getName()).toLowerCase());
 		map.put("extension", FilenameUtils.getExtension(srcFile.getName()).toLowerCase());
+		map.put("filename", srcFile.getName());
 
 		return map;
 	}

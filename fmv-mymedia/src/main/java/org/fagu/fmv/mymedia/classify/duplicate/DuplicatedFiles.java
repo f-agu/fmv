@@ -1,6 +1,5 @@
 package org.fagu.fmv.mymedia.classify.duplicate;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +15,7 @@ import org.fagu.fmv.utils.file.FileFinder.InfosFile;
 @SuppressWarnings("rawtypes")
 public interface DuplicatedFiles<K> {
 
-	public record FileInfosFile(File file, InfosFile infosFile) {}
+	public record FileInfosFile(FileFound fileFound, InfosFile infosFile) {}
 
 	void populate(FileFound fileFound, InfosFile infosFile);
 

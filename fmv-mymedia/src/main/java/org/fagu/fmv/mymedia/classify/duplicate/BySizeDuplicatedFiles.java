@@ -24,7 +24,7 @@ public class BySizeDuplicatedFiles extends AbstractDuplicatedFiles<Long> {
 		super(logger,
 				"size",
 				(size, infosFiles) -> ByteSize.formatSize(size) + " (" + size + "): " + infosFiles.size() + " files",
-				(size, infosFiles) -> infosFiles.stream().map(inff -> inff.file().getName()).collect(Collectors.joining(", ")));
+				(size, infosFiles) -> infosFiles.stream().map(inff -> inff.fileFound().getFileFound().getName()).collect(Collectors.joining(", ")));
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class BySizeDuplicatedFiles extends AbstractDuplicatedFiles<Long> {
 		bySizes.computeIfAbsent(
 				fileFound.getFileFound().length(),
 				k -> new ArrayList<>())
-				.add(new FileInfosFile(fileFound.getFileFound(), infosFile));
+				.add(new FileInfosFile(fileFound, infosFile));
 	}
 
 	@Override

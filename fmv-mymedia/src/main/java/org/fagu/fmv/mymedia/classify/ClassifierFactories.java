@@ -55,6 +55,23 @@ public class ClassifierFactories {
 		};
 	}
 
+	public static ClassifierFactory<ImageFinder, Image> imageMonth() {
+		final String PATTERN = "${yyyy}-${MM}/${filename}";
+		return new ClassifierFactory<ImageFinder, Image>() {
+
+			@Override
+			public String getTitle() {
+				return "Mois (" + PATTERN + ')';
+			}
+
+			@Override
+			public Classifier<ImageFinder, Image> create(ImageFinder finder, File destFolder) throws IOException {
+				MediaTimeComparator<Image> mediaTimeComparator = new AskTimeOffsetImageComparator(finder);
+				return new ByPatternClassifier<ImageFinder, Image>(finder, destFolder, mediaTimeComparator, PATTERN, ReplacerMaps.counterGlobal());
+			}
+		};
+	}
+
 	public static ClassifierFactory<ImageFinder, Image> imagesToMovie() {
 		final String PATTERN = "img_${counter}.${extension}";
 		return new ClassifierFactory<ImageFinder, Image>() {

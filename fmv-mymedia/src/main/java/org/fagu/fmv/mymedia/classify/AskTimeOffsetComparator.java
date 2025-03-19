@@ -1,26 +1,5 @@
 package org.fagu.fmv.mymedia.classify;
 
-/*
- * #%L
- * fmv-mymedia
- * %%
- * Copyright (C) 2014 fagu
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -104,24 +83,6 @@ public abstract class AskTimeOffsetComparator<M extends Media> implements MediaT
 
 	private boolean scanYesOrNo() {
 		return true;
-	}
-
-	private boolean scanYesOrNo_legacy() {
-		System.out.print("[y/n] ");
-		while(true) {
-			try {
-				char c = (char)System.in.read();
-				// int read = console.reader().read();
-				if('Y' == c || 'y' == c) {
-					return true;
-				}
-				if('N' == c || 'n' == c) {
-					return false;
-				}
-			} catch(IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
 	}
 
 	private void displayAllFilesFromSameDevice(Collection<M> medias, Long offset) {

@@ -6,12 +6,13 @@ import java.nio.file.attribute.FileTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NavigableSet;
+import java.util.Objects;
 import java.util.TreeSet;
 
 import org.fagu.fmv.media.Media;
 import org.fagu.fmv.mymedia.classify.duplicate.DuplicatedFiles.FileInfosFile;
-import org.fagu.fmv.mymedia.utils.ScannerHelper;
-import org.fagu.fmv.mymedia.utils.ScannerHelper.YesNo;
+import org.fagu.fmv.mymedia.utils.ScannerHelper.YesNoAlways;
+import org.fagu.fmv.utils.file.FileFinder;
 
 
 /**
@@ -21,10 +22,20 @@ import org.fagu.fmv.mymedia.utils.ScannerHelper.YesNo;
  */
 public class KeepOlderDuplicateCleanPolicy implements DuplicateCleanPolicy {
 
-	public KeepOlderDuplicateCleanPolicy() {}
+	private final AskDelete askDelete;
+
+	private final DeletePolicy deletePolicy;
+
+	private final FileFinder<?> fileFinder;
+
+	public KeepOlderDuplicateCleanPolicy(AskDelete askDelete, DeletePolicy deletePolicy, FileFinder<?> fileFinder) {
+		this.askDelete = Objects.requireNonNull(askDelete);
+		this.deletePolicy = Objects.requireNonNull(deletePolicy);
+		this.fileFinder = Objects.requireNonNull(fileFinder);
+	}
 
 	@Override
-	public void clean(List<FileInfosFile> list) {
+	public void clean(DuplicatedFiles<?> duplicatedFiles, List<FileInfosFile> list) {
 		if(list.isEmpty()) {
 			return;
 		}
@@ -32,9 +43,11 @@ public class KeepOlderDuplicateCleanPolicy implements DuplicateCleanPolicy {
 		set.addAll(list);
 		set.stream()
 				.skip(1)
+				.filter(fif -> fif.fileFound().getFileFound().exists())
 				.forEach(fif -> {
-					if(YesNo.YES.equals(ScannerHelper.yesNo("Delete " + fif.file(), YesNo.YES))) {
-						System.out.println(fif.file());
+					if(YesNoAlways.YES.equals(askDelete.ask(duplicatedFiles, fif))
+							&& deletePolicy.delete(fif.fileFound().getFileFound())) {
+						fileFinder.remove(fif.fileFound());
 					}
 				});
 	}
@@ -56,15 +69,17 @@ public class KeepOlderDuplicateCleanPolicy implements DuplicateCleanPolicy {
 				}
 				Long ct1 = fileCreationTime(o1);
 				Long ct2 = fileCreationTime(o2);
-				if(ct1 < ct2) {
-					return - 1;
-				}
-				if(ct1 > ct2) {
-					return 1;
+				if(ct1 != null && ct2 != null) {
+					if(ct1 < ct2) {
+						return - 1;
+					}
+					if(ct1 > ct2) {
+						return 1;
+					}
 				}
 				int c = Long.compare(fileLastModifiedTime(o1), fileLastModifiedTime(o2));
 				if(c == 0) {
-					return o1.file().getName().compareTo(o2.file().getName());
+					return o1.fileFound().getFileFound().getName().compareTo(o2.fileFound().getFileFound().getName());
 				}
 				return c;
 			}
@@ -80,7 +95,7 @@ public class KeepOlderDuplicateCleanPolicy implements DuplicateCleanPolicy {
 
 		private Long fileCreationTime(FileInfosFile fif) {
 			try {
-				FileTime creationTime = (FileTime)Files.getAttribute(fif.file().toPath(), "creationTime");
+				FileTime creationTime = (FileTime)Files.getAttribute(fif.fileFound().getFileFound().toPath(), "creationTime");
 				return creationTime.toMillis();
 			} catch(IOException e) {
 				// ignore
@@ -89,7 +104,7 @@ public class KeepOlderDuplicateCleanPolicy implements DuplicateCleanPolicy {
 		}
 
 		private long fileLastModifiedTime(FileInfosFile fif) {
-			return fif.file().lastModified();
+			return fif.fileFound().getFileFound().lastModified();
 		}
 	}
 

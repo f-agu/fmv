@@ -24,7 +24,7 @@ public class ByMD5DuplicatedFiles extends AbstractDuplicatedFiles<String> {
 		super(logger,
 				"content (MD5)",
 				(md5, infosFiles) -> md5 + ": " + infosFiles.size() + " files",
-				(md5, infosFiles) -> infosFiles.stream().map(inff -> inff.file().getName()).collect(Collectors.joining(", ")));
+				(md5, infosFiles) -> infosFiles.stream().map(inff -> inff.fileFound().getFileFound().getName()).collect(Collectors.joining(", ")));
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class ByMD5DuplicatedFiles extends AbstractDuplicatedFiles<String> {
 		@SuppressWarnings("unchecked")
 		Optional<MD5Sum> opt = infosFile.getInfo(MD5Sum.class);
 		opt.ifPresent(md5 -> byMD5s.computeIfAbsent(md5.value(), k -> new ArrayList<>())
-				.add(new FileInfosFile(fileFound.getFileFound(), infosFile)));
+				.add(new FileInfosFile(fileFound, infosFile)));
 	}
 
 	@Override
