@@ -1,5 +1,7 @@
 package org.fagu.fmv.mymedia.classify.image;
 
+import java.awt.Color;
+
 /*
  * #%L
  * fmv-mymedia
@@ -22,10 +24,12 @@ package org.fagu.fmv.mymedia.classify.image;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.fagu.fmv.im.Image;
 import org.fagu.fmv.im.soft.Convert;
 import org.fagu.fmv.im.soft.Identify;
@@ -40,6 +44,7 @@ import org.fagu.fmv.mymedia.classify.duplicate.KeepOlderDuplicateCleanPolicy;
 import org.fagu.fmv.mymedia.file.ImageFinder;
 import org.fagu.fmv.mymedia.logger.Logger;
 import org.fagu.fmv.mymedia.logger.LoggerFactory;
+import org.fagu.fmv.mymedia.utils.ColorKMeans;
 import org.fagu.fmv.soft.SoftLogger;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
 import org.fagu.fmv.textprogressbar.part.SupplierTextPart;
@@ -137,6 +142,10 @@ public class Bootstrap {
 					duplicateCleanPolicy.clean(duplicatedFiles, (Map<Object, List<FileInfosFile>>)duplicatedFiles.getDuplicateds());
 				}
 			}
+
+			// colors
+			analyzeColors(imageFinder, source, 10);
+
 			Organizer<ImageFinder, Image> organizer = new Organizer<>(Image.class);
 			organizer.organize(destFolder, imageFinder);
 		}
@@ -152,4 +161,31 @@ public class Bootstrap {
 				.build();
 		softLogger.log(System.out::println);
 	}
+
+	private static void analyzeColors(ImageFinder imageFinder, File folder, int numberOfCategory) {
+		List<Color> trainingColors = new ArrayList<>();
+		imageFinder.getAllMap()
+				.forEach((fileFound, infosFile) -> infosFile
+						.getInfo(Color.class)
+						.ifPresent(trainingColors::add));
+
+		ColorKMeans colorKMeans = new ColorKMeans(numberOfCategory, trainingColors);
+		imageFinder.getAllMap()
+				.forEach((fileFound, infosFile) -> {
+					Color color = infosFile.getInfo(Color.class).orElseThrow();
+					int category = colorKMeans.classify(color);
+					File destFile = new File(folder, Integer.toString(category));
+					if( ! destFile.exists()) {
+						destFile.mkdirs();
+					}
+					destFile = new File(destFile, fileFound.getFileFound().getName());
+					try {
+						System.out.println(destFile);
+						FileUtils.copyFile(fileFound.getFileFound(), destFile);
+					} catch(IOException e) {
+						e.printStackTrace();
+					}
+				});
+	}
+
 }
