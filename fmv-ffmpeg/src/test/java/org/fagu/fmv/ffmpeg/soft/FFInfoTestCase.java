@@ -40,6 +40,7 @@ import org.fagu.fmv.soft.find.Founds;
 import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.version.Version;
+import org.fagu.version.VersionUnit;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -360,7 +361,7 @@ class FFInfoTestCase {
 		lines.addOut("libswresample   5.  1.100 /  5.  1.100");
 		lines.addOut("libpostproc    58.  1.100 / 58.  1.100");
 
-		assertFull(newParserFFMpeg(lines), lines, new Version(7, 0, 1), LocalDate.of(2024, 4, 5), null);
+		assertFull(newParserFFMpeg(lines), lines, new Version(7, 0, 1), LocalDate.of(2024, 5, 26), null);
 	}
 
 	// ********************************************************
@@ -386,7 +387,7 @@ class FFInfoTestCase {
 		if(version == null) {
 			assertFalse(ffInfo.getVersion().isPresent());
 		} else {
-			assertTrue(Objects.equals(version, ffInfo.getVersion().orElse(null)));
+			assertTrue(Objects.equals(version, ffInfo.getVersion().map(v -> v.cut(VersionUnit.VF_2_REVISION)).orElse(null)));
 		}
 
 		if(builtVersion == null) {

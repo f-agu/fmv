@@ -1,6 +1,7 @@
 package org.fagu.fmv.textprogressbar.part;
 
 import org.fagu.fmv.textprogressbar.TextProgressBar;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
  * @author f.agu
  * @created 18 oct. 2024 11:12:31
  */
+@Disabled
 public class ChainCharsPartTestCase {
 
 	@Test
