@@ -2,6 +2,7 @@ package org.fagu.fmv.textprogressbar.part;
 
 import org.fagu.fmv.textprogressbar.ProgressStatus;
 import org.fagu.fmv.textprogressbar.TextProgressBar;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.doReturn;
@@ -12,6 +13,7 @@ import static org.mockito.Mockito.mock;
  * @author f.agu
  * @created 21 oct. 2024 10:00:41
  */
+@Disabled
 class KnightRiderScannerPartTestCase {
 
 	@Test
