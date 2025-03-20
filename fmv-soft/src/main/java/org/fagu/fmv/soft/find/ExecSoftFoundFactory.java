@@ -226,7 +226,7 @@ public class ExecSoftFoundFactory implements SoftFoundFactory {
 				if(timeOutMilliSeconds == null) {
 					fmvExecutor.setTimeOut(DEFAULT_TIMEOUT_MS);
 				}
-				fmvExecutor.addListener(new LogFMVExecListener());
+				fmvExecutor.addListener(new LoggerDebugCmdLineFMVExecListener());
 				applyCustomizeExecutor(fmvExecutor);
 				return fmvExecutor;
 			};

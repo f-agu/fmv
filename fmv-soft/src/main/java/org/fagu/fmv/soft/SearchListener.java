@@ -34,7 +34,9 @@ import org.fagu.fmv.soft.find.SoftTester;
  */
 public interface SearchListener {
 
-	default void eventPreSearch(Collection<Locator> locators, SoftTester tester, Properties searchProperties) {}
+	default void eventPreSearch(String softName, Collection<Locator> locators, SoftTester tester, Properties searchProperties) {}
 
-	default void eventAddSoftFound(Locator locator, SoftFound softFound) {}
+	default void eventStartLocator(String softName, Locator locator, SoftTester tester, Properties searchProperties) {}
+
+	default void eventAddSoftFound(String softName, Locator locator, SoftFound softFound) {}
 }

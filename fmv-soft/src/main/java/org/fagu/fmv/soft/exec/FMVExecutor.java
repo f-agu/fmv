@@ -177,9 +177,7 @@ public class FMVExecutor extends DefaultExecutor {
 			throw new IllegalArgumentException("Incredible timeout: " + timeOutMilliSeconds + "ms");
 		}
 		this.timeOutMilliSeconds = Math.max(timeOutMilliSeconds, org.apache.commons.exec.ExecuteWatchdog.INFINITE_TIMEOUT);
-		executeWatchdog = ExecuteWatchdog.builder()
-				.setTimeout(Duration.ofMillis(timeOutMilliSeconds))
-				.get();
+		executeWatchdog = new FMVExecuteWatchdog(Duration.ofMillis(timeOutMilliSeconds));
 		setWatchdog(executeWatchdog);
 	}
 

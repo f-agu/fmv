@@ -34,24 +34,23 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.SoftExecutor.Executed;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.ExecSoftFoundFactoryBuilder;
 import org.fagu.fmv.soft.find.FoundReason;
 import org.fagu.fmv.soft.find.FoundReasons;
 import org.fagu.fmv.soft.find.Founds;
-import org.fagu.fmv.soft.find.Locator;
-import org.fagu.fmv.soft.find.Locators;
 import org.fagu.fmv.soft.find.PlateformFileFilter;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftInfo;
+import org.fagu.fmv.soft.find.SoftLocator;
 import org.fagu.fmv.soft.find.SoftPolicy;
 import org.fagu.fmv.soft.find.SoftProvider;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
@@ -77,45 +76,156 @@ public class Soft {
 		this.softProvider = Objects.requireNonNull(softProvider);
 	}
 
-	// =============
+	// --------------------------------------------------
 
-	public static Soft withExecFile(String execFile) throws IOException {
+	public static class SoftExecFileBuilder {
+
+		private final File execFile;
+
+		private List<Consumer<SoftLocator>> softLocatorConsumers = new ArrayList<>();
+
+		private Properties searchProperties;
+
+		private String url;
+
+		private String logMessage;
+
+		private Consumer<String> logger;
+
+		private SoftExecFileBuilder(File execFile) throws IOException {
+			this.execFile = Objects.requireNonNull(execFile);
+			checkExecFile(execFile);
+		}
+
+		public SoftExecFileBuilder addSoftLocator(Consumer<SoftLocator> softLocatorConsumer) {
+			if(softLocatorConsumer != null) {
+				this.softLocatorConsumers.add(softLocatorConsumer);
+			}
+			return this;
+		}
+
+		public SoftExecFileBuilder withSearchProperties(Properties searchProperties) {
+			this.searchProperties = searchProperties;
+			return this;
+		}
+
+		public SoftExecFileBuilder withUrl(String url) {
+			this.url = url;
+			return this;
+		}
+
+		public SoftExecFileBuilder withLogMessage(String logMessage) {
+			this.logMessage = logMessage;
+			return this;
+		}
+
+		public SoftExecFileBuilder withLogger(Consumer<String> logger) {
+			this.logger = logger;
+			return this;
+		}
+
+		public SoftExecFile build() {
+			return new SoftExecFile(this);
+		}
+
+		// ***********************************************************
+
+		private static void checkExecFile(File execFile) throws IOException {
+			if( ! execFile.isAbsolute()) {
+				return;
+			}
+			if( ! execFile.exists()) {
+				throw new FileNotFoundException(execFile.getAbsolutePath());
+			}
+			if( ! execFile.isFile()) {
+				throw new IOException("It's not a file: " + execFile.getAbsolutePath());
+			}
+			Path path = execFile.toPath();
+			if( ! Files.isExecutable(path)) {
+				throw new IOException("Cannot execute: " + execFile.getAbsolutePath());
+			}
+		}
+
+	}
+
+	// --------------------------------------------------
+
+	public static class SoftExecFile {
+
+		private final File execFile;
+
+		private final List<Consumer<SoftLocator>> softLocatorConsumers;
+
+		private final Properties searchProperties;
+
+		private final String url;
+
+		private final String logMessage;
+
+		private final Consumer<String> logger;
+
+		private SoftExecFile(SoftExecFileBuilder builder) {
+			this.execFile = builder.execFile;
+			this.softLocatorConsumers = Collections.unmodifiableList(new ArrayList<>(builder.softLocatorConsumers));
+			this.searchProperties = builder.searchProperties;
+			this.url = builder.url;
+			this.logMessage = builder.logMessage;
+			this.logger = builder.logger;
+		}
+
+		public String getSoftName() {
+			return FilenameUtils.getBaseName(execFile.getName());
+		}
+
+		public Founds getFounds() {
+			String softName = getSoftName();
+			SoftLocator softLocator = new SoftLocator(
+					FilenameUtils.getBaseName(softName),
+					null,
+					PlateformFileFilter.plateformAndBasename(softName));
+			softLocator.addDefaultLocator();
+			softLocatorConsumers.forEach(slc -> slc.accept(softLocator));
+			return softLocator.find(searchProperties);
+		}
+
+		public Soft getSoft() {
+			Founds founds = getFounds();
+			SoftFile softFile = new SoftFile("exec");
+			if( ! founds.isFound()) {
+				return new Soft(
+						founds,
+						softFile.softProvider(founds.getSoftName(), url, logMessage, null));
+			}
+			return softFile.with(
+					founds.getSoftName(),
+					url,
+					logMessage,
+					founds.getFirstFound().getFile(),
+					logger);
+		}
+
+	}
+
+	// --------------------------------------------------
+
+	public static SoftExecFileBuilder withExecFileBuilder(String execFile) throws IOException {
 		File file = new File(execFile);
 		if( ! execFile.contains("/") && ! execFile.contains("\\") && ! file.exists()) {
-			// search in ENV PATH
-			Locators locators = new Locators(PlateformFileFilter.plateformAndBasename(execFile));
-			Locator locator = locators.byEnvPath();
-			List<File> locatedFiles = locator.locate(null);
-			if(locatedFiles.isEmpty()) {
-				throw new FileNotFoundException(execFile);
-			}
-			Collections.sort(locatedFiles);
-			file = locatedFiles.get(0);
+			return new SoftExecFileBuilder(file);
 		}
-		return withExecFile(file);
+		throw new FileNotFoundException(file.getAbsolutePath());
+	}
+
+	public static SoftExecFileBuilder withExecFileBuilder(File execFile) throws IOException {
+		return new SoftExecFileBuilder(execFile);
+	}
+
+	public static Soft withExecFile(String execFile) throws IOException {
+		return withExecFileBuilder(execFile).build().getSoft();
 	}
 
 	public static Soft withExecFile(File file) throws IOException {
-		if( ! file.exists()) {
-			throw new FileNotFoundException(file.getAbsolutePath());
-		}
-		if( ! file.isFile()) {
-			throw new IOException("It's not a file: " + file.getAbsolutePath());
-		}
-		Path path = file.toPath();
-		if( ! Files.isExecutable(path)) {
-			throw new IOException("Cannot execute: " + file.getAbsolutePath());
-		}
-		SoftProvider softProvider = new SoftProvider(file.getName(), null) {
-
-			@Override
-			public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
-				throw new RuntimeException("Not available !");
-			}
-
-		};
-		TreeSet<SoftFound> founds = new TreeSet<>(Collections.singleton(SoftFound.found(file)));
-		return new Soft(new Founds(softProvider.getName(), founds, null, null), softProvider);
+		return withExecFileBuilder(file).build().getSoft();
 	}
 
 	public static Soft search(String name) {

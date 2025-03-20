@@ -1,5 +1,7 @@
 package org.fagu.fmv.soft;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*
  * #%L
  * fmv-soft
@@ -29,6 +31,8 @@ import java.util.concurrent.Future;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fagu.fmv.soft.SoftExecutor.Executed;
+import org.fagu.fmv.soft.exec.exception.FMVExecuteException;
+import org.fagu.fmv.soft.exec.exception.TimeoutExecuteException;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory;
 import org.fagu.fmv.soft.find.ExecSoftFoundFactory.Parser;
 import org.fagu.fmv.soft.find.Lines;
@@ -36,8 +40,11 @@ import org.fagu.fmv.soft.find.Locators;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.SoftFoundFactory;
 import org.fagu.fmv.soft.find.SoftLocator;
+import org.fagu.fmv.soft.find.SysoutCmdLineFMVExecListener;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 
 /**
@@ -102,20 +109,23 @@ class SoftTestCase {
 	@Test
 	@Disabled
 	void testTimeout() throws Exception {
-		TestSoftProvider softProvider = new TestSoftProvider("pause1") {
+		TestSoftProvider softProvider = new TestSoftProvider("pause") {
 
 			@Override
 			public SoftLocator getSoftLocator() {
 				SoftLocator softLocator = super.getSoftLocator();
 				Locators locators = softLocator.createLocators();
+				softLocator.addDefaultLocator();
 				softLocator.addLocator(locators.byPath("c:\\tmp"));
 				return softLocator;
 			}
 
 		};
 		SoftFoundFactory ffSoftFoundFactory = ExecSoftFoundFactory.forProvider(softProvider)
-				.withParameters("-version")
+				// .withParameters("/?")
+				.withoutParameter()
 				.timeOut(1_000)
+				.customizeExecutor(e -> e.addListener(new SysoutCmdLineFMVExecListener()))
 				.parseFactory((file, softPolicy) -> new Parser() {
 
 					@Override
@@ -134,7 +144,7 @@ class SoftTestCase {
 	}
 
 	@Test
-	@Disabled
+	@EnabledOnOs(OS.LINUX)
 	void testTimeout2() throws Exception {
 		Soft soft = Soft.withExecFile("timeout");
 		System.out.println(soft);
@@ -147,6 +157,34 @@ class SoftTestCase {
 				.err(System.out)
 				.execute();
 		System.out.println(2);
+	}
+
+	@Test
+	@EnabledOnOs(OS.WINDOWS)
+	void testTimeout3() throws Exception {
+		Soft soft = Soft.withExecFileBuilder("ping")
+				.addSoftLocator(sl -> sl.addSearchListener(new LogSearchListener(System.out::println)))
+				.build()
+				.getSoft();
+
+		// System.out.println(soft);
+		// System.out.println(soft.getFounds());
+		// System.out.println("executing...");
+
+		try {
+			soft.withParameters("-t", "127.0.0.1")
+					.timeOut(2_000)
+					.input(System.in)
+					.output(System.out)
+					.err(System.out)
+					.execute();
+		} catch(FMVExecuteException e) {
+			if(e.getCause() instanceof TimeoutExecuteException) {
+				return;
+			}
+			fail("Cause not TimeoutExecuteException: " + e.getCause());
+		}
+		fail("TimeoutExecuteException not throw");
 	}
 
 	@Test

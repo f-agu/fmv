@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
  * @author f.agu
  * @created 14 déc. 2022 11:42:10
  */
-public class LogFMVExecListener implements FMVExecListener {
+public class LoggerDebugCmdLineFMVExecListener implements FMVExecListener {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LogFMVExecListener.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoggerDebugCmdLineFMVExecListener.class);
 
 	@Override
 	public void eventPreExecute(FMVExecutor fmvExecutor, CommandLine command, @SuppressWarnings("rawtypes") Map environment,

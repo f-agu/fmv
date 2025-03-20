@@ -58,12 +58,19 @@ public class SoftFile {
 			return notFound(softProvider);
 		}
 		File file = new File(filePath);
+		return with(name, url, logMessage, file, logger);
+	}
+
+	public Soft with(String name, String url, String logMessage, File file, Consumer<String> logger) {
+		AtomicReference<File> fileRef = new AtomicReference<>();
+		SoftProvider softProvider = softProvider(name, url, logMessage, fileRef::get);
+
 		if( ! file.exists()) {
-			logger.accept("File not found : " + filePath);
+			logger.accept("File not found : " + file);
 			return notFound(softProvider);
 		}
 		if( ! file.canRead()) {
-			logger.accept("File not readable : " + filePath);
+			logger.accept("File not readable : " + file);
 			return notFound(softProvider);
 		}
 		fileRef.set(file);
@@ -78,6 +85,9 @@ public class SoftFile {
 			@Override
 			public SoftFoundFactory createSoftFoundFactory(Properties searchProperties, Consumer<ExecSoftFoundFactoryBuilder> builderConsumer) {
 				return (f, l, p) -> {
+					if(fileSupplier == null) {
+						return SoftFound.notFound();
+					}
 					File file = fileSupplier.get();
 					if(file == null) {
 						return SoftFound.notFound();

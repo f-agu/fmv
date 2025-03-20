@@ -276,17 +276,18 @@ public class SoftLocator {
 
 	private Founds finding(Collection<Locator> locators, SoftTester tester, Properties searchProperties) {
 		Collection<Locator> roLocators = Collections.unmodifiableCollection(locators);
-		searchListeners.forEach(sl -> sl.eventPreSearch(roLocators, tester, searchProperties));
+		searchListeners.forEach(sl -> sl.eventPreSearch(softName, roLocators, tester, searchProperties));
 
 		List<SoftFound> softFounds = new ArrayList<>();
 		Set<File> fileDones = new HashSet<>(4);
 		for(Locator locator : locators) {
+			searchListeners.forEach(sl -> sl.eventStartLocator(softName, locator, tester, searchProperties));
 			for(File file : locator.locate(softName)) {
 				if(fileDones.add(file)) {
 					SoftFound found = tester.test(file, locator, softPolicy);
 					if(found != null) {
 						softFounds.add(found);
-						searchListeners.forEach(sl -> sl.eventAddSoftFound(locator, found));
+						searchListeners.forEach(sl -> sl.eventAddSoftFound(softName, locator, found));
 					}
 				}
 			}

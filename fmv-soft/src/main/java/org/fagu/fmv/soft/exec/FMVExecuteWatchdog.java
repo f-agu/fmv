@@ -1,7 +1,6 @@
 package org.fagu.fmv.soft.exec;
 
 import java.time.Duration;
-import java.util.concurrent.ThreadFactory;
 
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.Watchdog;
@@ -19,9 +18,8 @@ public class FMVExecuteWatchdog extends ExecuteWatchdog {
 
 	private boolean timeoutOccured;
 
-	public FMVExecuteWatchdog(ThreadFactory threadFactory, Duration timeout) {
-		// super(threadFactory, ExecuteWatchdog.INFINITE_TIMEOUT_DURATION);
-		super(0);
+	public FMVExecuteWatchdog(Duration timeout) {
+		super(timeout.toMillis());
 		if(timeout == INFINITE_TIMEOUT_DURATION) {
 			throw new IllegalArgumentException();
 		}
