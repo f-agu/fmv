@@ -198,7 +198,7 @@ class FFInfoTestCase {
 		lines.addOut("libswresample   0. 18.100 /  0. 18.100");
 		lines.addOut("libpostproc    52.  3.100 / 52.  3.100");
 
-		assertFull(newParserFFMpeg(lines), lines, new Version(2, 2, 10, 2), LocalDate.of(2014, 11, 14), null);
+		assertFull(newParserFFMpeg(lines), lines, new Version(2, 2, 10), LocalDate.of(2014, 11, 14), null);
 	}
 
 	@Test
@@ -387,7 +387,11 @@ class FFInfoTestCase {
 		if(version == null) {
 			assertFalse(ffInfo.getVersion().isPresent());
 		} else {
-			assertTrue(Objects.equals(version, ffInfo.getVersion().map(v -> v.cut(VersionUnit.VF_2_REVISION)).orElse(null)));
+			assertTrue(Objects.equals(
+					version,
+					ffInfo.getVersion()
+							.map(v -> v.cut(VersionUnit.parse(version.size() - 1)))
+							.orElse(null)));
 		}
 
 		if(builtVersion == null) {
