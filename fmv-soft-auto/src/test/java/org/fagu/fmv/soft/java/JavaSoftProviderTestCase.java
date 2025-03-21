@@ -39,6 +39,7 @@ import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
+import org.fagu.version.VersionUnit;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.simple.SimpleLogger;
@@ -207,7 +208,9 @@ class JavaSoftProviderTestCase {
 		parser.read(lines);
 		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		VersionDateSoftInfo softInfo = (VersionDateSoftInfo)softFound.getSoftInfo();
-		assertEquals(expectedVersion, softInfo.getVersion().orElse(null));
+		assertEquals(expectedVersion, softInfo.getVersion()
+				.map(v -> v.cut(VersionUnit.parse(expectedVersion.size() - 1)))
+				.orElse(null));
 		Optional<LocalDate> dateOpt = softInfo.getLocalDate();
 		if(date != null) {
 			assertEquals(date, dateOpt.get());

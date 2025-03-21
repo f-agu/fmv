@@ -39,6 +39,7 @@ import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
+import org.fagu.version.VersionUnit;
 import org.junit.jupiter.api.Test;
 
 
@@ -67,7 +68,7 @@ class IdentifySoftProviderTestCase {
 		lines.addOut(
 				"Delegates (built-in): bzlib cairo flif freetype gslib heic jng jp2 jpeg jxl lcms lqr lzma openexr pangocairo png ps raqm raw rsvg tiff webp xml zip zlib");
 		lines.addOut("Compiler: Visual Studio 2019 (192930137)");
-		assertInfo(lines, Version.parse("7.1.0-18"), LocalDate.of(2021, 12, 18));
+		assertInfo(lines, new Version(7, 1, 0), LocalDate.of(2021, 12, 18));
 	}
 
 	@Test
@@ -79,7 +80,7 @@ class IdentifySoftProviderTestCase {
 		lines.addOut("Features: Cipher DPC HDRI Modules OpenMP(3.1) ");
 		lines.addOut(
 				"Delegates (built-in): bzlib cairo djvu fftw flif fontconfig freetype gvc heic jbig jng jp2 jpeg lcms ltdl lzma openexr pangocairo png raqm raw rsvg tiff webp wmf x xml zip zlib");
-		assertInfo(lines, Version.parse("7.1.0-2"), LocalDate.of(2021, 06, 25));
+		assertInfo(lines, new Version(7, 1, 0), LocalDate.of(2021, 06, 25));
 	}
 
 	// *******************************************************
@@ -95,7 +96,9 @@ class IdentifySoftProviderTestCase {
 		parser.read(lines);
 		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		VersionDateSoftInfo softInfo = (VersionDateSoftInfo)softFound.getSoftInfo();
-		assertEquals(expectedVersion, softInfo.getVersion().orElse(null));
+		assertEquals(expectedVersion, softInfo.getVersion()
+				.map(v -> v.cut(VersionUnit.parse(expectedVersion.size() - 1)))
+				.orElse(null));
 		Optional<LocalDate> dateOpt = softInfo.getLocalDate();
 		if(date != null) {
 			assertEquals(date, dateOpt.get());

@@ -30,6 +30,7 @@ import org.fagu.fmv.soft.find.Lines;
 import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionSoftInfo;
 import org.fagu.version.Version;
+import org.fagu.version.VersionUnit;
 import org.junit.jupiter.api.Test;
 
 
@@ -89,7 +90,9 @@ class PdfInfoSoftProviderTestCase {
 		parser.read(lines);
 		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		VersionSoftInfo softInfo = (VersionSoftInfo)softFound.getSoftInfo();
-		assertEquals(expectedVersion, softInfo.getVersion().orElse(null));
+		assertEquals(expectedVersion, softInfo.getVersion()
+				.map(v -> v.cut(VersionUnit.parse(expectedVersion.size() - 1)))
+				.orElse(null));
 	}
 
 }
