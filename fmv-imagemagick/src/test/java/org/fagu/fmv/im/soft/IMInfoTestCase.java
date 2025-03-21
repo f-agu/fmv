@@ -35,6 +35,7 @@ import org.fagu.fmv.soft.find.SoftFound;
 import org.fagu.fmv.soft.find.info.VersionDateSoftInfo;
 import org.fagu.fmv.soft.utils.ImmutableProperties;
 import org.fagu.version.Version;
+import org.fagu.version.VersionUnit;
 import org.junit.jupiter.api.Test;
 
 
@@ -45,19 +46,19 @@ class IMInfoTestCase {
 
 	@Test
 	void testParse_firstLines() throws IOException {
-		assertInfo("Version: ImageMagick 6.6.0-4 2012-05-02 Q16 http://www.imagemagick.org", new Version(6, 6, 0, 4), d(2012, 5, 2), "6.6.0.4");
-		assertInfo("Version: ImageMagick 6.7.9-10 2012-10-08 Q16 http://www.imagemagick.org", new Version(6, 7, 9, 10), d(2012, 10, 8), "6.7.9.10");
-		assertInfo("Version: ImageMagick 6.8.7-1 2013-10-17 Q16 http://www.imagemagick.org", new Version(6, 8, 7, 1), d(2013, 10, 17), "6.8.7.1");
-		assertInfo("Version: ImageMagick 6.9.2-0 Q16 x86_64 2015-09-10 http://www.imagemagick.org", new Version(6, 9, 2, 0), d(2015, 9, 10),
-				"6.9.2.0");
-		assertInfo("Version: ImageMagick 6.9.2-1 Q16 x86_64 2015-09-18 http://www.imagemagick.org", new Version(6, 9, 2, 1), d(2015, 9, 18),
-				"6.9.2.1");
-		assertInfo("Version: ImageMagick 6.9.7-4 Q16 x86_64 20170114 http://www.imagemagick.org", new Version(6, 9, 7, 4), d(2017, 01, 14),
-				"6.9.7.4");
-		assertInfo("Version: ImageMagick 6.9.7-4 Q16 x86_64 2017-01-14 http://www.imagemagick.org", new Version(6, 9, 7, 4), d(2017, 01, 14),
-				"6.9.7.4");
-		assertInfo("Version: ImageMagick 7.0.8-28 Q16 x86_64 2019-02-17 https://imagemagick.org", new Version(7, 0, 8, 28), d(2019, 2, 17),
-				"7.0.8.28");
+		assertInfo("Version: ImageMagick 6.6.0-4 2012-05-02 Q16 http://www.imagemagick.org", new Version(6, 6, 0), d(2012, 5, 2), "6.6.0-4");
+		assertInfo("Version: ImageMagick 6.7.9-10 2012-10-08 Q16 http://www.imagemagick.org", new Version(6, 7, 9), d(2012, 10, 8), "6.7.9-10");
+		assertInfo("Version: ImageMagick 6.8.7-1 2013-10-17 Q16 http://www.imagemagick.org", new Version(6, 8, 7), d(2013, 10, 17), "6.8.7-1");
+		assertInfo("Version: ImageMagick 6.9.2-0 Q16 x86_64 2015-09-10 http://www.imagemagick.org", new Version(6, 9, 2), d(2015, 9, 10),
+				"6.9.2-0");
+		assertInfo("Version: ImageMagick 6.9.2-1 Q16 x86_64 2015-09-18 http://www.imagemagick.org", new Version(6, 9, 2), d(2015, 9, 18),
+				"6.9.2-1");
+		assertInfo("Version: ImageMagick 6.9.7-4 Q16 x86_64 20170114 http://www.imagemagick.org", new Version(6, 9, 7), d(2017, 01, 14),
+				"6.9.7-4");
+		assertInfo("Version: ImageMagick 6.9.7-4 Q16 x86_64 2017-01-14 http://www.imagemagick.org", new Version(6, 9, 7), d(2017, 01, 14),
+				"6.9.7-4");
+		assertInfo("Version: ImageMagick 7.0.8-28 Q16 x86_64 2019-02-17 https://imagemagick.org", new Version(7, 0, 8), d(2019, 2, 17),
+				"7.0.8-28");
 	}
 
 	@Test
@@ -67,7 +68,7 @@ class IMInfoTestCase {
 		lines.addOut("Copyright: Copyright (C) 1999-2013 ImageMagick Studio LLC");
 		lines.addOut("Features: DPC OpenMP");
 		lines.addOut("Delegates: bzlib freetype jbig jng jp2 jpeg lcms lqr png ps png tiff webp x xml zlib");
-		assertInfo(lines, new Version(6, 8, 7, 1), d(2013, 10, 17), "6.8.7.1");
+		assertInfo(lines, new Version(6, 8, 7), d(2013, 10, 17), "6.8.7-1");
 	}
 
 	@Test
@@ -79,7 +80,7 @@ class IMInfoTestCase {
 		lines.addOut("Features: Cipher DPC Modules ");
 		lines.addOut("Delegates (built-in): bzlib freetype jng jpeg ltdl lzma png tiff xml zlib");
 
-		assertInfo(lines, new Version(6, 9, 3, 7), d(2016, 3, 27), "6.9.3.7");
+		assertInfo(lines, new Version(6, 9, 3), d(2016, 3, 27), "6.9.3-7");
 	}
 
 	// *******************************************************
@@ -108,7 +109,9 @@ class IMInfoTestCase {
 		parser.read(lines);
 		SoftFound softFound = parser.closeAndParse("", 0, lines);
 		VersionDateSoftInfo imInfo = (VersionDateSoftInfo)softFound.getSoftInfo();
-		assertEquals(expectedVersion, imInfo.getVersion().orElse(null));
+		assertEquals(expectedVersion, imInfo.getVersion()
+				.map(v -> v.cut(VersionUnit.parse(expectedVersion.size() - 1)))
+				.orElse(null));
 		assertEquals(expectedDate, imInfo.getDate().orElse(null));
 		assertEquals(expectedInfo, imInfo.getInfo());
 	}
